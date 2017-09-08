@@ -13,9 +13,9 @@ Imports System.Windows
 
 <Assembly: AssemblyTitle("ADTools")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("Vitaliy Sorokovikov")>
 <Assembly: AssemblyProduct("ADTools")>
-<Assembly: AssemblyCopyright("Copyright ©  2017")>
+<Assembly: AssemblyCopyright("© 2017")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 

@@ -1,0 +1,138 @@
+﻿<Window x:Name="wndMain" x:Class="wndMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        Title="ADTools"
+        d:DesignWidth="1024"
+        d:DesignHeight="768"
+        WindowState="Maximized">
+    <Grid>
+        <DockPanel LastChildFill="True">
+            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True" Margin="0,0,0,5">
+                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,5,0" Content="⧉" ToolTip="Клонировать окно"></Button>
+                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,5,0" Content="߹" ToolTip="Тестовая кнопка (не тыкать)" Visibility="Collapsed"/>
+                <Menu>
+                    <MenuItem x:Name="mnuFile" Header="Файл">
+                        <MenuItem x:Name="mnuFilePrint" Header="Печать"/>
+                        <Separator/>
+                        <MenuItem x:Name="mnuFileExit" Header="Выход"/>
+                    </MenuItem>
+                    <MenuItem x:Name="mnuEdit" Header="Правка">
+                        <MenuItem x:Name="mnuEditCreateObject" Header="Создание объекта"/>
+                    </MenuItem>
+                    <MenuItem x:Name="mnuService" Header="Сервис">
+                        <MenuItem x:Name="mnuServiceDomainOptions" Header="Настройки доменов"/>
+                        <MenuItem x:Name="mnuServicePreferences" Header="Настройки приложения"/>
+                        <Separator/>
+                        <MenuItem x:Name="mnuServiceDeletedObjects" Header="Восстановление удаленных объектов"/>
+                        <MenuItem x:Name="mnuServiceADCommander" Header="ADCommander"/>
+                        <Separator/>
+                        <MenuItem x:Name="mnuServiceLog" Header="Журнал"/>
+                        <MenuItem x:Name="mnuServiceError" Header="Журнал ошибок"/>
+                    </MenuItem>
+                    <MenuItem x:Name="mnuHelp" Header="Справка">
+                        <MenuItem x:Name="mnuHelpAbout" Header="О программе"/>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="5,0,5,5">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="0,0,5,0" Height="23">
+                    <Button Content="⬌" Width="23"/>
+                    <Button Content="⬌" Width="23"/>
+                    <Button Content="⭥" Width="23"/>
+                </StackPanel>
+                <DockPanel DockPanel.Dock="Right" LastChildFill="True" Height="23">
+                    <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
+                    <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
+                        <ComboBox Name="cmboSearchDomains">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock IsHitTestVisible="False" Text="Все домены..." VerticalAlignment="Center" Margin="5,0,0,0" />
+                    </Grid>
+                    <Grid>
+                        <ComboBox x:Name="cmboSearchPattern" Width="300" Text="" IsEditable="True" Margin="0,0,5,0"/>
+                        <TextBlock IsHitTestVisible="False" Text="Поиск объектов" VerticalAlignment="Center" Margin="5,0,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=cmboSearchPattern}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </DockPanel>
+                <ToolBar VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Margin="0,0,5,0">
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                    <Button Content="path1"/>
+                    <Button Content="path2"/>
+                    <Button Content="path3"/>
+                </ToolBar>
+
+            </DockPanel>
+
+            <StatusBar Height="30" DockPanel.Dock="Bottom" >
+                <TextBlock>
+                    <Run Text="Объектов: "/>
+                    <Run Text="{Binding ElementName=dgMain, Path=Items.Count, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Выделено: "/>
+                    <Run Text="{Binding ElementName=dgMain, Path=SelectedItems.Count, Mode=OneWay}"/>
+                </TextBlock>
+                <StatusBarItem HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar x:Name="pbSearch" Width="30" Height="24" Margin="0,0,2,0" IsIndeterminate="True" Visibility="Hidden"/>
+                    </StackPanel>
+                </StatusBarItem>
+            </StatusBar>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
+                    <TreeView x:Name="tvFavorites"/>
+                    <TreeView x:Name="tvDomain"/>
+                    <TreeView x:Name="tvNetwork"/>
+                </StackPanel>
+            </ScrollViewer>
+            <DockPanel Grid.Column="2" LastChildFill="True">
+                    <DataGrid/>
+            </DockPanel>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
