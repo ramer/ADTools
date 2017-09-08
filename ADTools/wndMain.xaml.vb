@@ -1,0 +1,3 @@
+﻿Class wndMain
+
+End Class
