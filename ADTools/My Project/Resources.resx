@@ -121,7 +121,207 @@
   <data name="app" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\app.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="computer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\computer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="computer_blocked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\computer_blocked.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="computer_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\computer_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="contact" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\contact.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="container" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\container.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\domain.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="group" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\group.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="group_distribution" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\group_distribution.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="object_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\object_unknown.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="organizationalunit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\organizationalunit.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="properties" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\properties.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\splash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="splash1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\splash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\user.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user_blocked" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\user_blocked.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\user_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\warning.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wndDomains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="wndDomains_btnDomainsAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="wndDomains_btnDomainsRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="wndDomains_dgPatternTelephoneNumbers1" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="wndDomains_dgPatternTelephoneNumbers2" xml:space="preserve">
+    <value>Pattern</value>
+  </data>
+  <data name="wndDomains_dgPatternTelephoneNumbers3" xml:space="preserve">
+    <value>Range</value>
+  </data>
+  <data name="wndDomains_lbl_Connect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="wndDomains_lbl_DomainName" xml:space="preserve">
+    <value>Domain name</value>
+  </data>
+  <data name="wndDomains_lbl_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExample" xml:space="preserve">
+    <value>For example:</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExampleDef" xml:space="preserve">
+    <value>user-{{n}} = user-1 / user-2 / user-3 / user-100</value>
+  </data>
+  <data name="wndDomains_lbl_Patterns_Computer" xml:space="preserve">
+    <value>Computer (list or comma-separated)</value>
+  </data>
+  <data name="wndDomains_lbl_Patterns_DefaultPassword" xml:space="preserve">
+    <value>Default password</value>
+  </data>
+  <data name="wndDomains_lbl_Patterns_Exchange" xml:space="preserve">
+    <value>A template for naming a mailbox in the handlebars format (see the "Templates" tab)</value>
+  </data>
+  <data name="wndDomains_lbl_Patterns_PhoneNumbers" xml:space="preserve">
+    <value>Phone numbers</value>
+  </data>
+  <data name="wndDomains_lbl_Patterns_Username" xml:space="preserve">
+    <value>Username (list or comma-separated)</value>
+  </data>
+  <data name="wndDomains_lbl_SearchRoot" xml:space="preserve">
+    <value>Search root</value>
+  </data>
+  <data name="wndDomains_lbl_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="wndDomains_lvDomainProperties1" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="wndDomains_lvDomainProperties2" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="wndDomains_tabctlDomain1" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="wndDomains_tabctlDomain2" xml:space="preserve">
+    <value>Search root</value>
+  </data>
+  <data name="wndDomains_tabctlDomain_Exchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
+  <data name="wndDomains_tabctlDomain_Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="wndDomains_tabctlDomain_Patterns" xml:space="preserve">
+    <value>Patterns</value>
+  </data>
+  <data name="wndDomains_txt_Exchange" xml:space="preserve">
+    <value>If your organization uses Microsoft Exchange Server, specify the Exchange server name and mail domain list.
+This information is used to manage users' mailboxes using PowerShell. </value>
+  </data>
+  <data name="wndDomains_txt_Groups" xml:space="preserve">
+    <value>Select the standard domain security groups.
+The created users will be automatically added as the group member. </value>
+  </data>
+  <data name="wndDomains_txt_Patterns" xml:space="preserve">
+    <value>Specify the format for naming objects in the handlebars format, specifying the arguments in double curly braces, where the arguments are:
+{{n}} - number;
+{{displayname}} - display name;</value>
+  </data>
+  <data name="wndDomains_txt_SearchRoot" xml:space="preserve">
+    <value>In the next field, you must specify (select) the container in which the objects will be searched.
+
+In most cases, user objects are located in a specific container. Searching in such a container will shorten the search time.
+
+However, you can also specify the root of the domain as the root of the search.</value>
+  </data>
+  <data name="wndDomains_txt_UseExchange" xml:space="preserve">
+    <value>Use Exchange Server</value>
+  </data>
+  <data name="wndMain_btnWindowClone" xml:space="preserve">
+    <value>Clone window</value>
+  </data>
+  <data name="wndMain_lbl_ObjectsSelected" xml:space="preserve">
+    <value>Selected: </value>
+  </data>
+  <data name="wndMain_lbl_ObjectsTotal" xml:space="preserve">
+    <value>Objects: </value>
+  </data>
+  <data name="wndMain_lbl_SearchObjects" xml:space="preserve">
+    <value>Search objects ...</value>
+  </data>
+  <data name="wndMain_mnuEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="wndMain_mnuEdit_CreateObject" xml:space="preserve">
+    <value>Create object ...</value>
+  </data>
+  <data name="wndMain_mnuFile" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="wndMain_mnuFile_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="wndMain_mnuFile_Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="wndMain_mnuHelp" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="wndMain_mnuHelp_About" xml:space="preserve">
+    <value>About ...</value>
+  </data>
+  <data name="wndMain_mnuService" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
+    <value>Domain options ...</value>
+  </data>
+  <data name="wndMain_mnuService_ErrorLog" xml:space="preserve">
+    <value>Error log ...</value>
+  </data>
+  <data name="wndMain_mnuService_Log" xml:space="preserve">
+    <value>Log ...</value>
+  </data>
+  <data name="wndMain_mnuService_Preferences" xml:space="preserve">
+    <value>Preferences ...</value>
+  </data>
+  <data name="wndMain_tblckSearchDomains_AllDomains" xml:space="preserve">
+    <value>All domains ...</value>
+  </data>
+  <data name="wndMain_tblckSearchDomains_Domains" xml:space="preserve">
+    <value>Domains ...</value>
   </data>
 </root>

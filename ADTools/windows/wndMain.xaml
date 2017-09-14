@@ -4,45 +4,69 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="ADTools"
         d:DesignWidth="1024"
         d:DesignHeight="768"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        Icon="/images/app.ico"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        >
     <Grid>
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True" Margin="0,0,0,5">
-                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,5,0" Content="⧉" ToolTip="Клонировать окно"></Button>
-                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,5,0" Content="߹" ToolTip="Тестовая кнопка (не тыкать)" Visibility="Collapsed"/>
+                <Button x:Name="btnWindowClone" Background="{DynamicResource ColorElementBackground}" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"></Button>
+                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
                 <Menu>
-                    <MenuItem x:Name="mnuFile" Header="Файл">
-                        <MenuItem x:Name="mnuFilePrint" Header="Печать"/>
+                    <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
+                        <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}"/>
                         <Separator/>
-                        <MenuItem x:Name="mnuFileExit" Header="Выход"/>
+                        <MenuItem x:Name="mnuFileExit" Header="{x:Static r:Resources.wndMain_mnuFile_Exit}"/>
                     </MenuItem>
-                    <MenuItem x:Name="mnuEdit" Header="Правка">
-                        <MenuItem x:Name="mnuEditCreateObject" Header="Создание объекта"/>
+                    <MenuItem x:Name="mnuEdit" Header="{x:Static r:Resources.wndMain_mnuEdit}">
+                        <MenuItem x:Name="mnuEditCreateObject" Header="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}"/>
                     </MenuItem>
-                    <MenuItem x:Name="mnuService" Header="Сервис">
-                        <MenuItem x:Name="mnuServiceDomainOptions" Header="Настройки доменов"/>
-                        <MenuItem x:Name="mnuServicePreferences" Header="Настройки приложения"/>
+                    <MenuItem x:Name="mnuService" Header="{x:Static r:Resources.wndMain_mnuService}">
+                        <MenuItem x:Name="mnuServiceDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}"/>
+                        <MenuItem x:Name="mnuServicePreferences" Header="{x:Static r:Resources.wndMain_mnuService_Preferences}"/>
                         <Separator/>
-                        <MenuItem x:Name="mnuServiceDeletedObjects" Header="Восстановление удаленных объектов"/>
-                        <MenuItem x:Name="mnuServiceADCommander" Header="ADCommander"/>
-                        <Separator/>
-                        <MenuItem x:Name="mnuServiceLog" Header="Журнал"/>
-                        <MenuItem x:Name="mnuServiceError" Header="Журнал ошибок"/>
+                        <MenuItem x:Name="mnuServiceLog" Header="{x:Static r:Resources.wndMain_mnuService_Log}"/>
+                        <MenuItem x:Name="mnuServiceErrorLog" Header="{x:Static r:Resources.wndMain_mnuService_ErrorLog}"/>
                     </MenuItem>
-                    <MenuItem x:Name="mnuHelp" Header="Справка">
-                        <MenuItem x:Name="mnuHelpAbout" Header="О программе"/>
+                    <MenuItem x:Name="mnuHelp" Header="{x:Static r:Resources.wndMain_mnuHelp}">
+                        <MenuItem x:Name="mnuHelpAbout" Header="{x:Static r:Resources.wndMain_mnuHelp_About}"/>
                     </MenuItem>
                 </Menu>
             </DockPanel>
             <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="5,0,5,5">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="0,0,5,0" Height="23">
-                    <Button Content="⬌" Width="23"/>
-                    <Button Content="⬌" Width="23"/>
-                    <Button Content="⭥" Width="23"/>
+                    <Button Width="23" Background="{DynamicResource ColorElementBackground}" Margin="0,0,5,0">
+                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
+                            <TextBlock.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="270"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>                    </Button>
+                    <Button Width="23" Background="{DynamicResource ColorElementBackground}" Margin="0,0,5,0">
+                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="-3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
+                            <TextBlock.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Button>
+                    <Button x:Name="btnUp" Width="23" Background="{DynamicResource ColorElementBackground}" >
+                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
+                    </Button>
                 </StackPanel>
                 <DockPanel DockPanel.Dock="Right" LastChildFill="True" Height="23">
                     <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
@@ -56,11 +80,11 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBlock IsHitTestVisible="False" Text="Все домены..." VerticalAlignment="Center" Margin="5,0,0,0" />
+                        <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchDomains_AllDomains}" VerticalAlignment="Center" Margin="5,0,0,0" />
                     </Grid>
                     <Grid>
                         <ComboBox x:Name="cmboSearchPattern" Width="300" Text="" IsEditable="True" Margin="0,0,5,0"/>
-                        <TextBlock IsHitTestVisible="False" Text="Поиск объектов" VerticalAlignment="Center" Margin="5,0,0,0">
+                        <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchObjects}" VerticalAlignment="Center" Margin="5,0,0,0">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -74,39 +98,16 @@
                         </TextBlock>
                     </Grid>
                 </DockPanel>
-                <ToolBar VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Margin="0,0,5,0">
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                    <Button Content="path1"/>
-                    <Button Content="path2"/>
-                    <Button Content="path3"/>
-                </ToolBar>
-
+                <ToolBar x:Name="tlbrPath" VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Margin="0,0,5,0" />
             </DockPanel>
 
             <StatusBar Height="30" DockPanel.Dock="Bottom" >
                 <TextBlock>
-                    <Run Text="Объектов: "/>
+                    <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsTotal}"/>
                     <Run Text="{Binding ElementName=dgMain, Path=Items.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock>
-                    <Run Text="Выделено: "/>
+                    <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsSelected}"/>
                     <Run Text="{Binding ElementName=dgMain, Path=SelectedItems.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <StatusBarItem HorizontalAlignment="Right">
@@ -119,19 +120,83 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
-            <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
-            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <TreeView x:Name="tvFavorites"/>
-                    <TreeView x:Name="tvDomain"/>
-                    <TreeView x:Name="tvNetwork"/>
-                </StackPanel>
-            </ScrollViewer>
-            <DockPanel Grid.Column="2" LastChildFill="True">
-                    <DataGrid/>
-            </DockPanel>
+                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
+                <TreeView x:Name="tvDomains" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <TreeView.Resources>
+                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <EventSetter Event="Selected" Handler="tvDomains_TreeViewItem_Selected"/>
+                        </Style>
+                    </TreeView.Resources>
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children[true]}">
+                            <StackPanel Orientation="Horizontal" Height="23">
+                                <Image Source="{Binding Image}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource ColorButtonBackground}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+                <DockPanel Grid.Column="2" LastChildFill="True">
+                    <DataGrid 
+                x:Name="dgObjects"
+                Foreground="Black"
+                ItemsSource="{Binding objects}"
+                AlternationCount="2"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="None"
+                IsSynchronizedWithCurrentItem="True" IsTextSearchEnabled="True">
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="⬕" Width="32">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding Image, Mode=OneWay}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Имя" Width="400" SortMemberPath="name" CanUserSort="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding name, Mode=OneWay}" ToolTip="name" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Класс" Width="150" SortMemberPath="SchemaClassName" CanUserSort="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SchemaClassName, Mode=OneWay}" ToolTip="SchemaClassName" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Создан" Width="110" SortMemberPath="whenCreated" CanUserSort="True">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding whenCreated, Mode=OneWay}" ToolTip="whenCreated" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                </DockPanel>
             </Grid>
         </DockPanel>
     </Grid>

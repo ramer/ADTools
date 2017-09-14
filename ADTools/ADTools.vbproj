@@ -48,14 +48,27 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>images\app.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CredentialManagement">
+      <HintPath>libraries\CredentialManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="IPrint, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\IPrint.dll</HintPath>
+    </Reference>
     <Reference Include="IPrompt, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\IPrompt.1.0.1\lib\net30\IPrompt.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\IPrompt.dll</HintPath>
+    </Reference>
+    <Reference Include="IRegisty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\IRegisty.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -76,6 +89,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="controls\ctlCap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndDomains.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="windows\wndMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -84,7 +105,20 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="classes\clsDirectoryObject.vb" />
+    <Compile Include="classes\clsDomain.vb" />
+    <Compile Include="classes\clsDomainProperty.vb" />
+    <Compile Include="classes\clsTelephoneNumberPattern.vb" />
+    <Compile Include="classes\ConverterBooleanToVisibility.vb" />
+    <Compile Include="classes\ConverterBooleanToVisibilityInverted.vb" />
+    <Compile Include="controls\ctlCap.xaml.vb">
+      <DependentUpon>ctlCap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="mdlMain.vb" />
+    <Compile Include="mdlTools.vb" />
+    <Compile Include="windows\wndDomains.xaml.vb">
+      <DependentUpon>wndDomains.xaml</DependentUpon>
+    </Compile>
     <Compile Include="windows\wndMain.xaml.vb">
       <DependentUpon>wndMain.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -128,7 +162,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
@@ -137,19 +171,40 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <AppDesigner Include="My Project\" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="resources\" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="images\app.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="classes\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\properties.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\domain.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\computer.ico" />
+    <Resource Include="images\computer_blocked.ico" />
+    <Resource Include="images\computer_expired.ico" />
+    <Resource Include="images\contact.ico" />
+    <Resource Include="images\container.ico" />
+    <Resource Include="images\group.ico" />
+    <Resource Include="images\group_distribution.ico" />
+    <Resource Include="images\object_unknown.ico" />
+    <Resource Include="images\organizationalunit.ico" />
+    <Resource Include="images\user.ico" />
+    <Resource Include="images\user_blocked.ico" />
+    <Resource Include="images\user_expired.ico" />
+    <Resource Include="images\warning.ico" />
+    <Content Include="libraries\IPrint.dll" />
+    <Content Include="libraries\IPrompt.dll" />
+    <Content Include="libraries\IRegisty.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

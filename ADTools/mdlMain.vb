@@ -57,7 +57,7 @@ Public Class ADToolsApplication
     Inherits Application
 
     Public Shared WithEvents nicon As New Forms.NotifyIcon
-    Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem("Выход", AddressOf ni_ctxmenuExit)})
+    Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.wndMain_mnuFile_Exit, AddressOf ni_ctxmenuExit)})
 
     'Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     'Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
@@ -72,7 +72,7 @@ Public Class ADToolsApplication
 
             ' notify icon initialization
             nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
-            nicon.Text = "ADViewer"
+            nicon.Text = My.Application.Info.AssemblyName
             nicon.ContextMenu = ctxmenu
             nicon.Visible = True
 
@@ -97,8 +97,8 @@ Public Class ADToolsApplication
             '    ' preferences setup
             '    initializePreferences()
 
-            '    ' domains setup
-            '    initializeDomains()
+            ' domains setup
+            initializeDomains()
 
             '    ' register SIP
             '    initializeSIP()
@@ -124,7 +124,7 @@ Public Class ADToolsApplication
         MyBase.OnExit(e)
         'Try
         '    ' notify icon deinitialization
-        '    nicon.Visible = False
+        nicon.Visible = False
 
         '    ' save preferences
         '    deinitializePreferences()
