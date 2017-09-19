@@ -68,36 +68,6 @@
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
                     </Button>
                 </StackPanel>
-                <DockPanel DockPanel.Dock="Right" LastChildFill="True" Height="23">
-                    <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
-                    <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
-                        <ComboBox Name="cmboSearchDomains">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchDomains_AllDomains}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                    </Grid>
-                    <Grid>
-                        <ComboBox x:Name="cmboSearchPattern" Width="300" Text="" IsEditable="True" Margin="0,0,5,0"/>
-                        <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchObjects}" VerticalAlignment="Center" Margin="5,0,0,0">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=cmboSearchPattern}" Value="">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Grid>
-                </DockPanel>
                 <ToolBar x:Name="tlbrPath" VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Margin="0,0,5,0" />
             </DockPanel>
 
@@ -130,9 +100,9 @@
                         </Style>
                     </TreeView.Resources>
                     <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children[true]}">
+                        <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
                             <StackPanel Orientation="Horizontal" Height="23">
-                                <Image Source="{Binding Image}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
@@ -149,53 +119,104 @@
                     </TreeView.ItemTemplate>
                 </TreeView>
                 <DockPanel Grid.Column="2" LastChildFill="True">
-                    <DataGrid 
-                x:Name="dgObjects"
-                Foreground="Black"
-                ItemsSource="{Binding objects}"
-                AlternationCount="2"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
-                AutoGenerateColumns="False"
-                GridLinesVisibility="None"
-                IsSynchronizedWithCurrentItem="True" IsTextSearchEnabled="True">
-
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="⬕" Width="32">
-                                <DataGridTemplateColumn.CellTemplate>
+                    <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
+                        <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
+                        <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
+                            <ComboBox Name="cmboSearchDomains">
+                                <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Image Source="{Binding Image, Mode=OneWay}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                        </StackPanel>
                                     </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchDomains}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                        </Grid>
+                        <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
+                            <ComboBox Name="cmboSearchObjectClasses">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding Group}" Content="Group" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding Container}" Content="Container" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </ComboBox>
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchObjectClasses}" VerticalAlignment="Center" Margin="5,0,0,0" />
+                        </Grid>
+                        <Grid>
+                            <ComboBox x:Name="cmboSearchPattern" Text="" IsEditable="True" Margin="0,0,5,0"/>
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchObjects}" VerticalAlignment="Center" Margin="5,0,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=cmboSearchPattern}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </DockPanel>
 
-                            <DataGridTemplateColumn Header="Имя" Width="400" SortMemberPath="name" CanUserSort="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding name, Mode=OneWay}" ToolTip="name" VerticalAlignment="Center" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                    <Grid>
+                        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
+                        <DataGrid 
+                            x:Name="dgObjects"
+                            Foreground="Black"
+                            ItemsSource="{Binding objects}"
+                            AlternationCount="2"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            AutoGenerateColumns="False"
+                            GridLinesVisibility="None"
+                            IsReadOnly="True"
+                            IsSynchronizedWithCurrentItem="True" IsTextSearchEnabled="True">
 
-                            <DataGridTemplateColumn Header="Класс" Width="150" SortMemberPath="SchemaClassName" CanUserSort="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding SchemaClassName, Mode=OneWay}" ToolTip="SchemaClassName" VerticalAlignment="Center" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="⬕" Width="32">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Source="{Binding Image, Mode=OneWay}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Создан" Width="110" SortMemberPath="whenCreated" CanUserSort="True">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding whenCreated, Mode=OneWay}" ToolTip="whenCreated" VerticalAlignment="Center" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Имя" Width="400" SortMemberPath="name" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding name, Mode=OneWay}" ToolTip="name" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                <DataGridTemplateColumn Header="Класс" Width="150" SortMemberPath="SchemaClassName" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding SchemaClassName, Mode=OneWay}" ToolTip="SchemaClassName" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
+                                <DataGridTemplateColumn Header="Создан" Width="110" SortMemberPath="whenCreated" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding whenCreated, Mode=OneWay}" ToolTip="whenCreated" VerticalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
                 </DockPanel>
             </Grid>
         </DockPanel>

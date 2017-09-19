@@ -1,0 +1,79 @@
+﻿<Window x:Class="wndErrorLog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        Title="Отладка" Height="667.364" Width="795.188" WindowStartupLocation="Manual" ShowInTaskbar="True" Icon="/images/app.ico">
+    <Grid>
+        <DataGrid 
+                Name="dgLog"
+                Margin="5"
+                Foreground="Black"
+                AlternationCount="2"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="None"
+                IsSynchronizedWithCurrentItem="True"
+                IsReadOnly="True"
+            >
+            <DataGrid.CommandBindings>
+                <CommandBinding Command="Copy" Executed="ctxmnuErrorCopy_Click" />
+            </DataGrid.CommandBindings>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
+            </DataGrid.InputBindings>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="ctxmnuErrorCopy" Header="Копировать" InputGestureText="Ctrl+C"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="⬕" Width="30">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Время" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TimeStamp}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Команда" Width="150" SortMemberPath="Command" CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Command}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Объект" Width="150" SortMemberPath="Result" CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Obj}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Ошибка" Width="*" SortMemberPath="Err" CanUserSort="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Err}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</Window>
+

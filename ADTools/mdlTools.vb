@@ -3,12 +3,16 @@ Imports System.Reflection
 Imports Microsoft.Win32
 Imports IRegisty
 Imports System.Windows.Forms
+Imports IPrompt.VisualBasic
+Imports System.DirectoryServices
 
 Module mdlTools
 
     Public regApplication As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\" & My.Application.Info.AssemblyName)
     Public regDomains As RegistryKey = regApplication.CreateSubKey("Domains")
+    Public regPreferences As RegistryKey = regApplication.CreateSubKey("Preferences")
 
+    Public preferences As clsPreferences
     Public domains As New ObservableCollection(Of clsDomain)
 
     Public Const ADS_UF_SCRIPT = 1 '0x1
@@ -38,37 +42,159 @@ Module mdlTools
     Public Const ADS_GROUP_TYPE_UNIVERSAL_GROUP = 8 '0x00000008
     Public Const ADS_GROUP_TYPE_SECURITY_ENABLED = -2147483648 '0x80000000
 
-    Public Sub initializeDomains()
-        domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
+    Public columnsDefault As New ObservableCollection(Of clsDataGridColumnInfo) From {
+        New clsDataGridColumnInfo("⬕", New List(Of clsAttribute) From {New clsAttribute("Image", "⬕")}, 0, 45),
+        New clsDataGridColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
+        New clsDataGridColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedName", "LDAP-путь")}, 2, 450),
+        New clsDataGridColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
+        New clsDataGridColumnInfo("Место работы", New List(Of clsAttribute) From {New clsAttribute("title", "Должность"), New clsAttribute("department", "Подразделение"), New clsAttribute("company", "Компания")}, 4, 300),
+        New clsDataGridColumnInfo("Основной адрес", New List(Of clsAttribute) From {New clsAttribute("mail", "Основной адрес")}, 5, 170),
+        New clsDataGridColumnInfo("Объект", New List(Of clsAttribute) From {New clsAttribute("whenCreatedFormated", "Создан (формат)"), New clsAttribute("lastLogonFormated", "Последний вход (формат)"), New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")}, 6, 150),
+        New clsDataGridColumnInfo("Пароль", New List(Of clsAttribute) From {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)"), New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")}, 7, 150)}
 
+    Public attributesDefault As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("accountExpires", "Объект истекает")},
+        {New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")},
+        {New clsAttribute("badPwdCount", "Ошибок ввода пароля")},
+        {New clsAttribute("company", "Компания")},
+        {New clsAttribute("department", "Подразделение")},
+        {New clsAttribute("description", "Описание")},
+        {New clsAttribute("disabled", "Заблокирован")},
+        {New clsAttribute("disabledFormated", "Заблокирован (формат)")},
+        {New clsAttribute("displayName", "Отображаемое имя")},
+        {New clsAttribute("distinguishedName", "LDAP-путь")},
+        {New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")},
+        {New clsAttribute("givenName", "Имя")},
+        {New clsAttribute("Image", "⬕")},
+        {New clsAttribute("initials", "Инициалы")},
+        {New clsAttribute("lastLogonDate", "Последний вход")},
+        {New clsAttribute("lastLogonFormated", "Последний вход (формат)")},
+        {New clsAttribute("location", "Местонахождение")},
+        {New clsAttribute("logonCount", "Входов")},
+        {New clsAttribute("mail", "Основной адрес")},
+        {New clsAttribute("manager", "Руководитель")},
+        {New clsAttribute("name", "Имя объекта")},
+        {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
+        {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},
+        {New clsAttribute("passwordExpiresDate", "Пароль истекает")},
+        {New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")},
+        {New clsAttribute("physicalDeliveryOfficeName", "Офис")},
+        {New clsAttribute("pwdLastSetDate", "Пароль изменен")},
+        {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)")},
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")},
+        {New clsAttribute("SchemaClassName", "Класс")},
+        {New clsAttribute("sn", "Фамилия")},
+        {New clsAttribute("Status", "Статус")},
+        {New clsAttribute("StatusFormated", "Статус (формат)")},
+        {New clsAttribute("telephoneNumber", "Телефон")},
+        {New clsAttribute("thumbnailPhoto", "Фото")},
+        {New clsAttribute("title", "Должность")},
+        {New clsAttribute("userPrincipalName", "Имя входа")},
+        {New clsAttribute("whenCreated", "Создан")},
+        {New clsAttribute("whenCreatedFormated", "Создан (формат)")}
+    }
+    Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("name", "Имя объекта")},
+        {New clsAttribute("displayName", "Отображаемое имя")},
+        {New clsAttribute("givenName", "Имя")},
+        {New clsAttribute("sn", "Фамилия")},
+        {New clsAttribute("userPrincipalName", "Имя входа")}
+    }
+    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
+    }
+    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
+    }
+    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("name", "Имя объекта")}
+    }
 
+    Public Sub initializePreferences()
+        'Handlebars.Configuration.TextEncoder = Nothing
+        'Handlebars.RegisterHelper("lz",
+        '    Sub(writer, context, parameters)
+        '        Try
+        '            If parameters(1).ToString = "*" Then
+        '                writer.WriteSafeString("*")
+        '            Else
+        '                Dim int As String = Format(parameters(1), New String("0", parameters(0)))
+        '                writer.WriteSafeString(int)
+        '            End If
+        '        Catch ex As Exception
+        '        End Try
+        '    End Sub)
+
+        'Handlebars.RegisterHelper("fst",
+        '    Sub(writer, context, parameters)
+        '        Try
+        '            If CInt(parameters(0)) > parameters(1).ToString.Length Then
+        '                writer.WriteSafeString(parameters(1).ToString)
+        '            Else
+        '                writer.WriteSafeString(Mid(parameters(1).ToString, 1, parameters(0)))
+        '            End If
+        '        Catch ex As Exception
+        '        End Try
+        '    End Sub)
+
+        'Handlebars.RegisterHelper("trans",
+        '    Sub(writer, context, parameters)
+        '        Try
+        '            writer.WriteSafeString(Translit_RU_EN(parameters(0)))
+        '        Catch ex As Exception
+        '        End Try
+        '    End Sub)
+
+        'Handlebars.RegisterHelper("split",
+        '    Sub(writer, context, parameters)
+        '        Try
+        '            writer.WriteSafeString(If(Split(parameters(1), " ").Count >= parameters(0), Split(parameters(1), " ")(parameters(0)), ""))
+        '        Catch ex As Exception
+        '        End Try
+        '    End Sub)
+
+        preferences = IRegistrySerializer.Deserialize(GetType(clsPreferences), regPreferences)
     End Sub
 
-    Public Sub ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False)
-        If owner IsNot Nothing Then
-            If singleinstance Then
+    Public Sub initializeDomains()
+        domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
+    End Sub
+
+    Public Function ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
+        If singleinstance Then
+            If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
                     If w.GetType Is wnd.GetType Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
                         w.Topmost = True : w.Topmost = False
-                        Exit Sub
+                        w.Owner = owner
+                        Return w
+                    End If
+                Next
+            Else
+                For Each wnd As Window In Application.Current.Windows
+                    If w.GetType Is wnd.GetType Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        w.Owner = Nothing
+                        Return w
                     End If
                 Next
             End If
+        End If
 
-            w.Owner = owner
-
-            If modal Then
-                w.ShowDialog()
-            Else
-                w.Show()
-            End If
+        w.Owner = owner
+        If modal Then
+            w.ShowDialog()
         Else
             w.Show()
         End If
-    End Sub
+        Return w
+    End Function
 
     Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
         Try
@@ -134,5 +260,219 @@ Module mdlTools
         End With
     End Sub
 
+    Public Sub ShowWrongMemberMessage()
+        IMsgBox("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." & vbCrLf &
+               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." & vbCrLf &
+               "Локальная группа домена может быть членом только другой локальной группы домена." & vbCrLf & vbCrLf &
+               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." & vbCrLf &
+               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." & vbCrLf &
+               "Универсальная группа не может быть членом глобальной группы.", vbOKOnly + vbExclamation, "Неверный тип группы")
+    End Sub
 
+    Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As Window
+        If obj.objectClass.Contains("user") Then
+            Dim w As wndUser
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndUser) Is wnd.GetType AndAlso CType(wnd, wndUser).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndUser
+            If owner IsNot Nothing Then
+                w.Owner = owner
+                'w.Left = owner.Left + owner.ActualWidth / 2 - w.Width / 2
+                'w.Top = owner.Top + owner.ActualHeight / 2 - w.Height / 2
+            End If
+
+            w.currentobject = obj
+            w.Show()
+            Return w
+        ElseIf obj.objectClass.Contains("computer") Then
+            Dim w As wndComputer
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndComputer) Is wnd.GetType AndAlso CType(wnd, wndComputer).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndComputer
+            If owner IsNot Nothing Then w.Owner = owner
+            w.currentobject = obj
+            w.Show()
+            Return w
+        ElseIf obj.objectClass.Contains("group") Then
+            Dim w As wndGroup
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndGroup) Is wnd.GetType AndAlso CType(wnd, wndGroup).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndGroup
+            If owner IsNot Nothing Then w.Owner = owner
+            w.currentobject = obj
+            w.Show()
+            Return w
+        ElseIf obj.objectClass.Contains("contact") Then
+            Dim w As wndContact
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndContact
+            If owner IsNot Nothing Then
+                w.Owner = owner
+                'w.Left = owner.Left + owner.ActualWidth / 2 - w.Width / 2
+                'w.Top = owner.Top + owner.ActualHeight / 2 - w.Height / 2
+            End If
+
+            w.currentobject = obj
+            w.Show()
+            Return w
+        Else
+            Return Nothing
+        End If
+    End Function
+
+    Public Sub Log(message As String)
+        ADToolsApplication.tsocLog.Add(New clsLog(message))
+    End Sub
+
+    Public Function GetNextDomainTelephoneNumbers(domain As clsDomain) As ObservableCollection(Of clsTelephoneNumber)
+        If domain Is Nothing Then Return Nothing
+        Dim patterns As ObservableCollection(Of clsTelephoneNumberPattern) = domain.TelephoneNumberPattern
+        If patterns.Count = 0 Then Return Nothing
+        Dim de As DirectoryEntry = domain.DefaultNamingContext
+        If de Is Nothing Then Return Nothing
+
+        Dim result As New ObservableCollection(Of clsTelephoneNumber)
+
+        Dim LDAPsearcher As New DirectorySearcher(de)
+        Dim LDAPresults As SearchResultCollection = Nothing
+        Dim LDAPresult As SearchResult
+
+        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        LDAPsearcher.PropertiesToLoad.Add("userAccountControl")
+        LDAPsearcher.PropertiesToLoad.Add("telephoneNumber")
+
+        For Each pattern As clsTelephoneNumberPattern In patterns
+            If Not pattern.Range.Contains("-") Then Continue For
+            Dim numstart As Long = 0
+            Dim numend As Long = 0
+            If Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(0), numstart) Or
+               Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(1), numend) Then Continue For
+
+            LDAPsearcher.Filter = "(&(objectCategory=person)(!(objectClass=inetOrgPerson))(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(telephoneNumber=*))"
+            LDAPsearcher.PageSize = 1000
+            LDAPresults = LDAPsearcher.FindAll()
+
+            Dim dummy As New List(Of String)
+            For Each LDAPresult In LDAPresults
+                dummy.Add(GetLDAPProperty(LDAPresult.Properties, "telephoneNumber"))
+            Next LDAPresult
+
+            For I As Long = numstart To numend
+                Dim u As String = LCase(Format(I, pattern.Pattern))
+                If Not dummy.Contains(u) Then
+                    result.Add(New clsTelephoneNumber(pattern.Label, u))
+                    Exit For
+                End If
+            Next
+        Next
+
+        Return result
+    End Function
+
+    Public Function GetApplicationIcon(fileName As String) As ImageSource
+        Dim ai As System.Drawing.Icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName)
+        Return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(ai.Handle, New Int32Rect(0, 0, ai.Width, ai.Height), BitmapSizeOptions.FromEmptyOptions())
+    End Function
+
+    Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn
+        Dim BasicProperties As PropertyInfo() = GetType(clsDirectoryObject).GetProperties()
+        Dim BasicPropertiesNames As String() = BasicProperties.Select(Function(x As PropertyInfo) x.Name).ToArray
+
+        Dim column As New DataGridTemplateColumn()
+        column.Header = columninfo.Header
+        column.SetValue(DataGridColumn.CanUserSortProperty, True)
+        If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
+        If columninfo.Width > 0 Then column.Width = columninfo.Width
+        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+        panel.SetValue(VirtualizingStackPanel.VerticalAlignmentProperty, VerticalAlignment.Center)
+        panel.SetValue(VirtualizingStackPanel.MarginProperty, New Thickness(5, 0, 5, 0))
+        Dim first As Boolean = True
+        For Each attr As clsAttribute In columninfo.Attributes
+            Dim bind As System.Windows.Data.Binding
+
+            If BasicPropertiesNames.Contains(attr.Name) Then
+                bind = New System.Windows.Data.Binding(attr.Name)
+            Else
+                bind = New System.Windows.Data.Binding("Attr[" & attr.Name & "]")
+            End If
+            bind.Mode = BindingMode.OneWay
+
+            If attr.Name <> "Image" Then
+
+                Dim text As New FrameworkElementFactory(GetType(TextBlock))
+                If first Then
+                    text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
+                    first = False
+                    column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+                End If
+                text.SetBinding(TextBlock.TextProperty, bind)
+                text.SetValue(TextBlock.ToolTipProperty, attr.Label)
+                'text.SetValue(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow)
+                panel.AppendChild(text)
+
+            Else
+
+                Dim ttbind As New System.Windows.Data.Binding("Status")
+                ttbind.Mode = BindingMode.OneWay
+                Dim img As New FrameworkElementFactory(GetType(Image))
+                column.SetValue(clsSorter.PropertyNameProperty, "Image")
+                img.SetBinding(Image.SourceProperty, bind)
+                img.SetValue(Image.WidthProperty, 32.0)
+                img.SetValue(Image.HeightProperty, 32.0)
+                img.SetBinding(Image.ToolTipProperty, ttbind)
+                panel.AppendChild(img)
+
+            End If
+            'Status
+        Next
+
+        Dim template As New DataTemplate()
+        template.VisualTree = panel
+
+        column.CellTemplate = template
+
+        Return column
+    End Function
 End Module

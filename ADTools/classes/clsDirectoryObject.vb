@@ -4,66 +4,35 @@ Imports System.DirectoryServices
 Imports System.Security.Principal
 
 Public Class clsDirectoryObject
+    Inherits Dynamic.DynamicObject
     Implements INotifyPropertyChanged
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     Private _entry As DirectoryEntry
+    Private _searchresult As SearchResult
     Private _domain As clsDomain
-    Private _tag As Object
     Private _children As New ObservableCollection(Of clsDirectoryObject)
+    Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
 
-    Private _allowedAttributes As List(Of String)
-    Private _allowedAttributesEffective As List(Of String)
+    Private _properties As New Dictionary(Of String, Object)
 
-    'Private _allAttributes As ObservableCollection(Of clsAttribute)
-
-    Private _sn As String
-    Private _initials As String
-    Private _givenName As String
-    Private _distinguishedName As String
-    Private _displayName As String
-    Private _description As String
-    Private _info As String
-    Private _location As String
-    Private _physicalDeliveryOfficeName As String
-    Private _company As String
     Private _manager As clsDirectoryObject
     Private _employees As ObservableCollection(Of clsDirectoryObject)
-    Private _name As String
-    Private _telephoneNumber As String
-    Private _homePhone As String
-    Private _ipPhone As String
-    Private _mobile As String
-    Private _streetAddress As String
-    Private _mail As String
-    Private _title As String
-    Private _department As String
-    Private _sAMAccountName As String
-    Private _userPrincipalName As String
-    Private _groupType As Long = 0
-    Private _userAccountControl As Integer? = Nothing
-    Private _badPwdCount As Integer? = Nothing
-    Private _logonCount As Integer? = Nothing
-    Private _objectGUID As String
-    Private _objectSID As String
     Private _memberOf As ObservableCollection(Of clsDirectoryObject)
     Private _member As ObservableCollection(Of clsDirectoryObject)
-    'Private _publicDelegates() As Object
-    Private _whenCreated As Date
-    Private _whenChanged As Date
-    Private _lastLogon As Long? = Nothing
-    Private _pwdLastSet As Long? = Nothing
-    Private _passwordExpiresDate As Date
-    Private _accountExpires As Long? = Nothing
-    Private _dnshostname As String
-    Private _operatingsystemversion As String
-    Private _operatingsystem As String
-    Private _thumbnailPhoto() As Byte
-    Private _userWorkstations() As String
 
     Private Sub NotifyPropertyChanged(propertyName As String)
         Me.OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
+    End Sub
+
+    Public Sub NotifyMoved()
+        NotifyPropertyChanged("distinguishedName")
+        NotifyPropertyChanged("distinguishedNameFormated")
+    End Sub
+
+    Public Sub NotifyRenamed()
+        NotifyPropertyChanged("name")
     End Sub
 
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
@@ -75,174 +44,36 @@ Public Class clsDirectoryObject
         _domain = Domain
     End Sub
 
-    Public Sub Refresh()
-        _sn = Nothing
-        _initials = Nothing
-        _givenName = Nothing
-        _distinguishedName = Nothing
-        _displayName = Nothing
-        _description = Nothing
-        _physicalDeliveryOfficeName = Nothing
-        _company = Nothing
-        _manager = Nothing
-        _employees = Nothing
-        _name = Nothing
-        _telephoneNumber = Nothing
-        _homePhone = Nothing
-        _mobile = Nothing
-        _ipPhone = Nothing
-        _streetAddress = Nothing
-        _mail = Nothing
-        _title = Nothing
-        _department = Nothing
-        _sAMAccountName = Nothing
-        _userPrincipalName = Nothing
-        _groupType = 0
-        _userAccountControl = Nothing
-        _badPwdCount = Nothing
-        _logonCount = Nothing
-        _objectGUID = Nothing
-        _objectSID = Nothing
-        _memberOf = Nothing
-        _member = Nothing
-        _whenCreated = Nothing
-        _whenChanged = Nothing
-        _lastLogon = Nothing
-        _pwdLastSet = Nothing
-        _passwordExpiresDate = Nothing
-        _accountExpires = Nothing
-        _thumbnailPhoto = Nothing
-
-        Entry.RefreshCache()
+    Sub New(SearchResult As SearchResult, ByRef Domain As clsDomain)
+        Me.SearchResult = SearchResult
+        _domain = Domain
     End Sub
-
-    Public Function GetProperty(PropertyName As String) As Object
-        If Entry Is Nothing Then Return Nothing
-
-        Entry.RefreshCache({PropertyName})
-        Dim pvc As PropertyValueCollection = Entry.Properties(PropertyName)
-
-        If pvc.Value Is Nothing Then Return Nothing
-
-        Select Case pvc.Value.GetType()
-            Case GetType(String)
-                Return pvc.Value
-            Case GetType(Integer)
-                Return pvc.Value
-            Case GetType(Byte())
-                Return pvc.Value
-            Case GetType(Object())
-                Return pvc.Value
-            Case GetType(DateTime)
-                Return pvc.Value
-            Case GetType(Boolean)
-                Return pvc.Value
-            Case Else 'System.__ComObject
-                Try
-                    Return LongFromLargeInteger(pvc.Value)
-                Catch
-                    Return pvc.Value
-                End Try
-        End Select
-
-    End Function
-
-    Public Function SetProperty(PropertyName As String, Value As Object) As Boolean
-        Try
-            If IsNumeric(Value) Or IsDate(Value) Or Len(Value) > 0 Then
-                _entry.Properties(PropertyName).Value = Trim(Value)
-            Else
-                _entry.Properties(PropertyName).Clear()
-            End If
-
-            _entry.CommitChanges()
-
-            Return True
-        Catch ex As Exception
-            ThrowException(ex, "SetProperty")
-            Return False
-        End Try
-    End Function
-
-    Public ReadOnly Property CustomProperty(PropertyName As String) As Object
-        Get
-            Return GetProperty(PropertyName)
-        End Get
-    End Property
-
-    Public ReadOnly Property allowedAttributes() As List(Of String)
-        Get
-            If _allowedAttributes Is Nothing Then
-                Dim a As Object = GetProperty("allowedAttributes")
-                If IsArray(a) Then          'если атрибутов несколько
-                    _allowedAttributes = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-                ElseIf a Is Nothing Then    'если атрибутов нет
-                    _allowedAttributes = New List(Of String)
-                Else                        'если атрибут один
-                    _allowedAttributes = New List(Of String)({a.ToString})
-                End If
-            End If
-            Return _allowedAttributes
-        End Get
-    End Property
-
-    Public ReadOnly Property allowedAttributesEffective() As List(Of String)
-        Get
-            If _allowedAttributesEffective Is Nothing Then
-                Dim a As Object = GetProperty("allowedAttributesEffective")
-                If IsArray(a) Then          'если атрибутов несколько
-                    _allowedAttributesEffective = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-                ElseIf a Is Nothing Then    'если атрибутов нет
-                    _allowedAttributesEffective = New List(Of String)
-                Else                        'если атрибут один
-                    _allowedAttributesEffective = New List(Of String)({a.ToString})
-                End If
-            End If
-            Return _allowedAttributesEffective
-        End Get
-    End Property
-
-    Public ReadOnly Property CanWrite(PropertyName As String) As Boolean
-        Get
-            Return allowedAttributesEffective.Contains(PropertyName, StringComparer.OrdinalIgnoreCase)
-        End Get
-    End Property
-
-    Public ReadOnly Property IsReadOnly(PropertyName As String) As Boolean
-        Get
-            Return Not allowedAttributesEffective.Contains(PropertyName, StringComparer.OrdinalIgnoreCase)
-        End Get
-    End Property
-
-    'Public ReadOnly Property AllAttributes As ObservableCollection(Of clsAttribute)
-    '    Get
-    '        If _allAttributes IsNot Nothing Then
-    '            Return _allAttributes
-    '        Else
-    '            Dim aa As New ObservableCollection(Of clsAttribute)
-    '            For Each attr As String In allowedAttributes
-    '                aa.Add(New clsAttribute(attr, "", CustomProperty(attr)))
-    '            Next
-    '            If aa.Count > 0 Then _allAttributes = aa
-    '            Return _allAttributes
-    '        End If
-    '    End Get
-    'End Property
 
     Public Property Entry() As DirectoryEntry
         Get
             Return _entry
         End Get
         Set(ByVal value As DirectoryEntry)
-            _entry = value
             Try
-                Dim o As Object = _entry.NativeObject
+                Dim o As Object = value.NativeObject
+                _entry = value
             Catch
                 _entry = Nothing
-                _name = "{unknown}"
             End Try
 
             NotifyPropertyChanged("Entry")
+        End Set
+    End Property
+
+    Public Property SearchResult() As SearchResult
+        Get
+            Return _searchresult
+        End Get
+        Set(ByVal value As SearchResult)
+            _searchresult = value
+            Entry = _searchresult.GetDirectoryEntry
+
+            NotifyPropertyChanged("SearchResult")
         End Set
     End Property
 
@@ -252,55 +83,197 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    Public ReadOnly Property SchemaClassName() As String
-        Get
-            Return If(Entry IsNot Nothing, Entry.SchemaClassName, Nothing)
-        End Get
-    End Property
 
-    Public ReadOnly Property Children(Optional containersonly As Boolean = False) As ObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property Children() As ObservableCollection(Of clsDirectoryObject)
         Get
             _children.Clear()
+            If Entry Is Nothing Then Return _childcontainers
 
-            Dim ds As New DirectorySearcher(_entry)
+            Dim ds As New DirectorySearcher(Entry)
+            ds.Tombstone = True
             ds.PropertiesToLoad.AddRange({"name", "objectClass"})
             ds.SearchScope = SearchScope.OneLevel
 
-            If containersonly Then
-                ds.Filter = "(|(objectClass=organizationalUnit)(objectClass=container))"
-                For Each sr As SearchResult In ds.FindAll()
-                    _children.Add(New clsDirectoryObject(sr.GetDirectoryEntry(), Domain))
-                Next
-            Else
-                For Each sr As SearchResult In ds.FindAll()
-                    _children.Add(New clsDirectoryObject(sr.GetDirectoryEntry(), Domain))
-                Next
-            End If
+            For Each sr As SearchResult In ds.FindAll()
+                _children.Add(New clsDirectoryObject(sr, Domain))
+            Next
+
             Return _children
         End Get
     End Property
 
-    Public Sub ResetPassword()
-        If Domain.DefaultPassword = "" Then Throw New Exception("Стандартный пароль в целевом домене не указан")
+    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            _childcontainers.Clear()
+            If Entry Is Nothing Then Return _childcontainers
 
-        _entry.Invoke("SetPassword", Domain.DefaultPassword)
-        pwdLastSet = 0
-        _entry.CommitChanges()
-        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
-    End Sub
+            Dim ds As New DirectorySearcher(Entry)
+            ds.PropertiesToLoad.AddRange({"name", "objectClass"})
+            ds.SearchScope = SearchScope.OneLevel
+            ds.Filter = "(|(objectClass=organizationalUnit)(objectClass=container))"
+            For Each sr As SearchResult In ds.FindAll()
+                _childcontainers.Add(New clsDirectoryObject(sr, Domain))
+            Next
+            Return _childcontainers
+        End Get
+    End Property
 
-    Public Sub SetPassword(password As String)
-        _entry.Invoke("SetPassword", password)
-        pwdLastSet = -1
-        _entry.CommitChanges()
-        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
-    End Sub
+    Public ReadOnly Property CanWrite(name As String) As Boolean
+        Get
+            Return AllowedAttributesEffective.Contains(name, StringComparer.OrdinalIgnoreCase)
+        End Get
+    End Property
+
+    Public ReadOnly Property IsReadOnly(name As String) As Boolean
+        Get
+            Return Not AllowedAttributesEffective.Contains(name, StringComparer.OrdinalIgnoreCase)
+        End Get
+    End Property
+
+    Public ReadOnly Property HasValue(name As String) As Boolean
+        Get
+            Return LdapProperty(name) IsNot Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property AllowedAttributes() As List(Of String)
+        Get
+            If LdapProperty("allowedAttributes") Is Nothing Then Entry.RefreshCache({"allowedAttributes"})
+
+            Dim a As Object = LdapProperty("allowedAttributes")
+            If IsArray(a) Then
+                Return New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
+            ElseIf a Is Nothing Then
+                Return New List(Of String)
+            Else
+                Return New List(Of String)({a.ToString})
+            End If
+        End Get
+    End Property
+
+    Public ReadOnly Property AllowedAttributesEffective() As List(Of String)
+        Get
+            If LdapProperty("allowedAttributesEffective") Is Nothing Then Entry.RefreshCache({"allowedAttributesEffective"})
+
+            Dim a As Object = LdapProperty("allowedAttributesEffective")
+            If IsArray(a) Then
+                Return New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
+            ElseIf a Is Nothing Then
+                Return New List(Of String)
+            Else
+                Return New List(Of String)({a.ToString})
+            End If
+        End Get
+    End Property
+
+    Public ReadOnly Property AllAttributes As ObservableCollection(Of clsAttribute)
+        Get
+            Dim aa As New ObservableCollection(Of clsAttribute)
+            For Each attr As String In AllowedAttributes
+                aa.Add(New clsAttribute(attr, "", Me.LdapProperty(attr)))
+            Next
+            Return aa
+        End Get
+    End Property
+
+    Private Property LdapProperty(name As String) As Object
+        Get
+            If _properties.ContainsKey(name) Then Return _properties(name)
+
+            Dim value As Object = Nothing
+            Dim valuetyped As Object = Nothing
+
+            If Entry IsNot Nothing Then
+                Entry.RefreshCache({name})
+                Dim pvc As PropertyValueCollection = Entry.Properties(name)
+                If pvc.Value IsNot Nothing Then value = pvc.Value
+            ElseIf SearchResult IsNot Nothing Then
+                Dim rpvc As ResultPropertyValueCollection = SearchResult.Properties(name)
+                If rpvc.Count > 0 AndAlso rpvc.Item(0) IsNot Nothing Then value = rpvc.Item(0)
+            End If
+
+            If value Is Nothing Then Return Nothing
+
+            Select Case value.GetType()
+                Case GetType(String)
+                    valuetyped = value
+                Case GetType(Integer)
+                    valuetyped = value
+                Case GetType(Byte())
+                    valuetyped = value
+                Case GetType(Object())
+                    valuetyped = value
+                Case GetType(DateTime)
+                    valuetyped = value
+                Case GetType(Boolean)
+                    valuetyped = value
+                Case Else 'System.__ComObject
+                    Try
+                        valuetyped = LongFromLargeInteger(value)
+                    Catch
+                        valuetyped = value
+                    End Try
+            End Select
+
+            _properties.Add(name, valuetyped)
+
+            Return valuetyped
+        End Get
+        Set(value As Object)
+            Try
+                If Entry Is Nothing Then Exit Property
+                If IsNumeric(value) Or IsDate(value) Or Len(value) > 0 Then
+                    Entry.Properties(name).Value = Trim(value)
+                Else
+                    Entry.Properties(name).Clear()
+                End If
+
+                Entry.CommitChanges()
+
+                NotifyPropertyChanged(name)
+            Catch ex As Exception
+                ThrowException(ex, "Set LdapProperty")
+            End Try
+        End Set
+    End Property
+
+    Public Overrides Function TryGetMember(ByVal binder As Dynamic.GetMemberBinder, ByRef result As Object) As Boolean
+        result = LdapProperty(binder.Name)
+        Return True
+    End Function
+
+    Public Overrides Function TrySetMember(ByVal binder As Dynamic.SetMemberBinder, ByVal value As Object) As Boolean
+        LdapProperty(binder.Name) = value
+        NotifyPropertyChanged(binder.Name)
+        Return True
+    End Function
+
+    'Default Public Property Attr(name As String) As Object
+    '    Get
+    '        Dim staticprops = Me.GetType.GetProperties()
+    '        Dim props = Me.GetType.GetProperties().Where(Function(p) LCase(p.Name) = LCase(name))
+    '        If props.Count = 1 Then
+    '            Return props(0).GetValue(Me)
+    '        Else
+    '            Return LdapAttr(name)
+    '        End If
+    '    End Get
+    '    Set(value)
+    '        Dim staticprops = Me.GetType.GetProperties()
+    '        Dim props = Me.GetType.GetProperties().Where(Function(p) LCase(p.Name) = LCase(name))
+    '        If props.Count = 1 Then
+    '            props(0).SetValue(Me, value)
+    '        Else
+    '            LdapAttr(name) = value
+    '        End If
+    '    End Set
+    'End Property
 
     Public ReadOnly Property Status() As String
         Get
             Dim _statusFormated As String = ""
 
-            If SchemaClassName = "user" Or SchemaClassName = "computer" Then
+            If objectClass.Contains("user") Or objectClass.Contains("computer") Then
                 If passwordNeverExpires Is Nothing Then
                     _statusFormated &= "Срок действия пароля неизвестен" & vbCr
                 ElseIf passwordNeverExpires = False Then
@@ -329,103 +302,144 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    Public Property Tag() As Object
+    Public ReadOnly Property ClassImage() As BitmapImage
         Get
-            Return _tag
+            Dim _image As String = ""
+            Dim oc As String() = objectClass
+
+            If oc.Contains("user") Then
+                _image = "images/user.ico"
+            ElseIf oc.Contains("computer") Then
+                _image = "images/computer.ico"
+            ElseIf oc.Contains("group") Then
+                _image = "images/group.ico"
+            ElseIf oc.Contains("contact") Then
+                _image = "images/contact.ico"
+            ElseIf oc.Contains("domaindns") Then
+                _image = "images/domain.ico"
+            ElseIf oc.Contains("organizationalunit") Then
+                _image = "images/organizationalunit.ico"
+            ElseIf oc.Contains("container") Then
+                _image = "images/container.ico"
+            Else
+                If name = "Deleted Objects" Then
+                    _image = "images/container_deleted.ico"
+                Else
+                    _image = "images/object_unknown.ico"
+                End If
+            End If
+
+            Return New BitmapImage(New Uri("pack://application:,,,/" & _image))
         End Get
-        Set(ByVal value As Object)
-            _tag = value
-        End Set
     End Property
 
     Public ReadOnly Property Image() As BitmapImage
         Get
             Dim _image As String = ""
 
-            Select Case SchemaClassName
-                Case "user"
-                    _image = "images/user.ico"
-                    If passwordNeverExpires Is Nothing Then
+            If objectClass.Contains("user") Then
+                _image = "images/user.ico"
+                If passwordNeverExpires Is Nothing Then
+                    _image = "images/user_expired.ico"
+                ElseIf passwordNeverExpires = False Then
+                    If passwordExpiresDate = Nothing Then
                         _image = "images/user_expired.ico"
-                    ElseIf passwordNeverExpires = False Then
-                        If passwordExpiresDate = Nothing Then
-                            _image = "images/user_expired.ico"
-                        ElseIf passwordExpiresDate() <= Now Then
-                            _image = "images/user_expired.ico"
-                        End If
-                    End If
-
-                    If accountNeverExpires Is Nothing Then
-                        _image = "images/user_expired.ico"
-                    ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
+                    ElseIf passwordExpiresDate() <= Now Then
                         _image = "images/user_expired.ico"
                     End If
+                End If
 
-                    If disabled Is Nothing Then
-                        _image = "images/user_expired.ico"
-                    ElseIf disabled Then
-                        _image = "images/user_blocked.ico"
-                    End If
-                Case "computer"
-                    _image = "images/computer.ico"
-                    If passwordNeverExpires Is Nothing Then
-                        _image = "images/computer_expired.ico"
-                    ElseIf passwordNeverExpires = False Then
-                        If passwordExpiresDate = Nothing Then
-                            _image = "images/computer_expired.ico"
-                        ElseIf passwordExpiresDate() <= Now Then
-                            _image = "images/computer_expired.ico"
-                        End If
-                    End If
+                If accountNeverExpires Is Nothing Then
+                    _image = "images/user_expired.ico"
+                ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
+                    _image = "images/user_expired.ico"
+                End If
 
-                    If accountNeverExpires Is Nothing Then
+                If disabled Is Nothing Then
+                    _image = "images/user_expired.ico"
+                ElseIf disabled Then
+                    _image = "images/user_blocked.ico"
+                End If
+            ElseIf objectClass.Contains("computer") Then
+                _image = "images/computer.ico"
+                If passwordNeverExpires Is Nothing Then
+                    _image = "images/computer_expired.ico"
+                ElseIf passwordNeverExpires = False Then
+                    If passwordExpiresDate = Nothing Then
                         _image = "images/computer_expired.ico"
-                    ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
+                    ElseIf passwordExpiresDate() <= Now Then
                         _image = "images/computer_expired.ico"
                     End If
+                End If
 
-                    If disabled Is Nothing Then
-                        _image = "images/computer_expired.ico"
-                    ElseIf disabled Then
-                        _image = "images/computer_blocked.ico"
-                    End If
-                Case "group"
+                If accountNeverExpires Is Nothing Then
+                    _image = "images/computer_expired.ico"
+                ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
+                    _image = "images/computer_expired.ico"
+                End If
+
+                If disabled Is Nothing Then
+                    _image = "images/computer_expired.ico"
+                ElseIf disabled Then
+                    _image = "images/computer_blocked.ico"
+                End If
+            ElseIf objectClass.Contains("group") Then
+                _image = "images/group.ico"
+                If groupTypeSecurity Then
                     _image = "images/group.ico"
-                    If groupTypeSecurity Then
-                        _image = "images/group.ico"
-                    ElseIf groupTypeDistribution Then
-                        _image = "images/group_distribution.ico"
-                    Else
-                        _image = "images/object_unknown.ico"
-                    End If
-                Case "contact"
-                    _image = "images/contact.ico"
-                Case "domainDNS"
-                    _image = "images/domain.ico"
-                Case "organizationalUnit"
-                    _image = "images/organizationalunit.ico"
-                Case "container"
-                    _image = "images/container.ico"
-                Case Else
+                ElseIf groupTypeDistribution Then
+                    _image = "images/group_distribution.ico"
+                Else
                     _image = "images/object_unknown.ico"
-            End Select
+                End If
+            ElseIf objectClass.Contains("contact") Then
+                _image = "images/contact.ico"
+            ElseIf objectClass.Contains("domaindns") Then
+                _image = "images/domain.ico"
+            ElseIf objectClass.Contains("organizationalunit") Then
+                _image = "images/organizationalunit.ico"
+            ElseIf objectClass.Contains("container") Then
+                _image = "images/container.ico"
+            Else
+                If LdapProperty("name") = "Deleted Objects" Then
+                    _image = "images/container_deleted.ico"
+                Else
+                    _image = "images/object_unknown.ico"
+                End If
+            End If
+
 
             Return New BitmapImage(New Uri("pack://application:,,,/" & _image))
         End Get
     End Property
 
-    'cached ldap properties
+    Public Sub ResetPassword()
+        If Domain.DefaultPassword = "" Then Throw New Exception("Стандартный пароль в целевом домене не указан")
 
+        _entry.Invoke("SetPassword", Domain.DefaultPassword)
+        pwdLastSet = 0
+        _entry.CommitChanges()
+        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+    End Sub
+
+    Public Sub SetPassword(password As String)
+        _entry.Invoke("SetPassword", password)
+        pwdLastSet = -1
+        _entry.CommitChanges()
+        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+    End Sub
+
+
+    'cached ldap properties
 
 #Region "User attributes"
 
     Public Property sn() As String
         Get
-            _sn = If(_sn, If(GetProperty("sn"), ""))
-            Return _sn
+            Return If(LdapProperty("sn"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("sn", value) Then _sn = value
+            LdapProperty("sn") = value
 
             NotifyPropertyChanged("sn")
         End Set
@@ -433,11 +447,10 @@ Public Class clsDirectoryObject
 
     Public Property initials() As String
         Get
-            _initials = If(_initials, If(GetProperty("initials"), ""))
-            Return _initials
+            Return If(LdapProperty("initials"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("initials", value) Then _initials = value
+            LdapProperty("initials") = value
 
             NotifyPropertyChanged("initials")
         End Set
@@ -445,11 +458,10 @@ Public Class clsDirectoryObject
 
     Public Property givenName() As String
         Get
-            _givenName = If(_givenName, If(GetProperty("givenName"), ""))
-            Return _givenName
+            Return If(LdapProperty("givenName"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("givenName", value) Then _givenName = value
+            LdapProperty("givenName") = value
 
             NotifyPropertyChanged("givenName")
         End Set
@@ -457,11 +469,10 @@ Public Class clsDirectoryObject
 
     Public Property displayName() As String
         Get
-            _displayName = If(_displayName, If(GetProperty("displayName"), ""))
-            Return _displayName
+            Return If(LdapProperty("displayName"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("displayName", value) Then _displayName = value
+            LdapProperty("displayName") = value
 
             NotifyPropertyChanged("displayName")
         End Set
@@ -469,11 +480,10 @@ Public Class clsDirectoryObject
 
     Public Property physicalDeliveryOfficeName() As String
         Get
-            _physicalDeliveryOfficeName = If(_physicalDeliveryOfficeName, If(GetProperty("physicalDeliveryOfficeName"), ""))
-            Return _physicalDeliveryOfficeName
+            Return If(LdapProperty("physicalDeliveryOfficeName"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("physicalDeliveryOfficeName", value) Then _physicalDeliveryOfficeName = value
+            LdapProperty("physicalDeliveryOfficeName") = value
 
             NotifyPropertyChanged("physicalDeliveryOfficeName")
         End Set
@@ -481,11 +491,10 @@ Public Class clsDirectoryObject
 
     Public Property company() As String
         Get
-            _company = If(_company, If(GetProperty("company"), ""))
-            Return _company
+            Return If(LdapProperty("company"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("company", value) Then _company = value
+            LdapProperty("company") = value
 
             NotifyPropertyChanged("company")
         End Set
@@ -495,7 +504,7 @@ Public Class clsDirectoryObject
         Get
             If _manager Is Nothing Then
                 Try
-                    Dim managerDN As String = GetProperty("manager")
+                    Dim managerDN As String = LdapProperty("manager")
                     If managerDN Is Nothing Then
                         _manager = Nothing
                     Else
@@ -511,7 +520,8 @@ Public Class clsDirectoryObject
         End Get
         Set(value As clsDirectoryObject)
             Dim path() As String = value.Entry.Path.Split({"/"}, StringSplitOptions.RemoveEmptyEntries)
-            If SetProperty("manager", path(UBound(path))) Then _manager = value
+            LdapProperty("manager") = path(UBound(path))
+            _manager = value
 
             NotifyPropertyChanged("manager")
         End Set
@@ -519,11 +529,10 @@ Public Class clsDirectoryObject
 
     Public Property telephoneNumber() As String
         Get
-            _telephoneNumber = If(_telephoneNumber, If(GetProperty("telephoneNumber"), ""))
-            Return _telephoneNumber
+            Return If(LdapProperty("telephoneNumber"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("telephoneNumber", value) Then _telephoneNumber = value
+            LdapProperty("telephoneNumber") = value
 
             NotifyPropertyChanged("telephoneNumber")
         End Set
@@ -531,11 +540,10 @@ Public Class clsDirectoryObject
 
     Public Property homePhone() As String
         Get
-            _homePhone = If(_homePhone, If(GetProperty("homePhone"), ""))
-            Return _homePhone
+            Return If(LdapProperty("homePhone"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("homePhone", value) Then _homePhone = value
+            LdapProperty("homePhone") = value
 
             NotifyPropertyChanged("homePhone")
         End Set
@@ -543,11 +551,10 @@ Public Class clsDirectoryObject
 
     Public Property ipPhone() As String
         Get
-            _ipPhone = If(_ipPhone, If(GetProperty("ipPhone"), ""))
-            Return _ipPhone
+            Return If(LdapProperty("ipPhone"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("ipPhone", value) Then _ipPhone = value
+            LdapProperty("ipPhone") = value
 
             NotifyPropertyChanged("ipPhone")
         End Set
@@ -555,11 +562,10 @@ Public Class clsDirectoryObject
 
     Public Property mobile() As String
         Get
-            _mobile = If(_mobile, If(GetProperty("mobile"), ""))
-            Return _mobile
+            Return If(LdapProperty("mobile"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("mobile", value) Then _mobile = value
+            LdapProperty("mobile") = value
 
             NotifyPropertyChanged("mobile")
         End Set
@@ -567,11 +573,10 @@ Public Class clsDirectoryObject
 
     Public Property streetAddress() As String
         Get
-            _streetAddress = If(_streetAddress, If(GetProperty("streetAddress"), ""))
-            Return _streetAddress
+            Return If(LdapProperty("streetAddress"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("streetAddress", value) Then _streetAddress = value
+            LdapProperty("streetAddress") = value
 
             NotifyPropertyChanged("streetAddress")
         End Set
@@ -579,11 +584,10 @@ Public Class clsDirectoryObject
 
     Public Property mail() As String
         Get
-            _mail = If(_mail, If(GetProperty("mail"), ""))
-            Return _mail
+            Return If(LdapProperty("mail"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("mail", value) Then _mail = value
+            LdapProperty("mail") = value
 
             NotifyPropertyChanged("mail")
         End Set
@@ -591,11 +595,10 @@ Public Class clsDirectoryObject
 
     Public Property title() As String
         Get
-            _title = If(_title, If(GetProperty("title"), ""))
-            Return _title
+            Return If(LdapProperty("title"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("title", value) Then _title = value
+            LdapProperty("title") = value
 
             NotifyPropertyChanged("title")
         End Set
@@ -603,11 +606,10 @@ Public Class clsDirectoryObject
 
     Public Property department() As String
         Get
-            _department = If(_department, If(GetProperty("department"), ""))
-            Return _department
+            Return If(LdapProperty("department"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("department", value) Then _department = value
+            LdapProperty("department") = value
 
             NotifyPropertyChanged("department")
         End Set
@@ -615,11 +617,10 @@ Public Class clsDirectoryObject
 
     Public Property userPrincipalName() As String
         Get
-            _userPrincipalName = If(_userPrincipalName, If(GetProperty("userPrincipalName"), ""))
-            Return _userPrincipalName
+            Return If(LdapProperty("userPrincipalName"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("userPrincipalName", value) Then _userPrincipalName = value
+            LdapProperty("userPrincipalName") = value
 
             NotifyPropertyChanged("userPrincipalName")
         End Set
@@ -664,7 +665,7 @@ Public Class clsDirectoryObject
     Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberOf Is Nothing Then
-                Dim g As Object = GetProperty("memberOf")
+                Dim g As Object = LdapProperty("memberOf")
                 If IsArray(g) Then          'если групп несколько
                     _memberOf = New ObservableCollection(Of clsDirectoryObject)(CType(g, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                 ElseIf g Is Nothing Then    'если групп нет
@@ -682,40 +683,22 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
-    'Public ReadOnly Property publicDelegates() As Object()
-    'Get
-    '        If _publicDelegates Is Nothing Then
-    '            Dim Value As Object = GetProperty("publicDelegates")
-    '            If IsArray(Value) Then
-    '                _publicDelegates = Value
-    '            ElseIf Value Is Nothing Then
-    '                _publicDelegates = Nothing
-    '            Else
-    '                _publicDelegates = {Value}
-    '            End If
-    '        End If
-    '        Return _publicDelegates
-    '    End Get
-    'End Property
-
     Public ReadOnly Property msExchHideFromAddressLists() As Boolean
         Get
             _entry.RefreshCache({"msExchHideFromAddressLists"})
-            Return GetProperty("msExchHideFromAddressLists")
+            Return LdapProperty("msExchHideFromAddressLists")
         End Get
     End Property
 
     Public Property thumbnailPhoto() As Byte()
         Get
-            _thumbnailPhoto = If(_thumbnailPhoto, GetProperty("thumbnailPhoto"))
-            Return _thumbnailPhoto
+            Return LdapProperty("thumbnailPhoto")
         End Get
         Set(value As Byte())
             If value Is Nothing Then
                 Try
                     _entry.Properties("thumbnailPhoto").Clear()
                     _entry.CommitChanges()
-                    _thumbnailPhoto = Nothing
                 Catch ex As Exception
                     ThrowException(ex, "Clear thumbnailPhoto")
                 End Try
@@ -724,7 +707,6 @@ Public Class clsDirectoryObject
                     _entry.Properties("thumbnailPhoto").Clear()
                     _entry.Properties("thumbnailPhoto").Add(value)
                     _entry.CommitChanges()
-                    _thumbnailPhoto = value
                 Catch ex As Exception
                     ThrowException(ex, "Set thumbnailPhoto")
                 End Try
@@ -736,16 +718,10 @@ Public Class clsDirectoryObject
 
     Public Property userWorkstations() As String()
         Get
-            If _userWorkstations IsNot Nothing Then
-                Return _userWorkstations
-            Else
-                Dim str As String = GetProperty("userWorkstations")
-                _userWorkstations = If(str IsNot Nothing, str.Split({","}, StringSplitOptions.RemoveEmptyEntries), {})
-                Return _userWorkstations
-            End If
+            Return If(LdapProperty("userWorkstations") IsNot Nothing, LdapProperty("userWorkstations").Split({","}, StringSplitOptions.RemoveEmptyEntries), {})
         End Get
         Set(value As String())
-            If SetProperty("userWorkstations", Join(value, ",")) Then _userWorkstations = value
+            LdapProperty("userWorkstations") = Join(value, ",")
 
             NotifyPropertyChanged("userWorkstations")
         End Set
@@ -757,18 +733,16 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property dNSHostName As String
         Get
-            _dnshostname = If(_dnshostname, GetProperty("dNSHostName"))
-            Return _dnshostname
+            Return If(LdapProperty("dNSHostName"), "")
         End Get
     End Property
 
     Public Property location() As String
         Get
-            _location = If(_location, If(GetProperty("location"), ""))
-            Return _location
+            Return If(LdapProperty("location"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("location", value) Then _location = value
+            LdapProperty("location") = value
 
             NotifyPropertyChanged("location")
         End Set
@@ -776,15 +750,13 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property operatingSystem() As String
         Get
-            _operatingsystem = If(_operatingsystem, If(GetProperty("operatingSystem"), ""))
-            Return _operatingsystem
+            Return If(LdapProperty("operatingSystem"), "")
         End Get
     End Property
 
     Public ReadOnly Property operatingSystemVersion() As String
         Get
-            _operatingsystemversion = If(_operatingsystemversion, If(GetProperty("operatingSystemVersion"), ""))
-            Return _operatingsystemversion
+            Return If(LdapProperty("operatingSystemVersion"), "")
         End Get
     End Property
 
@@ -794,15 +766,15 @@ Public Class clsDirectoryObject
 
     Public Property groupType() As Long
         Get
-            _groupType = If(_groupType <> 0, _groupType, GetProperty("groupType"))
-            Return _groupType
+            Return LdapProperty("groupType")
         End Get
         Set(ByVal value As Long)
-            If SetProperty("groupType", value) Then
-                _groupType = value
-            Else
-                'ShowWrongMemberMessage()
-            End If
+            Try
+                LdapProperty("groupType") = value
+            Catch ex As Exception
+                ShowWrongMemberMessage()
+            End Try
+
             NotifyPropertyChanged("groupType")
             NotifyPropertyChanged("groupTypeScopeDomainLocal")
             NotifyPropertyChanged("groupTypeScopeDomainGlobal")
@@ -901,11 +873,10 @@ Public Class clsDirectoryObject
 
     Public Property info() As String
         Get
-            _info = If(_info, If(GetProperty("info"), ""))
-            Return _info
+            Return If(LdapProperty("info"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("info", value) Then _info = value
+            LdapProperty("info") = value
 
             NotifyPropertyChanged("info")
         End Set
@@ -914,7 +885,7 @@ Public Class clsDirectoryObject
     Public Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _member Is Nothing Then
-                Dim o As Object = GetProperty("member")
+                Dim o As Object = LdapProperty("member")
                 If IsArray(o) Then          'если объектов несколько
                     _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                 ElseIf o Is Nothing Then    'если объектов нет
@@ -936,13 +907,27 @@ Public Class clsDirectoryObject
 
 #Region "Shared attributes"
 
+    Public ReadOnly Property objectClass() As String()
+        Get
+            Try
+                Dim oc = LdapProperty("objectclass")
+                If IsArray(oc) Then
+                    Return CType(oc, Object()).Select(Function(x) LCase(x.ToString)).ToArray
+                Else
+                    Return New String() {oc}
+                End If
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End Get
+    End Property
+
     Public Property accountExpires() As Long?
         Get
-            _accountExpires = If(_accountExpires, GetProperty("accountExpires"))
-            Return _accountExpires
+            Return LdapProperty("accountExpires")
         End Get
         Set(ByVal value As Long?)
-            If value IsNot Nothing AndAlso SetProperty("accountExpires", value.ToString) Then _accountExpires = value
+            If value IsNot Nothing Then LdapProperty("accountExpires") = value
 
             NotifyPropertyChanged("accountExpires")
             NotifyPropertyChanged("accountExpiresDate")
@@ -1013,33 +998,24 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property badPwdCount() As Integer?
         Get
-            _badPwdCount = If(_badPwdCount, GetProperty("badPwdCount"))
-            Return _badPwdCount
+            Return LdapProperty("badPwdCount")
         End Get
     End Property
 
     Public Property description() As String
         Get
-            _description = If(_description, If(GetProperty("description"), ""))
-            Return _description
+            Return If(LdapProperty("description"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("description", value) Then _description = value
+            LdapProperty("description") = value
 
             NotifyPropertyChanged("description")
         End Set
     End Property
 
-    Public Sub NotifyMoved()
-        _distinguishedName = Nothing
-        NotifyPropertyChanged("distinguishedName")
-        NotifyPropertyChanged("distinguishedNameFormated")
-    End Sub
-
     Public ReadOnly Property distinguishedName() As String
         Get
-            _distinguishedName = If(_distinguishedName, If(GetProperty("distinguishedName"), ""))
-            Return _distinguishedName
+            Return If(LdapProperty("distinguishedName"), "")
         End Get
     End Property
 
@@ -1058,8 +1034,7 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property lastLogon() As Long?
         Get
-            _lastLogon = If(_lastLogon, GetProperty("lastLogon"))
-            Return _lastLogon
+            Return LdapProperty("lastLogon")
         End Get
     End Property
 
@@ -1085,53 +1060,40 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property logonCount() As Integer
         Get
-            _logonCount = If(_logonCount, GetProperty("logonCount"))
-            Return _logonCount
+            Return LdapProperty("logonCount")
         End Get
     End Property
 
     Public ReadOnly Property name() As String
         Get
-            _name = If(_name, If(GetProperty("name"), ""))
-            Return _name
+            Return If(LdapProperty("name"), "")
         End Get
     End Property
 
-    Public Sub NotifyRenamed()
-        _name = Nothing
-        NotifyPropertyChanged("name")
-    End Sub
-
     Public ReadOnly Property objectGUID() As String
         Get
-            _objectGUID = If(_objectGUID, New Guid(TryCast(GetProperty("objectGUID"), Byte())).ToString)
-            Return _objectGUID
+            Return New Guid(TryCast(LdapProperty("objectGUID"), Byte())).ToString
         End Get
     End Property
 
     Public ReadOnly Property objectSID() As String
         Get
-            If _objectSID IsNot Nothing Then
-                Return _objectSID
-            Else
-                Try
-                    Dim sid As New SecurityIdentifier(TryCast(GetProperty("objectSid"), Byte()), 0)
-                    If sid.IsAccountSid Then _objectSID = sid.ToString
-                    Return _objectSID
-                Catch
-                    Return Nothing
-                End Try
-            End If
+            Try
+                Dim sid As New SecurityIdentifier(TryCast(LdapProperty("objectSid"), Byte()), 0)
+                If sid.IsAccountSid Then Return sid.ToString
+                Return Nothing
+            Catch
+                Return Nothing
+            End Try
         End Get
     End Property
 
     Public Property pwdLastSet() As Long?
         Get
-            _pwdLastSet = If(_pwdLastSet, GetProperty("pwdLastSet"))
-            Return _pwdLastSet
+            Return LdapProperty("pwdLastSet")
         End Get
         Set(ByVal value As Long?)
-            If value IsNot Nothing AndAlso SetProperty("pwdLastSet", value.ToString) Then _pwdLastSet = Nothing
+            If value IsNot Nothing Then LdapProperty("pwdLastSet") = value.ToString
 
             NotifyPropertyChanged("pwdLastSet")
             NotifyPropertyChanged("pwdLastSetDate")
@@ -1195,11 +1157,10 @@ Public Class clsDirectoryObject
 
     Public Property sAMAccountName() As String
         Get
-            _sAMAccountName = If(_sAMAccountName, If(GetProperty("sAMAccountName"), ""))
-            Return _sAMAccountName
+            Return If(LdapProperty("sAMAccountName"), "")
         End Get
         Set(ByVal value As String)
-            If SetProperty("sAMAccountName", value) Then _sAMAccountName = value
+            LdapProperty("sAMAccountName") = value
 
             NotifyPropertyChanged("sAMAccountName")
         End Set
@@ -1207,11 +1168,10 @@ Public Class clsDirectoryObject
 
     Public Property userAccountControl() As Integer?
         Get
-            _userAccountControl = If(_userAccountControl, GetProperty("userAccountControl"))
-            Return _userAccountControl
+            Return LdapProperty("userAccountControl")
         End Get
         Set(ByVal value As Integer?)
-            If value IsNot Nothing AndAlso SetProperty("userAccountControl", value) Then _userAccountControl = value
+            If value IsNot Nothing Then LdapProperty("userAccountControl") = value
 
             NotifyPropertyChanged("userAccountControl")
             NotifyPropertyChanged("normalAccount")
@@ -1295,8 +1255,7 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property whenCreated() As Date
         Get
-            _whenCreated = If(_whenCreated = Nothing, GetProperty("whenCreated"), _whenCreated)
-            Return _whenCreated
+            Return LdapProperty("whenCreated")
         End Get
     End Property
 
@@ -1308,11 +1267,11 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property whenChanged() As Date
         Get
-            whenChanged = If(_whenChanged = Nothing, GetProperty("whenChanged"), _whenChanged)
-            Return _whenChanged
+            Return LdapProperty("whenChanged")
         End Get
     End Property
 
 #End Region
+
 
 End Class

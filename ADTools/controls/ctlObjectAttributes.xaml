@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="ctlObjectAttributes"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="413" d:DesignWidth="518"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
+        <DockPanel>
+            <TextBox x:Name="tbAttributesFilter" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
+            <DataGrid 
+                    Name="dgAttributes"
+                    Foreground="Black"
+                    AlternationCount="2"
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    AutoGenerateColumns="False"
+                    GridLinesVisibility="None"
+                    IsSynchronizedWithCurrentItem="True"
+                    CanUserAddRows="False"
+                    >
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Атрибут" Width="250" SortMemberPath="Name" CanUserSort="True" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Binding="{Binding Value}" Header="Значение" Width="350" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>

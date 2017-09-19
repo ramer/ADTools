@@ -101,6 +101,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property computer_image() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("computer_image", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property contact() As System.Drawing.Icon
@@ -111,11 +121,31 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property contact_image() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("contact_image", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property container() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("container", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property container_deleted() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("container_deleted", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
@@ -147,6 +177,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("group_distribution", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property group_image() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("group_image", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -227,6 +267,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("user_expired", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property user_image() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("user_image", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -663,20 +713,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на All domains ....
+        '''  Ищет локализованную строку, похожую на Domains ....
         '''</summary>
-        Public ReadOnly Property wndMain_tblckSearchDomains_AllDomains() As String
+        Public ReadOnly Property wndMain_tblckSearchDomains() As String
             Get
-                Return ResourceManager.GetString("wndMain_tblckSearchDomains_AllDomains", resourceCulture)
+                Return ResourceManager.GetString("wndMain_tblckSearchDomains", resourceCulture)
             End Get
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Domains ....
+        '''  Ищет локализованную строку, похожую на Classes ....
         '''</summary>
-        Public ReadOnly Property wndMain_tblckSearchDomains_Domains() As String
+        Public ReadOnly Property wndMain_tblckSearchObjectClasses() As String
             Get
-                Return ResourceManager.GetString("wndMain_tblckSearchDomains_Domains", resourceCulture)
+                Return ResourceManager.GetString("wndMain_tblckSearchObjectClasses", resourceCulture)
             End Get
         End Property
     End Module

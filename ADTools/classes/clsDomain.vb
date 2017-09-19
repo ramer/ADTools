@@ -36,6 +36,9 @@ Public Class clsDomain
 
     Private _defaultpassword As String = ""
 
+    Private _defaultgroups As New ObservableCollection(Of clsDirectoryObject)
+    Private _defaultgrouppaths As New ObservableCollection(Of String)
+
     Private _exchangeservers As New ObservableCollection(Of String)
     Private _useexchange As Boolean
     Private _exchangeserver As String
@@ -86,6 +89,7 @@ Public Class clsDomain
                 connecttester = SchemaNamingContext.NativeObject
                 SearchRoot = New DirectoryEntry(SearchRootPath, Username, Password)
                 connecttester = SearchRoot.NativeObject
+                If DefaultGroupPaths.Count > 0 Then DefaultGroups = DefaultGroupPaths.Select(Function(x) New clsDirectoryObject(New DirectoryEntry(x, Username, Password), Me))
 
                 Validated = True
             Catch
@@ -469,6 +473,28 @@ Public Class clsDomain
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
+    Public Property DefaultGroups() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            Return _defaultgroups
+        End Get
+        Set(value As ObservableCollection(Of clsDirectoryObject))
+            _defaultgroups = value
+            If value IsNot Nothing Then _defaultgrouppaths = New ObservableCollection(Of String)(value.Select(Function(x) x.Entry.Path))
+            NotifyPropertyChanged("DefaultGroups")
+        End Set
+    End Property
+
+    Public Property DefaultGroupPaths() As ObservableCollection(Of String)
+        Get
+            Return _defaultgrouppaths
+        End Get
+        Set(value As ObservableCollection(Of String))
+            _defaultgrouppaths = value
+            NotifyPropertyChanged("DefaultGroupPaths")
+        End Set
+    End Property
+
     Public Property ExchangeServers() As ObservableCollection(Of String)
         Get
             Return _exchangeservers
@@ -519,4 +545,5 @@ Public Class clsDomain
             NotifyPropertyChanged("IsSearchable")
         End Set
     End Property
+
 End Class

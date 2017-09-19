@@ -85,6 +85,52 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\clsAttribute.vb" />
+    <Compile Include="classes\clsDataGridColumnInfo.vb" />
+    <Compile Include="classes\clsErrorLog.vb" />
+    <Compile Include="classes\clsExternalSoftware.vb" />
+    <Compile Include="classes\clsLog.vb" />
+    <Compile Include="classes\clsSearcher.vb" />
+    <Compile Include="classes\clsSearchObjectClasses.vb" />
+    <Compile Include="classes\clsSorter.vb" />
+    <Compile Include="classes\clsTelephoneNumber.vb" />
+    <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
+    <Compile Include="classes\ConverterBooleanAnd.vb" />
+    <Compile Include="classes\ConverterBooleanInverted.vb" />
+    <Compile Include="controls\ctlGroupMember.xaml.vb">
+      <DependentUpon>ctlGroupMember.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="controls\ctlGroupMemberOf.xaml.vb">
+      <DependentUpon>ctlGroupMemberOf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="controls\ctlObjectAttributes.xaml.vb">
+      <DependentUpon>ctlObjectAttributes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="controls\ctlUserWorkstations.xaml.vb">
+      <DependentUpon>ctlUserWorkstations.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="classes\clsPreferences.vb" />
+    <Compile Include="windows\wndComputer.xaml.vb">
+      <DependentUpon>wndComputer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndContact.xaml.vb">
+      <DependentUpon>wndContact.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndErrorLog.xaml.vb">
+      <DependentUpon>wndErrorLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndGroup.xaml.vb">
+      <DependentUpon>wndGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndLog.xaml.vb">
+      <DependentUpon>wndLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndUser.xaml.vb">
+      <DependentUpon>wndUser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndUserPhoto.xaml.vb">
+      <DependentUpon>wndUserPhoto.xaml</DependentUpon>
+    </Compile>
     <Page Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,7 +139,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="controls\ctlGroupMember.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlGroupMemberOf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlObjectAttributes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlUserWorkstations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndComputer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndContact.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="windows\wndDomains.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndErrorLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -123,6 +205,14 @@
       <DependentUpon>wndMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="windows\wndUser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndUserPhoto.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Import Include="System.Threading.Tasks" />
@@ -189,6 +279,7 @@
     <Resource Include="images\domain.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="images\container_deleted.ico" />
     <Resource Include="images\computer.ico" />
     <Resource Include="images\computer_blocked.ico" />
     <Resource Include="images\computer_expired.ico" />
@@ -202,6 +293,10 @@
     <Resource Include="images\user_blocked.ico" />
     <Resource Include="images\user_expired.ico" />
     <Resource Include="images\warning.ico" />
+    <Resource Include="images\computer_image.png" />
+    <Resource Include="images\group_image.png" />
+    <Resource Include="images\contact_image.png" />
+    <Resource Include="images\user_image.png" />
     <Content Include="libraries\IPrint.dll" />
     <Content Include="libraries\IPrompt.dll" />
     <Content Include="libraries\IRegisty.dll" />

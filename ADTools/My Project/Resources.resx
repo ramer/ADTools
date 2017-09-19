@@ -130,11 +130,20 @@
   <data name="computer_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\computer_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="computer_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\computer_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="contact" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\contact.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="contact_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\contact_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="container" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\container.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="container_deleted" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\container_deleted.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\domain.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -144,6 +153,9 @@
   </data>
   <data name="group_distribution" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\group_distribution.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="group_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\group_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="object_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\object_unknown.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -168,6 +180,9 @@
   </data>
   <data name="user_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\user_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="user_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\user_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\warning.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -318,10 +333,10 @@ However, you can also specify the root of the domain as the root of the search.<
   <data name="wndMain_mnuService_Preferences" xml:space="preserve">
     <value>Preferences ...</value>
   </data>
-  <data name="wndMain_tblckSearchDomains_AllDomains" xml:space="preserve">
-    <value>All domains ...</value>
-  </data>
-  <data name="wndMain_tblckSearchDomains_Domains" xml:space="preserve">
+  <data name="wndMain_tblckSearchDomains" xml:space="preserve">
     <value>Domains ...</value>
+  </data>
+  <data name="wndMain_tblckSearchObjectClasses" xml:space="preserve">
+    <value>Classes ...</value>
   </data>
 </root>
