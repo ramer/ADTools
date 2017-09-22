@@ -163,6 +163,36 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
+        Public ReadOnly Property domain_folder() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("domain_folder", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property favorite_folder() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("favorite_folder", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property filter_folder() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("filter_folder", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
         Public ReadOnly Property group() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("group", resourceCulture)
@@ -187,6 +217,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("group_image", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property network_folder() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("network_folder", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
         
@@ -601,6 +641,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_lbl_SearchObjects() As String
             Get
                 Return ResourceManager.GetString("wndMain_lbl_SearchObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Search results:.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_SearchResults() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_SearchResults", resourceCulture)
             End Get
         End Property
         

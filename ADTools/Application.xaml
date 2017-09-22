@@ -64,13 +64,66 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border BorderThickness="1,1,1,1" BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Padding}">
+                        <Border BorderThickness="1,1,1,1" BorderBrush="{TemplateBinding BorderBrush}">
                             <Grid Background="{TemplateBinding Background}">
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
-                                <ContentPresenter x:Name="MyContentPresenter" 
+                                <Border Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter x:Name="MyContentPresenter" 
                                               Content="{TemplateBinding Content}"
                                               HorizontalAlignment="Center" 
                                               VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.2" />
+                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.6" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ColorButtonInactiveBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border BorderThickness="1,1,1,1" BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid Background="{TemplateBinding Background}">
+                                <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
+                                <Border Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter x:Name="MyContentPresenter" 
+                                                  Content="{TemplateBinding Content}"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center" />
+                                </Border>
                             </Grid>
 
                             <VisualStateManager.VisualStateGroups>
@@ -429,7 +482,7 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <VisualStateManager.VisualStateGroups>
-                                <!--<VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup x:Name="SelectionStates">
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Bd" Storyboard.TargetProperty="(Panel.Background)">
@@ -445,7 +498,7 @@
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
-                                </VisualStateGroup>-->
+                                </VisualStateGroup>
                                 <VisualStateGroup x:Name="ExpansionStates">
                                     <VisualState x:Name="Expanded">
                                         <Storyboard>
@@ -510,25 +563,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        <!--<Style TargetType="{x:Type TreeView}">
-            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
-            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
-            <Style.Resources>
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
-                      Color="Transparent" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
-                      Color="Black" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                      Color="Transparent" />
-                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
-                      Color="Black" />
-            </Style.Resources>
-        </Style>-->
 
         <Style TargetType="{x:Type ListView}">
-            <!--<Setter Property="Background" Value="Green"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListView}">
@@ -688,7 +724,7 @@
                 <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
                     <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
                 </Trigger>
-                <EventTrigger RoutedEvent="Loaded">
+                <!--<EventTrigger RoutedEvent="Loaded">
                     <EventTrigger.Actions>
                         <BeginStoryboard>
                             <Storyboard>
@@ -696,7 +732,7 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger.Actions>
-                </EventTrigger>
+                </EventTrigger>-->
             </Style.Triggers>
         </Style>
         <Style TargetType="{x:Type DataGridCell}">

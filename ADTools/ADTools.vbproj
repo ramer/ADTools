@@ -91,7 +91,9 @@
     <Compile Include="classes\clsExternalSoftware.vb" />
     <Compile Include="classes\clsLog.vb" />
     <Compile Include="classes\clsSearcher.vb" />
+    <Compile Include="classes\clsSearchHistory.vb" />
     <Compile Include="classes\clsSearchObjectClasses.vb" />
+    <Compile Include="classes\clsSearchParameters.vb" />
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
@@ -110,6 +112,11 @@
       <DependentUpon>ctlUserWorkstations.xaml</DependentUpon>
     </Compile>
     <Compile Include="classes\clsPreferences.vb" />
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="windows\wndComputer.xaml.vb">
       <DependentUpon>wndComputer.xaml</DependentUpon>
     </Compile>
@@ -241,11 +248,6 @@
       <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
       <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
     </Compile>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -253,8 +255,8 @@
     </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -276,7 +278,7 @@
     <Resource Include="images\properties.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\domain.ico" />
+    <Resource Include="images\domain_folder.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\container_deleted.ico" />
@@ -297,6 +299,10 @@
     <Resource Include="images\group_image.png" />
     <Resource Include="images\contact_image.png" />
     <Resource Include="images\user_image.png" />
+    <Resource Include="images\favorite_folder.ico" />
+    <Resource Include="images\domain.ico" />
+    <Resource Include="images\filter_folder.ico" />
+    <Resource Include="images\network_folder.ico" />
     <Content Include="libraries\IPrint.dll" />
     <Content Include="libraries\IPrompt.dll" />
     <Content Include="libraries\IRegisty.dll" />

@@ -1,9 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.DirectoryServices
 Imports System.Security.Principal
-Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports System.Threading.Tasks
 
 Public Class clsSearcher
     Private basicsearchtasks As New List(Of Task)
@@ -17,12 +15,7 @@ Public Class clsSearcher
 
     End Sub
 
-    Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject), pattern As String,
-                                      Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
-                                      Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
-                                      Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
-                                      Optional freesearch As Boolean = False) As Task
-
+    Public Async Function BasicSearchStopAsync() As Task
         basicsearchtaskscts.Cancel()
         If basicsearchtasks.Count > 0 Then
             Try
@@ -33,20 +26,40 @@ Public Class clsSearcher
             basicsearchtasks.Clear()
             Log("Список задач очищен")
         End If
+    End Function
+
+    Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
+                                           Optional parentobject As clsDirectoryObject = Nothing,
+                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
+                                           Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
+                                           Optional pattern As String = Nothing,
+                                           Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
+                                           Optional freesearch As Boolean = False
+                                           ) As Task
+        Await BasicSearchStopAsync()
+
         returncollection.Clear()
 
         basicsearchtaskscts = New CancellationTokenSource
 
-        Dim domainlist As ObservableCollection(Of clsDomain) = If(specificdomains Is Nothing, domains, specificdomains)
+        Dim roots As List(Of clsDirectoryObject)
+        Dim searchscope As SearchScope
 
-        For Each dmn In domainlist
+        If parentobject IsNot Nothing Then
+            roots = New List(Of clsDirectoryObject) From {parentobject}
+            searchscope = SearchScope.OneLevel
+        Else
+            roots = If(specificdomains Is Nothing, domains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList, specificdomains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
+            searchscope = SearchScope.Subtree
+        End If
 
+        For Each root In roots
             Dim mt = Task.Factory.StartNew(
                 Function()
-                    Return BasicSearchSync(pattern, dmn, attributes, searchobjectclasses, freesearch, basicsearchtaskscts.Token)
+                    Return BasicSearchSync(root, attributes, pattern, searchobjectclasses, freesearch, searchscope, basicsearchtaskscts.Token)
                 End Function, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
-            Log(String.Format("Задача на поиск в домене ""{0}"" создана", dmn.Name))
+            Log(String.Format("Задача на поиск в домене ""{0}"" создана", root.name))
 
             Dim lt = mt.ContinueWith(
                 Function(parenttask As Task(Of ObservableCollection(Of clsDirectoryObject)))
@@ -55,13 +68,13 @@ Public Class clsSearcher
                     For Each result In parenttask.Result
                         If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
                         returncollection.Add(result)
-                        Thread.Sleep(30)
+                        Thread.Sleep(50)
                     Next
                     Log("Задача на поиск закрыта")
                     Return True
                 End Function)
             basicsearchtasks.Add(lt)
-            Log(String.Format("Задача на вывод результатов домена ""{0}"" создана", dmn.Name))
+            Log(String.Format("Задача на вывод результатов домена ""{0}"" создана", root.name))
 
             Dim ft = lt.ContinueWith(
                 Function(parenttask As Task(Of Boolean))
@@ -73,7 +86,6 @@ Public Class clsSearcher
                     Log("Задача на вывод результатов закрыта")
                     Return True
                 End Function)
-
         Next
 
         Await Task.WhenAny(basicsearchtasks.ToArray)
@@ -81,115 +93,32 @@ Public Class clsSearcher
         Await Task.WhenAll(basicsearchtasks.ToArray)
     End Function
 
-    Public Function BasicSearchSync(pattern As String,
-                                      domain As clsDomain,
-                                      Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
-                                      Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
-                                      Optional freesearch As Boolean = False,
-                                      Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
+    Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,
+                                    Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
+                                    Optional pattern As String = Nothing,
+                                    Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
+                                    Optional freesearch As Boolean = False,
+                                    Optional searchscope As SearchScope = SearchScope.Subtree,
+                                    Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
-        Log(String.Format("Поиск ""{0}"" в домене ""{1}""", pattern, domain.Name))
-
-        Dim properties As String() = {"objectGUID",
-                                        "userAccountControl",
-                                        "accountExpires",
-                                        "name",
-                                        "description",
-                                        "userPrincipalName",
-                                        "distinguishedName",
-                                        "telephoneNumber",
-                                        "physicalDeliveryOfficeName",
-                                        "title",
-                                        "department",
-                                        "company",
-                                        "mail",
-                                        "whenCreated",
-                                        "lastLogon",
-                                        "pwdLastSet",
-                                        "thumbnailPhoto",
-                                        "memberOf",
-                                        "givenName",
-                                        "sn",
-                                        "initials",
-                                        "displayName",
-                                        "manager",
-                                        "sAMAccountName",
-                                        "groupType",
-                                        "dNSHostName",
-                                        "location",
-                                        "operatingSystem",
-                                        "operatingSystemVersion"}
-
-        If domain.Validated = True Then 'check domain validation
-            Log(String.Format("Проверка валидации к домена ""{0}"" завершена", domain.Name))
-        Else
-            Log(String.Format("Ошибка валидации к домена ""{0}""", domain.Name))
-            Return New ObservableCollection(Of clsDirectoryObject)
-        End If
-
-        Try ' check LDAP connection
-            Dim o As Object = domain.SearchRoot.NativeObject
-            Log(String.Format("Проверка подключения к домену ""{0}"" завершена", domain.Name))
-        Catch ex As Exception
-            Log(String.Format("Отсутствует подключение к домену ""{0}""", domain.Name))
-            Return New ObservableCollection(Of clsDirectoryObject)
-        End Try
+        If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
         Dim results As New ObservableCollection(Of clsDirectoryObject)
 
         Try
-            Dim patterns() As String = pattern.Split({"/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries)
+            Dim ldapsearcher As New DirectorySearcher(root.Entry)
+            ldapsearcher.SearchScope = searchscope
+            ldapsearcher.PropertiesToLoad.Add("objectGuid")
+            ldapsearcher.PageSize = 1000
 
-            For Each singlepattern As String In patterns
-                If ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
+            If searchscope = SearchScope.Subtree Then
+                If String.IsNullOrEmpty(pattern) Then Return New ObservableCollection(Of clsDirectoryObject)
 
-                singlepattern = Trim(singlepattern)
-                If String.IsNullOrEmpty(singlepattern) Then Continue For
-
-                Dim _sid As SecurityIdentifier = Nothing
-                Dim IsSid As Boolean = False
-                Try
-                    If Regex.IsMatch(singlepattern, "^S-\d-\d+-(\d+-){1,14}\d+$") Then
-                        _sid = New SecurityIdentifier(singlepattern)
-                        IsSid = _sid.IsAccountSid
-                    End If
-                Catch
-                End Try
-
-                Dim _guid As Guid = Nothing
-                Dim IsGuid As Boolean = Guid.TryParse(singlepattern, _guid)
-
-                If IsSid Then
-                    Try
-                        Dim de As DirectoryEntry = New DirectoryEntry("LDAP://" & domain.Name & "/<SID=" & _sid.Value & ">", domain.Username, domain.Password)
-                        de.RefreshCache(properties)
-                        results.Add(New clsDirectoryObject(de, domain))
-                        Continue For
-                    Catch ex As Exception
-                        Continue For
-                    End Try
-                End If
-
-                If IsGuid Then
-                    Try
-                        Dim de As New DirectoryEntry("LDAP://" & domain.Name & "/<GUID=" & _guid.ToString & ">", domain.Username, domain.Password)
-                        de.RefreshCache(properties)
-                        results.Add(New clsDirectoryObject(de, domain))
-                        Continue For
-                    Catch ex As DirectoryServicesCOMException
-                        Continue For
-                    End Try
-                End If
-
+                Dim patterns() As String = pattern.Split({"/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries)
                 attributes = If(attributes, attributesForSearchDefault)
                 searchobjectclasses = If(searchobjectclasses, New clsSearchObjectClasses)
-
-                If singlepattern.StartsWith("""") And singlepattern.EndsWith("""") And Len(singlepattern) > 2 Then
-                    singlepattern = Mid(singlepattern, 2, Len(singlepattern) - 2)
-                Else
-                    singlepattern = If(freesearch, "*" & singlepattern & "*", singlepattern & "*")
-                End If
-
+                Dim attrfilter = ""
+                attributes.ToList.ForEach(Sub(a As clsAttribute) patterns.ToList.ForEach(Sub(p) attrfilter &= String.Format("({0}={1}{2}*)", a.Name, If(freesearch, "*", ""), Trim(p))))
                 Dim filter As String = "(&" +
                                             "(|" +
                                                 If(searchobjectclasses.User, "(&(objectCategory=person)(!(objectClass=inetOrgPerson)))", "") +
@@ -197,35 +126,25 @@ Public Class clsSearcher
                                                 If(searchobjectclasses.Group, "(objectCategory=group)", "") +
                                                 If(searchobjectclasses.Container, "(objectCategory=container)", "") +
                                             ")" +
-                                            "(|" +
-                                                "(" & Join(attributes.Select(Function(x As clsAttribute) x.Name).ToArray, "=" & singlepattern & ")(") & "=" & singlepattern & ")" +
-                                            ")" +
-                                         ")"
+                                            If(Not String.IsNullOrEmpty(attrfilter), "(|" & attrfilter & ")", "") +
+                                        ")"
+                ldapsearcher.Filter = "(thumbnailPhoto=*)"
+            End If
 
-                Dim ldapsearcher As New DirectorySearcher(domain.SearchRoot)
-                ldapsearcher.PropertiesToLoad.Add("objectGuid")
-                ldapsearcher.Filter = filter
-                ldapsearcher.PageSize = 1000
+            Dim ldapresults As SearchResultCollection = ldapsearcher.FindAll()
 
-                Dim ldapresults As SearchResultCollection = ldapsearcher.FindAll()
+            For Each ldapresult As SearchResult In ldapresults
+                If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
 
-                Log(String.Format("Поиск в домене ""{0}"" запущен. Найдено {1} объектов", domain.Name, ldapresults.Count))
-
-                For Each ldapresult As SearchResult In ldapresults
-                    If ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
-
-                    Dim de As DirectoryEntry = ldapresult.GetDirectoryEntry
-                    de.RefreshCache(properties)
-                    results.Add(New clsDirectoryObject(de, domain))
-                Next
-                ldapresults.Dispose()
+                Dim de As DirectoryEntry = ldapresult.GetDirectoryEntry
+                de.RefreshCache(propertiesToLoadDefault)
+                results.Add(New clsDirectoryObject(de, root.Domain))
             Next
+            ldapresults.Dispose()
 
         Catch ex As Exception
-            ThrowException(ex, domain.Name)
+            ThrowException(ex, "BasicSearchSync")
         End Try
-
-        Log(String.Format("Поиск в домене ""{0}"" завершен. Обработано {1} объектов", domain.Name, results.Count))
 
         Return results
     End Function

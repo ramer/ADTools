@@ -84,23 +84,23 @@ Public Class clsDirectoryObject
     End Property
 
 
-    Public ReadOnly Property Children() As ObservableCollection(Of clsDirectoryObject)
-        Get
-            _children.Clear()
-            If Entry Is Nothing Then Return _childcontainers
+    'Public ReadOnly Property Children() As ObservableCollection(Of clsDirectoryObject)
+    '    Get
+    '        _children.Clear()
+    '        If Entry Is Nothing Then Return _childcontainers
 
-            Dim ds As New DirectorySearcher(Entry)
-            ds.Tombstone = True
-            ds.PropertiesToLoad.AddRange({"name", "objectClass"})
-            ds.SearchScope = SearchScope.OneLevel
+    '        Dim ds As New DirectorySearcher(Entry)
+    '        ds.Tombstone = True
+    '        ds.PropertiesToLoad.AddRange({"name", "objectClass"})
+    '        ds.SearchScope = SearchScope.OneLevel
 
-            For Each sr As SearchResult In ds.FindAll()
-                _children.Add(New clsDirectoryObject(sr, Domain))
-            Next
+    '        For Each sr As SearchResult In ds.FindAll()
+    '            _children.Add(New clsDirectoryObject(sr, Domain))
+    '        Next
 
-            Return _children
-        End Get
-    End Property
+    '        Return _children
+    '    End Get
+    'End Property
 
     Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -692,7 +692,13 @@ Public Class clsDirectoryObject
 
     Public Property thumbnailPhoto() As Byte()
         Get
-            Return LdapProperty("thumbnailPhoto")
+            If LdapProperty("thumbnailPhoto") IsNot Nothing Then
+                Return LdapProperty("thumbnailPhoto")
+            Else
+                Dim ms As New IO.MemoryStream
+                Application.GetResourceStream(New Uri("pack://application:,,,/images/user_image.png")).Stream.CopyTo(ms)
+                Return ms.ToArray
+            End If
         End Get
         Set(value As Byte())
             If value Is Nothing Then
@@ -718,7 +724,7 @@ Public Class clsDirectoryObject
 
     Public Property userWorkstations() As String()
         Get
-            Return If(LdapProperty("userWorkstations") IsNot Nothing, LdapProperty("userWorkstations").Split({","}, StringSplitOptions.RemoveEmptyEntries), {})
+            Return If(LdapProperty("userWorkstations") IsNot Nothing, LdapProperty("userWorkstations").Split({","}, StringSplitOptions.RemoveEmptyEntries), New String() {})
         End Get
         Set(value As String())
             LdapProperty("userWorkstations") = Join(value, ",")

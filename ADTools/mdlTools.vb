@@ -110,6 +110,37 @@ Module mdlTools
         {New clsAttribute("name", "Имя объекта")}
     }
 
+    Public propertiesToLoadDefault As String() =
+        {"objectGUID",
+        "userAccountControl",
+        "accountExpires",
+        "name",
+        "description",
+        "userPrincipalName",
+        "distinguishedName",
+        "telephoneNumber",
+        "physicalDeliveryOfficeName",
+        "title",
+        "department",
+        "company",
+        "mail",
+        "whenCreated",
+        "lastLogon",
+        "pwdLastSet",
+        "thumbnailPhoto",
+        "memberOf",
+        "givenName",
+        "sn",
+        "initials",
+        "displayName",
+        "manager",
+        "sAMAccountName",
+        "groupType",
+        "dNSHostName",
+        "location",
+        "operatingSystem",
+        "operatingSystemVersion"}
+
     Public Sub initializePreferences()
         'Handlebars.Configuration.TextEncoder = Nothing
         'Handlebars.RegisterHelper("lz",

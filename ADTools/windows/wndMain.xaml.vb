@@ -1,16 +1,19 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.Windows.Controls.Primitives
 
 Class wndMain
     Public WithEvents searcher As New clsSearcher
 
     Public Shared hkF5 As New RoutedCommand
 
+    Public Property container As clsDirectoryObject
     Public Property objects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     Private searchhistoryindex As Integer
-    Private searchhistory As New List(Of String)
+    Private searchhistory As New List(Of clsSearchHistory)
 
     Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True)
+
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
@@ -22,9 +25,7 @@ Class wndMain
         cmboSearchPattern.ItemsSource = ADToolsApplication.ocGlobalSearchHistory
         cmboSearchPattern.Focus()
 
-        cmboSearchObjectClasses.DataContext = searchobjectclasses
         cmboSearchDomains.ItemsSource = domains
-
     End Sub
 
     Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing, MyBase.Closing
@@ -50,13 +51,10 @@ Class wndMain
 
 #Region "Events"
 
-    Private Sub tvDomains_TreeViewItem_Selected(sender As Object, e As RoutedEventArgs)
-        Dim trvitem As TreeViewItem = TryCast(sender, TreeViewItem)
-        If trvitem Is e.OriginalSource AndAlso TypeOf CType(trvitem, TreeViewItem).DataContext Is clsDirectoryObject Then
-            Dim parent As clsDirectoryObject = CType(CType(trvitem, TreeViewItem).DataContext, clsDirectoryObject)
-            OpenObject(parent)
-            trvitem.IsSelected = False
-            'dgObjects.UpdateLayout()
+    Private Sub tvDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+        If TypeOf sp.Tag Is clsDirectoryObject Then
+            OpenObject(CType(sp.Tag, clsDirectoryObject))
         End If
     End Sub
 
@@ -85,6 +83,19 @@ Class wndMain
         OpenObject(current)
     End Sub
 
+    Private Sub dgObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDown
+        If e.ChangedButton = MouseButton.XButton1 Then SearchPrevious()
+        If e.ChangedButton = MouseButton.XButton2 Then SearchNext()
+    End Sub
+
+    Private Sub btnBack_Click(sender As Object, e As RoutedEventArgs) Handles btnBack.Click
+        SearchPrevious()
+    End Sub
+
+    Private Sub btnForward_Click(sender As Object, e As RoutedEventArgs) Handles btnForward.Click
+        SearchNext()
+    End Sub
+
     Private Sub btnUp_Click(sender As Object, e As RoutedEventArgs) Handles btnUp.Click
         OpenObjectParent()
     End Sub
@@ -97,20 +108,30 @@ Class wndMain
 
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
         If e.Key = Key.Enter Then
-            Search(cmboSearchPattern.Text)
-
-            If Not String.IsNullOrEmpty(cmboSearchPattern.Text) Then
-                While searchhistory.Count > searchhistoryindex + 1
-                    searchhistory.RemoveAt(searchhistory.Count - 1)
-                End While
-
-                searchhistory.Add(cmboSearchPattern.Text)
-                If Not ADToolsApplication.ocGlobalSearchHistory.Contains(cmboSearchPattern.Text) Then ADToolsApplication.ocGlobalSearchHistory.Insert(0, cmboSearchPattern.Text)
-                searchhistoryindex = searchhistory.Count - 1
-            End If
+            StartSearch(Nothing, cmboSearchPattern.Text)
         Else
             If cmboSearchPattern.IsDropDownOpen Then cmboSearchPattern.IsDropDownOpen = False
         End If
+    End Sub
+
+    Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
+        StartSearch(Nothing, cmboSearchPattern.Text)
+        cmboSearchPattern.Focus()
+    End Sub
+
+    Private Sub cmboSearchObjectClasses_Loaded(sender As Object, e As RoutedEventArgs) Handles cmboSearchObjectClasses.Loaded, cmboSearchDomains.Loaded
+        Dim ct As ControlTemplate = CType(sender, ComboBox).Template
+        Dim pop As Popup = ct.FindName("Popup", CType(sender, ComboBox))
+        pop.Placement = PlacementMode.Top
+    End Sub
+
+    Private Async Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
+        Await searcher.BasicSearchStopAsync()
+    End Sub
+
+    Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
+        Dim w As New wndMain
+        w.Show()
     End Sub
 
 #End Region
@@ -118,7 +139,7 @@ Class wndMain
 #Region "Subs"
 
     Public Sub DomainTreeUpdate()
-        tvDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d) If(d IsNot Nothing, New clsDirectoryObject(d.DefaultNamingContext, d), Nothing))
+        tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d) If(d IsNot Nothing, New clsDirectoryObject(d.DefaultNamingContext, d), Nothing))
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
@@ -129,69 +150,64 @@ Class wndMain
 
             ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
 
-        ElseIf current.name = "Deleted Objects" Then
-            'Search("""*""", True)
         ElseIf current.objectClass.Contains("organizationalunit") Or
                current.objectClass.Contains("container") Or
                current.objectClass.Contains("builtindomain") Or
                current.objectClass.Contains("domaindns") Then
 
-            ShowChildren(current)
-            dgObjects.Tag = current
+            StartSearch(current, Nothing)
         End If
-
-        ShowPath()
     End Sub
 
     Public Sub OpenObjectParent()
-        Dim current As clsDirectoryObject = CType(dgObjects.Tag, clsDirectoryObject)
-        If current Is Nothing OrElse (current.Entry.Parent Is Nothing OrElse current.Entry.Path = current.Domain.DefaultNamingContext.Path) Then Exit Sub
-        Dim parent As New clsDirectoryObject(current.Entry.Parent, current.Domain)
-        ShowChildren(parent)
-        dgObjects.Tag = parent
-
-        ShowPath()
+        If container Is Nothing OrElse (container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path) Then Exit Sub
+        Dim parent As New clsDirectoryObject(container.Entry.Parent, container.Domain)
+        StartSearch(parent, Nothing)
     End Sub
 
-    Private Sub ShowChildren(parent As clsDirectoryObject)
-        objects.Clear()
-        For Each child As clsDirectoryObject In parent.Children
-            objects.Add(child)
-        Next
-    End Sub
-
-    Private Sub ShowPath()
-        Dim current As clsDirectoryObject = CType(dgObjects.Tag, clsDirectoryObject)
-        If current Is Nothing Then Exit Sub
-
-        Dim children As New List(Of Button)
-
-        Do
-            Dim btn As New Button
-            btn.Background = Brushes.Transparent
-            btn.Content = If(current.objectClass.Contains("domaindns"), current.Domain.Name, current.name)
-            btn.Margin = New Thickness(2, 0, 2, 0)
-            btn.Padding = New Thickness(5, 0, 5, 0)
-            btn.Tag = current
-            children.Add(btn)
-
-            If current.Entry.Parent Is Nothing OrElse current.Entry.Path = current.Domain.DefaultNamingContext.Path Then
-                Exit Do
-            Else
-                current = New clsDirectoryObject(current.Entry.Parent, current.Domain)
-            End If
-        Loop
-
-        children.Reverse()
-
-        For Each child As Button In tlbrPath.Items
-            RemoveHandler child.Click, AddressOf btnPath_Click
+    Private Sub ShowPath(Optional pattern As String = Nothing)
+        For Each child In tlbrPath.Items
+            If TypeOf child Is Button Then RemoveHandler CType(child, Button).Click, AddressOf btnPath_Click
         Next
         tlbrPath.Items.Clear()
-        For Each child As Button In children
-            AddHandler child.Click, AddressOf btnPath_Click
-            tlbrPath.Items.Add(child)
-        Next
+
+        If container IsNot Nothing Then
+
+            Dim buttons As New List(Of Button)
+
+            Do
+                Dim btn As New Button
+                Dim st As Style = Application.Current.TryFindResource("ToolbarButton")
+                btn.Style = st
+                btn.Content = If(container.objectClass.Contains("domaindns"), container.Domain.Name, container.name)
+                btn.Margin = New Thickness(2, 0, 2, 0)
+                btn.Padding = New Thickness(5, 0, 5, 0)
+                btn.Tag = container
+                buttons.Add(btn)
+
+                If container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path Then
+                    Exit Do
+                Else
+                    container = New clsDirectoryObject(container.Entry.Parent, container.Domain)
+                End If
+            Loop
+
+            buttons.Reverse()
+
+            For Each child As Button In buttons
+                AddHandler child.Click, AddressOf btnPath_Click
+                tlbrPath.Items.Add(child)
+            Next
+        Else
+            If String.IsNullOrEmpty(pattern) Then Exit Sub
+
+            Dim tblck As New TextBlock
+            tblck.Background = Brushes.Transparent
+            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & pattern
+            tblck.Margin = New Thickness(2, 0, 2, 0)
+            tblck.Padding = New Thickness(5, 0, 5, 0)
+            tlbrPath.Items.Add(tblck)
+        End If
     End Sub
 
     Public Sub RebuildColumns()
@@ -215,28 +231,35 @@ Class wndMain
     End Sub
 
     Private Sub HotKey_F5()
-        SearchRepeat()
-    End Sub
-
-    Private Sub SearchRepeat()
-        Search(cmboSearchPattern.Text)
+        If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
+        Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Pattern)
     End Sub
 
     Private Sub SearchPrevious()
         If searchhistoryindex <= 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
-        Search(searchhistory(searchhistoryindex - 1))
+        Search(searchhistory(searchhistoryindex - 1).Root, searchhistory(searchhistoryindex - 1).Pattern)
         searchhistoryindex -= 1
     End Sub
 
     Private Sub SearchNext()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 2 > searchhistory.Count Then Exit Sub
-        Search(searchhistory(searchhistoryindex + 1))
+        Search(searchhistory(searchhistoryindex + 1).Root, searchhistory(searchhistoryindex + 1).Pattern)
         searchhistoryindex += 1
     End Sub
 
-    Public Async Sub Search(pattern As String)
-        If String.IsNullOrEmpty(pattern) Then Exit Sub
+    Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional pattern As String = Nothing)
+        While searchhistory.Count > searchhistoryindex + 1
+            searchhistory.RemoveAt(searchhistory.Count - 1)
+        End While
 
+        searchhistory.Add(New clsSearchHistory(root, pattern))
+        If Not ADToolsApplication.ocGlobalSearchHistory.Contains(cmboSearchPattern.Text) Then ADToolsApplication.ocGlobalSearchHistory.Insert(0, cmboSearchPattern.Text)
+        searchhistoryindex = searchhistory.Count - 1
+
+        Search(root, pattern)
+    End Sub
+
+    Public Async Sub Search(Optional root As clsDirectoryObject = Nothing, Optional pattern As String = Nothing)
         Try
             CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Clear()
         Catch
@@ -251,7 +274,10 @@ Class wndMain
 
         Dim domainlist As New ObservableCollection(Of clsDomain)(domains.Where(Function(x As clsDomain) x.IsSearchable = True).ToList)
 
-        Await searcher.BasicSearchAsync(objects, pattern, domainlist, preferences.AttributesForSearch, searchobjectclasses, False)
+        container = root
+        ShowPath(pattern)
+
+        Await searcher.BasicSearchAsync(objects, root, domainlist, preferences.AttributesForSearch, pattern, searchobjectclasses, False)
 
         If preferences.SearchResultGrouping Then
             Try
@@ -267,6 +293,10 @@ Class wndMain
     Private Sub Searcher_BasicSearchAsyncDataRecieved() Handles searcher.BasicSearchAsyncDataRecieved
         cap.Visibility = Visibility.Hidden
     End Sub
+
+
+
+
 
 #End Region
 

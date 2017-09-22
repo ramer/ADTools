@@ -15,9 +15,9 @@
         >
     <Grid>
         <DockPanel LastChildFill="True">
-            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True" Margin="0,0,0,5">
-                <Button x:Name="btnWindowClone" Background="{DynamicResource ColorElementBackground}" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"></Button>
-                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
+            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
+                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}" Style="{DynamicResource ToolbarButton}"/>
+                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed" Style="{DynamicResource ToolbarButton}"/>
                 <Menu>
                     <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
                         <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}"/>
@@ -39,9 +39,9 @@
                     </MenuItem>
                 </Menu>
             </DockPanel>
-            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="5,0,5,5">
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="0,0,5,0" Height="23">
-                    <Button Width="23" Background="{DynamicResource ColorElementBackground}" Margin="0,0,5,0">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorMenuBackground}" Margin="0,0,0,5">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Height="23">
+                    <Button x:Name="btnBack" Width="23" Style="{DynamicResource ToolbarButton}" Margin="5,0,5,0">
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
                             <TextBlock.RenderTransform>
                                 <TransformGroup>
@@ -52,7 +52,7 @@
                                 </TransformGroup>
                             </TextBlock.RenderTransform>
                         </TextBlock>                    </Button>
-                    <Button Width="23" Background="{DynamicResource ColorElementBackground}" Margin="0,0,5,0">
+                    <Button x:Name="btnForward" Width="23" Style="{DynamicResource ToolbarButton}" Margin="0,0,5,0">
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="-3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
                             <TextBlock.RenderTransform>
                                 <TransformGroup>
@@ -64,21 +64,21 @@
                             </TextBlock.RenderTransform>
                         </TextBlock>
                     </Button>
-                    <Button x:Name="btnUp" Width="23" Background="{DynamicResource ColorElementBackground}" >
+                    <Button x:Name="btnUp" Width="23" Style="{DynamicResource ToolbarButton}" >
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
                     </Button>
                 </StackPanel>
-                <ToolBar x:Name="tlbrPath" VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Margin="0,0,5,0" />
+                <ToolBar x:Name="tlbrPath" VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Background="Transparent"/>
             </DockPanel>
 
-            <StatusBar Height="30" DockPanel.Dock="Bottom" >
+            <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0">
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsTotal}"/>
-                    <Run Text="{Binding ElementName=dgMain, Path=Items.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsSelected}"/>
-                    <Run Text="{Binding ElementName=dgMain, Path=SelectedItems.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding ElementName=dgObjects, Path=SelectedItems.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <StatusBarItem HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
@@ -86,37 +86,81 @@
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
-            <Grid>
+            <Grid Margin="5,0,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
-                <TreeView x:Name="tvDomains" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <TreeView.Resources>
-                        <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                            <EventSetter Event="Selected" Handler="tvDomains_TreeViewItem_Selected"/>
-                        </Style>
-                    </TreeView.Resources>
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                <TreeView x:Name="tvObjects" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <TreeViewItem x:Name="tviFavorites">
+                        <TreeViewItem.Header>
                             <StackPanel Orientation="Horizontal" Height="23">
-                                <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Foreground" Value="{DynamicResource ColorButtonBackground}" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
+                                <Image Source="/images/favorite_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Избранное"/>
                             </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
+                        </TreeViewItem.Header>
+                        <TreeViewItem.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeViewItem.ItemTemplate>
+                    </TreeViewItem>
+                    <TreeViewItem x:Name="tviDomains">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" Height="23">
+                                <Image Source="/images/domain_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Домены"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <TreeViewItem.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeViewItem.ItemTemplate>
+                    </TreeViewItem>
+                    <TreeViewItem x:Name="tviFilters">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" Height="23">
+                                <Image Source="/images/filter_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Фильтры"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <TreeViewItem.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeViewItem.ItemTemplate>
+                    </TreeViewItem>
+                    <TreeViewItem x:Name="tviNetworks">
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal" Height="23">
+                                <Image Source="/images/network_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Сеть"/>
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                        <TreeViewItem.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeViewItem.ItemTemplate>
+                    </TreeViewItem>
+
+
+
                 </TreeView>
                 <DockPanel Grid.Column="2" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
@@ -134,7 +178,7 @@
                             <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchDomains}" VerticalAlignment="Center" Margin="5,0,0,0" />
                         </Grid>
                         <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
-                            <ComboBox Name="cmboSearchObjectClasses">
+                            <ComboBox Name="cmboSearchObjectClasses" DataContext="{Binding searchobjectclasses}">
                                 <StackPanel Orientation="Horizontal">
                                     <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                 </StackPanel>
@@ -179,7 +223,11 @@
                             AutoGenerateColumns="False"
                             GridLinesVisibility="None"
                             IsReadOnly="True"
-                            IsSynchronizedWithCurrentItem="True" IsTextSearchEnabled="True">
+                            IsSynchronizedWithCurrentItem="True" 
+                            IsTextSearchCaseSensitive="False"
+                            IsTextSearchEnabled="True"
+                            TextSearch.TextPath="name"
+                            Margin="0,0,0,5">
 
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="⬕" Width="32">
