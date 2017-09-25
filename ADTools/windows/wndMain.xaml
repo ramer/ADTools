@@ -27,6 +27,26 @@
                     <MenuItem x:Name="mnuEdit" Header="{x:Static r:Resources.wndMain_mnuEdit}">
                         <MenuItem x:Name="mnuEditCreateObject" Header="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}"/>
                     </MenuItem>
+                    <MenuItem x:Name="mnuSearch" Header="{x:Static r:Resources.wndMain_mnuSearch}">
+                        <MenuItem x:Name="mnuSearchMode" Header="{x:Static r:Resources.wndMain_mnuSearchMode}">
+                            <RadioButton x:Name="mnuSearchModeDefault" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Default}" IsChecked="True"/>
+                            <RadioButton x:Name="mnuSearchModeAdvanced" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Advanced}"/>
+                        </MenuItem>
+                        <MenuItem x:Name="mnuSearchObjectClasses" Header="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DataContext="{Binding searchobjectclasses}">
+                            <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <CheckBox IsChecked="{Binding Group}" Content="Group" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <CheckBox IsChecked="{Binding Container}" Content="Container" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                        </MenuItem>
+                        <MenuItem x:Name="mnuSearchDomains" Header="{x:Static r:Resources.wndMain_mnuSearchDomains}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                        <MenuItem x:Name="mnuSearchSaveCurrentFilter" Header="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}"/>
+                    </MenuItem>
                     <MenuItem x:Name="mnuService" Header="{x:Static r:Resources.wndMain_mnuService}">
                         <MenuItem x:Name="mnuServiceDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}"/>
                         <MenuItem x:Name="mnuServicePreferences" Header="{x:Static r:Resources.wndMain_mnuService_Preferences}"/>
@@ -101,14 +121,14 @@
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Избранное"/>
                             </StackPanel>
                         </TreeViewItem.Header>
-                        <TreeViewItem.ItemTemplate>
+                        <!--<TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
                                 <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>
+                        </TreeViewItem.ItemTemplate>-->
                     </TreeViewItem>
                     <TreeViewItem x:Name="tviDomains">
                         <TreeViewItem.Header>
@@ -119,7 +139,7 @@
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown">
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
                                 </StackPanel>
@@ -134,12 +154,12 @@
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
-                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown">
+                                    <Image Source="/images/filter.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Name}"/>
                                 </StackPanel>
-                            </HierarchicalDataTemplate>
+                            </DataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
                     <TreeViewItem x:Name="tviNetworks">
@@ -149,14 +169,14 @@
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Сеть"/>
                             </StackPanel>
                         </TreeViewItem.Header>
-                        <TreeViewItem.ItemTemplate>
+                        <!--<TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
                                 <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>
+                        </TreeViewItem.ItemTemplate>-->
                     </TreeViewItem>
 
 
@@ -165,38 +185,9 @@
                 <DockPanel Grid.Column="2" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
-                        <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
-                            <ComboBox Name="cmboSearchDomains">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchDomains}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                        </Grid>
-                        <Grid DockPanel.Dock="Right" Margin="0,0,5,0">
-                            <ComboBox Name="cmboSearchObjectClasses" DataContext="{Binding searchobjectclasses}">
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding Group}" Content="Group" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="{Binding Container}" Content="Container" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                </StackPanel>
-                            </ComboBox>
-                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_tblckSearchObjectClasses}" VerticalAlignment="Center" Margin="5,0,0,0" />
-                        </Grid>
                         <Grid>
                             <ComboBox x:Name="cmboSearchPattern" Text="" IsEditable="True" Margin="0,0,5,0"/>
-                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchObjects}" VerticalAlignment="Center" Margin="5,0,0,0">
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchFilter}" VerticalAlignment="Center" Margin="5,0,0,0">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -216,7 +207,7 @@
                         <DataGrid 
                             x:Name="dgObjects"
                             Foreground="Black"
-                            ItemsSource="{Binding objects}"
+                            ItemsSource="{Binding currentobjects}"
                             AlternationCount="2"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"

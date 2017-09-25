@@ -36,7 +36,11 @@ Public Class ctlUserWorkstations
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
-            If ._currentobject IsNot Nothing AndAlso ._currentobject.userWorkstations.Count > 0 Then ._currentselectedobjects = .searcher.BasicSearchSync(New clsDirectoryObject(._currentobject.Domain.DefaultNamingContext, ._currentobject.Domain), Nothing, Join(._currentobject.userWorkstations, "/"), New clsSearchObjectClasses(False, True, False, False), False,, Nothing)
+            If ._currentobject IsNot Nothing AndAlso ._currentobject.userWorkstations.Count > 0 Then
+                ._currentselectedobjects = .searcher.BasicSearchSync(
+                    New clsDirectoryObject(._currentobject.Domain.DefaultNamingContext, ._currentobject.Domain),
+                    New clsFilter(Join(._currentobject.userWorkstations, "/"), Nothing, New clsSearchObjectClasses(False, True, False, False), False))
+            End If
             .lvSelectedObjects.ItemsSource = If(._currentselectedobjects IsNot Nothing, ._currentselectedobjects, Nothing)
             .lvDomainObjects.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomainobjects, Nothing)
         End With
@@ -45,7 +49,11 @@ Public Class ctlUserWorkstations
     Private Async Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
         If e.Key = Key.Enter Then
             _currentdomainobjects.Clear()
-            Await searcher.BasicSearchAsync(_currentdomainobjects, Nothing, New ObservableCollection(Of clsDomain)({_currentobject.Domain}), Nothing, tbDomainObjectsFilter.Text, New clsSearchObjectClasses(False, True, False, False), False)
+            Await searcher.BasicSearchAsync(
+                _currentdomainobjects,
+                Nothing,
+                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, True, False, False), False),
+                New ObservableCollection(Of clsDomain)({_currentobject.Domain}))
         End If
     End Sub
 

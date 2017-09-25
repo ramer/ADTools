@@ -89,6 +89,7 @@
     <Compile Include="classes\clsDataGridColumnInfo.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
+    <Compile Include="classes\clsFilter.vb" />
     <Compile Include="classes\clsLog.vb" />
     <Compile Include="classes\clsSearcher.vb" />
     <Compile Include="classes\clsSearchHistory.vb" />
@@ -97,8 +98,8 @@
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
-    <Compile Include="classes\ConverterBooleanAnd.vb" />
-    <Compile Include="classes\ConverterBooleanInverted.vb" />
+    <Compile Include="converters\ConverterBooleanAnd.vb" />
+    <Compile Include="converters\ConverterBooleanInverted.vb" />
     <Compile Include="controls\ctlGroupMember.xaml.vb">
       <DependentUpon>ctlGroupMember.xaml</DependentUpon>
     </Compile>
@@ -198,8 +199,8 @@
     <Compile Include="classes\clsDomain.vb" />
     <Compile Include="classes\clsDomainProperty.vb" />
     <Compile Include="classes\clsTelephoneNumberPattern.vb" />
-    <Compile Include="classes\ConverterBooleanToVisibility.vb" />
-    <Compile Include="classes\ConverterBooleanToVisibilityInverted.vb" />
+    <Compile Include="converters\ConverterBooleanToVisibility.vb" />
+    <Compile Include="converters\ConverterBooleanToVisibilityInverted.vb" />
     <Compile Include="controls\ctlCap.xaml.vb">
       <DependentUpon>ctlCap.xaml</DependentUpon>
     </Compile>
@@ -303,6 +304,7 @@
     <Resource Include="images\domain.ico" />
     <Resource Include="images\filter_folder.ico" />
     <Resource Include="images\network_folder.ico" />
+    <Resource Include="images\filter.ico" />
     <Content Include="libraries\IPrint.dll" />
     <Content Include="libraries\IPrompt.dll" />
     <Content Include="libraries\IRegisty.dll" />

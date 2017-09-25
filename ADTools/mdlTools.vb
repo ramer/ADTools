@@ -191,6 +191,10 @@ Module mdlTools
         domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
     End Sub
 
+    Public Sub deinitializePreferences()
+        IRegistrySerializer.Serialize(preferences, regPreferences)
+    End Sub
+
     Public Function ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
         If singleinstance Then
             If owner IsNot Nothing Then

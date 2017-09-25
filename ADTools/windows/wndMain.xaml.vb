@@ -1,13 +1,15 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Windows.Controls.Primitives
+Imports IPrompt.VisualBasic
 
 Class wndMain
     Public WithEvents searcher As New clsSearcher
 
     Public Shared hkF5 As New RoutedCommand
 
-    Public Property container As clsDirectoryObject
-    Public Property objects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Public Property currentcontainer As clsDirectoryObject
+    Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Public Property currentfilter As clsFilter
 
     Private searchhistoryindex As Integer
     Private searchhistory As New List(Of clsSearchHistory)
@@ -25,7 +27,8 @@ Class wndMain
         cmboSearchPattern.ItemsSource = ADToolsApplication.ocGlobalSearchHistory
         cmboSearchPattern.Focus()
 
-        cmboSearchDomains.ItemsSource = domains
+        mnuSearchDomains.ItemsSource = domains
+        tviFilters.ItemsSource = preferences.Filters
     End Sub
 
     Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing, MyBase.Closing
@@ -45,16 +48,35 @@ Class wndMain
         DomainTreeUpdate()
     End Sub
 
+    Private Sub mnuSearchSaveCurrentFilter_Click(sender As Object, e As RoutedEventArgs) Handles mnuSearchSaveCurrentFilter.Click
+        If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Me) : Exit Sub
+
+        Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterFilterName,,, vbQuestion, Me)
+
+        If String.IsNullOrEmpty(name) Then Exit Sub
+
+        currentfilter.Name = name
+        preferences.Filters.Add(currentfilter)
+    End Sub
 
 #End Region
 
 
 #Region "Events"
 
-    Private Sub tvDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+    Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim sp As StackPanel = CType(sender, StackPanel)
+        'System.Media.SystemSounds.Beep.Play()
+
         If TypeOf sp.Tag Is clsDirectoryObject Then
             OpenObject(CType(sp.Tag, clsDirectoryObject))
+        End If
+    End Sub
+
+    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+        If TypeOf sp.Tag Is clsFilter Then
+            StartSearch(Nothing, CType(sp.Tag, clsFilter))
         End If
     End Sub
 
@@ -108,21 +130,23 @@ Class wndMain
 
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
         If e.Key = Key.Enter Then
-            StartSearch(Nothing, cmboSearchPattern.Text)
+            If mnuSearchModeDefault.IsChecked = True Then
+                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, Nothing, False))
+            ElseIf mnuSearchModeAdvanced.IsChecked = True Then
+                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
+            End If
         Else
             If cmboSearchPattern.IsDropDownOpen Then cmboSearchPattern.IsDropDownOpen = False
         End If
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
-        StartSearch(Nothing, cmboSearchPattern.Text)
+        If mnuSearchModeDefault.IsChecked = True Then
+            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, Nothing, False))
+        ElseIf mnuSearchModeAdvanced.IsChecked = True Then
+            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
+        End If
         cmboSearchPattern.Focus()
-    End Sub
-
-    Private Sub cmboSearchObjectClasses_Loaded(sender As Object, e As RoutedEventArgs) Handles cmboSearchObjectClasses.Loaded, cmboSearchDomains.Loaded
-        Dim ct As ControlTemplate = CType(sender, ComboBox).Template
-        Dim pop As Popup = ct.FindName("Popup", CType(sender, ComboBox))
-        pop.Placement = PlacementMode.Top
     End Sub
 
     Private Async Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
@@ -160,15 +184,16 @@ Class wndMain
     End Sub
 
     Public Sub OpenObjectParent()
-        If container Is Nothing OrElse (container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path) Then Exit Sub
-        Dim parent As New clsDirectoryObject(container.Entry.Parent, container.Domain)
+        If currentcontainer Is Nothing OrElse (currentcontainer.Entry.Parent Is Nothing OrElse currentcontainer.Entry.Path = currentcontainer.Domain.DefaultNamingContext.Path) Then Exit Sub
+        Dim parent As New clsDirectoryObject(currentcontainer.Entry.Parent, currentcontainer.Domain)
         StartSearch(parent, Nothing)
     End Sub
 
-    Private Sub ShowPath(Optional pattern As String = Nothing)
+    Private Sub ShowPath(Optional container As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         For Each child In tlbrPath.Items
             If TypeOf child Is Button Then RemoveHandler CType(child, Button).Click, AddressOf btnPath_Click
         Next
+
         tlbrPath.Items.Clear()
 
         If container IsNot Nothing Then
@@ -198,20 +223,21 @@ Class wndMain
                 AddHandler child.Click, AddressOf btnPath_Click
                 tlbrPath.Items.Add(child)
             Next
-        Else
-            If String.IsNullOrEmpty(pattern) Then Exit Sub
+
+        ElseIf filter IsNot Nothing Then
 
             Dim tblck As New TextBlock
             tblck.Background = Brushes.Transparent
-            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & pattern
+            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern, " Advanced filter"))
             tblck.Margin = New Thickness(2, 0, 2, 0)
             tblck.Padding = New Thickness(5, 0, 5, 0)
             tlbrPath.Items.Add(tblck)
+
         End If
     End Sub
 
     Public Sub RebuildColumns()
-        If objects.Count > 10 Then objects.Clear()
+        If currentobjects.Count > 10 Then currentobjects.Clear()
 
         dgObjects.Columns.Clear()
         For Each columninfo As clsDataGridColumnInfo In preferences.Columns
@@ -232,40 +258,39 @@ Class wndMain
 
     Private Sub HotKey_F5()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
-        Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Pattern)
+        Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Filter)
     End Sub
 
     Private Sub SearchPrevious()
         If searchhistoryindex <= 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
-        Search(searchhistory(searchhistoryindex - 1).Root, searchhistory(searchhistoryindex - 1).Pattern)
+        Search(searchhistory(searchhistoryindex - 1).Root, searchhistory(searchhistoryindex - 1).Filter)
         searchhistoryindex -= 1
     End Sub
 
     Private Sub SearchNext()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 2 > searchhistory.Count Then Exit Sub
-        Search(searchhistory(searchhistoryindex + 1).Root, searchhistory(searchhistoryindex + 1).Pattern)
+        Search(searchhistory(searchhistoryindex + 1).Root, searchhistory(searchhistoryindex + 1).Filter)
         searchhistoryindex += 1
     End Sub
 
-    Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional pattern As String = Nothing)
+    Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         While searchhistory.Count > searchhistoryindex + 1
             searchhistory.RemoveAt(searchhistory.Count - 1)
         End While
 
-        searchhistory.Add(New clsSearchHistory(root, pattern))
+        searchhistory.Add(New clsSearchHistory(root, filter))
         If Not ADToolsApplication.ocGlobalSearchHistory.Contains(cmboSearchPattern.Text) Then ADToolsApplication.ocGlobalSearchHistory.Insert(0, cmboSearchPattern.Text)
         searchhistoryindex = searchhistory.Count - 1
 
-        Search(root, pattern)
+        Search(root, filter)
     End Sub
 
-    Public Async Sub Search(Optional root As clsDirectoryObject = Nothing, Optional pattern As String = Nothing)
+    Public Async Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         Try
             CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Clear()
         Catch
         End Try
 
-        cmboSearchPattern.Text = pattern
         Dim cmboTextBoxChild As TextBox = cmboSearchPattern.Template.FindName("PART_EditableTextBox", cmboSearchPattern)
         If cmboTextBoxChild IsNot Nothing Then cmboTextBoxChild.SelectAll()
 
@@ -274,10 +299,11 @@ Class wndMain
 
         Dim domainlist As New ObservableCollection(Of clsDomain)(domains.Where(Function(x As clsDomain) x.IsSearchable = True).ToList)
 
-        container = root
-        ShowPath(pattern)
+        currentcontainer = root
+        currentfilter = filter
+        ShowPath(currentcontainer, filter)
 
-        Await searcher.BasicSearchAsync(objects, root, domainlist, preferences.AttributesForSearch, pattern, searchobjectclasses, False)
+        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist)
 
         If preferences.SearchResultGrouping Then
             Try
@@ -293,6 +319,7 @@ Class wndMain
     Private Sub Searcher_BasicSearchAsyncDataRecieved() Handles searcher.BasicSearchAsyncDataRecieved
         cap.Visibility = Visibility.Hidden
     End Sub
+
 
 
 

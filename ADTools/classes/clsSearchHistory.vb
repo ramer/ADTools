@@ -1,10 +1,10 @@
 ﻿Public Class clsSearchHistory
     Private _root As clsDirectoryObject
-    Private _pattern As String
+    Private _filter As clsFilter
 
-    Sub New(root As clsDirectoryObject, pattern As String)
+    Sub New(root As clsDirectoryObject, filter As clsFilter)
         _root = root
-        _pattern = pattern
+        _filter = filter
     End Sub
 
     Public ReadOnly Property Root() As clsDirectoryObject
@@ -13,9 +13,9 @@
         End Get
     End Property
 
-    Public ReadOnly Property Pattern() As String
+    Public ReadOnly Property Filter() As clsFilter
         Get
-            Return _pattern
+            Return _filter
         End Get
     End Property
 

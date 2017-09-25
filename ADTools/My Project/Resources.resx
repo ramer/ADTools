@@ -154,6 +154,9 @@
   <data name="favorite_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\favorite_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="filter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\filter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="filter_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\filter_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -306,8 +309,8 @@ However, you can also specify the root of the domain as the root of the search.<
   <data name="wndMain_lbl_ObjectsTotal" xml:space="preserve">
     <value>Objects: </value>
   </data>
-  <data name="wndMain_lbl_SearchObjects" xml:space="preserve">
-    <value>Search objects ...</value>
+  <data name="wndMain_lbl_SearchFilter" xml:space="preserve">
+    <value>Filter</value>
   </data>
   <data name="wndMain_lbl_SearchResults" xml:space="preserve">
     <value>Search results:</value>
@@ -333,6 +336,27 @@ However, you can also specify the root of the domain as the root of the search.<
   <data name="wndMain_mnuHelp_About" xml:space="preserve">
     <value>About ...</value>
   </data>
+  <data name="wndMain_mnuSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="wndMain_mnuSearchDomains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="wndMain_mnuSearchMode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="wndMain_mnuSearchMode_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="wndMain_mnuSearchMode_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="wndMain_mnuSearchObjectClasses" xml:space="preserve">
+    <value>Classes</value>
+  </data>
+  <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
+    <value>Save current filter ...</value>
+  </data>
   <data name="wndMain_mnuService" xml:space="preserve">
     <value>Service</value>
   </data>
@@ -348,10 +372,10 @@ However, you can also specify the root of the domain as the root of the search.<
   <data name="wndMain_mnuService_Preferences" xml:space="preserve">
     <value>Preferences ...</value>
   </data>
-  <data name="wndMain_tblckSearchDomains" xml:space="preserve">
-    <value>Domains ...</value>
+  <data name="wndMain_msg_CannotSaveCurrentFilter" xml:space="preserve">
+    <value>Current filter is empty.</value>
   </data>
-  <data name="wndMain_tblckSearchObjectClasses" xml:space="preserve">
-    <value>Classes ...</value>
+  <data name="wndMain_msg_EnterFilterName" xml:space="preserve">
+    <value>Enter new filter name:</value>
   </data>
 </root>

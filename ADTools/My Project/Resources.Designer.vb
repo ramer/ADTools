@@ -183,6 +183,16 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
+        Public ReadOnly Property filter() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("filter", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
         Public ReadOnly Property filter_folder() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("filter_folder", resourceCulture)
@@ -636,11 +646,11 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Search objects ....
+        '''  Ищет локализованную строку, похожую на Filter.
         '''</summary>
-        Public ReadOnly Property wndMain_lbl_SearchObjects() As String
+        Public ReadOnly Property wndMain_lbl_SearchFilter() As String
             Get
-                Return ResourceManager.GetString("wndMain_lbl_SearchObjects", resourceCulture)
+                Return ResourceManager.GetString("wndMain_lbl_SearchFilter", resourceCulture)
             End Get
         End Property
         
@@ -717,6 +727,69 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Search.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearch() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Domains.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchDomains() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchDomains", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Mode.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchMode() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchMode", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Advanced.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchMode_Advanced() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchMode_Advanced", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Default.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchMode_Default() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchMode_Default", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Classes.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchObjectClasses() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchObjectClasses", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Save current filter ....
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuSearchSaveCurrentFilter() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuSearchSaveCurrentFilter", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Service.
         '''</summary>
         Public ReadOnly Property wndMain_mnuService() As String
@@ -762,20 +835,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Domains ....
+        '''  Ищет локализованную строку, похожую на Current filter is empty..
         '''</summary>
-        Public ReadOnly Property wndMain_tblckSearchDomains() As String
+        Public ReadOnly Property wndMain_msg_CannotSaveCurrentFilter() As String
             Get
-                Return ResourceManager.GetString("wndMain_tblckSearchDomains", resourceCulture)
+                Return ResourceManager.GetString("wndMain_msg_CannotSaveCurrentFilter", resourceCulture)
             End Get
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Classes ....
+        '''  Ищет локализованную строку, похожую на Enter new filter name:.
         '''</summary>
-        Public ReadOnly Property wndMain_tblckSearchObjectClasses() As String
+        Public ReadOnly Property wndMain_msg_EnterFilterName() As String
             Get
-                Return ResourceManager.GetString("wndMain_tblckSearchObjectClasses", resourceCulture)
+                Return ResourceManager.GetString("wndMain_msg_EnterFilterName", resourceCulture)
             End Get
         End Property
     End Module

@@ -30,11 +30,8 @@ Public Class clsSearcher
 
     Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
                                            Optional parentobject As clsDirectoryObject = Nothing,
-                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
-                                           Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
-                                           Optional pattern As String = Nothing,
-                                           Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
-                                           Optional freesearch As Boolean = False
+                                           Optional filter As clsFilter = Nothing,
+                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing
                                            ) As Task
         Await BasicSearchStopAsync()
 
@@ -56,7 +53,7 @@ Public Class clsSearcher
         For Each root In roots
             Dim mt = Task.Factory.StartNew(
                 Function()
-                    Return BasicSearchSync(root, attributes, pattern, searchobjectclasses, freesearch, searchscope, basicsearchtaskscts.Token)
+                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
                 End Function, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
             Log(String.Format("Задача на поиск в домене ""{0}"" создана", root.name))
@@ -94,10 +91,7 @@ Public Class clsSearcher
     End Function
 
     Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,
-                                    Optional attributes As ObservableCollection(Of clsAttribute) = Nothing,
-                                    Optional pattern As String = Nothing,
-                                    Optional searchobjectclasses As clsSearchObjectClasses = Nothing,
-                                    Optional freesearch As Boolean = False,
+                                    Optional filter As clsFilter = Nothing,
                                     Optional searchscope As SearchScope = SearchScope.Subtree,
                                     Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
@@ -112,23 +106,7 @@ Public Class clsSearcher
             ldapsearcher.PageSize = 1000
 
             If searchscope = SearchScope.Subtree Then
-                If String.IsNullOrEmpty(pattern) Then Return New ObservableCollection(Of clsDirectoryObject)
-
-                Dim patterns() As String = pattern.Split({"/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries)
-                attributes = If(attributes, attributesForSearchDefault)
-                searchobjectclasses = If(searchobjectclasses, New clsSearchObjectClasses)
-                Dim attrfilter = ""
-                attributes.ToList.ForEach(Sub(a As clsAttribute) patterns.ToList.ForEach(Sub(p) attrfilter &= String.Format("({0}={1}{2}*)", a.Name, If(freesearch, "*", ""), Trim(p))))
-                Dim filter As String = "(&" +
-                                            "(|" +
-                                                If(searchobjectclasses.User, "(&(objectCategory=person)(!(objectClass=inetOrgPerson)))", "") +
-                                                If(searchobjectclasses.Computer, "(objectCategory=computer)", "") +
-                                                If(searchobjectclasses.Group, "(objectCategory=group)", "") +
-                                                If(searchobjectclasses.Container, "(objectCategory=container)", "") +
-                                            ")" +
-                                            If(Not String.IsNullOrEmpty(attrfilter), "(|" & attrfilter & ")", "") +
-                                        ")"
-                ldapsearcher.Filter = "(thumbnailPhoto=*)"
+                If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then ldapsearcher.Filter = filter.Filter
             End If
 
             Dim ldapresults As SearchResultCollection = ldapsearcher.FindAll()

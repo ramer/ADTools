@@ -42,6 +42,9 @@ Public Class clsPreferences
     ' externalsoftware
     Private _externalsoftware As New ObservableCollection(Of clsExternalSoftware)
 
+    ' saved filters
+    Private _filters As New ObservableCollection(Of clsFilter)
+
     ' SIP
     'Private _sipuse As Boolean
     'Private _sipserver As String
@@ -608,8 +611,18 @@ Public Class clsPreferences
             Return _externalsoftware
         End Get
         Set(value As ObservableCollection(Of clsExternalSoftware))
-            _externalsoftware = value
+            _externalsoftware = If(value, New ObservableCollection(Of clsExternalSoftware))
             NotifyPropertyChanged("ExternalSoftware")
+        End Set
+    End Property
+
+    Public Property Filters As ObservableCollection(Of clsFilter)
+        Get
+            Return _filters
+        End Get
+        Set(value As ObservableCollection(Of clsFilter))
+            _filters = If(value, New ObservableCollection(Of clsFilter))
+            NotifyPropertyChanged("Filters")
         End Set
     End Property
 

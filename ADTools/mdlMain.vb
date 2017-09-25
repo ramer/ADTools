@@ -65,13 +65,13 @@ Public Class ADToolsApplication
 
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)
-        'Try
-        ' unhandled exception handler
-        'AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
-        'AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
+        Try
+            ' unhandled exception handler
+            AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
+            AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
-        ' notify icon initialization
-        nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
+            ' notify icon initialization
+            nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
             nicon.Text = My.Application.Info.AssemblyName
             nicon.ContextMenu = ctxmenu
             nicon.Visible = True
@@ -111,9 +111,9 @@ Public Class ADToolsApplication
                 wndMainActivate()
             End If
 
-        'Catch ex As Exception
-        '    IMsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")
-        'End Try
+        Catch ex As Exception
+            IMsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")
+        End Try
     End Sub
 
     Public Sub Activate()
@@ -126,8 +126,8 @@ Public Class ADToolsApplication
             ' notify icon deinitialization
             nicon.Visible = False
 
-            '    ' save preferences
-            'deinitializePreferences()
+            ' save preferences
+            deinitializePreferences()
 
             '    ' unregister SIP
             '    deinitializeSIP()

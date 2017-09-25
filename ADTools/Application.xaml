@@ -981,7 +981,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="MenuItem">
-                        <Border x:Name="Border" BorderThickness="0">
+                        <Border x:Name="Border" BorderThickness="0" MinHeight="23">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition x:Name="Col0" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup"/>
@@ -1003,14 +1003,16 @@
                                 Margin="7"
                                 x:Name="HeaderHost"
                                 RecognizesAccessKey="True"
-                                ContentSource="Header"/>
+                                ContentSource="Header"
+                                VerticalAlignment="Center"
+                                />
 
                                 <!-- Content for the menu IGT -->
                                 <ContentPresenter Grid.Column="2"
                                 Margin="8,1,8,1"
                                 x:Name="IGTHost"
                                 ContentSource="InputGestureText"
-                                VerticalAlignment="Center"/>
+                                />
 
                                 <!-- Arrow drawn path which points to the next level of the menu -->
                                 <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
