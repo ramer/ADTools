@@ -34,10 +34,11 @@ Public Class clsFilter
         attributes.ToList.ForEach(Sub(a As clsAttribute) patterns.ToList.ForEach(Sub(p) attrfilter &= String.Format("({0}={1}{2}*)", a.Name, If(freesearch, "*", ""), Trim(p))))
         Me.Filter = "(&" +
                      "(|" +
-                         If(searchobjectclasses.User, "(&(objectCategory=person)(!(objectClass=inetOrgPerson)))", "") +
-                         If(searchobjectclasses.Computer, "(objectCategory=computer)", "") +
-                         If(searchobjectclasses.Group, "(objectCategory=group)", "") +
-                         If(searchobjectclasses.Container, "(objectCategory=container)", "") +
+                         If(searchobjectclasses.User, "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))", "") +
+                         If(searchobjectclasses.Contact, "(&(objectCategory=person)(objectClass=contact))", "") +
+                         If(searchobjectclasses.Computer, "(objectClass=computer)", "") +
+                         If(searchobjectclasses.Group, "(objectClass=group)", "") +
+                         If(searchobjectclasses.OrganizationalUnit, "(objectClass=organizationalunit)", "") +
                      ")" +
                      If(Not String.IsNullOrEmpty(attrfilter), "(|" & attrfilter & ")", "") +
                   ")"

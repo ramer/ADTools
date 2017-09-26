@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.Reflection
 Imports System.Windows.Controls.Primitives
 Imports IPrompt.VisualBasic
 
@@ -14,8 +15,7 @@ Class wndMain
     Private searchhistoryindex As Integer
     Private searchhistory As New List(Of clsSearchHistory)
 
-    Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True)
-
+    Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True, False)
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
@@ -66,11 +66,32 @@ Class wndMain
 
     Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim sp As StackPanel = CType(sender, StackPanel)
-        'System.Media.SystemSounds.Beep.Play()
 
         If TypeOf sp.Tag Is clsDirectoryObject Then
             OpenObject(CType(sp.Tag, clsDirectoryObject))
         End If
+    End Sub
+
+    Private Sub objects_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
+        Dim obj As clsDirectoryObject = Nothing
+
+        If TypeOf sender Is StackPanel AndAlso TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
+        If TypeOf sender Is DataGrid AndAlso TypeOf CType(sender, DataGrid).CurrentItem Is clsDirectoryObject Then obj = CType(CType(sender, DataGrid).CurrentItem, clsDirectoryObject)
+
+        If obj Is Nothing Then Exit Sub
+
+        If TypeOf sender Is StackPanel Then CType(sender, StackPanel).ContextMenu.Tag = obj
+        If TypeOf sender Is DataGrid Then CType(sender, DataGrid).ContextMenu.Tag = obj
+
+        If obj.objectClass.Contains("computer") Then
+        ElseIf obj.objectClass.Contains("group") Then
+        ElseIf obj.objectClass.Contains("contact") Then
+        ElseIf obj.objectClass.Contains("user") Then
+        ElseIf obj.objectClass.Contains("organizationalunit") Then
+        Else
+        End If
+
+
     End Sub
 
     Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
@@ -100,7 +121,7 @@ Class wndMain
     End Sub
 
     Private Sub dgObjects_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDoubleClick
-        If dgObjects.SelectedItem Is Nothing Then Exit Sub
+        If dgObjects.SelectedItem Is Nothing Or Not (e.ChangedButton = MouseButton.Left) Then Exit Sub
         Dim current As clsDirectoryObject = CType(dgObjects.SelectedItem, clsDirectoryObject)
         OpenObject(current)
     End Sub
@@ -131,7 +152,7 @@ Class wndMain
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
         If e.Key = Key.Enter Then
             If mnuSearchModeDefault.IsChecked = True Then
-                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, Nothing, False))
+                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses, False))
             ElseIf mnuSearchModeAdvanced.IsChecked = True Then
                 StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
             End If
@@ -142,7 +163,7 @@ Class wndMain
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If mnuSearchModeDefault.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, Nothing, False))
+            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses, False))
         ElseIf mnuSearchModeAdvanced.IsChecked = True Then
             StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
         End If
@@ -167,19 +188,14 @@ Class wndMain
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
-        If current.objectClass.Contains("computer") Or
-           current.objectClass.Contains("group") Or
-           current.objectClass.Contains("contact") Or
-           current.objectClass.Contains("user") Then
-
-            ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
-
-        ElseIf current.objectClass.Contains("organizationalunit") Or
-               current.objectClass.Contains("container") Or
-               current.objectClass.Contains("builtindomain") Or
-               current.objectClass.Contains("domaindns") Then
-
+        If current.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
+           current.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
+           current.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer Or
+           current.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Then
             StartSearch(current, Nothing)
+
+        Else
+            ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
         End If
     End Sub
 
@@ -318,6 +334,74 @@ Class wndMain
 
     Private Sub Searcher_BasicSearchAsyncDataRecieved() Handles searcher.BasicSearchAsyncDataRecieved
         cap.Visibility = Visibility.Hidden
+    End Sub
+
+    Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn
+        Dim BasicProperties As PropertyInfo() = GetType(clsDirectoryObject).GetProperties()
+        Dim BasicPropertiesNames As String() = BasicProperties.Select(Function(x As PropertyInfo) x.Name).ToArray
+
+        Dim column As New DataGridTemplateColumn()
+        column.Header = columninfo.Header
+        column.SetValue(DataGridColumn.CanUserSortProperty, True)
+        If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
+        If columninfo.Width > 0 Then column.Width = columninfo.Width
+        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+        panel.SetValue(VirtualizingStackPanel.VerticalAlignmentProperty, VerticalAlignment.Center)
+        panel.SetValue(VirtualizingStackPanel.MarginProperty, New Thickness(5, 0, 5, 0))
+
+        Dim first As Boolean = True
+        For Each attr As clsAttribute In columninfo.Attributes
+            Dim bind As System.Windows.Data.Binding
+
+            If BasicPropertiesNames.Contains(attr.Name) Then
+                bind = New System.Windows.Data.Binding(attr.Name)
+            Else
+                bind = New System.Windows.Data.Binding("Attr[" & attr.Name & "]")
+            End If
+            bind.Mode = BindingMode.OneWay
+
+            If attr.Name <> "Image" Then
+
+                Dim text As New FrameworkElementFactory(GetType(TextBlock))
+                If first Then
+                    text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
+                    first = False
+                    column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+                End If
+                text.SetBinding(TextBlock.TextProperty, bind)
+                text.SetValue(TextBlock.ToolTipProperty, attr.Label)
+                'text.SetValue(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow)
+                panel.AppendChild(text)
+
+            Else
+
+                Dim ttbind As New System.Windows.Data.Binding("Status")
+                ttbind.Mode = BindingMode.OneWay
+                Dim img As New FrameworkElementFactory(GetType(Image))
+                column.SetValue(clsSorter.PropertyNameProperty, "Image")
+                img.SetBinding(Image.SourceProperty, bind)
+                img.SetValue(Image.WidthProperty, 32.0)
+                img.SetValue(Image.HeightProperty, 32.0)
+                img.SetBinding(Image.ToolTipProperty, ttbind)
+                panel.AppendChild(img)
+
+            End If
+            'Status
+        Next
+
+        Dim template As New DataTemplate()
+        template.VisualTree = panel
+
+        column.CellTemplate = template
+
+        Return column
+    End Function
+
+
+    Private Sub ctxmnuProperties_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
+        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
     End Sub
 
 

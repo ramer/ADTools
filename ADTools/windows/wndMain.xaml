@@ -13,6 +13,32 @@
         Icon="/images/app.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
+    <Window.Resources>
+        <ContextMenu x:Key="ctxmnuObjects" x:Name="ctxmnuObject">
+            <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="Внешние приложения"/>
+            <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать">
+                    <MenuItem x:Name="ctxmnuObjectsCopyDisplayName" Header="Отображаемое имя"/>
+                    <MenuItem x:Name="ctxmnuObjectsCopyBasicAttributes" Header="Основные атрибуты" ToolTip="Отображаемое имя, имя входа, основной адрес, телефон"/>
+                    <MenuItem x:Name="ctxmnuObjectsCopyAllAttributes" Header="Все атрибуты"/>
+                </MenuItem>
+                <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
+                <Separator/>
+                <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..."/>
+                <MenuItem x:Name="ctxmnuObjectsMove" Header="Переместить..."/>
+                <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..."/>
+                <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить"/>
+                <Separator/>
+                <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="Сбросить пароль на стандартный"/>
+                <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
+                <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
+                <MenuItem x:Name="ctxmnuObjectsShowInCommander" Header="Показать в ADCommander">
+                    <MenuItem x:Name="ctxmnuObjectsShowInCommanderLeftPanel" Header="Левая панель"/>
+                    <MenuItem x:Name="ctxmnuObjectsShowInCommanderRightPanel" Header="Правая панель"/>
+                </MenuItem>
+            <MenuItem x:Name="ctxmnuProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuProperties_Click"/>
+            </ContextMenu>
+
+    </Window.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
@@ -34,9 +60,10 @@
                         </MenuItem>
                         <MenuItem x:Name="mnuSearchObjectClasses" Header="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DataContext="{Binding searchobjectclasses}">
                             <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <CheckBox IsChecked="{Binding Contact}" Content="Contact" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                             <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                             <CheckBox IsChecked="{Binding Group}" Content="Group" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                            <CheckBox IsChecked="{Binding Container}" Content="Container" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                            <CheckBox IsChecked="{Binding OrganizationalUnit}" Content="Organizational Unit" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                         </MenuItem>
                         <MenuItem x:Name="mnuSearchDomains" Header="{x:Static r:Resources.wndMain_mnuSearchDomains}">
                             <MenuItem.ItemTemplate>
@@ -139,7 +166,7 @@
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown">
+                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenu="{DynamicResource ctxmnuObjects}" ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening">
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
                                 </StackPanel>
@@ -208,6 +235,8 @@
                             x:Name="dgObjects"
                             Foreground="Black"
                             ItemsSource="{Binding currentobjects}"
+                            ContextMenu="{DynamicResource ctxmnuObjects}"
+                            ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening"
                             AlternationCount="2"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
@@ -218,6 +247,8 @@
                             IsTextSearchCaseSensitive="False"
                             IsTextSearchEnabled="True"
                             TextSearch.TextPath="name"
+                            SelectionMode="Single"
+                            ScrollViewer.CanContentScroll ="False"
                             Margin="0,0,0,5">
 
                             <DataGrid.Columns>

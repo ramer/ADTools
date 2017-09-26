@@ -7,6 +7,18 @@ Public Class clsDirectoryObject
     Inherits Dynamic.DynamicObject
     Implements INotifyPropertyChanged
 
+    Enum enmSchemaClass
+        User
+        Contact
+        Computer
+        Group
+        OrganizationalUnit
+        Container
+        DomainDNS
+        UnknownContainer
+        Unknown
+    End Enum
+
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     Private _entry As DirectoryEntry
@@ -83,6 +95,9 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Public Sub Refresh()
+        _properties.Clear()
+    End Sub
 
     'Public ReadOnly Property Children() As ObservableCollection(Of clsDirectoryObject)
     '    Get
@@ -110,7 +125,7 @@ Public Class clsDirectoryObject
             Dim ds As New DirectorySearcher(Entry)
             ds.PropertiesToLoad.AddRange({"name", "objectClass"})
             ds.SearchScope = SearchScope.OneLevel
-            ds.Filter = "(|(objectClass=organizationalUnit)(objectClass=container))"
+            ds.Filter = "(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"
             For Each sr As SearchResult In ds.FindAll()
                 _childcontainers.Add(New clsDirectoryObject(sr, Domain))
             Next
@@ -248,32 +263,35 @@ Public Class clsDirectoryObject
         Return True
     End Function
 
-    'Default Public Property Attr(name As String) As Object
-    '    Get
-    '        Dim staticprops = Me.GetType.GetProperties()
-    '        Dim props = Me.GetType.GetProperties().Where(Function(p) LCase(p.Name) = LCase(name))
-    '        If props.Count = 1 Then
-    '            Return props(0).GetValue(Me)
-    '        Else
-    '            Return LdapAttr(name)
-    '        End If
-    '    End Get
-    '    Set(value)
-    '        Dim staticprops = Me.GetType.GetProperties()
-    '        Dim props = Me.GetType.GetProperties().Where(Function(p) LCase(p.Name) = LCase(name))
-    '        If props.Count = 1 Then
-    '            props(0).SetValue(Me, value)
-    '        Else
-    '            LdapAttr(name) = value
-    '        End If
-    '    End Set
-    'End Property
+    Public ReadOnly Property SchemaClass() As enmSchemaClass
+        Get
+            If objectCategory = "person" And objectClass.Contains("user") Then
+                Return enmSchemaClass.User
+            ElseIf objectCategory = "person" And objectClass.Contains("contact") Then
+                Return enmSchemaClass.Contact
+            ElseIf objectClass.Contains("computer") Then
+                Return enmSchemaClass.Computer
+            ElseIf objectClass.Contains("group") Then
+                Return enmSchemaClass.Group
+            ElseIf objectClass.Contains("organizationalunit") Then
+                Return enmSchemaClass.OrganizationalUnit
+            ElseIf objectClass.Contains("container") Or objectClass.Contains("builtindomain") Then
+                Return enmSchemaClass.Container
+            ElseIf objectClass.Contains("domaindns") Then
+                Return enmSchemaClass.DomainDNS
+            ElseIf objectClass.Contains("lostandfound") Then
+                Return enmSchemaClass.UnknownContainer
+            Else
+                Return enmSchemaClass.Unknown
+            End If
+        End Get
+    End Property
 
     Public ReadOnly Property Status() As String
         Get
             Dim _statusFormated As String = ""
 
-            If objectClass.Contains("user") Or objectClass.Contains("computer") Then
+            If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
                     _statusFormated &= "Срок действия пароля неизвестен" & vbCr
                 ElseIf passwordNeverExpires = False Then
@@ -305,31 +323,33 @@ Public Class clsDirectoryObject
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
             Dim _image As String = ""
-            Dim oc As String() = objectClass
+            Dim oclass As String() = objectClass
+            Dim ocategory As String = objectCategory
 
-            If oc.Contains("user") Then
-                _image = "images/user.ico"
-            ElseIf oc.Contains("computer") Then
-                _image = "images/computer.ico"
-            ElseIf oc.Contains("group") Then
-                _image = "images/group.ico"
-            ElseIf oc.Contains("contact") Then
-                _image = "images/contact.ico"
-            ElseIf oc.Contains("domaindns") Then
-                _image = "images/domain.ico"
-            ElseIf oc.Contains("organizationalunit") Then
-                _image = "images/organizationalunit.ico"
-            ElseIf oc.Contains("container") Then
-                _image = "images/container.ico"
-            Else
-                If name = "Deleted Objects" Then
-                    _image = "images/container_deleted.ico"
-                Else
-                    _image = "images/object_unknown.ico"
-                End If
-            End If
+            Select Case SchemaClass
+                Case enmSchemaClass.User
+                    _image = "user.ico"
+                Case enmSchemaClass.Contact
+                    _image = "contact.ico"
+                Case enmSchemaClass.Computer
+                    _image = "computer.ico"
+                Case enmSchemaClass.Group
+                    _image = "group.ico"
+                Case enmSchemaClass.OrganizationalUnit
+                    _image = "organizationalunit.ico"
+                Case enmSchemaClass.Container
+                    _image = "container.ico"
+                Case enmSchemaClass.DomainDNS
+                    _image = "domain.ico"
+                Case enmSchemaClass.UnknownContainer
+                    _image = "container_unknown.ico"
+                Case enmSchemaClass.Unknown
+                    _image = "object_unknown.ico"
+                Case Else
+                    _image = "object_unknown.ico"
+            End Select
 
-            Return New BitmapImage(New Uri("pack://application:,,,/" & _image))
+            Return New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
         End Get
     End Property
 
@@ -337,79 +357,66 @@ Public Class clsDirectoryObject
         Get
             Dim _image As String = ""
 
-            If objectClass.Contains("user") Then
-                _image = "images/user.ico"
+            If SchemaClass = enmSchemaClass.User Then
+                _image = "user.ico"
                 If passwordNeverExpires Is Nothing Then
-                    _image = "images/user_expired.ico"
+                    _image = "user_expired.ico"
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate = Nothing Then
-                        _image = "images/user_expired.ico"
+                        _image = "user_expired.ico"
                     ElseIf passwordExpiresDate() <= Now Then
-                        _image = "images/user_expired.ico"
+                        _image = "user_expired.ico"
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _image = "images/user_expired.ico"
+                    _image = "user_expired.ico"
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _image = "images/user_expired.ico"
+                    _image = "user_expired.ico"
                 End If
 
                 If disabled Is Nothing Then
-                    _image = "images/user_expired.ico"
+                    _image = "user_expired.ico"
                 ElseIf disabled Then
-                    _image = "images/user_blocked.ico"
+                    _image = "user_blocked.ico"
                 End If
-            ElseIf objectClass.Contains("computer") Then
-                _image = "images/computer.ico"
+            ElseIf SchemaClass = enmSchemaClass.Computer Then
+                _image = "computer.ico"
                 If passwordNeverExpires Is Nothing Then
-                    _image = "images/computer_expired.ico"
+                    _image = "computer_expired.ico"
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate = Nothing Then
-                        _image = "images/computer_expired.ico"
+                        _image = "computer_expired.ico"
                     ElseIf passwordExpiresDate() <= Now Then
-                        _image = "images/computer_expired.ico"
+                        _image = "computer_expired.ico"
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _image = "images/computer_expired.ico"
+                    _image = "computer_expired.ico"
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _image = "images/computer_expired.ico"
+                    _image = "computer_expired.ico"
                 End If
 
                 If disabled Is Nothing Then
-                    _image = "images/computer_expired.ico"
+                    _image = "computer_expired.ico"
                 ElseIf disabled Then
-                    _image = "images/computer_blocked.ico"
+                    _image = "computer_blocked.ico"
                 End If
-            ElseIf objectClass.Contains("group") Then
-                _image = "images/group.ico"
+            ElseIf SchemaClass = enmSchemaClass.Group Then
+                _image = "group.ico"
                 If groupTypeSecurity Then
-                    _image = "images/group.ico"
+                    _image = "group.ico"
                 ElseIf groupTypeDistribution Then
-                    _image = "images/group_distribution.ico"
+                    _image = "group_distribution.ico"
                 Else
-                    _image = "images/object_unknown.ico"
+                    _image = "object_unknown.ico"
                 End If
-            ElseIf objectClass.Contains("contact") Then
-                _image = "images/contact.ico"
-            ElseIf objectClass.Contains("domaindns") Then
-                _image = "images/domain.ico"
-            ElseIf objectClass.Contains("organizationalunit") Then
-                _image = "images/organizationalunit.ico"
-            ElseIf objectClass.Contains("container") Then
-                _image = "images/container.ico"
             Else
-                If LdapProperty("name") = "Deleted Objects" Then
-                    _image = "images/container_deleted.ico"
-                Else
-                    _image = "images/object_unknown.ico"
-                End If
+                Return ClassImage
             End If
 
-
-            Return New BitmapImage(New Uri("pack://application:,,,/" & _image))
+            Return New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
         End Get
     End Property
 
@@ -921,6 +928,22 @@ Public Class clsDirectoryObject
                     Return CType(oc, Object()).Select(Function(x) LCase(x.ToString)).ToArray
                 Else
                     Return New String() {oc}
+                End If
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End Get
+    End Property
+
+    Public ReadOnly Property objectCategory() As String
+        Get
+            Try
+                Dim oc = LdapProperty("objectcategory")
+                If oc IsNot Nothing Then
+                    Dim ocarr = LCase(oc.ToString).Split(New String() {"=", ","}, StringSplitOptions.RemoveEmptyEntries)
+                    Return If(ocarr.Length >= 2, ocarr(1), Nothing)
+                Else
+                    Return Nothing
                 End If
             Catch ex As Exception
                 Return Nothing

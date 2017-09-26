@@ -88,7 +88,7 @@ Public Class ctlGroupMemberOf
             Await searcher.BasicSearchAsync(
                 _currentdomaingroups,
                 Nothing,
-                New clsFilter(tbDomainGroupsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, False), True),
+                New clsFilter(tbDomainGroupsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, False, True, False), True),
                 New ObservableCollection(Of clsDomain)({_currentdomain}))
         End If
     End Sub

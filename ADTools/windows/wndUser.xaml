@@ -134,11 +134,11 @@
                         <DockPanel LastChildFill="True" Margin="5,5,5,0">
                             <TextBlock Text="Имя входа" Width="130"/>
                             <ComboBox x:Name="cmboUserPrincipalNameDomain" Height="23" Width="150" Text="{Binding userPrincipalNameDomain}" ItemsSource="{Binding Domain.Suffixes}" DockPanel.Dock="Right" IsEditable="True" IsEnabled="{Binding CanWrite[userPrincipalName]}"/>
-                            <TextBox x:Name="tbUserPrincipalNameName" Height="23" Text="{Binding userPrincipalNameName}" MaxLength="256" BorderThickness="1,1,0,1" TabIndex="0" IsEnabled="{Binding CanWrite[userPrincipalName]}"/>
+                            <TextBox x:Name="tbUserPrincipalNameName" Height="23" Text="{Binding userPrincipalNameName}" MaxLength="256" BorderThickness="1,1,0,1" TabIndex="0" IsReadOnly="{Binding IsReadOnly[userPrincipalName]}"/>
                         </DockPanel>
                         <DockPanel LastChildFill="True" Margin="5,5,5,0">
                             <TextBlock Text="Имя входа (пред-Windows 2000)" Width="200"/>
-                            <TextBox x:Name="tbSAMAccountName" Height="23" Text="{Binding sAMAccountName}" MaxLength="20" IsEnabled="{Binding CanWrite[sAMAccountName]}"/>
+                            <TextBox x:Name="tbSAMAccountName" Height="23" Text="{Binding sAMAccountName}" MaxLength="20" IsReadOnly="{Binding IsReadOnly[sAMAccountName]}"/>
                         </DockPanel>
                         <Grid Margin="0,15,0,0">
                             <Grid.ColumnDefinitions>

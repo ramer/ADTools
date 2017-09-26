@@ -1,6 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports System.Threading.Tasks
 
 Public Class ctlObjectAttributes
 
@@ -26,10 +25,11 @@ Public Class ctlObjectAttributes
     End Property
 
     Sub New()
-        InitializeComponent()
-
         cvsAttributes = New CollectionViewSource() With {.Source = attributes}
         cvAttributes = cvsAttributes.View
+
+        InitializeComponent()
+
         dgAttributes.ItemsSource = cvAttributes
     End Sub
 
@@ -48,32 +48,114 @@ Public Class ctlObjectAttributes
         If _currentobject Is Nothing Then Exit Sub
 
         cap.Visibility = Visibility.Visible
-        Dim attrs As New ObservableCollection(Of clsAttribute)
+        Dim ldapattributes As New ObservableCollection(Of clsAttribute)
 
         Await Task.Run(
             Sub()
-                attrs = _currentobject.AllAttributes
+                ldapattributes = _currentobject.AllAttributes
             End Sub)
 
         attributes.Clear()
-
-        For Each a In attrs
-            attributes.Add(a)
+        For Each a In ldapattributes
+            attributes.Add(New clsAttribute(a.Name, "", a.Value))
         Next
 
         cap.Visibility = Visibility.Hidden
     End Sub
 
-    Private Sub tbAttributesFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbAttributesFilter.TextChanged
-        cvAttributes.Filter = New Predicate(Of Object)(
-            Function(a As clsAttribute)
-                Dim filter As String = tbAttributesFilter.Text
-
-                If tbAttributesFilter.Text = "*" Then
-                    Return a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString)
-                Else
-                    Return a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0 Or (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0)
-                End If
-            End Function)
+    Private Sub btnAttributesRefresh_Click(sender As Object, e As RoutedEventArgs) Handles btnAttributesRefresh.Click
+        RefreshAsync()
     End Sub
+
+    Public Async Sub RefreshAsync()
+        If _currentobject Is Nothing Then Exit Sub
+
+        cap.Visibility = Visibility.Visible
+        Dim ldapattributes As New ObservableCollection(Of clsAttribute)
+
+        Await Task.Run(
+            Sub()
+                _currentobject.Refresh()
+                ldapattributes = _currentobject.AllAttributes
+            End Sub)
+
+        For I = 0 To ldapattributes.Count - 1
+            For J = 0 To attributes.Count - 1
+                If ldapattributes(I).Name = attributes(J).Name Then
+                    'magic
+                    If ldapattributes(I).Value Is Nothing And attributes(J).Value Is Nothing Then Continue For
+
+                    If (ldapattributes(I).Value IsNot Nothing And attributes(J).Value Is Nothing) OrElse
+                       (ldapattributes(I).Value Is Nothing And attributes(J).Value IsNot Nothing) OrElse
+                       (Not ldapattributes(I).Value.ToString = attributes(J).Value.ToString) Then
+                        attributes(J).NewValue = ldapattributes(I).Value
+                    End If
+
+                End If
+            Next
+        Next
+
+        ApplyFilter()
+
+        cap.Visibility = Visibility.Hidden
+    End Sub
+
+    Private Sub rbAttributesWithValue_Checked(sender As Object, e As RoutedEventArgs) Handles rbAttributesWithValue.Checked, rbAttributesAll.Checked, rbAttributesChanged.Checked
+        ApplyFilter()
+    End Sub
+
+    Private Sub tbAttributesFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbAttributesFilter.TextChanged
+        ApplyFilter()
+    End Sub
+
+    Private Sub dgAttributes_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles dgAttributes.SelectionChanged
+        e.Handled = True
+    End Sub
+
+    Private Sub ctxmnuCopy_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuCopy.Click
+        If dgAttributes.SelectedItems Is Nothing Then Exit Sub
+
+        Dim str As String = ""
+
+        For Each a As clsAttribute In dgAttributes.SelectedItems
+            str &= a.Name & vbTab & a.Value & vbCrLf
+        Next
+
+        Clipboard.SetText(str)
+    End Sub
+
+    Private Sub ctxmnuCopyValues_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuCopyValues.Click
+        If dgAttributes.SelectedItems Is Nothing Then Exit Sub
+
+        Dim str As String = ""
+
+        For Each a As clsAttribute In dgAttributes.SelectedItems
+            str &= a.Value & vbCrLf
+        Next
+
+        Clipboard.SetText(str)
+    End Sub
+
+    Private Sub ApplyFilter()
+        cvAttributes.Filter = New Predicate(Of Object)(
+    Function(a As clsAttribute)
+        Dim filter As String = tbAttributesFilter.Text
+
+        If filter.Length = 0 Then
+            If rbAttributesWithValue.IsChecked Then
+                Return a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString)
+            ElseIf rbAttributesChanged.IsChecked Then
+                Return (a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
+                       (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
+                       (Not a.Value.Equals(a.NewValue))
+            Else
+                Return True
+            End If
+        Else
+            Return a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0 Or (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0)
+        End If
+
+    End Function)
+    End Sub
+
 End Class

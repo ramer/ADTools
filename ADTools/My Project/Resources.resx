@@ -142,8 +142,8 @@
   <data name="container" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\container.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="container_deleted" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\container_deleted.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="container_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\container_unknown.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\domain.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -153,9 +153,6 @@
   </data>
   <data name="favorite_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\favorite_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="filter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\filter.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="filter_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\filter_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

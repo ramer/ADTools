@@ -113,6 +113,7 @@
       <DependentUpon>ctlUserWorkstations.xaml</DependentUpon>
     </Compile>
     <Compile Include="classes\clsPreferences.vb" />
+    <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,6 +133,12 @@
     </Compile>
     <Compile Include="windows\wndLog.xaml.vb">
       <DependentUpon>wndLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndOrganizationalUnit.xaml.vb">
+      <DependentUpon>wndOrganizationalUnit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndUnknownObject.xaml.vb">
+      <DependentUpon>wndUnknownObject.xaml</DependentUpon>
     </Compile>
     <Compile Include="windows\wndUser.xaml.vb">
       <DependentUpon>wndUser.xaml</DependentUpon>
@@ -213,6 +220,14 @@
       <DependentUpon>wndMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="windows\wndOrganizationalUnit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndUnknownObject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="windows\wndUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -282,7 +297,7 @@
     <Resource Include="images\domain_folder.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\container_deleted.ico" />
+    <Resource Include="images\container_unknown.ico" />
     <Resource Include="images\computer.ico" />
     <Resource Include="images\computer_blocked.ico" />
     <Resource Include="images\computer_expired.ico" />

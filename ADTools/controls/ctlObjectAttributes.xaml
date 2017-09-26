@@ -7,9 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <UserControl.Resources>
+        <local:ConverterToSingleLine x:Key="ConverterToSingleLine" />
+    </UserControl.Resources>
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+                <RadioButton x:Name="rbAttributesWithValue" Content="Имеющие значения" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
+                <RadioButton x:Name="rbAttributesAll" Content="Все" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                <RadioButton x:Name="rbAttributesChanged" Content="Измененные" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <Button x:Name="btnAttributesRefresh" Content="↺" Height="17" Width="17" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
+            </StackPanel>
             <TextBox x:Name="tbAttributesFilter" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
             <DataGrid 
                     Name="dgAttributes"
@@ -21,7 +30,14 @@
                     GridLinesVisibility="None"
                     IsSynchronizedWithCurrentItem="True"
                     CanUserAddRows="False"
+                    ScrollViewer.CanContentScroll ="False"
                     >
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="ctxmnuCopy" Header="Копировать"/>
+                        <MenuItem x:Name="ctxmnuCopyValues" Header="Копировать значения"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
                 <DataGrid.Columns>
 
                     <DataGridTextColumn Binding="{Binding Name}" Header="Атрибут" Width="250" SortMemberPath="Name" CanUserSort="True" IsReadOnly="True">
@@ -32,13 +48,21 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Binding="{Binding Value}" Header="Значение" Width="350" IsReadOnly="True">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Значение" Width="*" SortMemberPath="Value" CanUserSort="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn Header="Новое значение" Width="*" SortMemberPath="Value" CanUserSort="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NewValue, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                 </DataGrid.Columns>
             </DataGrid>

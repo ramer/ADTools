@@ -49,7 +49,7 @@ Public Class ctlGroupMember
             Await searcher.BasicSearchAsync(
                 _currentdomainobjects,
                 Nothing,
-                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(True, True, True, False), False),
+                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(True, False, True, True, False), False),
                 New ObservableCollection(Of clsDomain)({_currentobject.Domain}))
         End If
     End Sub

@@ -143,9 +143,9 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
-        Public ReadOnly Property container_deleted() As System.Drawing.Icon
+        Public ReadOnly Property container_unknown() As System.Drawing.Icon
             Get
-                Dim obj As Object = ResourceManager.GetObject("container_deleted", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("container_unknown", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
@@ -176,16 +176,6 @@ Namespace My.Resources
         Public ReadOnly Property favorite_folder() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("favorite_folder", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property filter() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("filter", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
             End Get
         End Property

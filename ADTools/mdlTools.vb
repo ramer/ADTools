@@ -42,6 +42,7 @@ Module mdlTools
     Public Const ADS_GROUP_TYPE_UNIVERSAL_GROUP = 8 '0x00000008
     Public Const ADS_GROUP_TYPE_SECURITY_ENABLED = -2147483648 '0x80000000
 
+
     Public columnsDefault As New ObservableCollection(Of clsDataGridColumnInfo) From {
         New clsDataGridColumnInfo("⬕", New List(Of clsAttribute) From {New clsAttribute("Image", "⬕")}, 0, 45),
         New clsDataGridColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
@@ -305,7 +306,7 @@ Module mdlTools
     End Sub
 
     Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As Window
-        If obj.objectClass.Contains("user") Then
+        If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
             Dim w As wndUser
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
@@ -322,14 +323,34 @@ Module mdlTools
             w = New wndUser
             If owner IsNot Nothing Then
                 w.Owner = owner
-                'w.Left = owner.Left + owner.ActualWidth / 2 - w.Width / 2
-                'w.Top = owner.Top + owner.ActualHeight / 2 - w.Height / 2
             End If
 
             w.currentobject = obj
             w.Show()
             Return w
-        ElseIf obj.objectClass.Contains("computer") Then
+        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
+            Dim w As wndContact
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndContact
+            If owner IsNot Nothing Then
+                w.Owner = owner
+            End If
+
+            w.currentobject = obj
+            w.Show()
+            Return w
+        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
             Dim w As wndComputer
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
@@ -348,7 +369,7 @@ Module mdlTools
             w.currentobject = obj
             w.Show()
             Return w
-        ElseIf obj.objectClass.Contains("group") Then
+        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
             Dim w As wndGroup
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
@@ -367,11 +388,11 @@ Module mdlTools
             w.currentobject = obj
             w.Show()
             Return w
-        ElseIf obj.objectClass.Contains("contact") Then
-            Dim w As wndContact
+        ElseIf obj.objectClass.Contains("organizationalunit") Then
+            Dim w As wndOrganizationalUnit
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).currentobject Is obj Then
+                    If GetType(wndOrganizationalUnit) Is wnd.GetType AndAlso CType(wnd, wndOrganizationalUnit).currentobject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -381,18 +402,30 @@ Module mdlTools
                 Next
             End If
 
-            w = New wndContact
-            If owner IsNot Nothing Then
-                w.Owner = owner
-                'w.Left = owner.Left + owner.ActualWidth / 2 - w.Width / 2
-                'w.Top = owner.Top + owner.ActualHeight / 2 - w.Height / 2
-            End If
-
+            w = New wndOrganizationalUnit
+            If owner IsNot Nothing Then w.Owner = owner
             w.currentobject = obj
             w.Show()
             Return w
         Else
-            Return Nothing
+            Dim w As wndUnknownObject
+            If owner IsNot Nothing Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If GetType(wndUnknownObject) Is wnd.GetType AndAlso CType(wnd, wndUnknownObject).currentobject Is obj Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                        Return Nothing
+                    End If
+                Next
+            End If
+
+            w = New wndUnknownObject
+            If owner IsNot Nothing Then w.Owner = owner
+            w.currentobject = obj
+            w.Show()
+            Return w
         End If
     End Function
 
@@ -451,63 +484,4 @@ Module mdlTools
         Return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(ai.Handle, New Int32Rect(0, 0, ai.Width, ai.Height), BitmapSizeOptions.FromEmptyOptions())
     End Function
 
-    Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn
-        Dim BasicProperties As PropertyInfo() = GetType(clsDirectoryObject).GetProperties()
-        Dim BasicPropertiesNames As String() = BasicProperties.Select(Function(x As PropertyInfo) x.Name).ToArray
-
-        Dim column As New DataGridTemplateColumn()
-        column.Header = columninfo.Header
-        column.SetValue(DataGridColumn.CanUserSortProperty, True)
-        If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
-        If columninfo.Width > 0 Then column.Width = columninfo.Width
-        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-        panel.SetValue(VirtualizingStackPanel.VerticalAlignmentProperty, VerticalAlignment.Center)
-        panel.SetValue(VirtualizingStackPanel.MarginProperty, New Thickness(5, 0, 5, 0))
-        Dim first As Boolean = True
-        For Each attr As clsAttribute In columninfo.Attributes
-            Dim bind As System.Windows.Data.Binding
-
-            If BasicPropertiesNames.Contains(attr.Name) Then
-                bind = New System.Windows.Data.Binding(attr.Name)
-            Else
-                bind = New System.Windows.Data.Binding("Attr[" & attr.Name & "]")
-            End If
-            bind.Mode = BindingMode.OneWay
-
-            If attr.Name <> "Image" Then
-
-                Dim text As New FrameworkElementFactory(GetType(TextBlock))
-                If first Then
-                    text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
-                    first = False
-                    column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-                End If
-                text.SetBinding(TextBlock.TextProperty, bind)
-                text.SetValue(TextBlock.ToolTipProperty, attr.Label)
-                'text.SetValue(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow)
-                panel.AppendChild(text)
-
-            Else
-
-                Dim ttbind As New System.Windows.Data.Binding("Status")
-                ttbind.Mode = BindingMode.OneWay
-                Dim img As New FrameworkElementFactory(GetType(Image))
-                column.SetValue(clsSorter.PropertyNameProperty, "Image")
-                img.SetBinding(Image.SourceProperty, bind)
-                img.SetValue(Image.WidthProperty, 32.0)
-                img.SetValue(Image.HeightProperty, 32.0)
-                img.SetBinding(Image.ToolTipProperty, ttbind)
-                panel.AppendChild(img)
-
-            End If
-            'Status
-        Next
-
-        Dim template As New DataTemplate()
-        template.VisualTree = panel
-
-        column.CellTemplate = template
-
-        Return column
-    End Function
 End Module

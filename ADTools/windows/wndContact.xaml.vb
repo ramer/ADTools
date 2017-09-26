@@ -40,25 +40,25 @@ Public Class wndContact
         ShowDirectoryObjectProperties(currentobject.manager, Me)
     End Sub
 
-    'Private Async Sub tabctlContact_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlContact.SelectionChanged
-    '    If tabctlContact.SelectedIndex = 0 Then
-    '        tbGivenName.Focus()
-    '    ElseIf tabctlContact.SelectedIndex = 1 Then
-    '        ctlMemberOf.Focus()
-    '    ElseIf tabctlContact.SelectedIndex = 2 Then
-    '        tbMailbox.Focus()
+    Private Async Sub tabctlContact_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlContact.SelectionChanged
+        If tabctlContact.SelectedIndex = 0 Then
+            tbGivenName.Focus()
+            'ElseIf tabctlContact.SelectedIndex = 1 Then
+            '    ctlMemberOf.Focus()
+            'ElseIf tabctlContact.SelectedIndex = 2 Then
+            '    tbMailbox.Focus()
 
-    '        If contact Is Nothing AndAlso currentobject.Domain.UseExchange AndAlso currentobject.Domain.ExchangeServer IsNot Nothing Then
-    '            cap.Visibility = Visibility.Visible
-    '            contact = Await Task.Run(Function() New clsContact(currentobject))
-    '            tabctlContactExchange.DataContext = contact
-    '            cap.Visibility = Visibility.Hidden
-    '        End If
+            '    If contact Is Nothing AndAlso currentobject.Domain.UseExchange AndAlso currentobject.Domain.ExchangeServer IsNot Nothing Then
+            '        cap.Visibility = Visibility.Visible
+            '        contact = Await Task.Run(Function() New clsContact(currentobject))
+            '        tabctlContactExchange.DataContext = contact
+            '        cap.Visibility = Visibility.Hidden
+            '    End If
 
-    '    ElseIf tabctlContact.SelectedIndex = 3 Then
-    '        ctlAttributes.InitializeAsync()
-    '    End If
-    'End Sub
+        ElseIf tabctlContact.SelectedIndex = 3 Then
+            ctlAttributes.InitializeAsync()
+        End If
+    End Sub
 
     'Private Sub lvEmailAddresses_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles lvEmailAddresses.SelectionChanged
     '    e.Handled = True
