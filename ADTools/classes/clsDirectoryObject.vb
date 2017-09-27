@@ -2,6 +2,7 @@
 Imports System.ComponentModel
 Imports System.DirectoryServices
 Imports System.Security.Principal
+Imports IRegisty
 
 Public Class clsDirectoryObject
     Inherits Dynamic.DynamicObject
@@ -22,8 +23,12 @@ Public Class clsDirectoryObject
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     Private _entry As DirectoryEntry
+    Private _entrypath As String
     Private _searchresult As SearchResult
     Private _domain As clsDomain
+    Private _domainname As String
+    Private _name As String
+
     Private _children As New ObservableCollection(Of clsDirectoryObject)
     Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
 
@@ -51,6 +56,10 @@ Public Class clsDirectoryObject
         RaiseEvent PropertyChanged(Me, e)
     End Sub
 
+    Sub New()
+
+    End Sub
+
     Sub New(Entry As DirectoryEntry, ByRef Domain As clsDomain)
         Me.Entry = Entry
         _domain = Domain
@@ -61,6 +70,7 @@ Public Class clsDirectoryObject
         _domain = Domain
     End Sub
 
+    <RegistrySerializerIgnorable(True)>
     Public Property Entry() As DirectoryEntry
         Get
             Return _entry
@@ -77,6 +87,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property SearchResult() As SearchResult
         Get
             Return _searchresult
@@ -89,34 +100,51 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Domain() As clsDomain
         Get
             Return _domain
         End Get
     End Property
 
+    Public Property EntryPath() As String
+        Get
+            Return If(_entry IsNot Nothing, _entry.Path, _entrypath)
+        End Get
+        Set(ByVal value As String)
+            _entrypath = value
+
+            NotifyPropertyChanged("EntryPath")
+        End Set
+    End Property
+
+    Public Property DomainName() As String
+        Get
+            Return If(_domain IsNot Nothing, _domain.Name, _domainname)
+        End Get
+        Set(value As String)
+            _domainname = value
+
+            NotifyPropertyChanged("DomainName")
+        End Set
+    End Property
+
+    <RegistrySerializerAfterDeserialize(True)>
+    Public Sub AfterDeserialize()
+        For Each d In domains
+            If d.Name = _domainname Then
+                If String.IsNullOrEmpty(_entrypath) Or String.IsNullOrEmpty(d.Username) Or String.IsNullOrEmpty(d.Password) Then Exit Sub
+                Entry = New DirectoryEntry(_entrypath, d.Username, d.Password)
+                _domain = d
+            End If
+        Next
+    End Sub
+
     Public Sub Refresh()
         _properties.Clear()
     End Sub
 
-    'Public ReadOnly Property Children() As ObservableCollection(Of clsDirectoryObject)
-    '    Get
-    '        _children.Clear()
-    '        If Entry Is Nothing Then Return _childcontainers
-
-    '        Dim ds As New DirectorySearcher(Entry)
-    '        ds.Tombstone = True
-    '        ds.PropertiesToLoad.AddRange({"name", "objectClass"})
-    '        ds.SearchScope = SearchScope.OneLevel
-
-    '        For Each sr As SearchResult In ds.FindAll()
-    '            _children.Add(New clsDirectoryObject(sr, Domain))
-    '        Next
-
-    '        Return _children
-    '    End Get
-    'End Property
-
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
             _childcontainers.Clear()
@@ -133,27 +161,31 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property CanWrite(name As String) As Boolean
         Get
             Return AllowedAttributesEffective.Contains(name, StringComparer.OrdinalIgnoreCase)
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsReadOnly(name As String) As Boolean
         Get
             Return Not AllowedAttributesEffective.Contains(name, StringComparer.OrdinalIgnoreCase)
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property HasValue(name As String) As Boolean
         Get
             Return LdapProperty(name) IsNot Nothing
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributes() As List(Of String)
         Get
-            If LdapProperty("allowedAttributes") Is Nothing Then Entry.RefreshCache({"allowedAttributes"})
+            If LdapProperty("allowedAttributes") Is Nothing AndAlso Entry IsNot Nothing Then Entry.RefreshCache({"allowedAttributes"})
 
             Dim a As Object = LdapProperty("allowedAttributes")
             If IsArray(a) Then
@@ -166,9 +198,10 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributesEffective() As List(Of String)
         Get
-            If LdapProperty("allowedAttributesEffective") Is Nothing Then Entry.RefreshCache({"allowedAttributesEffective"})
+            If LdapProperty("allowedAttributesEffective") Is Nothing AndAlso Entry IsNot Nothing Then Entry.RefreshCache({"allowedAttributesEffective"})
 
             Dim a As Object = LdapProperty("allowedAttributesEffective")
             If IsArray(a) Then
@@ -181,6 +214,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllAttributes As ObservableCollection(Of clsAttribute)
         Get
             Dim aa As New ObservableCollection(Of clsAttribute)
@@ -191,6 +225,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Private Property LdapProperty(name As String) As Object
         Get
             If _properties.ContainsKey(name) Then Return _properties(name)
@@ -263,6 +298,7 @@ Public Class clsDirectoryObject
         Return True
     End Function
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property SchemaClass() As enmSchemaClass
         Get
             If objectCategory = "person" And objectClass.Contains("user") Then
@@ -287,6 +323,32 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsUser
+        Get
+            Return SchemaClass = enmSchemaClass.User
+        End Get
+    End Property
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsContact
+        Get
+            Return SchemaClass = enmSchemaClass.Contact
+        End Get
+    End Property
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsComputer
+        Get
+            Return SchemaClass = enmSchemaClass.Computer
+        End Get
+    End Property
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsGroup
+        Get
+            Return SchemaClass = enmSchemaClass.Group
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Status() As String
         Get
             Dim _statusFormated As String = ""
@@ -320,6 +382,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
             Dim _image As String = ""
@@ -353,6 +416,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Image() As BitmapImage
         Get
             Dim _image As String = ""
@@ -441,6 +505,7 @@ Public Class clsDirectoryObject
 
 #Region "User attributes"
 
+    <RegistrySerializerIgnorable(True)>
     Public Property sn() As String
         Get
             Return If(LdapProperty("sn"), "")
@@ -452,6 +517,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property initials() As String
         Get
             Return If(LdapProperty("initials"), "")
@@ -463,6 +529,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property givenName() As String
         Get
             Return If(LdapProperty("givenName"), "")
@@ -474,6 +541,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property displayName() As String
         Get
             Return If(LdapProperty("displayName"), "")
@@ -485,6 +553,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property physicalDeliveryOfficeName() As String
         Get
             Return If(LdapProperty("physicalDeliveryOfficeName"), "")
@@ -496,6 +565,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property company() As String
         Get
             Return If(LdapProperty("company"), "")
@@ -507,6 +577,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property manager() As clsDirectoryObject
         Get
             If _manager Is Nothing Then
@@ -534,6 +605,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property telephoneNumber() As String
         Get
             Return If(LdapProperty("telephoneNumber"), "")
@@ -545,6 +617,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property homePhone() As String
         Get
             Return If(LdapProperty("homePhone"), "")
@@ -556,6 +629,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property ipPhone() As String
         Get
             Return If(LdapProperty("ipPhone"), "")
@@ -567,6 +641,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property mobile() As String
         Get
             Return If(LdapProperty("mobile"), "")
@@ -578,6 +653,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property streetAddress() As String
         Get
             Return If(LdapProperty("streetAddress"), "")
@@ -589,6 +665,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property mail() As String
         Get
             Return If(LdapProperty("mail"), "")
@@ -600,6 +677,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property title() As String
         Get
             Return If(LdapProperty("title"), "")
@@ -611,6 +689,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property department() As String
         Get
             Return If(LdapProperty("department"), "")
@@ -622,6 +701,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalName() As String
         Get
             Return If(LdapProperty("userPrincipalName"), "")
@@ -633,6 +713,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalNameName() As String
         Get
             Dim s As String
@@ -652,6 +733,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalNameDomain() As String
         Get
             Dim s As String
@@ -669,6 +751,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberOf Is Nothing Then
@@ -690,6 +773,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property msExchHideFromAddressLists() As Boolean
         Get
             _entry.RefreshCache({"msExchHideFromAddressLists"})
@@ -697,6 +781,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As Byte()
         Get
             If LdapProperty("thumbnailPhoto") IsNot Nothing Then
@@ -729,6 +814,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userWorkstations() As String()
         Get
             Return If(LdapProperty("userWorkstations") IsNot Nothing, LdapProperty("userWorkstations").Split({","}, StringSplitOptions.RemoveEmptyEntries), New String() {})
@@ -744,12 +830,14 @@ Public Class clsDirectoryObject
 
 #Region "Computer attributes"
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property dNSHostName As String
         Get
             Return If(LdapProperty("dNSHostName"), "")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property location() As String
         Get
             Return If(LdapProperty("location"), "")
@@ -761,12 +849,14 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystem() As String
         Get
             Return If(LdapProperty("operatingSystem"), "")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystemVersion() As String
         Get
             Return If(LdapProperty("operatingSystemVersion"), "")
@@ -777,6 +867,7 @@ Public Class clsDirectoryObject
 
 #Region "Group attributes"
 
+    <RegistrySerializerIgnorable(True)>
     Public Property groupType() As Long
         Get
             Return LdapProperty("groupType")
@@ -798,6 +889,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeDomainLocal() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
@@ -819,6 +911,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeDomainGlobal() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_GLOBAL_GROUP
@@ -840,6 +933,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeDomainUniversal() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_UNIVERSAL_GROUP
@@ -861,6 +955,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property groupTypeSecurity() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_SECURITY_ENABLED
@@ -878,12 +973,14 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property groupTypeDistribution() As Boolean
         Get
             Return Not groupTypeSecurity
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property info() As String
         Get
             Return If(LdapProperty("info"), "")
@@ -895,6 +992,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _member Is Nothing Then
@@ -920,6 +1018,7 @@ Public Class clsDirectoryObject
 
 #Region "Shared attributes"
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectClass() As String()
         Get
             Try
@@ -935,6 +1034,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectCategory() As String
         Get
             Try
@@ -951,6 +1051,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property accountExpires() As Long?
         Get
             Return LdapProperty("accountExpires")
@@ -966,6 +1067,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property accountExpiresDate() As Date
         Get
             If accountExpires IsNot Nothing Then
@@ -985,6 +1087,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property accountExpiresFormated() As String
         Get
             If accountExpires IsNot Nothing Then
@@ -999,6 +1102,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property accountNeverExpires() As Boolean?
         Get
             If accountExpires IsNot Nothing Then
@@ -1015,6 +1119,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property accountExpiresAt() As Boolean?
         Get
             If accountNeverExpires IsNot Nothing Then
@@ -1025,12 +1130,14 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property badPwdCount() As Integer?
         Get
             Return LdapProperty("badPwdCount")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property description() As String
         Get
             Return If(LdapProperty("description"), "")
@@ -1042,12 +1149,14 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property distinguishedName() As String
         Get
             Return If(LdapProperty("distinguishedName"), "")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property distinguishedNameFormated() As String
         Get
             Dim OU() As String = Split(distinguishedName, ",")
@@ -1061,12 +1170,14 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogon() As Long?
         Get
             Return LdapProperty("lastLogon")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogonDate() As Date
         Get
             If lastLogon IsNot Nothing Then
@@ -1077,6 +1188,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogonFormated() As String
         Get
             If lastLogon IsNot Nothing Then
@@ -1087,24 +1199,33 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property logonCount() As Integer
         Get
             Return LdapProperty("logonCount")
         End Get
     End Property
 
-    Public ReadOnly Property name() As String
+    <RegistrySerializerAlias("Name")>
+    Public Property name() As String
         Get
-            Return If(LdapProperty("name"), "")
+            Return If(LdapProperty("name"), _name)
         End Get
+        Set(value As String)
+            _name = value
+
+            NotifyPropertyChanged("name")
+        End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectGUID() As String
         Get
             Return New Guid(TryCast(LdapProperty("objectGUID"), Byte())).ToString
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectSID() As String
         Get
             Try
@@ -1117,6 +1238,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property pwdLastSet() As Long?
         Get
             Return LdapProperty("pwdLastSet")
@@ -1133,18 +1255,21 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property pwdLastSetDate() As Date
         Get
             Return If(pwdLastSet IsNot Nothing AndAlso pwdLastSet > 0, Date.FromFileTime(pwdLastSet), Nothing)
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property pwdLastSetFormated() As String
         Get
             Return If(pwdLastSet Is Nothing, "неизвестно", If(pwdLastSet = 0, "истек", Date.FromFileTime(pwdLastSet).ToString))
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property passwordExpiresDate() As Date
         Get
             If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
@@ -1155,6 +1280,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property passwordExpiresFormated() As String
         Get
             If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
@@ -1165,6 +1291,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userMustChangePasswordNextLogon() As Boolean?
         Get
             If pwdLastSet IsNot Nothing Then
@@ -1184,6 +1311,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property sAMAccountName() As String
         Get
             Return If(LdapProperty("sAMAccountName"), "")
@@ -1195,6 +1323,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property userAccountControl() As Integer?
         Get
             Return LdapProperty("userAccountControl")
@@ -1213,6 +1342,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property normalAccount() As Boolean?
         Get
             Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_NORMAL_ACCOUNT)
@@ -1231,6 +1361,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property disabled() As Boolean?
         Get
             Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_ACCOUNTDISABLE)
@@ -1250,6 +1381,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property disabledFormated() As String
         Get
             If disabled IsNot Nothing Then
@@ -1264,6 +1396,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property passwordNeverExpires() As Boolean?
         Get
             Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_DONT_EXPIRE_PASSWD)
@@ -1282,18 +1415,21 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreated() As Date
         Get
             Return LdapProperty("whenCreated")
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreatedFormated() As String
         Get
             Return If(whenCreated = Nothing, "неизвестно", whenCreated.ToString)
         End Get
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenChanged() As Date
         Get
             Return LdapProperty("whenChanged")

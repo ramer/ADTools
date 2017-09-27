@@ -193,6 +193,7 @@ Module mdlTools
     End Sub
 
     Public Sub deinitializePreferences()
+        Array.ForEach(Of String)(regPreferences.GetSubKeyNames, New Action(Of String)(Sub(p) regPreferences.DeleteSubKeyTree(p, False)))
         IRegistrySerializer.Serialize(preferences, regPreferences)
     End Sub
 

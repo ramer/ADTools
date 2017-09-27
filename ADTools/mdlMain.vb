@@ -94,11 +94,12 @@ Public Class ADToolsApplication
             ' setting localization
             FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 
-            '    ' preferences setup
-            initializePreferences()
-
             ' domains setup
             initializeDomains()
+
+            ' preferences setup
+            initializePreferences()
+
 
             '    ' register SIP
             '    initializeSIP()

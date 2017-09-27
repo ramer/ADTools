@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports IRegisty
 
 Public Class clsAttribute
     Implements INotifyPropertyChanged
@@ -53,6 +54,7 @@ Public Class clsAttribute
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property Value() As Object
         Get
             Return _value
@@ -63,6 +65,7 @@ Public Class clsAttribute
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property NewValue() As Object
         Get
             Return _newvalue

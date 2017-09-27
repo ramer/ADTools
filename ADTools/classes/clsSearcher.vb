@@ -65,7 +65,7 @@ Public Class clsSearcher
                     For Each result In parenttask.Result
                         If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
                         returncollection.Add(result)
-                        Thread.Sleep(50)
+                        If searchscope = SearchScope.Subtree Then Thread.Sleep(50)
                     Next
                     Log("Задача на поиск закрыта")
                     Return True

@@ -13,32 +13,7 @@
         Icon="/images/app.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
-    <Window.Resources>
-        <ContextMenu x:Key="ctxmnuObjects" x:Name="ctxmnuObject">
-            <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="Внешние приложения"/>
-            <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать">
-                    <MenuItem x:Name="ctxmnuObjectsCopyDisplayName" Header="Отображаемое имя"/>
-                    <MenuItem x:Name="ctxmnuObjectsCopyBasicAttributes" Header="Основные атрибуты" ToolTip="Отображаемое имя, имя входа, основной адрес, телефон"/>
-                    <MenuItem x:Name="ctxmnuObjectsCopyAllAttributes" Header="Все атрибуты"/>
-                </MenuItem>
-                <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
-                <Separator/>
-                <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..."/>
-                <MenuItem x:Name="ctxmnuObjectsMove" Header="Переместить..."/>
-                <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..."/>
-                <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить"/>
-                <Separator/>
-                <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="Сбросить пароль на стандартный"/>
-                <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
-                <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
-                <MenuItem x:Name="ctxmnuObjectsShowInCommander" Header="Показать в ADCommander">
-                    <MenuItem x:Name="ctxmnuObjectsShowInCommanderLeftPanel" Header="Левая панель"/>
-                    <MenuItem x:Name="ctxmnuObjectsShowInCommanderRightPanel" Header="Правая панель"/>
-                </MenuItem>
-            <MenuItem x:Name="ctxmnuProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuProperties_Click"/>
-            </ContextMenu>
 
-    </Window.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
@@ -140,58 +115,78 @@
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
-                <TreeView x:Name="tvObjects" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <TreeViewItem x:Name="tviFavorites">
+                <TreeView x:Name="tvObjects" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SnapsToDevicePixels="True">
+                    <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
                         <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal" Height="23">
+                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/favorite_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Избранное"/>
                             </StackPanel>
                         </TreeViewItem.Header>
-                        <!--<TreeViewItem.ItemTemplate>
+                        <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
+                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu x:Name="ctxmnutviFavorites">
+                                            <MenuItem x:Name="tviFavoritesRemoveFromFavorites" Header="Удалить из панели избранного" Click="tviFavoritesRemoveFromFavorites_Click"/>
+                                            <Separator/>
+                                            <MenuItem x:Name="tviFavoritesProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}" Margin="0,0,5,0"/>
+                                    <!--<TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="6">(<Run Text="{Binding DomainName}"/>)</TextBlock>-->
                                 </StackPanel>
                             </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>-->
+                        </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
-                    <TreeViewItem x:Name="tviDomains">
+                    <TreeViewItem x:Name="tviDomains" IsExpanded="True">
                         <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal" Height="23">
+                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/domain_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Домены"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenu="{DynamicResource ctxmnuObjects}" ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening">
+                                <!--<StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenu="{DynamicResource ctxmnuObjects}" ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening">-->
+                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu x:Name="ctxmnutviDomains">
+                                            <MenuItem x:Name="ctxmnutviDomainsMove" Header="Переместить..."/>
+                                            <MenuItem x:Name="ctxmnutviDomainsRename" Header="Переименовать..."/>
+                                            <MenuItem x:Name="ctxmnutviDomainsRemove" Header="Удалить"/>
+                                            <Separator/>
+                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="Добавить в избранное"/>
+                                            <Separator/>
+                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
-                    <TreeViewItem x:Name="tviFilters">
+                    <TreeViewItem x:Name="tviFilters" IsExpanded="True">
                         <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal" Height="23">
+                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/filter_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Фильтры"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown">
+                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown">
                                     <Image Source="/images/filter.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
-                    <TreeViewItem x:Name="tviNetworks">
+                    <TreeViewItem x:Name="tviNetworks" IsExpanded="True">
                         <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal" Height="23">
+                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/network_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Сеть"/>
                             </StackPanel>
@@ -235,8 +230,6 @@
                             x:Name="dgObjects"
                             Foreground="Black"
                             ItemsSource="{Binding currentobjects}"
-                            ContextMenu="{DynamicResource ctxmnuObjects}"
-                            ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening"
                             AlternationCount="2"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
@@ -250,7 +243,30 @@
                             SelectionMode="Single"
                             ScrollViewer.CanContentScroll ="False"
                             Margin="0,0,0,5">
-
+                            <DataGrid.ContextMenu>
+                                <ContextMenu x:Name="ctxmnuObjects">
+                                    <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="Внешние приложения"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать">
+                                        <MenuItem x:Name="ctxmnuObjectsCopyDisplayName" Header="Отображаемое имя"/>
+                                        <MenuItem x:Name="ctxmnuObjectsCopyBasicAttributes" Header="Основные атрибуты" ToolTip="Отображаемое имя, имя входа, основной адрес, телефон"/>
+                                        <MenuItem x:Name="ctxmnuObjectsCopyAllAttributes" Header="Все атрибуты"/>
+                                    </MenuItem>
+                                    <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
+                                    <Separator/>
+                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..."/>
+                                    <Separator/>
+                                    <MenuItem x:Name="ctxmnuObjectsMove" Header="Переместить..."/>
+                                    <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..."/>
+                                    <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить"/>
+                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="Добавить в избранное"/>
+                                    <Separator/>
+                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="Сбросить пароль на стандартный" />
+                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
+                                    <Separator/>
+                                    <MenuItem x:Name="ctxmnuProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="⬕" Width="32">
                                     <DataGridTemplateColumn.CellTemplate>
