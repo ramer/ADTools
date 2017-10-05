@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
         mc:Ignorable="d"
-        Title="Отладка" Height="667.364" Width="795.188" WindowStartupLocation="Manual" ShowInTaskbar="True" Icon="/images/app.ico">
+        Title="Отладка"
+        Height="667.364"
+        Width="795.188"
+        WindowStartupLocation="Manual"
+        ShowInTaskbar="True"
+        Icon="/images/app.ico">
+    
     <Grid>
         <DataGrid 
                 Name="dgLog"

@@ -1,0 +1,418 @@
+﻿<Window x:Class="wndPreferences"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        Title="Настройки"
+        Height="561"
+        Width="983"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="/images/app.ico">
+    
+    <Grid>
+        <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
+            <TabControl TabStripPlacement="Left" Margin="0,-1,-1,-1">
+                <TabItem Header="Основные">
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Top" Margin="5">
+                            <CheckBox x:Name="chbClipboardSource" Content="Использовать буфер обмена" IsChecked="{Binding ClipboardSource}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При копировании в буфер обмена текстовых данных из других приложений ADViewer автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</TextBlock>
+                            <CheckBox Content="Ограничить объем данных для поиска" IsChecked="{Binding ClipboardSourceLimit}" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Margin="20,0,0,0"/>
+                            <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" >Поиск будет производится в случае, если количество слов в буфере обмена не превышает трех.</TextBlock>
+                            <CheckBox Content="Группировать результаты поиска" IsChecked="{Binding SearchResultGrouping}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">Результаты поиска будут сгруппированны по имени домена.</TextBlock>
+                            <CheckBox Content="Включить режим отладки Powershell" IsChecked="{Binding PowershellDebug}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При выполнении команд Powershell будет открываться окно с информацией о результатах выполнения команд.</TextBlock>
+
+                        </StackPanel>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Главное окно">
+                    <DockPanel Margin="5">
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <DockPanel LastChildFill="True">
+                                <DockPanel DockPanel.Dock="Top">
+                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="Добавить столбец в конец"/>
+                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="Удалить последний столбец"/>
+                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="По умолчанию" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Макет главного окна" DockPanel.Dock="Left"/>
+                                </DockPanel>
+                                <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                    <Grid x:Name="grdLayout" ShowGridLines="True" AllowDrop="True" Background="Transparent" Height="150" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20"></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                    </Grid>
+                                </Border>
+                            </DockPanel>
+                        </DockPanel>
+                        <DockPanel LastChildFill="True">
+                            <Grid Margin="0,0,0,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Основные атрибуты" Grid.Column="0" Grid.Row="0"/>
+                                <TextBlock Text="Дополнительные атрибуты" Grid.Column="1" Grid.Row="0"/>
+                                <TextBlock Text="Атрибуты для поиска" Grid.Column="2" Grid.Row="0"/>
+                                <ListView x:Name="lvAttributesDefault" Grid.Column="0" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
+                                    <ListView.View>
+                                        <GridView AllowsColumnReorder="False">
+                                            <GridView.Columns>
+                                                <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Label}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Name}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView.Columns>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                <Grid Grid.Column="1" Grid.Row="1" >
+                                    <local:ctlCap x:Name="cap1" Panel.ZIndex="2" Visibility="Hidden"/>
+                                    <Button x:Name="btnGetExtendedAttributes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="🔎" Panel.ZIndex="1" ToolTip="Получить дополнительные атрибуты из доменов"/>
+                                    <ListView x:Name="lvAttributesExtended" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
+                                        <ListView.View>
+                                            <GridView AllowsColumnReorder="False">
+                                                <GridView.Columns>
+                                                    <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Label}"/>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                    <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Name}"/>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                </GridView.Columns>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Grid>
+                                <Grid Grid.Column="2" Grid.Row="1">
+                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="1" ToolTip="По умолчанию" />
+                                    <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
+                                        <ListView.View>
+                                            <GridView AllowsColumnReorder="False">
+                                                <GridView.Columns>
+                                                    <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Label}"/>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                    <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                        <GridViewColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Name}"/>
+                                                            </DataTemplate>
+                                                        </GridViewColumn.CellTemplate>
+                                                    </GridViewColumn>
+                                                </GridView.Columns>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Grid>
+                            </Grid>
+                        </DockPanel>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Поведение">
+                    <StackPanel Margin="5">
+                        <CheckBox x:Name="chbStartOnLogon" Content="Запускать вместе с Windows" IsChecked="{Binding StartWithWindows}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">ADViewer будет запущен при загрузке операционной системы.</TextBlock>
+                        <CheckBox x:Name="chbStartOnLogonMinimized" Content="Запускать свернутым" IsChecked="{Binding StartWithWindowsMinimized}" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Margin="20,0,0,0"/>
+                        <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" >В случае автозапуска приложение будет запущено в свернутом виде.</TextBlock>
+                        <CheckBox Content="Закрывать при нажатии на [✖]" IsChecked="{Binding CloseOnXButton}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При нажатии на [✖] в последнем экземпляре главного окна работа приложения будет завершена.</TextBlock>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Внешний вид">
+                    <StackPanel Margin="5">
+                        <TextBlock>Основная тема приложения</TextBlock>
+                        <ComboBox x:Name="cmboTheme" Margin="0,0,0,10">
+                            <ComboBoxItem>Светло-серая</ComboBoxItem>
+                            <ComboBoxItem>Светло-голубая</ComboBoxItem>
+                            <ComboBoxItem>Светло-зеленая</ComboBoxItem>
+                            <ComboBoxItem>Темно-серая</ComboBoxItem>
+                            <ComboBoxItem>Темно-синяя</ComboBoxItem>
+                            <ComboBoxItem>Темно-зеленая</ComboBoxItem>
+                            <ComboBoxItem>Темно-оранжевая</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock Margin="0,0,0,10">Цвета</TextBlock>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type xctk:ColorPicker}">
+                                    <Setter Property="DisplayColorAndName" Value="True"/>
+                                    <Setter Property="AvailableColorsHeader" Value="Доступные цвета"/>
+                                    <Setter Property="StandardColorsHeader" Value="Стандартные цвета"/>
+                                    <Setter Property="AdvancedButtonHeader" Value="Дополнительно"/>
+                                    <Setter Property="StandardButtonHeader" Value="Стандарт"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="60"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Grid.Row="0" TextWrapping="Wrap" Margin="20,0,0,10">Текст</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Margin="20,0,0,10">Фон окон</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,10">Фон элементов</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="3" TextWrapping="Wrap" Margin="20,0,0,10">Пункты меню</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="Wrap" Margin="20,0,0,10">Элементы управления</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="Wrap" Margin="20,0,0,10">Элементы управления (не активные)</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="6" TextWrapping="Wrap" Margin="20,0,0,10">Фон списков</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="7" TextWrapping="Wrap" Margin="20,0,0,10">Фон списков (альтернативный)</TextBlock>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="0" Height="26" SelectedColor="{Binding ColorText}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="1" Height="26" SelectedColor="{Binding ColorWindowBackground}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="2" Height="26" SelectedColor="{Binding ColorElementBackground}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="3" Height="26" SelectedColor="{Binding ColorMenuBackground}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="4" Height="26" SelectedColor="{Binding ColorButtonBackground}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="5" Height="26" SelectedColor="{Binding ColorButtonInactiveBackground}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="6" Height="26" SelectedColor="{Binding ColorListviewRow}"/>
+                            <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="7" Height="26" SelectedColor="{Binding ColorListviewAlternationRow}"/>
+                        </Grid>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Внешние приложения">
+                    <DockPanel Margin="5">
+                        <StackPanel DockPanel.Dock="Bottom">
+                            <TextBlock Text="Шаблоны аргументов" Margin="0,5,0,0"/>
+                            <TextBox  TextWrapping="Wrap" AcceptsReturn="True" 
+                                 VerticalScrollBarVisibility="Auto" Height="80" IsReadOnly="True" 
+                                 Text="%myusername% %mypassword% %userAccountControl% %mydomain% %accountExpires% %name% %description% %userPrincipalName% %distinguishedName% %telephoneNumber% %physicalDeliveryOfficeName% %title% %department% %company% %mail% %whenCreated% %lastLogon% %pwdLastSet% %givenName% %sn% %initials% %displayName% %sAMAccountName% %groupType% %dNSHostName% %location% %operatingSystem% %operatingSystemVersion% "/>
+                        </StackPanel>
+                        <DataGrid 
+                            Name="dgExternalSoftware"
+                            Foreground="Black"
+                            AlternationCount="2"
+                            ItemsSource="{Binding ExternalSoftware}"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            AutoGenerateColumns="False"
+                            GridLinesVisibility="None"
+                            IsSynchronizedWithCurrentItem="True"
+                            CanUserAddRows="True"
+                        >
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="⬕" Width="40">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Binding="{Binding Label}" Header="Название"  Width="150" SortMemberPath="Label" CanUserSort="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTemplateColumn Header="Путь" Width="200" SortMemberPath="Path" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel LastChildFill="True">
+                                                <Button Click="btnExternalSoftwareBrowse_Click" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding Path}" VerticalAlignment="Center" />
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTextColumn Binding="{Binding Arguments}" Header="Агрументы" Width="330" SortMemberPath="Arguments" CanUserSort="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTemplateColumn Header="Тек. рек." Width="36" SortMemberPath="CurrentCredentials" CanUserSort="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding CurrentCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Использовать текущие реквизиты при запуске" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+
+                <TabItem Header="Плагины">
+                    <TabControl>
+                        <TabItem Header="Telegram Bot">
+                            <StackPanel Margin="5">
+                                <TextBlock Margin="0,0,0,10">
+                                    Вы можете создась себе Telegram бота и управлять учетными записями пользователей через мессенджер Telegram.<LineBreak/>
+                                    Для этого вам необходимо иметь @Username мессенджера и API ключ бота.<LineBreak/><LineBreak/>
+                                    Для получения API-ключа:<LineBreak/>
+                                    1) откройте приложение Telegram и найдите в контактах бота "BotFather"<LineBreak/>
+                                    2) нажмите кнопку /Start для начала диалога с BotFather<LineBreak/>
+                                    3) отправьте команду /newbot, после чего BotFather предложит выбрать имя вашего нового бота<LineBreak/>
+                                    4) отправьте отображаемое имя вашего бота, например "MyPersonalADToolsAssistant" или "Тыжпрограммист"<LineBreak/>
+                                    5) теперь отправьте @username вашего бота, оканчивающегося на "bot", например "MyPersonalADToolsBot"<LineBreak/>
+                                    6) если @username бота уникальное, BotFather выдаст вам API ключ<LineBreak/>
+                                    7) найдите в контактах вашего нового бота по имени.
+                                </TextBlock>
+                                <StackPanel HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBlock Text="@Username" Width="100"/>
+                                        <TextBox x:Name="tbPluginTelegramBotUsername" Width="400"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                        <TextBlock Text="API-ключ" Width="100"/>
+                                        <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400"/>
+                                    </StackPanel>
+                                    <Button x:Name="btnPluginTelegramBotStartStop" Content="Запустить Telegram Bot" Width="200" Height="24" Margin="0,0,0,20"/>
+                                    <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="Запускать Telegram Bot при входе в систему" Margin="0,0,0,10"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                        <!--<TabItem Header="SIP">
+                            <DockPanel LastChildFill="True">
+                                <StackPanel DockPanel.Dock="Top" Margin="5">
+                                    <CheckBox x:Name="chbSipUse" Content="Использовать SIP" Margin="0,0,0,10" IsChecked="{Binding SipUse}"/>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">Позволяет ADViewer подключиться к SIP-серверу, при входящем вызове ADViewer автоматически произведет поиск объектов, используя данные о номере телефона в качестве шаблона поиска.</TextBlock>
+
+                                    <StackPanel IsEnabled="{Binding ElementName=chbSipUse, Path=IsChecked}">
+
+                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
+                                            <TextBlock Text="Сервер" Width="130"/>
+                                            <ComboBox x:Name="cmboSipProtocol" Width="50" Height="23" DockPanel.Dock="Right" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SipProtocol}" />
+                                            <TextBlock Text="Протокол" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                            <TextBox Height="23" Text="{Binding SipServer}" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
+                                            <TextBlock Text="Имя регистрации" Width="130"/>
+                                            <TextBox Height="24" Text="{Binding SipRegistrationName}" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
+                                            <TextBlock Text="Имя входа" Width="130"/>
+                                            <TextBox Height="23" Text="{Binding SipUsername}" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
+                                            <TextBlock Text="Пароль" Width="130"/>
+                                            <PasswordBox x:Name="tbSipPassword" Height="23" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
+                                            <TextBlock Text="Домен (Realm)" Width="130"/>
+                                            <TextBox Height="23" Text="{Binding SipDomain}" MaxLength="64"/>
+                                        </DockPanel>
+
+                                        <DockPanel x:Name="dpSipState" LastChildFill="True" Margin="0,30,5,0">
+                                            <TextBlock Text="Статус" Width="130"/>
+                                            <Button x:Name="btnSipConnect" DockPanel.Dock="Right" Width="130" Height="23" Content="Обновить"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                                    <TextBlock Text="Stack: "/>
+                                                    <TextBlock Text="{Binding StackState}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <TextBlock Text="Registration: "/>
+                                                    <TextBlock Text="{Binding RegistrationState}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DockPanel>
+
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </DockPanel>
+                        </TabItem>
+                        <TabItem Header="Redmine">
+                            <DockPanel LastChildFill="True">
+                                <StackPanel DockPanel.Dock="Top" Margin="5">
+                                    <CheckBox x:Name="chbRedminUse" Content="Использовать Redmine" Margin="0,0,0,10" IsChecked="{Binding RedmineUse}"/>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">Позволяет ADViewer подключиться к Redmine-серверу, при поступлении новой задачи ADViewer автоматически произведет поиск объектов, используя значения полей задачи.</TextBlock>
+                                </StackPanel>
+                                <DockPanel IsEnabled="{Binding ElementName=chbRedminUse, Path=IsChecked}" Margin="5">
+                                    <StackPanel DockPanel.Dock="Top">
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,5">
+                                            <TextBlock Text="Сервер" Width="130"/>
+                                            <TextBox Height="23" Text="{Binding RedmineServer}" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,5">
+                                            <TextBlock Text="Ключ доступа к API" Width="130"/>
+                                            <PasswordBox x:Name="tbRedmineAPIKey" Height="23" MaxLength="256"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,5">
+                                            <TextBlock Text="Проект" Width="130"/>
+                                            <DockPanel LastChildFill="True">
+                                                <Button x:Name="btnRedmineBuildProjectTree" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right"/>
+                                                <TextBox Height="23" Text="{Binding RedmineProject}" MaxLength="256" Margin="0,0,5,0" IsReadOnly="True"/>
+                                            </DockPanel>
+                                        </DockPanel>
+                                    </StackPanel>
+                                    <Grid>
+                                        <local:ctlCap x:Name="cap2" Panel.ZIndex="2" Visibility="Hidden"/>
+                                        <TreeView x:Name="tvRedmineProjects">
+                                            <TreeView.ItemTemplate>
+                                                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                                    </StackPanel>
+                                                </HierarchicalDataTemplate>
+                                            </TreeView.ItemTemplate>
+                                        </TreeView>
+                                    </Grid>
+                                </DockPanel>
+                            </DockPanel>
+                        </TabItem>-->
+                    </TabControl>
+                </TabItem>
+            </TabControl>
+        </Border>
+    </Grid>
+</Window>

@@ -5,7 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
         mc:Ignorable="d"
-        Height="300" Width="300" WindowStartupLocation="CenterOwner" WindowState="Maximized" WindowStyle="None" Background="#7F000000" AllowsTransparency="True">
+        Height="300"
+        Width="300"
+        WindowStartupLocation="CenterOwner" 
+        WindowState="Maximized"
+        WindowStyle="None" 
+        Background="#7F000000" 
+        AllowsTransparency="True">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>

@@ -10,7 +10,8 @@
         Height="600"
         Width="762"
         WindowStartupLocation="CenterOwner"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        Icon="/images/domain.ico">
 
     <Window.Resources>
         <local:ConverterBooleanToVisibilityInverted x:Key="ConverterBooleanToVisibilityInverted" />

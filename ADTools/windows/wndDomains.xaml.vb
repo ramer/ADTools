@@ -61,4 +61,19 @@ Public Class wndDomains
         IRegistrySerializer.Serialize(domains, regDomains)
     End Sub
 
+    Private Sub btnSearchRootBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnSearchRootBrowse.Click
+        If lvDomains.SelectedItem Is Nothing Then Exit Sub
+
+        Dim domainbrowser As New wndDomainBrowser
+        Dim domain As clsDomain = CType(lvDomains.SelectedItem, clsDomain)
+
+        domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
+        ShowWindow(domainbrowser, True, Me, True)
+
+        If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
+            domain.SearchRoot = domainbrowser.currentobject.Entry
+        End If
+
+    End Sub
+
 End Class

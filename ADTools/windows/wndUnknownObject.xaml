@@ -6,7 +6,12 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
         mc:Ignorable="d"
-        Title="{Binding name}" Height="467" Width="674.343" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/object_unknown.ico">
+        Title="{Binding name}"
+        Height="467"
+        Width="674.343"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="/images/object_unknown.ico">
 
     <Grid>
         <TabControl x:Name="tabctlUnknownObject" Margin="5">

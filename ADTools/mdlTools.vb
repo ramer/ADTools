@@ -5,6 +5,7 @@ Imports IRegisty
 Imports System.Windows.Forms
 Imports IPrompt.VisualBasic
 Imports System.DirectoryServices
+Imports System.DirectoryServices.ActiveDirectory
 
 Module mdlTools
 
@@ -257,6 +258,39 @@ Module mdlTools
         End Try
     End Function
 
+    Public Function GetDefaultColumns()
+        Dim results As New ObservableCollection(Of clsDataGridColumnInfo)
+        For Each c In columnsDefault
+            results.Add(c)
+        Next
+        Return results
+    End Function
+
+    Public Function GetAttributesExtended() As clsAttribute()
+        Dim attributes As New Dictionary(Of String, clsAttribute)
+
+        For Each domain In domains
+            Try
+                Dim _domaincontrollers As DirectoryEntry = domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
+                Dim _directorycontext As New DirectoryContext(DirectoryContextType.DirectoryServer, GetLDAPProperty(_domaincontrollers.Children(0).Properties, "dNSHostName"), domain.Username, domain.Password)
+                Dim _schema As ActiveDirectorySchema = ActiveDirectorySchema.GetSchema(_directorycontext)
+                Dim _userClass As ActiveDirectorySchemaClass = _schema.FindClass("user")
+
+                For Each a As clsAttribute In _userClass.MandatoryProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
+                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
+                Next
+                For Each a As clsAttribute In _userClass.OptionalProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
+                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
+                Next
+
+            Catch ex As Exception
+
+            End Try
+        Next
+
+        Return attributes.Values.ToArray.OrderBy(Function(x As clsAttribute) x.Label).ToArray
+    End Function
+
     Public Function LongFromLargeInteger(largeInteger As Object) As Long
         Dim valBytes(7) As Byte
         Dim result As Long
@@ -278,11 +312,11 @@ Module mdlTools
     End Sub
 
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
-        'ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))
+        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))
     End Sub
 
     Public Sub ThrowCustomException(Message As String)
-        'ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Message))
+        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Message))
     End Sub
 
     Public Sub ThrowInformation(Message As String)

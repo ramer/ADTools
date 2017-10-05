@@ -6,7 +6,13 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
         mc:Ignorable="d"
-        Title="{Binding name}" Height="518.78" Width="674.343" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/contact.ico">
+        Title="{Binding name}"
+        Height="518.78"
+        Width="674.343"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="/images/contact.ico">
+    
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
     </Window.Resources>

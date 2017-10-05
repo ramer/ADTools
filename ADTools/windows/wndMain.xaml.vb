@@ -49,6 +49,10 @@ Class wndMain
         DomainTreeUpdate()
     End Sub
 
+    Private Sub mnuServicePreferences_Click(sender As Object, e As RoutedEventArgs) Handles mnuServicePreferences.Click
+        ShowWindow(New wndPreferences, True, Me, True)
+    End Sub
+
     Private Sub mnuSearchSaveCurrentFilter_Click(sender As Object, e As RoutedEventArgs) Handles mnuSearchSaveCurrentFilter.Click
         If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Me) : Exit Sub
 
@@ -62,8 +66,21 @@ Class wndMain
 
 #End Region
 
+#Region "Context Menu"
 
-#Region "Events"
+    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+        If TypeOf sp.Tag Is clsFilter Then
+            StartSearch(Nothing, CType(sp.Tag, clsFilter))
+        End If
+    End Sub
+
+    Private Sub tviFilters_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
+        Dim flt As clsFilter = Nothing
+        If TypeOf CType(sender, StackPanel).DataContext Is clsFilter Then flt = CType(CType(sender, StackPanel).DataContext, clsFilter)
+        If flt Is Nothing Then Exit Sub
+        CType(sender, StackPanel).ContextMenu.Tag = flt
+    End Sub
 
     Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim sp As StackPanel = CType(sender, StackPanel)
@@ -84,22 +101,59 @@ Class wndMain
     Private Sub dgObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles dgObjects.ContextMenuOpening
         Dim obj As clsDirectoryObject = Nothing
         If TypeOf CType(sender, DataGrid).SelectedItem Is clsDirectoryObject Then obj = CType(CType(sender, DataGrid).SelectedItem, clsDirectoryObject)
-        If obj Is Nothing And currentcontainer Is Nothing Then Exit Sub
         If obj Is Nothing Then obj = currentcontainer
         CType(sender, DataGrid).ContextMenu.Tag = obj
 
-        ctxmnuObjectsResetPassword.Visibility = If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed)
-        ctxmnuObjectsDisableEnable.Visibility = If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer, Visibility.Visible, Visibility.Collapsed)
-        ctxmnuObjectsExpirationDate.Visibility = If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed)
+        ctxmnuObjectsExternalSoftware.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsCopy.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+
+        ctxmnuObjectsSelectAll.Visibility = If(dgObjects.Items.Count = 0, Visibility.Collapsed, Visibility.Visible)
+
+        ctxmnuObjectsCreateObject.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS, Visibility.Visible, Visibility.Collapsed))
+        ctxmnuObjectsMove.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsRename.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsRemove.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsAddToFavorites.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+
+        ctxmnuObjectsResetPassword.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed))
+        ctxmnuObjectsDisableEnable.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer, Visibility.Visible, Visibility.Collapsed))
+        ctxmnuObjectsExpirationDate.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed))
+
+        ctxmnuObjectsProperties.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
     End Sub
 
 
-    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        If TypeOf sp.Tag Is clsFilter Then
-            StartSearch(Nothing, CType(sp.Tag, clsFilter))
-        End If
+    Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
+        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
     End Sub
+
+    Private Sub ctxmnuSharedAddToFavorites_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
+        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        preferences.Favorites.Add(current)
+    End Sub
+
+    Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
+        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If preferences.Favorites.Contains(current) Then preferences.Favorites.Remove(current)
+    End Sub
+
+    Private Sub ctxmnutviFiltersRemoveFromFilters_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsFilter Then Exit Sub
+        Dim current As clsFilter = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If preferences.Filters.Contains(current) Then preferences.Filters.Remove(current)
+    End Sub
+
+
+#End Region
+
+#Region "Events"
+
+
+
 
     Private Sub dgObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgObjects.PreviewKeyDown
         Select Case e.Key
@@ -402,29 +456,6 @@ Class wndMain
 
         Return column
     End Function
-
-    Private Sub ctxmnutviDomainsProperties_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
-    End Sub
-
-    Private Sub tviFavorites_Expanded(sender As Object, e As RoutedEventArgs)
-
-    End Sub
-
-    Private Sub ctxmnuObjectsAddToFavorites_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsAddToFavorites.Click
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        preferences.Favorites.Add(current)
-    End Sub
-
-    Private Sub tviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If preferences.Favorites.Contains(current) Then preferences.Favorites.Remove(current)
-    End Sub
-
 
 
 

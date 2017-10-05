@@ -128,9 +128,9 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFavorites">
-                                            <MenuItem x:Name="tviFavoritesRemoveFromFavorites" Header="Удалить из панели избранного" Click="tviFavoritesRemoveFromFavorites_Click"/>
+                                            <MenuItem x:Name="tviFavoritesRemoveFromFavorites" Header="Удалить из панели избранного" Click="ctxmnutviFavoritesRemoveFromFavorites_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="tviFavoritesProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                            <MenuItem x:Name="tviFavoritesProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -157,9 +157,9 @@
                                             <MenuItem x:Name="ctxmnutviDomainsRename" Header="Переименовать..."/>
                                             <MenuItem x:Name="ctxmnutviDomainsRemove" Header="Удалить"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="Добавить в избранное"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="Добавить в избранное" Click="ctxmnuSharedAddToFavorites_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -170,14 +170,19 @@
                     </TreeViewItem>
                     <TreeViewItem x:Name="tviFilters" IsExpanded="True">
                         <TreeViewItem.Header>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
+                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}">
                                 <Image Source="/images/filter_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Фильтры"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown">
+                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviFilters_TreeViewItem_ContextMenuOpening">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu x:Name="ctxmnutviFilters">
+                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="Удалить фильтр" Click="ctxmnutviFiltersRemoveFromFilters_Click"/>
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
                                     <Image Source="/images/filter.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Name}"/>
                                 </StackPanel>
@@ -254,17 +259,16 @@
                                     <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
                                     <Separator/>
                                     <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..."/>
-                                    <Separator/>
                                     <MenuItem x:Name="ctxmnuObjectsMove" Header="Переместить..."/>
                                     <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..."/>
                                     <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить"/>
-                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="Добавить в избранное"/>
+                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="Добавить в избранное" Click="ctxmnuSharedAddToFavorites_Click"/>
                                     <Separator/>
                                     <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="Сбросить пароль на стандартный" />
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
                                     <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
                                     <Separator/>
-                                    <MenuItem x:Name="ctxmnuProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnutviDomainsProperties_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>

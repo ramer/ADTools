@@ -6,7 +6,13 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
         mc:Ignorable="d"
-        Title="{Binding name}" Height="467" Width="674.343" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/user.ico">
+        Title="{Binding name}"
+        Height="467"
+        Width="674.343"
+        WindowStartupLocation="CenterOwner" 
+        ShowInTaskbar="False"
+        Icon="/images/user.ico">
+    
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
         <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility" />

@@ -135,7 +135,7 @@ Public Class clsPreferences
             Return _columns
         End Get
         Set(value As ObservableCollection(Of clsDataGridColumnInfo))
-            _columns = If(value, columnsDefault)
+            _columns = If(value, GetDefaultColumns())
 
             For Each w As Window In Application.Current.Windows
                 If w.GetType Is GetType(wndMain) Then
