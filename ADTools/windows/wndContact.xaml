@@ -11,8 +11,8 @@
         Width="674.343"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="/images/contact.ico">
-    
+        Icon="{Binding ClassImage}">
+
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
     </Window.Resources>
@@ -23,7 +23,7 @@
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
                             <Border Width="150" Height="150" BorderThickness="0" Margin="0,0,0,5">
-                                <Image Width="120" Height="120" Source="/images/contact_image.png"/>
+                                <Image Width="120" Height="120" Source="{Binding ClassImage}"/>
                             </Border>
                         </StackPanel>
                         <StackPanel>

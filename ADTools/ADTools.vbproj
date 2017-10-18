@@ -55,6 +55,10 @@
     <Reference Include="CredentialManagement">
       <HintPath>libraries\CredentialManagement.dll</HintPath>
     </Reference>
+    <Reference Include="Handlebars, Version=1.8.1.0, Culture=neutral, PublicKeyToken=22225d0bf33cd661, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\Handlebars.dll</HintPath>
+    </Reference>
     <Reference Include="IPrint, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\IPrint.dll</HintPath>
@@ -70,6 +74,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -90,10 +98,13 @@
   <ItemGroup>
     <Compile Include="classes\clsAttribute.vb" />
     <Compile Include="classes\clsDataGridColumnInfo.vb" />
+    <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
     <Compile Include="classes\clsFilter.vb" />
     <Compile Include="classes\clsLog.vb" />
+    <Compile Include="classes\clsMailbox.vb" />
+    <Compile Include="classes\clsPowerShell.vb" />
     <Compile Include="classes\clsSearcher.vb" />
     <Compile Include="classes\clsSearchHistory.vb" />
     <Compile Include="classes\clsSearchObjectClasses.vb" />
@@ -101,6 +112,9 @@
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
+    <Compile Include="controls\ctlUserMailbox.xaml.vb">
+      <DependentUpon>ctlUserMailbox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="converters\ConverterBooleanAnd.vb" />
     <Compile Include="converters\ConverterBooleanInverted.vb" />
     <Compile Include="controls\ctlGroupMember.xaml.vb">
@@ -140,6 +154,12 @@
     <Compile Include="windows\wndLog.xaml.vb">
       <DependentUpon>wndLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="windows\wndMailboxQuota.xaml.vb">
+      <DependentUpon>wndMailboxQuota.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndMailboxShare.xaml.vb">
+      <DependentUpon>wndMailboxShare.xaml</DependentUpon>
+    </Compile>
     <Compile Include="windows\wndOrganizationalUnit.xaml.vb">
       <DependentUpon>wndOrganizationalUnit.xaml</DependentUpon>
     </Compile>
@@ -175,6 +195,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="controls\ctlUserMailbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="controls\ctlUserWorkstations.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -204,6 +228,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="windows\wndLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndMailboxQuota.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndMailboxShare.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,6 +346,8 @@
     <Resource Include="images\domain_folder.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="libraries\Handlebars.dll" />
+    <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />
     <Resource Include="images\container_unknown.ico" />
     <Resource Include="images\computer.ico" />

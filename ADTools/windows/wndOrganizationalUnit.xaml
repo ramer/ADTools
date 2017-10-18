@@ -11,7 +11,7 @@
         Width="674.343"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="/images/organizationalunit.ico">
+        Icon="{Binding ClassImage}">
 
     <Grid>
         <TabControl x:Name="tabctlOrganizationalUnit" Margin="5">
@@ -20,7 +20,7 @@
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
                             <Border Width="150" Height="150" BorderThickness="0" Margin="0,0,0,5">
-                                <Image Width="120" Height="120" Source="/images/organizationalunit.ico"/>
+                                <Image Width="120" Height="120" Source="{Binding ClassImage}"/>
                             </Border>
                         </StackPanel>
                         <StackPanel>

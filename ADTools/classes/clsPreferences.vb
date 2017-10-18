@@ -312,7 +312,7 @@ Public Class clsPreferences
         End Set
     End Property
 
-    <RegistrySerializerAlias("ColorButtonBackground")>
+    <RegistrySerializerAlias("ColorButtonInactiveBackground")>
     Public Property ColorButtonInactiveBackgroundValue As String
         Get
             Return ColorButtonInactiveBackground.ToString

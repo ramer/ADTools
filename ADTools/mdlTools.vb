@@ -6,6 +6,9 @@ Imports System.Windows.Forms
 Imports IPrompt.VisualBasic
 Imports System.DirectoryServices
 Imports System.DirectoryServices.ActiveDirectory
+Imports HandlebarsDotNet
+Imports System.Windows.Markup
+Imports System.Globalization
 
 Module mdlTools
 
@@ -102,6 +105,11 @@ Module mdlTools
         {New clsAttribute("sn", "Фамилия")},
         {New clsAttribute("userPrincipalName", "Имя входа")}
     }
+    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From { ' 
+        {New clsAttribute("name", "Имя объекта")},
+        {New clsAttribute("displayName", "Отображаемое имя")},
+        {New clsAttribute("userPrincipalName", "Имя входа")}
+    }
     Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
         {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
     }
@@ -144,48 +152,6 @@ Module mdlTools
         "operatingSystemVersion"}
 
     Public Sub initializePreferences()
-        'Handlebars.Configuration.TextEncoder = Nothing
-        'Handlebars.RegisterHelper("lz",
-        '    Sub(writer, context, parameters)
-        '        Try
-        '            If parameters(1).ToString = "*" Then
-        '                writer.WriteSafeString("*")
-        '            Else
-        '                Dim int As String = Format(parameters(1), New String("0", parameters(0)))
-        '                writer.WriteSafeString(int)
-        '            End If
-        '        Catch ex As Exception
-        '        End Try
-        '    End Sub)
-
-        'Handlebars.RegisterHelper("fst",
-        '    Sub(writer, context, parameters)
-        '        Try
-        '            If CInt(parameters(0)) > parameters(1).ToString.Length Then
-        '                writer.WriteSafeString(parameters(1).ToString)
-        '            Else
-        '                writer.WriteSafeString(Mid(parameters(1).ToString, 1, parameters(0)))
-        '            End If
-        '        Catch ex As Exception
-        '        End Try
-        '    End Sub)
-
-        'Handlebars.RegisterHelper("trans",
-        '    Sub(writer, context, parameters)
-        '        Try
-        '            writer.WriteSafeString(Translit_RU_EN(parameters(0)))
-        '        Catch ex As Exception
-        '        End Try
-        '    End Sub)
-
-        'Handlebars.RegisterHelper("split",
-        '    Sub(writer, context, parameters)
-        '        Try
-        '            writer.WriteSafeString(If(Split(parameters(1), " ").Count >= parameters(0), Split(parameters(1), " ")(parameters(0)), ""))
-        '        Catch ex As Exception
-        '        End Try
-        '    End Sub)
-
         preferences = IRegistrySerializer.Deserialize(GetType(clsPreferences), regPreferences)
     End Sub
 
@@ -196,6 +162,52 @@ Module mdlTools
     Public Sub deinitializePreferences()
         Array.ForEach(Of String)(regPreferences.GetSubKeyNames, New Action(Of String)(Sub(p) regPreferences.DeleteSubKeyTree(p, False)))
         IRegistrySerializer.Serialize(preferences, regPreferences)
+    End Sub
+
+    Public Sub initializeGlobalParameters()
+        FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
+
+        Handlebars.Configuration.TextEncoder = Nothing
+        Handlebars.RegisterHelper("lz",
+            Sub(writer, context, parameters)
+                Try
+                    If parameters(1).ToString = "*" Then
+                        writer.WriteSafeString("*")
+                    Else
+                        Dim int As String = Format(parameters(1), New String("0", parameters(0)))
+                        writer.WriteSafeString(int)
+                    End If
+                Catch ex As Exception
+                End Try
+            End Sub)
+
+        Handlebars.RegisterHelper("fst",
+            Sub(writer, context, parameters)
+                Try
+                    If CInt(parameters(0)) > parameters(1).ToString.Length Then
+                        writer.WriteSafeString(parameters(1).ToString)
+                    Else
+                        writer.WriteSafeString(Mid(parameters(1).ToString, 1, parameters(0)))
+                    End If
+                Catch ex As Exception
+                End Try
+            End Sub)
+
+        Handlebars.RegisterHelper("trans",
+            Sub(writer, context, parameters)
+                Try
+                    writer.WriteSafeString(Transliterate_RU_EN(parameters(0)))
+                Catch ex As Exception
+                End Try
+            End Sub)
+
+        Handlebars.RegisterHelper("split",
+            Sub(writer, context, parameters)
+                Try
+                    writer.WriteSafeString(If(Split(parameters(1), " ").Count >= parameters(0), Split(parameters(1), " ")(parameters(0)), ""))
+                Catch ex As Exception
+                End Try
+            End Sub)
     End Sub
 
     Public Function ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
@@ -233,112 +245,6 @@ Module mdlTools
         End If
         Return w
     End Function
-
-    Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
-        Try
-            If Properties(Prop).Count > 0 Then
-                Return Properties(Prop)(0)
-            Else
-                Return ""
-            End If
-        Catch
-            Return ""
-        End Try
-    End Function
-
-    Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.PropertyCollection, ByVal Prop As String)
-        Try
-            If Properties(Prop).Count > 0 Then
-                Return Properties(Prop)(0)
-            Else
-                Return ""
-            End If
-        Catch
-            Return ""
-        End Try
-    End Function
-
-    Public Function GetDefaultColumns()
-        Dim results As New ObservableCollection(Of clsDataGridColumnInfo)
-        For Each c In columnsDefault
-            results.Add(c)
-        Next
-        Return results
-    End Function
-
-    Public Function GetAttributesExtended() As clsAttribute()
-        Dim attributes As New Dictionary(Of String, clsAttribute)
-
-        For Each domain In domains
-            Try
-                Dim _domaincontrollers As DirectoryEntry = domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
-                Dim _directorycontext As New DirectoryContext(DirectoryContextType.DirectoryServer, GetLDAPProperty(_domaincontrollers.Children(0).Properties, "dNSHostName"), domain.Username, domain.Password)
-                Dim _schema As ActiveDirectorySchema = ActiveDirectorySchema.GetSchema(_directorycontext)
-                Dim _userClass As ActiveDirectorySchemaClass = _schema.FindClass("user")
-
-                For Each a As clsAttribute In _userClass.MandatoryProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
-                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
-                Next
-                For Each a As clsAttribute In _userClass.OptionalProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
-                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
-                Next
-
-            Catch ex As Exception
-
-            End Try
-        Next
-
-        Return attributes.Values.ToArray.OrderBy(Function(x As clsAttribute) x.Label).ToArray
-    End Function
-
-    Public Function LongFromLargeInteger(largeInteger As Object) As Long
-        Dim valBytes(7) As Byte
-        Dim result As Long
-        Dim type As System.Type = largeInteger.[GetType]()
-        Dim highPart As Integer = CInt(type.InvokeMember("HighPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
-        Dim lowPart As Integer = CInt(type.InvokeMember("LowPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
-        BitConverter.GetBytes(lowPart).CopyTo(valBytes, 0)
-        BitConverter.GetBytes(highPart).CopyTo(valBytes, 4)
-
-        result = BitConverter.ToInt64(valBytes, 0)
-        If result = 9223372036854775807 Then result = 0
-
-        Return result
-    End Function
-
-    Public Sub UnhandledException(sender As Object, e As UnhandledExceptionEventArgs)
-        Dim ex As Exception = DirectCast(e.ExceptionObject, Exception)
-        ThrowException(ex, "Необработанное исключение")
-    End Sub
-
-    Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
-        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))
-    End Sub
-
-    Public Sub ThrowCustomException(Message As String)
-        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Message))
-    End Sub
-
-    Public Sub ThrowInformation(Message As String)
-        With ADToolsApplication.nicon
-            .BalloonTipIcon = ToolTipIcon.Info
-            .BalloonTipTitle = My.Application.Info.AssemblyName
-            .BalloonTipText = Message
-            .Tag = Nothing
-            .Visible = False
-            .Visible = True
-            .ShowBalloonTip(5000)
-        End With
-    End Sub
-
-    Public Sub ShowWrongMemberMessage()
-        IMsgBox("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." & vbCrLf &
-               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." & vbCrLf &
-               "Локальная группа домена может быть членом только другой локальной группы домена." & vbCrLf & vbCrLf &
-               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." & vbCrLf &
-               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." & vbCrLf &
-               "Универсальная группа не может быть членом глобальной группы.", vbOKOnly + vbExclamation, "Неверный тип группы")
-    End Sub
 
     Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As Window
         If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
@@ -464,6 +370,112 @@ Module mdlTools
         End If
     End Function
 
+    Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
+        Try
+            If Properties(Prop).Count > 0 Then
+                Return Properties(Prop)(0)
+            Else
+                Return ""
+            End If
+        Catch
+            Return ""
+        End Try
+    End Function
+
+    Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.PropertyCollection, ByVal Prop As String)
+        Try
+            If Properties(Prop).Count > 0 Then
+                Return Properties(Prop)(0)
+            Else
+                Return ""
+            End If
+        Catch
+            Return ""
+        End Try
+    End Function
+
+    Public Function GetDefaultColumns()
+        Dim results As New ObservableCollection(Of clsDataGridColumnInfo)
+        For Each c In columnsDefault
+            results.Add(c)
+        Next
+        Return results
+    End Function
+
+    Public Function GetAttributesExtended() As clsAttribute()
+        Dim attributes As New Dictionary(Of String, clsAttribute)
+
+        For Each domain In domains
+            Try
+                Dim _domaincontrollers As DirectoryEntry = domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
+                Dim _directorycontext As New DirectoryContext(DirectoryContextType.DirectoryServer, GetLDAPProperty(_domaincontrollers.Children(0).Properties, "dNSHostName"), domain.Username, domain.Password)
+                Dim _schema As ActiveDirectorySchema = ActiveDirectorySchema.GetSchema(_directorycontext)
+                Dim _userClass As ActiveDirectorySchemaClass = _schema.FindClass("user")
+
+                For Each a As clsAttribute In _userClass.MandatoryProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
+                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
+                Next
+                For Each a As clsAttribute In _userClass.OptionalProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
+                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
+                Next
+
+            Catch ex As Exception
+
+            End Try
+        Next
+
+        Return attributes.Values.ToArray.OrderBy(Function(x As clsAttribute) x.Label).ToArray
+    End Function
+
+    Public Function LongFromLargeInteger(largeInteger As Object) As Long
+        Dim valBytes(7) As Byte
+        Dim result As Long
+        Dim type As System.Type = largeInteger.[GetType]()
+        Dim highPart As Integer = CInt(type.InvokeMember("HighPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
+        Dim lowPart As Integer = CInt(type.InvokeMember("LowPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
+        BitConverter.GetBytes(lowPart).CopyTo(valBytes, 0)
+        BitConverter.GetBytes(highPart).CopyTo(valBytes, 4)
+
+        result = BitConverter.ToInt64(valBytes, 0)
+        If result = 9223372036854775807 Then result = 0
+
+        Return result
+    End Function
+
+    Public Sub UnhandledException(sender As Object, e As UnhandledExceptionEventArgs)
+        Dim ex As Exception = DirectCast(e.ExceptionObject, Exception)
+        ThrowException(ex, "Необработанное исключение")
+    End Sub
+
+    Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
+        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))
+    End Sub
+
+    Public Sub ThrowCustomException(Message As String)
+        ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Message))
+    End Sub
+
+    Public Sub ThrowInformation(Message As String)
+        With ADToolsApplication.nicon
+            .BalloonTipIcon = ToolTipIcon.Info
+            .BalloonTipTitle = My.Application.Info.AssemblyName
+            .BalloonTipText = Message
+            .Tag = Nothing
+            .Visible = False
+            .Visible = True
+            .ShowBalloonTip(5000)
+        End With
+    End Sub
+
+    Public Sub ShowWrongMemberMessage()
+        IMsgBox("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." & vbCrLf &
+               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." & vbCrLf &
+               "Локальная группа домена может быть членом только другой локальной группы домена." & vbCrLf & vbCrLf &
+               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." & vbCrLf &
+               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." & vbCrLf &
+               "Универсальная группа не может быть членом глобальной группы.", vbOKOnly + vbExclamation, "Неверный тип группы")
+    End Sub
+
     Public Sub Log(message As String)
         ADToolsApplication.tsocLog.Add(New clsLog(message))
     End Sub
@@ -517,6 +529,33 @@ Module mdlTools
     Public Function GetApplicationIcon(fileName As String) As ImageSource
         Dim ai As System.Drawing.Icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName)
         Return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(ai.Handle, New Int32Rect(0, 0, ai.Width, ai.Height), BitmapSizeOptions.FromEmptyOptions())
+    End Function
+
+    Public Function GetNextUserMailbox(obj As clsDirectoryObject) As String
+        If obj Is Nothing Then Return ""
+        Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(obj.Domain.MailboxPattern)
+        Dim hbData = New With {.displayname = obj.displayName}
+        Return hbTemplate(hbData)
+    End Function
+
+    Public Function Transliterate_RU_EN(ByVal text As String) As String
+        Dim Russian() As String = {"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"}
+        Dim English() As String = {"a", "b", "v", "g", "d", "e", "e", "zh", "z", "i", "y", "k", "l", "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "sch", "", "y", "", "e", "yu", "ya"}
+
+        For I As Integer = 0 To Russian.Count - 1
+            text = text.Replace(Russian(I), English(I))
+            text = text.Replace(UCase(Russian(I)), UCase(English(I)))
+        Next
+
+        Return LCase(text)
+    End Function
+
+    Public Function BooleanToVisibility(value As Boolean) As Visibility
+        If value Then
+            Return Visibility.Visible
+        Else
+            Return Visibility.Collapsed
+        End If
     End Function
 
 End Module

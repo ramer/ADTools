@@ -1,10 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Collections.Specialized
 Imports System.Drawing
-Imports System.Globalization
-Imports System.Text
 Imports System.Windows.Forms
-Imports System.Windows.Markup
 Imports System.Windows.Threading
 Imports Microsoft.VisualBasic.ApplicationServices
 Imports IPrompt.VisualBasic
@@ -91,8 +88,8 @@ Public Class ADToolsApplication
                 splash.Show(True, True)
             End If
 
-            ' setting localization
-            FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
+            ' global parameters
+            initializeGlobalParameters()
 
             ' domains setup
             initializeDomains()

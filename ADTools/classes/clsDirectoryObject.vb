@@ -784,6 +784,8 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As Byte()
         Get
+            If Entry Is Nothing Then Return Nothing
+
             If LdapProperty("thumbnailPhoto") IsNot Nothing Then
                 Return LdapProperty("thumbnailPhoto")
             Else

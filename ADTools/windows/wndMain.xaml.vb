@@ -2,6 +2,7 @@
 Imports System.Reflection
 Imports System.Windows.Controls.Primitives
 Imports IPrompt.VisualBasic
+Imports IPrint
 
 Class wndMain
     Public WithEvents searcher As New clsSearcher
@@ -43,6 +44,82 @@ Class wndMain
     End Sub
 
 #Region "Main Menu"
+
+
+    Private Sub mnuFilePrint_Click(sender As Object, e As RoutedEventArgs) Handles mnuFilePrint.Click
+        Dim fd As New FlowDocument
+        fd.IsColumnWidthFlexible = True
+
+        Dim table = New Table()
+        table.CellSpacing = 0
+        table.BorderBrush = Brushes.Black
+        table.BorderThickness = New Thickness(1)
+        Dim rowGroup = New TableRowGroup()
+        table.RowGroups.Add(rowGroup)
+        Dim header = New TableRow()
+        header.Background = Brushes.AliceBlue
+        rowGroup.Rows.Add(header)
+
+        For Each column As clsDataGridColumnInfo In preferences.Columns
+            Dim tableColumn = New TableColumn()
+            'configure width and such
+            tableColumn.Width = New GridLength(column.Width / 96, GridUnitType.Star)
+            table.Columns.Add(tableColumn)
+            Dim hc As New Paragraph(New Run(column.Header))
+            hc.FontSize = 10.0
+            hc.FontFamily = New FontFamily("Segoe UI")
+            hc.FontWeight = FontWeights.Bold
+            Dim cell = New TableCell(hc)
+            cell.BorderBrush = Brushes.Gray
+            cell.BorderThickness = New Thickness(0.1)
+            cell.Padding = New Thickness(5, 5, 5, 5)
+            header.Cells.Add(cell)
+        Next
+
+        For Each obj In currentobjects
+            Dim tableRow = New TableRow()
+            rowGroup.Rows.Add(tableRow)
+
+            For Each column As clsDataGridColumnInfo In preferences.Columns
+                Dim cell As New TableCell
+                cell.BorderBrush = Brushes.Gray
+                cell.BorderThickness = New Thickness(0.1)
+                cell.Padding = New Thickness(5, 5, 5, 5)
+                Dim first As Boolean = True
+                For Each attr In column.Attributes
+                    Dim t As Type = obj.GetType()
+                    Dim pic() As PropertyInfo = t.GetProperties()
+
+                    For Each pi In pic
+                        If pi.Name = attr.Name Then
+                            Dim value = pi.GetValue(obj)
+
+                            If attr.Name <> "Image" Then
+                                Dim p As New Paragraph(New Run(value))
+                                p.FontSize = 8.0
+                                p.FontFamily = New FontFamily("Segoe UI")
+                                If first Then p.FontWeight = FontWeights.Bold : first = False
+                                cell.Blocks.Add(p)
+                            Else
+                                Dim img As New Image
+                                img.Source = value
+                                img.Width = 16
+                                img.Height = 16
+                                Dim p As New BlockUIContainer(img)
+                                cell.Blocks.Add(p)
+                            End If
+                        End If
+                    Next
+
+                Next
+
+                tableRow.Cells.Add(cell)
+            Next
+        Next
+
+        fd.Blocks.Add(table)
+        IPrintDialog.PreviewDocument(fd)
+    End Sub
 
     Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click
         ShowWindow(New wndDomains, True, Me, True)
@@ -95,50 +172,68 @@ Class wndMain
         If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
         If obj Is Nothing And currentcontainer Is Nothing Then Exit Sub
         If obj Is Nothing Then obj = currentcontainer
-        CType(sender, StackPanel).ContextMenu.Tag = obj
+        CType(sender, StackPanel).ContextMenu.Tag = {obj}
     End Sub
 
     Private Sub dgObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles dgObjects.ContextMenuOpening
-        Dim obj As clsDirectoryObject = Nothing
-        If TypeOf CType(sender, DataGrid).SelectedItem Is clsDirectoryObject Then obj = CType(CType(sender, DataGrid).SelectedItem, clsDirectoryObject)
-        If obj Is Nothing Then obj = currentcontainer
-        CType(sender, DataGrid).ContextMenu.Tag = obj
+        Dim objects() As clsDirectoryObject = Nothing
 
-        ctxmnuObjectsExternalSoftware.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
-        ctxmnuObjectsCopy.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        If dgObjects.SelectedItems.Count = 0 Then
+            If currentcontainer IsNot Nothing Then objects = {currentcontainer}
+        ElseIf dgObjects.SelectedItems.Count = 1 Then
+            If TypeOf dgObjects.SelectedItem Is clsDirectoryObject Then objects = {dgObjects.SelectedItem}
+        ElseIf dgObjects.SelectedItems.Count > 1 Then
+            Dim isobjectsflag As Boolean = True ' all selected objects is clsDirectoryObject
+            Dim tmpobjs As New List(Of clsDirectoryObject)
+            For Each obj In dgObjects.SelectedItems
+                If TypeOf obj IsNot clsDirectoryObject Then isobjectsflag = False : Exit For
+                tmpobjs.Add(obj)
+            Next
+            If isobjectsflag Then objects = tmpobjs.ToArray
+        End If
+        If objects Is Nothing Then e.Handled = True : Exit Sub
 
-        ctxmnuObjectsSelectAll.Visibility = If(dgObjects.Items.Count = 0, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1)
+        ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
 
-        ctxmnuObjectsCreateObject.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS, Visibility.Visible, Visibility.Collapsed))
-        ctxmnuObjectsMove.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
-        ctxmnuObjectsRename.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
-        ctxmnuObjectsRemove.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
-        ctxmnuObjectsAddToFavorites.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
+        ctxmnuObjectsCopy.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsCut.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsMove.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1)
+        ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
 
-        ctxmnuObjectsResetPassword.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed))
-        ctxmnuObjectsDisableEnable.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer, Visibility.Visible, Visibility.Collapsed))
-        ctxmnuObjectsExpirationDate.Visibility = If(obj Is Nothing, Visibility.Collapsed, If(obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User, Visibility.Visible, Visibility.Collapsed))
+        ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
+        ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
+        ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
+        ctxmnuObjectsCopyAttributes.Visibility = BooleanToVisibility(objects.Count > 0)
 
-        ctxmnuObjectsProperties.Visibility = If(obj Is Nothing, Visibility.Collapsed, Visibility.Visible)
+        ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
+
+        dgObjects.ContextMenu.Tag = objects
     End Sub
 
+    Private Sub ctxmnuObjectsSelectAll_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsSelectAll.Click
+        dgObjects.SelectAll()
+    End Sub
 
     Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count = 1 Then ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
     End Sub
 
     Private Sub ctxmnuSharedAddToFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        preferences.Favorites.Add(current)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count = 1 Then preferences.Favorites.Add(objects(0))
     End Sub
 
     Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim current As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If preferences.Favorites.Contains(current) Then preferences.Favorites.Remove(current)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count = 1 AndAlso preferences.Favorites.Contains(objects(0)) Then preferences.Favorites.Remove(objects(0))
     End Sub
 
     Private Sub ctxmnutviFiltersRemoveFromFilters_Click(sender As Object, e As RoutedEventArgs)
@@ -456,7 +551,6 @@ Class wndMain
 
         Return column
     End Function
-
 
 
 

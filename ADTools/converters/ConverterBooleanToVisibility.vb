@@ -3,6 +3,7 @@ Imports System.Globalization
 
 Public NotInheritable Class ConverterBooleanToVisibility
     Implements IValueConverter
+
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
         Dim flag = False
         If TypeOf value Is Boolean Then
@@ -32,4 +33,6 @@ Public NotInheritable Class ConverterBooleanToVisibility
         End If
         Return back
     End Function
+
+
 End Class

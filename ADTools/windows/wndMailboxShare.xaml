@@ -1,0 +1,147 @@
+﻿<Window x:Class="wndMailboxShare"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        Title="Общий доступ к почтовому ящику" Height="674.893" Width="821.546"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
+    <Grid>
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
+        <Grid Margin="5,5,5,7">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
+                <TextBlock Text="Полный доступ" DockPanel.Dock="Top"/>
+                <ListView x:Name="lvFullAccess" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionFullAccess, Mode=OneWay}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="Имя" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding name}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Имя входа" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding userPrincipalName}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+            <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1">
+                <TextBlock Text="Отправить" DockPanel.Dock="Top"/>
+                <CheckBox x:Name="chbSentItemsConfigurationSendAs" DockPanel.Dock="Bottom" Margin="5,5,5,5" IsChecked="{Binding SentItemsConfigurationSendAs}" Content="Помещать копии писем в папку &quot;Отправленные&quot;"/>
+                <ListView x:Name="lvSendAs" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendAs, Mode=OneWay}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="Имя" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding name}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Имя входа" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding userPrincipalName}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+            <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="2">
+                <TextBlock Text="Отправить от имени" DockPanel.Dock="Top"/>
+                <CheckBox x:Name="chbSentItemsConfigurationSendOnBehalf" DockPanel.Dock="Bottom" Margin="5,8,5,5" IsChecked="{Binding SentItemsConfigurationSendOnBehalf}" Content="Помещать копии писем в папку &quot;Отправленные&quot;"/>
+                <ListView x:Name="lvSendOnBehalf" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendOnBehalf, Mode=OneWay}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="Имя" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding name}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Имя входа" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding userPrincipalName}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+            <DockPanel LastChildFill="True" Grid.Column="1" Grid.RowSpan="3" Margin="5,0,0,0">
+                <TextBlock Text="Поиск пользователей" DockPanel.Dock="Top"/>
+                <TextBox x:Name="tbSearchPattern" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
+                <ListView x:Name="lvUsers" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding users}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="Имя" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding name}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Имя входа" Width="120">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <TextBlock Text="{Binding userPrincipalName}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>

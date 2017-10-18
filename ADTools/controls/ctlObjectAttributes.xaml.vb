@@ -3,7 +3,6 @@ Imports System.ComponentModel
 
 Public Class ctlObjectAttributes
 
-
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
                                                             GetType(ctlObjectAttributes),
@@ -47,20 +46,19 @@ Public Class ctlObjectAttributes
     Public Async Sub InitializeAsync()
         If _currentobject Is Nothing Then Exit Sub
 
-        cap.Visibility = Visibility.Visible
-        Dim ldapattributes As New ObservableCollection(Of clsAttribute)
+        If attributes.Count = 0 Then
+            cap.Visibility = Visibility.Visible
 
-        Await Task.Run(
-            Sub()
-                ldapattributes = _currentobject.AllAttributes
-            End Sub)
+            Dim ldapattributes As New ObservableCollection(Of clsAttribute)
+            ldapattributes = Await Task.Run(Function() _currentobject.AllAttributes)
 
-        attributes.Clear()
-        For Each a In ldapattributes
-            attributes.Add(New clsAttribute(a.Name, "", a.Value))
-        Next
+            attributes.Clear()
+            For Each a In ldapattributes
+                attributes.Add(New clsAttribute(a.Name, "", a.Value))
+            Next
 
-        cap.Visibility = Visibility.Hidden
+            cap.Visibility = Visibility.Hidden
+        End If
     End Sub
 
     Private Sub btnAttributesRefresh_Click(sender As Object, e As RoutedEventArgs) Handles btnAttributesRefresh.Click

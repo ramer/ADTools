@@ -40,7 +40,7 @@ Public Class wndContact
         ShowDirectoryObjectProperties(currentobject.manager, Me)
     End Sub
 
-    Private Async Sub tabctlContact_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlContact.SelectionChanged
+    Private Sub tabctlContact_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlContact.SelectionChanged
         If tabctlContact.SelectedIndex = 0 Then
             tbGivenName.Focus()
             'ElseIf tabctlContact.SelectedIndex = 1 Then

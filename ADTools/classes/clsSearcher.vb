@@ -113,10 +113,7 @@ Public Class clsSearcher
 
             For Each ldapresult As SearchResult In ldapresults
                 If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
-
-                Dim de As DirectoryEntry = ldapresult.GetDirectoryEntry
-                de.RefreshCache(propertiesToLoadDefault)
-                results.Add(New clsDirectoryObject(de, root.Domain))
+                results.Add(New clsDirectoryObject(ldapresult, root.Domain))
             Next
             ldapresults.Dispose()
 
