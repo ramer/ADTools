@@ -3,6 +3,8 @@ Imports System.Reflection
 Imports System.Windows.Controls.Primitives
 Imports IPrompt.VisualBasic
 Imports IPrint
+Imports System.Text.RegularExpressions
+Imports System.IO
 
 Class wndMain
     Public WithEvents searcher As New clsSearcher
@@ -193,7 +195,19 @@ Class wndMain
         End If
         If objects Is Nothing Then e.Handled = True : Exit Sub
 
-        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1)
+        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
+        If objects.Count = 1 Then
+            ctxmnuObjectsExternalSoftware.Items.Clear()
+            For Each es As clsExternalSoftware In preferences.ExternalSoftware
+                Dim esmnu As New MenuItem
+                esmnu.Header = es.Label
+                esmnu.Icon = New Image With {.Source = es.Image}
+                esmnu.Tag = es
+                AddHandler esmnu.Click, AddressOf ctxmnuObjectsExternalSoftwareItem_Click
+                ctxmnuObjectsExternalSoftware.Items.Add(esmnu)
+            Next
+        End If
+
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
 
         ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
@@ -212,6 +226,46 @@ Class wndMain
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
 
         dgObjects.ContextMenu.Tag = objects
+    End Sub
+
+    Private Sub ctxmnuObjectsExternalSoftwareItem_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count <> 1 Then Exit Sub
+
+        Dim esmnu As MenuItem = CType(sender, MenuItem)
+        If esmnu Is Nothing Then Exit Sub
+        Dim es As clsExternalSoftware = CType(esmnu.Tag, clsExternalSoftware)
+        If es Is Nothing Then Exit Sub
+
+        Dim args As String = es.Arguments
+        If args Is Nothing Then args = ""
+
+        Dim patterns As MatchCollection = Regex.Matches(args, "{{(.*?)}}")
+
+        For Each pattern As Match In patterns
+            Dim val As String = If(objects(0).LdapProperty(pattern.Value.Replace("{{", "").Replace("}}", "")), pattern.Value).ToString
+            args = Replace(args, pattern.Value, val)
+        Next
+
+        args = Replace(args, "{{myusername}}", objects(0).Domain.Username)
+        args = Replace(args, "{{mypassword}}", objects(0).Domain.Password)
+        args = Replace(args, "{{mydomain}}", objects(0).Domain.Name)
+
+        Dim psi As New ProcessStartInfo(es.Path, args)
+
+        If es.CurrentCredentials = True Then
+            psi.WorkingDirectory = (New FileInfo(es.Path)).DirectoryName
+            psi.UseShellExecute = False
+            Process.Start(psi)
+        Else
+            psi.Domain = objects(0).Domain.Name
+            psi.UserName = objects(0).Domain.Username
+            psi.Password = StringToSecureString(objects(0).Domain.Password)
+            psi.WorkingDirectory = (New FileInfo(es.Path)).DirectoryName
+            psi.UseShellExecute = False
+            Process.Start(psi)
+        End If
     End Sub
 
     Private Sub ctxmnuObjectsSelectAll_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsSelectAll.Click
@@ -492,9 +546,6 @@ Class wndMain
     End Sub
 
     Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn
-        Dim BasicProperties As PropertyInfo() = GetType(clsDirectoryObject).GetProperties()
-        Dim BasicPropertiesNames As String() = BasicProperties.Select(Function(x As PropertyInfo) x.Name).ToArray
-
         Dim column As New DataGridTemplateColumn()
         column.Header = columninfo.Header
         column.SetValue(DataGridColumn.CanUserSortProperty, True)
@@ -508,22 +559,19 @@ Class wndMain
         For Each attr As clsAttribute In columninfo.Attributes
             Dim bind As System.Windows.Data.Binding
 
-            If BasicPropertiesNames.Contains(attr.Name) Then
-                bind = New System.Windows.Data.Binding(attr.Name)
-            Else
-                bind = New System.Windows.Data.Binding("Attr[" & attr.Name & "]")
-            End If
+            bind = New System.Windows.Data.Binding(attr.Name)
             bind.Mode = BindingMode.OneWay
 
             If attr.Name <> "Image" Then
 
-                Dim text As New FrameworkElementFactory(GetType(TextBlock))
+                Dim text As New FrameworkElementFactory(GetType(CustomTextBlock))
                 If first Then
                     text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
                     first = False
                     column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
                 End If
-                text.SetBinding(TextBlock.TextProperty, bind)
+                bind.Converter = New ConverterToInlinesWithHyperlink
+                text.SetBinding(CustomTextBlock.InlineCollectionProperty, bind)
                 text.SetValue(TextBlock.ToolTipProperty, attr.Label)
                 'text.SetValue(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow)
                 panel.AppendChild(text)

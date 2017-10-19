@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports IRegisty
 
 Public Class clsExternalSoftware
     Implements INotifyPropertyChanged
@@ -76,6 +77,7 @@ Public Class clsExternalSoftware
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Image() As ImageSource
         Get
             Try

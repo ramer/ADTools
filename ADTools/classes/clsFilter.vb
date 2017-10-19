@@ -22,7 +22,8 @@ Public Class clsFilter
     Sub New(pattern As String,
             attributes As ObservableCollection(Of clsAttribute),
             searchobjectclasses As clsSearchObjectClasses,
-            freesearch As Boolean)
+            freesearch As Boolean,
+            Optional exactsearch As Boolean = False)
 
         Me.Pattern = pattern
 
@@ -32,7 +33,7 @@ Public Class clsFilter
         searchobjectclasses = If(searchobjectclasses, New clsSearchObjectClasses)
 
         Dim attrfilter = ""
-        attributes.ToList.ForEach(Sub(a As clsAttribute) patterns.ToList.ForEach(Sub(p) attrfilter &= String.Format("({0}={1}{2}*)", a.Name, If(freesearch, "*", ""), Trim(p))))
+        attributes.ToList.ForEach(Sub(a As clsAttribute) patterns.ToList.ForEach(Sub(p) attrfilter &= String.Format("({0}={1}{2}{3})", a.Name, If(freesearch, "*", ""), Trim(p), If(exactsearch, "", "*"))))
         Me.Filter = "(&" +
                      "(|" +
                          If(searchobjectclasses.User, "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))", "") +

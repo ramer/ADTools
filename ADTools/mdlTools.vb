@@ -9,6 +9,7 @@ Imports System.DirectoryServices.ActiveDirectory
 Imports HandlebarsDotNet
 Imports System.Windows.Markup
 Imports System.Globalization
+Imports System.Security
 
 Module mdlTools
 
@@ -103,7 +104,8 @@ Module mdlTools
         {New clsAttribute("displayName", "Отображаемое имя")},
         {New clsAttribute("givenName", "Имя")},
         {New clsAttribute("sn", "Фамилия")},
-        {New clsAttribute("userPrincipalName", "Имя входа")}
+        {New clsAttribute("userPrincipalName", "Имя входа")},
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
     }
     Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From { ' 
         {New clsAttribute("name", "Имя объекта")},
@@ -171,11 +173,11 @@ Module mdlTools
         Handlebars.RegisterHelper("lz",
             Sub(writer, context, parameters)
                 Try
-                    If parameters(1).ToString = "*" Then
-                        writer.WriteSafeString("*")
-                    Else
+                    If IsNumeric(parameters(1)) Then
                         Dim int As String = Format(parameters(1), New String("0", parameters(0)))
                         writer.WriteSafeString(int)
+                    Else
+                        writer.WriteSafeString(parameters(1))
                     End If
                 Catch ex As Exception
                 End Try
@@ -556,6 +558,14 @@ Module mdlTools
         Else
             Return Visibility.Collapsed
         End If
+    End Function
+
+    Public Function StringToSecureString(current As String) As SecureString
+        Dim s = New SecureString()
+        For Each c As Char In current.ToCharArray()
+            s.AppendChar(c)
+        Next
+        Return s
     End Function
 
 End Module

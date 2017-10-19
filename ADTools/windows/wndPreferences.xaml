@@ -222,8 +222,8 @@
                         <StackPanel DockPanel.Dock="Bottom">
                             <TextBlock Text="Шаблоны аргументов" Margin="0,5,0,0"/>
                             <TextBox  TextWrapping="Wrap" AcceptsReturn="True" 
-                                 VerticalScrollBarVisibility="Auto" Height="80" IsReadOnly="True" 
-                                 Text="%myusername% %mypassword% %userAccountControl% %mydomain% %accountExpires% %name% %description% %userPrincipalName% %distinguishedName% %telephoneNumber% %physicalDeliveryOfficeName% %title% %department% %company% %mail% %whenCreated% %lastLogon% %pwdLastSet% %givenName% %sn% %initials% %displayName% %sAMAccountName% %groupType% %dNSHostName% %location% %operatingSystem% %operatingSystemVersion% "/>
+                                 VerticalScrollBarVisibility="Auto" Height="60" IsReadOnly="True" 
+                                 Text="{}{{myusername}} {{mypassword}} {{mydomain}}&#x0d;&#x0a;{{name}} {{description}} {{displayName}} {{sAMAccountName}} {{userPrincipalName}} {{distinguishedName}} {{telephoneNumber}} {{physicalDeliveryOfficeName}} {{title}} {{department}} {{company}} {{mail}} ..."/>
                         </StackPanel>
                         <DataGrid 
                             Name="dgExternalSoftware"

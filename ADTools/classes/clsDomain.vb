@@ -4,6 +4,7 @@ Imports System.DirectoryServices
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports CredentialManagement
+Imports HandlebarsDotNet
 Imports IRegisty
 
 Public Class clsDomain
@@ -31,7 +32,11 @@ Public Class clsDomain
     Private _password As String
 
     Private _usernamepattern As String = ""
+    Private _usernamepatterntemplates As Func(Of Object, String)() = Nothing
+
     Private _computerpattern As String = ""
+    Private _computerpatterntemplates As Func(Of Object, String)() = Nothing
+
     Private _telephonenumberpattern As New ObservableCollection(Of clsTelephoneNumberPattern)
 
     Private _defaultpassword As String = ""
@@ -42,6 +47,7 @@ Public Class clsDomain
     Private _exchangeservers As New ObservableCollection(Of String)
     Private _useexchange As Boolean
     Private _exchangeserver As String
+
     Private _mailboxpattern As String = ""
 
     Private _issearchable As Boolean = True
@@ -429,8 +435,21 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _usernamepattern = value
+            _usernamepatterntemplates = Nothing
             NotifyPropertyChanged("UsernamePattern")
+            NotifyPropertyChanged("UsernamePatternTemplates")
         End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property UsernamePatternTemplates As Func(Of Object, String)()
+        Get
+            If _usernamepatterntemplates IsNot Nothing Then Return _usernamepatterntemplates
+
+            Dim patterns() As String = UsernamePattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+            _usernamepatterntemplates = patterns.Select(Function(x) Handlebars.Compile(x)).ToArray
+            Return _usernamepatterntemplates
+        End Get
     End Property
 
     Public Property ComputerPattern() As String
@@ -439,8 +458,21 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _computerpattern = value
+            _computerpatterntemplates = Nothing
             NotifyPropertyChanged("ComputerPattern")
+            NotifyPropertyChanged("ComputerPatternTemplates")
         End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property ComputerPatternTemplates As Func(Of Object, String)()
+        Get
+            If _computerpatterntemplates IsNot Nothing Then Return _computerpatterntemplates
+
+            Dim patterns() As String = ComputerPattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+            _computerpatterntemplates = patterns.Select(Function(x) Handlebars.Compile(x)).ToArray
+            Return _computerpatterntemplates
+        End Get
     End Property
 
     Public Property MailboxPattern As String
