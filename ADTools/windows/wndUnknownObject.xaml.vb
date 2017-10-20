@@ -6,8 +6,6 @@ Public Class wndUnknownObject
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-
-        ctlAttributes.DataContext = currentobject
         ctlAttributes.CurrentObject = currentobject
     End Sub
 
@@ -16,9 +14,7 @@ Public Class wndUnknownObject
     End Sub
 
     Private Sub tabctlComputer_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlUnknownObject.SelectionChanged
-        If tabctlUnknownObject.SelectedIndex = 0 Then
-            tbDescription.Focus()
-        ElseIf tabctlUnknownObject.SelectedIndex = 1 Then
+        If tabctlUnknownObject.SelectedIndex = 1 Then
             ctlAttributes.InitializeAsync()
         End If
     End Sub

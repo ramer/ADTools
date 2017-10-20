@@ -53,8 +53,8 @@ Public Class ctlGroupMemberOf
             ._currentdomain = CType(e.NewValue, clsDirectoryObject).Domain
             ._currentdomaingroups.Clear()
             '.lvSelectedGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentobject.memberOf, Nothing)
-            .lvSelectedGroups.Items.Clear()
-            ._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
+            '.lvSelectedGroups.Items.Clear()
+            '._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -66,10 +66,36 @@ Public Class ctlGroupMemberOf
             ._currentdomain = CType(e.NewValue, clsDomain)
             ._currentdomaingroups.Clear()
             '.lvSelectedGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomain.DefaultGroups, Nothing)
-            .lvSelectedGroups.Items.Clear()
-            ._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
+            '.lvSelectedGroups.Items.Clear()
+            '._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
+    End Sub
+
+    Private Sub ctlGroupMemberOf_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        tbDomainGroupsFilter.Focus()
+        btnDefaultGroups.Visibility = If(mode() = 0, Visibility.Visible, Visibility.Hidden)
+    End Sub
+
+    Public Async Sub InitializeAsync()
+        If lvSelectedGroups.Items.Count = 0 Then
+            cap.Visibility = Visibility.Visible
+
+            Dim groups As New ObservableCollection(Of clsDirectoryObject)
+
+            If _currentobject IsNot Nothing Then
+                groups = Await Task.Run(Function() _currentobject.memberOf)
+            Else
+                groups = Await Task.Run(Function() _currentdomain.DefaultGroups)
+            End If
+
+            lvSelectedGroups.Items.Clear()
+            For Each g In groups
+                lvSelectedGroups.Items.Add(g)
+            Next
+
+            cap.Visibility = Visibility.Hidden
+        End If
     End Sub
 
     Private Function mode() As Integer
@@ -102,7 +128,6 @@ Public Class ctlGroupMemberOf
         If lvSelectedGroups.SelectedItem Is Nothing Then Exit Sub
         ShowDirectoryObjectProperties(lvSelectedGroups.SelectedItem, Window.GetWindow(Me))
     End Sub
-
 
     Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvSelectedGroups.PreviewMouseLeftButtonDown,
                                                                                                    lvDomainGroups.PreviewMouseLeftButtonDown
@@ -207,11 +232,6 @@ Public Class ctlGroupMemberOf
         Catch ex As Exception
             ThrowException(ex, "RemoveMember")
         End Try
-    End Sub
-
-    Private Sub ctlGroupMemberOf_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        tbDomainGroupsFilter.Focus()
-        btnDefaultGroups.Visibility = If(mode() = 0, Visibility.Visible, Visibility.Hidden)
     End Sub
 
     Private Sub btnDefaultGroups_Click(sender As Object, e As RoutedEventArgs) Handles btnDefaultGroups.Click

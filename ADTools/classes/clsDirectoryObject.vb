@@ -29,6 +29,9 @@ Public Class clsDirectoryObject
     Private _domainname As String
     Private _name As String
 
+    Private _allowedattributes As List(Of String)
+    Private _allowedattributeseffective As List(Of String)
+
     Private _children As New ObservableCollection(Of clsDirectoryObject)
     Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
 
@@ -63,11 +66,13 @@ Public Class clsDirectoryObject
     Sub New(Entry As DirectoryEntry, ByRef Domain As clsDomain)
         Me.Entry = Entry
         _domain = Domain
+        Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
     End Sub
 
     Sub New(SearchResult As SearchResult, ByRef Domain As clsDomain)
         Me.SearchResult = SearchResult
         _domain = Domain
+        Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
     End Sub
 
     <RegistrySerializerIgnorable(True)>
@@ -77,8 +82,7 @@ Public Class clsDirectoryObject
         End Get
         Set(ByVal value As DirectoryEntry)
             Try
-                Dim o As Object = value.NativeObject
-                _entry = value
+                If value.Properties.Count > 0 Then _entry = value
             Catch
                 _entry = Nothing
             End Try
@@ -185,15 +189,23 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributes() As List(Of String)
         Get
-            If LdapProperty("allowedAttributes") Is Nothing AndAlso Entry IsNot Nothing Then Entry.RefreshCache({"allowedAttributes"})
+            If _allowedattributes IsNot Nothing Then Return _allowedattributes
 
-            Dim a As Object = LdapProperty("allowedAttributes")
-            If IsArray(a) Then
-                Return New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-            ElseIf a Is Nothing Then
-                Return New List(Of String)
+            If Entry IsNot Nothing Then
+                Entry.RefreshCache({"allowedAttributes"})
+
+                Dim a As Object = LdapProperty("allowedAttributes")
+
+                If IsArray(a) Then
+                    _allowedattributes = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
+                ElseIf a Is Nothing Then
+                    _allowedattributes = New List(Of String)
+                Else
+                    _allowedattributes = New List(Of String)({a.ToString})
+                End If
+                Return _allowedattributes
             Else
-                Return New List(Of String)({a.ToString})
+                Return New List(Of String)
             End If
         End Get
     End Property
@@ -201,15 +213,23 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributesEffective() As List(Of String)
         Get
-            If LdapProperty("allowedAttributesEffective") Is Nothing AndAlso Entry IsNot Nothing Then Entry.RefreshCache({"allowedAttributesEffective"})
+            If _allowedattributeseffective IsNot Nothing Then Return _allowedattributeseffective
 
-            Dim a As Object = LdapProperty("allowedAttributesEffective")
-            If IsArray(a) Then
-                Return New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-            ElseIf a Is Nothing Then
-                Return New List(Of String)
+            If Entry IsNot Nothing Then
+                Entry.RefreshCache({"allowedAttributesEffective"})
+
+                Dim a As Object = LdapProperty("allowedAttributesEffective")
+
+                If IsArray(a) Then
+                    _allowedattributeseffective = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
+                ElseIf a Is Nothing Then
+                    _allowedattributeseffective = New List(Of String)
+                Else
+                    _allowedattributeseffective = New List(Of String)({a.ToString})
+                End If
+                Return _allowedattributeseffective
             Else
-                Return New List(Of String)({a.ToString})
+                Return New List(Of String)
             End If
         End Get
     End Property
@@ -234,7 +254,8 @@ Public Class clsDirectoryObject
             Dim valuetyped As Object = Nothing
 
             If Entry IsNot Nothing Then
-                Entry.RefreshCache({name})
+                'Entry.RefreshCache({name})
+                Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, name)
                 Dim pvc As PropertyValueCollection = Entry.Properties(name)
                 If pvc.Value IsNot Nothing Then value = pvc.Value
             ElseIf SearchResult IsNot Nothing Then
@@ -266,6 +287,8 @@ Public Class clsDirectoryObject
             End Select
 
             _properties.Add(name, valuetyped)
+
+            'Debug.Print("{0} LDAP property read end: {1}", Now.Second & "." & Now.Millisecond, name)
 
             Return valuetyped
         End Get
@@ -387,8 +410,6 @@ Public Class clsDirectoryObject
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
             Dim _image As String = ""
-            Dim oclass As String() = objectClass
-            Dim ocategory As String = objectCategory
 
             Select Case SchemaClass
                 Case enmSchemaClass.User

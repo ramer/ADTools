@@ -21,7 +21,7 @@
             </DockPanel>
             <TreeView x:Name="tvObjects" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SnapsToDevicePixels="True">
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
+                    <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers, IsAsync=True}">
                         <!--<StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenu="{DynamicResource ctxmnuObjects}" ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening">-->
                         <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown">
                             <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />

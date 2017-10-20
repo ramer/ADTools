@@ -8,19 +8,10 @@ Public Class wndContact
 
     Private Sub wndContact_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-
-        ctlMemberOf.DataContext = currentobject
         ctlMemberOf.CurrentObject = currentobject
-
-        'If Len(currentobject.givenName) > 0 And Len(currentobject.sn) > 0 Then
-        '    tbMailbox.Text = Translit_RU_EN(currentobject.givenName).Chars(0) & "." & Translit_RU_EN(currentobject.sn)
-        'End If
-
-        'tabctlContactExchange.DataContext = contact
-        tabctlContactExchange.IsEnabled = currentobject.Domain.UseExchange
-
-        ctlAttributes.DataContext = currentobject
         ctlAttributes.CurrentObject = currentobject
+
+        tabctlContactExchange.IsEnabled = currentobject.Domain.UseExchange
     End Sub
 
     Private Sub wnd_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -41,10 +32,8 @@ Public Class wndContact
     End Sub
 
     Private Sub tabctlContact_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlContact.SelectionChanged
-        If tabctlContact.SelectedIndex = 0 Then
-            tbGivenName.Focus()
-            'ElseIf tabctlContact.SelectedIndex = 1 Then
-            '    ctlMemberOf.Focus()
+        If tabctlContact.SelectedIndex = 1 Then
+            ctlMemberOf.InitializeAsync()
             'ElseIf tabctlContact.SelectedIndex = 2 Then
             '    tbMailbox.Focus()
 

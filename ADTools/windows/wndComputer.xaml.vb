@@ -15,14 +15,10 @@ Public Class wndComputer
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-
-        ctlMemberOf.DataContext = currentobject
         ctlMemberOf.CurrentObject = currentobject
+        ctlAttributes.CurrentObject = currentobject
 
         'dgEvents.ItemsSource = events
-
-        ctlAttributes.DataContext = currentobject
-        ctlAttributes.CurrentObject = currentobject
 
         'dtpPeriodTo.Value = Now
         'dtpPeriodFrom.Value = Now.AddDays(-1)
@@ -35,22 +31,19 @@ Public Class wndComputer
     End Sub
 
     Private Sub tabctlComputer_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlComputer.SelectionChanged
-        If tabctlComputer.SelectedIndex = 0 Then
-            pingtimer.Stop()
-            tbSAMAccountName.Focus()
-        ElseIf tabctlComputer.SelectedIndex = 1 Then
-            pingtimer.Stop()
-            ctlMemberOf.Focus()
+        If tabctlComputer.SelectedIndex = 1 Then
+            ctlMemberOf.InitializeAsync()
         ElseIf tabctlComputer.SelectedIndex = 2 Then
             'pingtimer.Start()
             'GetPingStatus()
             'GetTrace()
             'GetPorts()
-        ElseIf tabctlComputer.SelectedIndex = 3 Then
-            'pingtimer.Stop()
-            'dtpPeriodFrom.Focus()
         ElseIf tabctlComputer.SelectedIndex = 4 Then
             ctlAttributes.InitializeAsync()
+        End If
+
+        If tabctlComputer.SelectedIndex <> 2 Then
+            pingtimer.Stop()
         End If
     End Sub
 

@@ -6,11 +6,9 @@ Public Class wndGroup
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-        ctlMemberOf.CurrentObject = currentobject
-        ctlMember.CurrentObject = currentobject
-
-        ctlAttributes.DataContext = currentobject
         ctlAttributes.CurrentObject = currentobject
+        ctlMember.CurrentObject = currentobject
+        ctlMemberOf.CurrentObject = currentobject
     End Sub
 
     Private Sub wndComputer_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -18,12 +16,10 @@ Public Class wndGroup
     End Sub
 
     Private Sub tabctlGroup_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlGroup.SelectionChanged
-        If tabctlGroup.SelectedIndex = 0 Then
-            tbSAMAccountName.Focus()
-        ElseIf tabctlGroup.SelectedIndex = 1 Then
-            ctlMember.Focus()
+        If tabctlGroup.SelectedIndex = 1 Then
+            ctlMember.InitializeAsync()
         ElseIf tabctlGroup.SelectedIndex = 2 Then
-            ctlMemberOf.Focus()
+            ctlMemberOf.InitializeAsync()
         ElseIf tabctlGroup.SelectedIndex = 3 Then
             ctlAttributes.InitializeAsync()
         End If

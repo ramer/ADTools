@@ -6,8 +6,6 @@ Public Class wndOrganizationalUnit
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-
-        ctlAttributes.DataContext = currentobject
         ctlAttributes.CurrentObject = currentobject
     End Sub
 
@@ -16,9 +14,7 @@ Public Class wndOrganizationalUnit
     End Sub
 
     Private Sub tabctlComputer_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlOrganizationalUnit.SelectionChanged
-        If tabctlOrganizationalUnit.SelectedIndex = 0 Then
-            tbDescription.Focus()
-        ElseIf tabctlOrganizationalUnit.SelectedIndex = 1 Then
+        If tabctlOrganizationalUnit.SelectedIndex = 1 Then
             ctlAttributes.InitializeAsync()
         End If
     End Sub

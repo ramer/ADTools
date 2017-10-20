@@ -16,6 +16,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
         <DockPanel LastChildFill="True" Grid.Column="0">
             <Label Margin="0,0,3,0" Content="Выбранные объекты" DockPanel.Dock="Top"/>
             <ListView x:Name="lvSelectedObjects" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">

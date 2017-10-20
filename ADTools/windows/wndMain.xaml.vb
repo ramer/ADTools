@@ -301,9 +301,6 @@ Class wndMain
 
 #Region "Events"
 
-
-
-
     Private Sub dgObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgObjects.PreviewKeyDown
         Select Case e.Key
             Case Key.Enter

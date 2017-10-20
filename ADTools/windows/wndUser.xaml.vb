@@ -66,12 +66,8 @@ Public Class wndUser
     End Sub
 
     Private Sub tabctlUser_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlUser.SelectionChanged
-        If tabctlUser.SelectedIndex = 0 Then
-            tbGivenName.Focus()
-        ElseIf tabctlUser.SelectedIndex = 1 Then
-            tbUserPrincipalNameName.Focus()
-        ElseIf tabctlUser.SelectedIndex = 2 Then
-            ctlMemberOf.Focus()
+        If tabctlUser.SelectedIndex = 2 Then
+            ctlMemberOf.InitializeAsync()
         ElseIf tabctlUser.SelectedIndex = 3 Then
             ctlMailbox.InitializeAsync()
         ElseIf tabctlUser.SelectedIndex = 4 Then

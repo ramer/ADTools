@@ -37,10 +37,33 @@ Public Class ctlGroupMember
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
-            .lvSelectedObjects.Items.Clear()
-            CType(._currentobject.member, ObservableCollection(Of clsDirectoryObject)).ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedObjects.Items.Add(x))
+            '.lvSelectedObjects.Items.Clear()
+            'CType(._currentobject.member, ObservableCollection(Of clsDirectoryObject)).ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedObjects.Items.Add(x))
             .lvDomainObjects.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomainobjects, Nothing)
         End With
+    End Sub
+
+    Private Sub ctlGroupMember_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        tbDomainObjectsFilter.Focus()
+    End Sub
+
+    Public Async Sub InitializeAsync()
+        If _currentobject Is Nothing Then Exit Sub
+
+        If lvSelectedObjects.Items.Count = 0 Then
+            cap.Visibility = Visibility.Visible
+
+            Dim groups As New ObservableCollection(Of clsDirectoryObject)
+
+            groups = Await Task.Run(Function() _currentobject.member)
+
+            lvSelectedObjects.Items.Clear()
+            For Each g In groups
+                lvSelectedObjects.Items.Add(g)
+            Next
+
+            cap.Visibility = Visibility.Hidden
+        End If
     End Sub
 
     Private Async Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
@@ -147,7 +170,4 @@ Public Class ctlGroupMember
         End Try
     End Sub
 
-    Private Sub ctlGroupMember_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        tbDomainObjectsFilter.Focus()
-    End Sub
 End Class
