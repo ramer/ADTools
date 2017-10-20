@@ -30,6 +30,10 @@ Public Class clsMailbox
         RaiseEvent PropertyChanged(Me, e)
     End Sub
 
+    Sub New()
+
+    End Sub
+
     Sub New(ByRef currentobject As clsDirectoryObject)
         _currentobject = currentobject
 

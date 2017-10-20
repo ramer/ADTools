@@ -16,6 +16,11 @@
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
     </Window.Resources>
+
+    <Window.DataContext>
+        <local:clsDirectoryObject/>
+    </Window.DataContext>
+    
     <Grid>
         <TabControl x:Name="tabctlContact" Margin="5">
             <TabItem Header="Основные сведения">

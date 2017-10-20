@@ -15,7 +15,12 @@
     
     <Window.Resources>
         <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility" />
+        <local:clsDirectoryObject x:Key="vmDirectoryObject"/>
     </Window.Resources>
+    
+    <Window.DataContext>
+        <local:clsDirectoryObject/>
+    </Window.DataContext>
     
     <Grid>
         <TabControl x:Name="tabctlUser" Margin="5">
@@ -171,14 +176,16 @@
                         </DockPanel>
                         <TextBlock Text="Разрешить вход на следующие рабочие станции" Margin="5,20,5,0"/>
                     </StackPanel>
-                    <local:ctlUserWorkstations x:Name="ctlUserWorkstations" Margin="5" IsEnabled="{Binding CanWrite[userWorkstations]}"/>
+                    <DockPanel IsEnabled="{Binding CanWrite[userWorkstations]}">
+                        <local:ctlUserWorkstations x:Name="ctlUserWorkstations" Margin="5"/>
+                    </DockPanel>
                 </DockPanel>
             </TabItem>
             <TabItem Header="Член групп">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
             <TabItem x:Name="tabctlUserExchange" Header="Exchange">
-                <local:ctlUserMailbox x:Name="ctlMailbox" Margin="5" CurrentObject="{Binding currentobject}"/>
+                <local:ctlUserMailbox x:Name="ctlMailbox" Margin="5"/>
             </TabItem>
             <TabItem Header="Все атрибуты">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>

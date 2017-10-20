@@ -5,9 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADTools"
              mc:Ignorable="d" 
-             d:DesignHeight="413" d:DesignWidth="518"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    
+             d:DesignHeight="413" d:DesignWidth="518">
+    <UserControl.DataContext>
+        <local:clsMailbox/>
+    </UserControl.DataContext>
     <UserControl.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
     </UserControl.Resources>

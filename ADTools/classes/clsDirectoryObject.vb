@@ -66,13 +66,13 @@ Public Class clsDirectoryObject
     Sub New(Entry As DirectoryEntry, ByRef Domain As clsDomain)
         Me.Entry = Entry
         _domain = Domain
-        Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
+        'Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
     End Sub
 
     Sub New(SearchResult As SearchResult, ByRef Domain As clsDomain)
         Me.SearchResult = SearchResult
         _domain = Domain
-        Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
+        'Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
     End Sub
 
     <RegistrySerializerIgnorable(True)>
@@ -255,7 +255,7 @@ Public Class clsDirectoryObject
 
             If Entry IsNot Nothing Then
                 'Entry.RefreshCache({name})
-                Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, name)
+                'Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, name)
                 Dim pvc As PropertyValueCollection = Entry.Properties(name)
                 If pvc.Value IsNot Nothing Then value = pvc.Value
             ElseIf SearchResult IsNot Nothing Then
@@ -806,7 +806,11 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As Byte()
         Get
-            If Entry Is Nothing Then Return Nothing
+            If Entry Is Nothing Then
+                Dim ms As New IO.MemoryStream
+                Application.GetResourceStream(New Uri("pack://application:,,,/images/user_image.png")).Stream.CopyTo(ms)
+                Return ms.ToArray
+            End If
 
             If LdapProperty("thumbnailPhoto") IsNot Nothing Then
                 Return LdapProperty("thumbnailPhoto")
@@ -1233,6 +1237,8 @@ Public Class clsDirectoryObject
     <RegistrySerializerAlias("Name")>
     Public Property name() As String
         Get
+            If Entry Is Nothing Then Return "Directory Object"
+
             Return If(LdapProperty("name"), _name)
         End Get
         Set(value As String)

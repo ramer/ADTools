@@ -17,6 +17,11 @@
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
         <local:ConverterBooleanInverted x:Key="ConverterBooleanInverted" />
     </Window.Resources>
+
+    <Window.DataContext>
+        <local:clsDirectoryObject/>
+    </Window.DataContext>
+    
     <Grid>
         <TabControl x:Name="tabctlGroup" Margin="5">
             <TabItem Header="Основные сведения">

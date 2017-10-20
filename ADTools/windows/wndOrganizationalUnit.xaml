@@ -13,6 +13,10 @@
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">
 
+    <Window.DataContext>
+        <local:clsDirectoryObject/>
+    </Window.DataContext>
+    
     <Grid>
         <TabControl x:Name="tabctlOrganizationalUnit" Margin="5">
             <TabItem Header="Основные сведения">
