@@ -213,7 +213,8 @@ Class wndMain
         ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
         ctxmnuObjectsCopy.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsCut.Visibility = BooleanToVisibility(objects.Count > 0)
-        ctxmnuObjectsMove.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsPaste.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
+        ctxmnuObjectsPaste.IsEnabled = ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0
         ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
@@ -221,7 +222,6 @@ Class wndMain
         ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
         ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
         ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
-        ctxmnuObjectsCopyAttributes.Visibility = BooleanToVisibility(objects.Count > 0)
 
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
 
@@ -272,16 +272,45 @@ Class wndMain
         dgObjects.SelectAll()
     End Sub
 
-    Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
+    Private Sub ctxmnuObjectsCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsCreateObject.Click
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
+        If objects.Count <> 1 Then Exit Sub
+        If Not (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then Exit Sub
+
+        Dim w As New wndCreateObject
+        w.objectcontainer = objects(0)
+        w.objectdomain = objects(0).Domain
+
+        ShowWindow(w, False, Me, False)
+    End Sub
+
+    Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf))
+        ClipboardBuffer = objects
+        ClipboardAction = enmClipboardAction.Copy
+    End Sub
+
+    Private Sub ctxmnuSharedCut_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf))
+        ClipboardBuffer = objects
+        ClipboardAction = enmClipboardAction.Cut
     End Sub
 
     Private Sub ctxmnuSharedAddToFavorites_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If objects.Count = 1 Then preferences.Favorites.Add(objects(0))
+    End Sub
+
+    Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count = 1 Then ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
     End Sub
 
     Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)

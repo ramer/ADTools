@@ -20,6 +20,14 @@ Module mdlTools
     Public preferences As clsPreferences
     Public domains As New ObservableCollection(Of clsDomain)
 
+    Public Enum enmClipboardAction
+        Copy
+        Cut
+    End Enum
+
+    Public ClipboardBuffer As clsDirectoryObject()
+    Public ClipboardAction As enmClipboardAction
+
     Public Const ADS_UF_SCRIPT = 1 '0x1
     Public Const ADS_UF_ACCOUNTDISABLE = 2 '0x2
     Public Const ADS_UF_HOMEDIR_REQUIRED = 8 '0x8
@@ -481,6 +489,130 @@ Module mdlTools
     Public Sub Log(message As String)
         ADToolsApplication.tsocLog.Add(New clsLog(message))
     End Sub
+
+    Public Function GetNextDomainUsers(domain As clsDomain, Optional displayname As String = "") As List(Of String)
+        If domain Is Nothing Then Return Nothing
+        Dim patterns() As String = domain.UsernamePattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+        If patterns.Count = 0 Then Return Nothing
+        Dim de As DirectoryEntry = domain.DefaultNamingContext
+        If de Is Nothing Then Return Nothing
+
+        Dim result As New List(Of String)
+
+        Dim LDAPsearcher As New DirectorySearcher(de)
+        Dim LDAPresults As SearchResultCollection = Nothing
+        Dim LDAPresult As SearchResult
+
+        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
+
+        For Each pattern As String In patterns
+            Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+            Dim starredData = New With {.displayname = displayname, .n = "*"}
+
+            LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
+            LDAPsearcher.PageSize = 1000
+            LDAPresults = LDAPsearcher.FindAll()
+
+            Dim dummy As New List(Of String)
+            For Each LDAPresult In LDAPresults
+                dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
+            Next LDAPresult
+
+            For I As Integer = 1 To dummy.Count + 1
+                Dim integerData = New With {.displayname = displayname, .n = I}
+                Dim u As String = hbTemplate(integerData)
+                If Not dummy.Contains(u) Then
+                    result.Add(u)
+                    Exit For
+                End If
+            Next
+        Next
+
+        Return result
+    End Function
+
+    Public Function GetNextDomainUser(pattern As String, domain As clsDomain, Optional displayname As String = "") As String
+        If domain Is Nothing Then Return Nothing
+        Dim de As DirectoryEntry = domain.DefaultNamingContext
+        If de Is Nothing Then Return Nothing
+
+        Dim LDAPsearcher As New DirectorySearcher(de)
+        Dim LDAPresults As SearchResultCollection = Nothing
+        Dim LDAPresult As SearchResult
+
+        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
+
+        Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+        Dim starredData = New With {.displayname = displayname, .n = "*"}
+
+        LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
+        LDAPsearcher.PageSize = 1000
+        LDAPresults = LDAPsearcher.FindAll()
+
+        Dim dummy As New List(Of String)
+        For Each LDAPresult In LDAPresults
+            dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
+        Next LDAPresult
+
+        For I As Integer = 1 To dummy.Count + 1
+            Dim integerData = New With {.displayname = displayname, .n = I}
+            Dim u As String = hbTemplate(integerData)
+            If Not dummy.Contains(u) Then
+                Return u
+                Exit For
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+    Public Function GetNextDomainComputers(domain As clsDomain) As List(Of String)
+        If domain Is Nothing Then Return Nothing
+        Dim patterns() As String = domain.ComputerPattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+        If patterns.Count = 0 Then Return Nothing
+        Dim de As DirectoryEntry = domain.DefaultNamingContext
+        If de Is Nothing Then Return Nothing
+
+        Dim result As New List(Of String)
+
+        Dim LDAPsearcher As New DirectorySearcher(de)
+        Dim LDAPresults As SearchResultCollection = Nothing
+        Dim LDAPresult As SearchResult
+
+        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        LDAPsearcher.PropertiesToLoad.Add("name")
+
+        For Each pattern As String In patterns
+            Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+            Dim starredData = New With {.n = "*"}
+
+            LDAPsearcher.Filter = "(&(objectCategory=computer)(name=" & hbTemplate(starredData) & "))"
+            LDAPsearcher.PageSize = 1000
+            LDAPresults = LDAPsearcher.FindAll()
+
+            Dim dummy As New List(Of String)
+            For Each LDAPresult In LDAPresults
+                dummy.Add(LCase(GetLDAPProperty(LDAPresult.Properties, "name")))
+            Next LDAPresult
+
+            Dim count = 0
+            For I As Integer = 1 To dummy.Count + 10
+                Dim integerData = New With {.n = I}
+                Dim c As String = hbTemplate(integerData)
+                If Not dummy.Contains(c) Then
+                    result.Add(c)
+                    count += 1
+                    If count = 10 Then Exit For
+                End If
+            Next
+        Next
+
+        Return result
+    End Function
 
     Public Function GetNextDomainTelephoneNumbers(domain As clsDomain) As ObservableCollection(Of clsTelephoneNumber)
         If domain Is Nothing Then Return Nothing

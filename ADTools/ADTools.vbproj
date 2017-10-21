@@ -144,6 +144,9 @@
     <Compile Include="windows\wndContact.xaml.vb">
       <DependentUpon>wndContact.xaml</DependentUpon>
     </Compile>
+    <Compile Include="windows\wndCreateObject.xaml.vb">
+      <DependentUpon>wndCreateObject.xaml</DependentUpon>
+    </Compile>
     <Compile Include="windows\wndDomainBrowser.xaml.vb">
       <DependentUpon>wndDomainBrowser.xaml</DependentUpon>
     </Compile>
@@ -210,6 +213,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="windows\wndContact.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndCreateObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

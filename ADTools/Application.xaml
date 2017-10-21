@@ -926,9 +926,9 @@
 
 
         <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
-            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Margin" Value="0,0,0,0" />
-            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Focusable" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Separator">
@@ -944,14 +944,14 @@
         </Style>
 
         <Style TargetType="ContextMenu">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="HasDropShadow" Value="True"/>
             <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContextMenu">
                         <Border x:Name="Border"
-                            Background="{DynamicResource ColorButtonBackground}" 
+                            Background="{DynamicResource ColorMenuBackground}" 
                             BorderThickness="1"
                             BorderBrush="{DynamicResource ColorButtonBackground}">
                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
@@ -964,19 +964,20 @@
         <Style TargetType="Menu">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <!--<Setter Property="Height" Value="25"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Menu">
-                        <Border Background="{x:Null}"
-                            BorderBrush="{DynamicResource ColorButtonBackground}"
-                            BorderThickness="0">
-                            <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True"/>
+                        <Border x:Name="Border"
+                            Background="{DynamicResource ColorMenuBackground}"
+                            BorderThickness="0"
+                            BorderBrush="{DynamicResource ColorButtonBackground}">
+                            <StackPanel IsItemsHost="True" ClipToBounds="True" Orientation="Horizontal"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        
         <Style TargetType="MenuItem">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
             <Setter Property="Template">
@@ -1023,7 +1024,7 @@
                                 <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
                                 <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Right" x:Name="SubMenuPopup" Focusable="false" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                     <Border x:Name="SubMenuBorder" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Padding="0">
-                                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
+                                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True" Background="{DynamicResource ColorMenuBackground}">
                                             <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
                                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
                                         </Grid>
@@ -1091,7 +1092,7 @@
                                 <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" TargetName="Border"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

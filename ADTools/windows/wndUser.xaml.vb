@@ -3,7 +3,7 @@ Imports IPrompt.VisualBasic
 
 Public Class wndUser
 
-    Public Property currentobject As New clsDirectoryObject
+    Public Property currentobject As clsDirectoryObject
 
     Private Sub wndUser_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject

@@ -1,0 +1,125 @@
+﻿<Window x:Class="wndCreateObject"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        Title="Создание объекта" Height="370" Width="541" WindowStartupLocation="CenterOwner" Icon="/images/app.ico">
+    <Grid>
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Bottom" Margin="5,5,5,7">
+                <Button x:Name="btnCreate" Width="150" Height="23" Content="Создать" HorizontalAlignment="Right"></Button>
+            </StackPanel>
+            <Border BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Margin="5">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="7,5,7,5">
+                        <StackPanel>
+                            <TextBlock Text="Домен"/>
+                            <ComboBox x:Name="cmboDomain" Width="150" Height="23" DisplayMemberPath="Name"/>
+                        </StackPanel>
+                        <StackPanel Margin="5,0,0,0">
+                            <TextBlock Text="Контейнер"/>
+                            <DockPanel>
+                                <Button x:Name="btnContainerBrowse" Width="23" Height="23" Content="🔎" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                <TextBox x:Name="tbContainer" Height="23" IsReadOnly="True"></TextBox>
+                            </DockPanel>
+                        </StackPanel>
+                    </DockPanel>
+                    <TabControl x:Name="tabctlObject" BorderThickness="0">
+                        <TabItem Header="Пользователь">
+                            <StackPanel Margin="5">
+                                <StackPanel Margin="0,0,0,0">
+                                    <DockPanel LastChildFill="True">
+                                        <CheckBox x:Name="chbUserSharedMailbox" Content="общий почтовый ящик" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Отображаемое имя"/>
+                                    </DockPanel>
+                                    <TextBox x:Name="tbUserDisplayname" Height="23"></TextBox>
+                                </StackPanel>
+                                <DockPanel LastChildFill="True" Margin="0,10,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Имя входа"/>
+                                        <DockPanel LastChildFill="True">
+                                            <ComboBox x:Name="cmboUserUserPrincipalNameDomain" Width="150" Height="23" DockPanel.Dock="Right" ItemsSource="{Binding ElementName=cmboUserDomain, Path=SelectedItem.Suffixes, Mode=OneWay}" Margin="5,0,0,0"></ComboBox>
+                                            <ComboBox x:Name="cmboUserUserPrincipalName" Height="23" IsEditable="True" TextBoxBase.TextChanged="cmboUserUserPrincipalName_TextChanged"></ComboBox>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </DockPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Объект (CN)"/>
+                                    <TextBox x:Name="tbUserObjectName" Height="23" Text="{Binding ElementName=tbUserDisplayname, Path=Text, Mode=OneWay}"></TextBox>
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Имя входа (пред-Windows 2000)"/>
+                                    <TextBox x:Name="tbUserSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=cmboUserUserPrincipalName, Path=Text, Mode=OneWay}"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Компьютер">
+                            <StackPanel Margin="5">
+                                <StackPanel Margin="0,0,0,0">
+                                    <TextBlock Text="Объект (CN)"/>
+                                    <ComboBox x:Name="cmboComputerObjectName" Height="23" IsEditable="True"></ComboBox>
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Имя компьютера (пред-Windows 2000)"/>
+                                    <TextBox x:Name="tbComputerSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=cmboComputerObjectName, Path=Text, Mode=OneWay}"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Группа">
+                            <StackPanel Margin="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,0,0" Grid.Column="0">
+                                        <TextBlock Text="Область действия группы"/>
+                                        <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="Локальная в домене" IsChecked="True"/>
+                                        <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="Глобальная"/>
+                                        <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="Универсальная"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,0" Grid.Column="1">
+                                        <TextBlock Text="Тип группы"/>
+                                        <RadioButton x:Name="rbGroupTypeSecurity" Margin="0,10,0,0" Content="Группа безопасности" IsChecked="True"/>
+                                        <RadioButton x:Name="rbGroupTypeDistribution" Margin="0,5,0,0" Content="Группа распространения"/>
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Объект (CN)"/>
+                                    <TextBox x:Name="tbGroupObjectName" Height="23"></TextBox>
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Имя группы (пред-Windows 2000)"/>
+                                    <TextBox x:Name="tbGroupSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=tbGroupObjectName, Path=Text, Mode=OneWay}"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Контакт">
+                            <StackPanel Margin="5">
+                                <StackPanel Margin="0,0,0,0">
+                                    <TextBlock Text="Отображаемое имя"/>
+                                    <TextBox x:Name="tbContactDisplayname" Height="23"></TextBox>
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock Text="Объект (CN)"/>
+                                    <TextBox x:Name="tbContactObjectName" Height="23" Text="{Binding ElementName=tbContactDisplayname, Path=Text, Mode=OneWay}"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Подразделение">
+                            <StackPanel Margin="5">
+                                <StackPanel Margin="0,0,0,0">
+                                    <TextBlock Text="Объект (CN)"/>
+                                    <TextBox x:Name="tbOrganizationalUnitObjectName" Height="23"></TextBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </TabItem>
+                    </TabControl>
+                </DockPanel>
+            </Border>
+        </DockPanel>
+    </Grid>
+</Window>

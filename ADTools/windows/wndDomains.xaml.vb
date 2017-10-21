@@ -73,7 +73,6 @@ Public Class wndDomains
         If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
             domain.SearchRoot = domainbrowser.currentobject.Entry
         End If
-
     End Sub
 
 End Class

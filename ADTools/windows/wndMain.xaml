@@ -154,7 +154,9 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviDomains">
-                                            <MenuItem x:Name="ctxmnutviDomainsMove" Header="Переместить..."/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCopy" Header="Копировать" Click="ctxmnuSharedCopy_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCut" Header="Вырезать" Click="ctxmnuSharedCut_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsPaste" Header="Вставить"/>
                                             <MenuItem x:Name="ctxmnutviDomainsRename" Header="Переименовать..."/>
                                             <MenuItem x:Name="ctxmnutviDomainsRemove" Header="Удалить"/>
                                             <Separator/>
@@ -255,9 +257,9 @@
                                     <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
                                     <Separator/>
                                     <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..."/>
-                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать"/>
-                                    <MenuItem x:Name="ctxmnuObjectsCut" Header="Вырезать"/>
-                                    <MenuItem x:Name="ctxmnuObjectsMove" Header="Переместить..."/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать" Click="ctxmnuSharedCopy_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCut" Header="Вырезать" Click="ctxmnuSharedCut_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsPaste" Header="Вставить"/>
                                     <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..."/>
                                     <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="Добавить в избранное" Click="ctxmnuSharedAddToFavorites_Click"/>
@@ -265,11 +267,6 @@
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
                                     <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
                                     <Separator/>
-                                    <MenuItem x:Name="ctxmnuObjectsCopyAttributes" Header="Копировать сведения">
-                                        <MenuItem x:Name="ctxmnuObjectsCopyDisplayName" Header="Отображаемое имя"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCopyBasicAttributes" Header="Основные атрибуты" ToolTip="Отображаемое имя, имя входа, основной адрес, телефон"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCopyAllAttributes" Header="Все атрибуты"/>
-                                    </MenuItem>
                                     <MenuItem x:Name="ctxmnuObjectsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
