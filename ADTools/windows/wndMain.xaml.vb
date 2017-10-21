@@ -22,7 +22,7 @@ Class wndMain
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
-        Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf HotKey_F5))
+        Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf Refresh))
 
         DomainTreeUpdate()
         RebuildColumns()
@@ -507,7 +507,7 @@ Class wndMain
         Next
     End Sub
 
-    Private Sub HotKey_F5()
+    Public Sub Refresh()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
         Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Filter)
     End Sub

@@ -1,5 +1,4 @@
 ﻿Imports System.ComponentModel
-Imports System.Threading.Tasks
 
 Public Class wndCreateObject
     Public Property objectdomain As clsDomain
@@ -71,13 +70,19 @@ Public Class wndCreateObject
             obj = Await CreateGroup()
         ElseIf tabctlObject.SelectedIndex = 3 Then
             obj = Await CreateContact()
+        ElseIf tabctlObject.SelectedIndex = 4 Then
+            obj = Await CreateOrganizationaUnit()
         End If
 
         cap.Visibility = Visibility.Hidden
 
         If obj IsNot Nothing Then
-            ShowDirectoryObjectProperties(obj, Me.Owner)
-            Me.Close()
+            If TypeOf Me.Owner Is wndMain Then
+                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).DomainTreeUpdate()
+                CType(Me.Owner, wndMain).Refresh()
+            End If
+            If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Me.Owner)
+            If chbCloseWindow.IsChecked = True Then Me.Close()
         End If
     End Sub
 
@@ -113,7 +118,10 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    _currentobject = New clsDirectoryObject(objectcontainer.Entry.Children.Add("cn=" & _objectname, "user"), objectdomain)
+                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "user")
+                    entry.CommitChanges()
+                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+
                     _currentobject.sAMAccountName = _objectsamaccountname
                     _currentobject.userPrincipalName = _objectuserprincipalname & "@" & _objectuserprincipalnamedomain
                 Catch ex As Exception
@@ -188,9 +196,11 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    _currentobject = New clsDirectoryObject(objectcontainer.Entry.Children.Add("cn=" & _objectname, "computer"), objectdomain)
+                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "computer")
+                    entry.CommitChanges()
+                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+
                     _currentobject.sAMAccountName = _objectsamaccountname
-                    _currentobject.Entry.CommitChanges()
                 Catch ex As Exception
                     ThrowException(ex, "Create Computer")
                 End Try
@@ -207,7 +217,6 @@ Public Class wndCreateObject
 
                 Try
                     _currentobject.userAccountControl = ADS_UF_WORKSTATION_TRUST_ACCOUNT + ADS_UF_PASSWD_NOTREQD
-                    _currentobject.Entry.CommitChanges()
                 Catch ex As Exception
                     ThrowException(ex, "Set Computer attributes")
                 End Try
@@ -242,9 +251,11 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    _currentobject = New clsDirectoryObject(objectcontainer.Entry.Children.Add("cn=" & _objectname, "Group"), objectdomain)
+                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "Group")
+                    entry.CommitChanges()
+                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+
                     _currentobject.sAMAccountName = _objectsamaccountname
-                    _currentobject.Entry.CommitChanges()
                 Catch ex As Exception
                     ThrowException(ex, "Create Group")
                 End Try
@@ -258,17 +269,14 @@ Public Class wndCreateObject
                 If _groupscopedomainlocal Then ' domain local group, but unversal first
                     Try
                         _currentobject.groupType = ADS_GROUP_TYPE_UNIVERSAL_GROUP
-                        _currentobject.Entry.CommitChanges()
 
                         _currentobject.groupType = grouptype
-                        _currentobject.Entry.CommitChanges()
                     Catch ex As Exception
                         ThrowException(ex, "Set Group attributes")
                     End Try
                 Else
                     Try
                         _currentobject.groupType = grouptype
-                        _currentobject.Entry.CommitChanges()
                     Catch ex As Exception
                         ThrowException(ex, "Set Group attributes")
                     End Try
@@ -299,8 +307,9 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    _currentobject = New clsDirectoryObject(objectcontainer.Entry.Children.Add("cn=" & _objectname, "contact"), objectdomain)
-                    _currentobject.Entry.CommitChanges()
+                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "contact")
+                    entry.CommitChanges()
+                    _currentobject = New clsDirectoryObject(entry, objectdomain)
                 Catch ex As Exception
                     ThrowException(ex, "Create Contact")
                 End Try
@@ -311,8 +320,6 @@ Public Class wndCreateObject
                     _currentobject.displayName = _objectdisplayname
                     _currentobject.givenName = If(Split(_objectdisplayname, " ").Count >= 2, Split(_objectdisplayname, " ")(1), "")
                     _currentobject.sn = If(Split(_objectdisplayname, " ").Count >= 1, Split(_objectdisplayname, " ")(0), "")
-
-                    _currentobject.Entry.CommitChanges()
                 Catch ex As Exception
                     ThrowException(ex, "Set Contact attributes")
                 End Try
@@ -326,4 +333,33 @@ Public Class wndCreateObject
         Return _currentobject
     End Function
 
+    Private Async Function CreateOrganizationaUnit() As Task(Of clsDirectoryObject)
+        Dim _currentobject As clsDirectoryObject = Nothing
+
+        _objectname = tbOrganizationalUnitObjectName.Text
+
+        If objectdomain Is Nothing Or
+           objectcontainer Is Nothing Or
+           _objectname = "" Then
+            ThrowCustomException("Не заполнены необходимые поля")
+            Return Nothing
+        End If
+
+        Await Task.Run(
+            Sub()
+
+                Try
+                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("OU=" & _objectname, "organizationalUnit")
+                    entry.CommitChanges()
+                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                Catch ex As Exception
+                    ThrowException(ex, "Create OrganizationalUnit")
+                End Try
+
+                Threading.Thread.Sleep(500)
+
+            End Sub)
+
+        Return _currentobject
+    End Function
 End Class
