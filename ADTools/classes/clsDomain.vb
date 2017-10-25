@@ -18,8 +18,8 @@ Public Class clsDomain
     Private _defaultnamingcontextpath As String
     Private _configurationnamingcontext As DirectoryEntry
     Private _configurationnamingcontextpath As String
-    Private _schemanamingcontext As DirectoryEntry
-    Private _schemanamingcontextpath As String
+    'Private _schemanamingcontext As DirectoryEntry
+    'Private _schemanamingcontextpath As String
     Private _searchroot As DirectoryEntry
     Private _searchrootpath As String
 
@@ -91,8 +91,8 @@ Public Class clsDomain
                 connecttester = DefaultNamingContext.NativeObject
                 ConfigurationNamingContext = New DirectoryEntry(ConfigurationNamingContextPath, Username, Password)
                 connecttester = ConfigurationNamingContext.NativeObject
-                SchemaNamingContext = New DirectoryEntry(SchemaNamingContextPath, Username, Password)
-                connecttester = SchemaNamingContext.NativeObject
+                'SchemaNamingContext = New DirectoryEntry(SchemaNamingContextPath, Username, Password)
+                'connecttester = SchemaNamingContext.NativeObject
                 SearchRoot = New DirectoryEntry(SearchRootPath, Username, Password)
                 connecttester = SearchRoot.NativeObject
                 If DefaultGroupPaths.Count > 0 Then DefaultGroups = DefaultGroupPaths.Select(Function(x) New clsDirectoryObject(New DirectoryEntry(x, Username, Password), Me))
@@ -154,18 +154,18 @@ Public Class clsDomain
         If Not success Then Return False
 
         'schemaNamingContext
-        success = Await Task.Run(
-            Function()
-                Try
-                    SchemaNamingContext = New DirectoryEntry(connectionstring & GetLDAPProperty(_rootdse.Properties, "schemaNamingContext"), Username, Password)
-                    If SchemaNamingContext.Properties.Count = 0 Then Return False
-                Catch ex As Exception
-                    SchemaNamingContext = Nothing
-                    Return False
-                End Try
-                Return True
-            End Function)
-        If Not success Then Return False
+        'success = Await Task.Run(
+        '    Function()
+        '        Try
+        '            SchemaNamingContext = New DirectoryEntry(connectionstring & GetLDAPProperty(_rootdse.Properties, "schemaNamingContext"), Username, Password)
+        '            If SchemaNamingContext.Properties.Count = 0 Then Return False
+        '        Catch ex As Exception
+        '            SchemaNamingContext = Nothing
+        '            Return False
+        '        End Try
+        '        Return True
+        '    End Function)
+        'If Not success Then Return False
 
         'properties
         Properties = Await Task.Run(
@@ -320,28 +320,28 @@ Public Class clsDomain
         End Set
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public Property SchemaNamingContext() As DirectoryEntry
-        Get
-            Return _schemanamingcontext
-        End Get
-        Set(value As DirectoryEntry)
-            _schemanamingcontext = value
-            If value IsNot Nothing Then SchemaNamingContextPath = value.Path
-            NotifyPropertyChanged("SchemaNamingContext")
-        End Set
-    End Property
+    '<RegistrySerializerIgnorable(True)>
+    'Public Property SchemaNamingContext() As DirectoryEntry
+    '    Get
+    '        Return _schemanamingcontext
+    '    End Get
+    '    Set(value As DirectoryEntry)
+    '        _schemanamingcontext = value
+    '        If value IsNot Nothing Then SchemaNamingContextPath = value.Path
+    '        NotifyPropertyChanged("SchemaNamingContext")
+    '    End Set
+    'End Property
 
-    <RegistrySerializerAlias("SchemaNamingContext")>
-    Public Property SchemaNamingContextPath() As String
-        Get
-            Return _schemanamingcontextpath
-        End Get
-        Set(value As String)
-            _schemanamingcontextpath = value
-            NotifyPropertyChanged("SchemaNamingContextPath")
-        End Set
-    End Property
+    '<RegistrySerializerAlias("SchemaNamingContext")>
+    'Public Property SchemaNamingContextPath() As String
+    '    Get
+    '        Return _schemanamingcontextpath
+    '    End Get
+    '    Set(value As String)
+    '        _schemanamingcontextpath = value
+    '        NotifyPropertyChanged("SchemaNamingContextPath")
+    '    End Set
+    'End Property
 
     <RegistrySerializerIgnorable(True)>
     Public Property SearchRoot() As DirectoryEntry

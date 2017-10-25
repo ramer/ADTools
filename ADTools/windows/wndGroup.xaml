@@ -53,8 +53,8 @@
                                 <StackPanel Margin="0,10,0,0" Grid.Column="0">
                                     <TextBlock Text="Область действия группы"/>
                                     <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="Локальная в домене" IsChecked="{Binding groupTypeScopeDomainLocal}"/>
-                                    <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="Глобальная" IsChecked="{Binding groupTypeScopeDomainGlobal}"/>
-                                    <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="Универсальная" IsChecked="{Binding groupTypeScopeDomainUniversal}"/>
+                                    <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="Глобальная" IsChecked="{Binding groupTypeScopeGlobal}"/>
+                                    <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="Универсальная" IsChecked="{Binding groupTypeScopeUniversal}"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0" Grid.Column="1">
                                     <TextBlock Text="Тип группы"/>

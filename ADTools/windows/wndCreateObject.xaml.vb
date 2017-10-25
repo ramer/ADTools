@@ -1,23 +1,24 @@
 ﻿Imports System.ComponentModel
+Imports IPrompt.VisualBasic
 
 Public Class wndCreateObject
-    Public Property objectdomain As clsDomain
-    Public Property objectcontainer As clsDirectoryObject
+    Public Property destinationdomain As clsDomain
+    Public Property destinationcontainer As clsDirectoryObject
+    Public Property copyingobject As clsDirectoryObject = Nothing
 
-    Private Property _objectissharedmailbox As Boolean
-    Private Property _objectdisplayname As String
-    Private Property _objectuserprincipalname As String
-    Private Property _objectuserprincipalnamedomain As String
-    Private Property _objectname As String
-    Private Property _objectsamaccountname As String
+    Private Property newobjectissharedmailbox As Boolean
+    Private Property newobjectdisplayname As String
+    Private Property newobjectuserprincipalname As String
+    Private Property newobjectuserprincipalnamedomain As String
+    Private Property newobjectname As String
+    Private Property newobjectsamaccountname As String
 
     Private Sub wndCreateObject_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         DataContext = Me
         cmboDomain.ItemsSource = domains
 
-        cmboDomain.SelectedItem = objectdomain
-        tbContainer.Text = objectcontainer.Entry.Path
-
+        cmboDomain.SelectedItem = destinationdomain
+        tbContainer.Text = If(destinationcontainer IsNot Nothing, destinationcontainer.distinguishedNameFormated, "")
     End Sub
 
     Private Sub btnContainerBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnContainerBrowse.Click
@@ -31,18 +32,10 @@ Public Class wndCreateObject
 
         If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
             domain.SearchRoot = domainbrowser.currentobject.Entry
-            objectdomain = CType(cmboDomain.SelectedItem, clsDomain)
-            objectcontainer = domainbrowser.currentobject
-            tbContainer.Text = objectcontainer.Entry.Path
+            destinationdomain = CType(cmboDomain.SelectedItem, clsDomain)
+            destinationcontainer = domainbrowser.currentobject
+            tbContainer.Text = destinationcontainer.distinguishedNameFormated
         End If
-    End Sub
-
-    Private Sub tbUserDisplayname_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbUserDisplayname.TextChanged
-        tbUserObjectName.Text = If(chbUserSharedMailbox.IsChecked, "SharedMailbox_" & cmboUserUserPrincipalName.Text, tbUserDisplayname.Text)
-    End Sub
-
-    Private Sub cmboUserUserPrincipalName_TextChanged(sender As Object, e As TextChangedEventArgs)
-        tbUserObjectName.Text = If(chbUserSharedMailbox.IsChecked, "SharedMailbox_" & cmboUserUserPrincipalName.Text, tbUserDisplayname.Text)
     End Sub
 
     Private Sub cmboUserUserPrincipalName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboUserUserPrincipalName.DropDownOpened
@@ -78,8 +71,8 @@ Public Class wndCreateObject
 
         If obj IsNot Nothing Then
             If TypeOf Me.Owner Is wndMain Then
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).DomainTreeUpdate()
-                CType(Me.Owner, wndMain).Refresh()
+                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
+                CType(Me.Owner, wndMain).RefreshDataGrid()
             End If
             If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Me.Owner)
             If chbCloseWindow.IsChecked = True Then Me.Close()
@@ -91,39 +84,39 @@ Public Class wndCreateObject
     End Sub
 
     Private Async Function CreateUser() As Task(Of clsDirectoryObject)
-        Dim _currentobject As clsDirectoryObject = Nothing
+        Dim newobject As clsDirectoryObject = Nothing
 
-        _objectdisplayname = tbUserDisplayname.Text
-        _objectuserprincipalname = cmboUserUserPrincipalName.Text
-        _objectuserprincipalnamedomain = cmboUserUserPrincipalNameDomain.Text
-        _objectname = tbUserObjectName.Text
-        _objectsamaccountname = tbUserSamAccountName.Text
+        newobjectdisplayname = tbUserDisplayname.Text
+        newobjectuserprincipalname = cmboUserUserPrincipalName.Text
+        newobjectuserprincipalnamedomain = cmboUserUserPrincipalNameDomain.Text
+        newobjectname = tbUserObjectName.Text
+        newobjectsamaccountname = tbUserSamAccountName.Text
 
-        If objectdomain Is Nothing Or
-           objectcontainer Is Nothing Or
-           _objectdisplayname = "" Or
-           _objectuserprincipalname = "" Or
-           _objectuserprincipalnamedomain = "" Or
-           _objectname = "" Or
-        _objectsamaccountname = "" Then
-            ThrowCustomException("Не заполнены необходимые поля")
+        If destinationdomain Is Nothing Or
+           destinationcontainer Is Nothing Or
+           newobjectdisplayname = "" Or
+           newobjectuserprincipalname = "" Or
+           newobjectuserprincipalnamedomain = "" Or
+           newobjectname = "" Or
+        newobjectsamaccountname = "" Then
+            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
             Return Nothing
         End If
 
-        _objectissharedmailbox = chbUserSharedMailbox.IsChecked
+        newobjectissharedmailbox = chbUserSharedMailbox.IsChecked
 
-        If objectdomain.DefaultPassword = "" Then ThrowCustomException("Стандартный пароль не указан") : Return Nothing
+        If destinationdomain.DefaultPassword = "" Then IMsgBox("Стандартный пароль не указан", vbOK + vbExclamation, "Создание объекта") : Return Nothing
 
         Await Task.Run(
             Sub()
 
                 Try
-                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "user")
+                    Dim entry As DirectoryServices.DirectoryEntry = destinationcontainer.Entry.Children.Add("CN=" & newobjectname, "user")
                     entry.CommitChanges()
-                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                    newobject = New clsDirectoryObject(entry, destinationdomain)
 
-                    _currentobject.sAMAccountName = _objectsamaccountname
-                    _currentobject.userPrincipalName = _objectuserprincipalname & "@" & _objectuserprincipalnamedomain
+                    newobject.sAMAccountName = newobjectsamaccountname
+                    newobject.userPrincipalName = newobjectuserprincipalname & "@" & newobjectuserprincipalnamedomain
                 Catch ex As Exception
                     ThrowException(ex, "Create User")
                 End Try
@@ -131,7 +124,7 @@ Public Class wndCreateObject
                 Threading.Thread.Sleep(500)
 
                 Try
-                    _currentobject.ResetPassword()
+                    newobject.ResetPassword()
                 Catch ex As Exception
                     ThrowException(ex, "Set User Password")
                 End Try
@@ -139,16 +132,16 @@ Public Class wndCreateObject
                 Threading.Thread.Sleep(500)
 
                 Try
-                    _currentobject.displayName = _objectdisplayname
+                    newobject.displayName = newobjectdisplayname
 
-                    If Not _objectissharedmailbox Then ' user
-                        _currentobject.givenName = If(Split(_objectdisplayname, " ").Count >= 2, Split(_objectdisplayname, " ")(1), "")
-                        _currentobject.sn = If(Split(_objectdisplayname, " ").Count >= 1, Split(_objectdisplayname, " ")(0), "")
-                        _currentobject.userAccountControl = ADS_UF_NORMAL_ACCOUNT
-                        _currentobject.userMustChangePasswordNextLogon = True
+                    If Not newobjectissharedmailbox Then ' user
+                        newobject.givenName = If(Split(newobjectdisplayname, " ").Count >= 2, Split(newobjectdisplayname, " ")(1), "")
+                        newobject.sn = If(Split(newobjectdisplayname, " ").Count >= 1, Split(newobjectdisplayname, " ")(0), "")
+                        newobject.userAccountControl = ADS_UF_NORMAL_ACCOUNT
+                        newobject.userMustChangePasswordNextLogon = True
                     Else                                       ' sharedmailbox
-                        _currentobject.userAccountControl = ADS_UF_NORMAL_ACCOUNT + ADS_UF_ACCOUNTDISABLE
-                        _currentobject.userMustChangePasswordNextLogon = True
+                        newobject.userAccountControl = ADS_UF_NORMAL_ACCOUNT + ADS_UF_ACCOUNTDISABLE
+                        newobject.userMustChangePasswordNextLogon = True
                     End If
 
                 Catch ex As Exception
@@ -157,10 +150,10 @@ Public Class wndCreateObject
 
                 Threading.Thread.Sleep(500)
 
-                If Not _objectissharedmailbox Then ' user
+                If Not newobjectissharedmailbox Then ' user
                     Try
-                        For Each group As clsDirectoryObject In objectdomain.DefaultGroups
-                            group.Entry.Invoke("Add", _currentobject.Entry.Path)
+                        For Each group As clsDirectoryObject In destinationdomain.DefaultGroups
+                            group.Entry.Invoke("Add", newobject.Entry.Path)
                             group.Entry.CommitChanges()
                             Threading.Thread.Sleep(500)
                         Next
@@ -173,22 +166,22 @@ Public Class wndCreateObject
 
             End Sub)
 
-        _currentobject.Refresh()
+        newobject.Refresh()
 
-        Return _currentobject
+        Return newobject
     End Function
 
     Private Async Function CreateComputer() As Task(Of clsDirectoryObject)
-        Dim _currentobject As clsDirectoryObject = Nothing
+        Dim newobject As clsDirectoryObject = Nothing
 
-        _objectname = cmboComputerObjectName.Text
-        _objectsamaccountname = tbComputerSamAccountName.Text
+        newobjectname = cmboComputerObjectName.Text
+        newobjectsamaccountname = tbComputerSamAccountName.Text
 
-        If objectdomain Is Nothing Or
-           objectcontainer Is Nothing Or
-           _objectname = "" Or
-           _objectsamaccountname = "" Then
-            ThrowCustomException("Не заполнены необходимые поля")
+        If destinationdomain Is Nothing Or
+           destinationcontainer Is Nothing Or
+           newobjectname = "" Or
+           newobjectsamaccountname = "" Then
+            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
             Return Nothing
         End If
 
@@ -196,11 +189,11 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "computer")
+                    Dim entry As DirectoryServices.DirectoryEntry = destinationcontainer.Entry.Children.Add("CN=" & newobjectname, "computer")
                     entry.CommitChanges()
-                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                    newobject = New clsDirectoryObject(entry, destinationdomain)
 
-                    _currentobject.sAMAccountName = _objectsamaccountname
+                    newobject.sAMAccountName = newobjectsamaccountname
                 Catch ex As Exception
                     ThrowException(ex, "Create Computer")
                 End Try
@@ -208,7 +201,7 @@ Public Class wndCreateObject
                 Threading.Thread.Sleep(500)
 
                 Try
-                    _currentobject.ResetPassword()
+                    newobject.ResetPassword()
                 Catch ex As Exception
                     ThrowException(ex, "Set Computer Password")
                 End Try
@@ -216,7 +209,7 @@ Public Class wndCreateObject
                 Threading.Thread.Sleep(500)
 
                 Try
-                    _currentobject.userAccountControl = ADS_UF_WORKSTATION_TRUST_ACCOUNT + ADS_UF_PASSWD_NOTREQD
+                    newobject.userAccountControl = ADS_UF_WORKSTATION_TRUST_ACCOUNT + ADS_UF_PASSWD_NOTREQD
                 Catch ex As Exception
                     ThrowException(ex, "Set Computer attributes")
                 End Try
@@ -225,25 +218,25 @@ Public Class wndCreateObject
 
             End Sub)
 
-        Return _currentobject
+        Return newobject
     End Function
 
     Private Async Function CreateGroup() As Task(Of clsDirectoryObject)
-        Dim _currentobject As clsDirectoryObject = Nothing
+        Dim newobject As clsDirectoryObject = Nothing
 
-        _objectname = tbGroupObjectName.Text
-        _objectsamaccountname = tbGroupSamAccountName.Text
+        newobjectname = tbGroupObjectName.Text
+        newobjectsamaccountname = tbGroupSamAccountName.Text
 
         Dim _groupscopedomainlocal As Boolean = rbGroupScopeDomainLocal.IsChecked
         Dim _groupscopeglobal As Boolean = rbGroupScopeGlobal.IsChecked
         Dim _groupscopeuniversal As Boolean = rbGroupScopeUniversal.IsChecked
         Dim _grouptypesecurity As Boolean = rbGroupTypeSecurity.IsChecked
 
-        If objectdomain Is Nothing Or
-           objectcontainer Is Nothing Or
-           _objectname = "" Or
-           _objectsamaccountname = "" Then
-            ThrowCustomException("Не заполнены необходимые поля")
+        If destinationdomain Is Nothing Or
+           destinationcontainer Is Nothing Or
+           newobjectname = "" Or
+           newobjectsamaccountname = "" Then
+            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
             Return Nothing
         End If
 
@@ -251,11 +244,11 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "Group")
+                    Dim entry As DirectoryServices.DirectoryEntry = destinationcontainer.Entry.Children.Add("CN=" & newobjectname, "Group")
                     entry.CommitChanges()
-                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                    newobject = New clsDirectoryObject(entry, destinationdomain)
 
-                    _currentobject.sAMAccountName = _objectsamaccountname
+                    newobject.sAMAccountName = newobjectsamaccountname
                 Catch ex As Exception
                     ThrowException(ex, "Create Group")
                 End Try
@@ -268,15 +261,15 @@ Public Class wndCreateObject
 
                 If _groupscopedomainlocal Then ' domain local group, but unversal first
                     Try
-                        _currentobject.groupType = ADS_GROUP_TYPE_UNIVERSAL_GROUP
+                        newobject.groupType = ADS_GROUP_TYPE_UNIVERSAL_GROUP
 
-                        _currentobject.groupType = grouptype
+                        newobject.groupType = grouptype
                     Catch ex As Exception
                         ThrowException(ex, "Set Group attributes")
                     End Try
                 Else
                     Try
-                        _currentobject.groupType = grouptype
+                        newobject.groupType = grouptype
                     Catch ex As Exception
                         ThrowException(ex, "Set Group attributes")
                     End Try
@@ -286,20 +279,20 @@ Public Class wndCreateObject
 
             End Sub)
 
-        Return _currentobject
+        Return newobject
     End Function
 
     Private Async Function CreateContact() As Task(Of clsDirectoryObject)
-        Dim _currentobject As clsDirectoryObject = Nothing
+        Dim newobject As clsDirectoryObject = Nothing
 
-        _objectdisplayname = tbContactDisplayname.Text
-        _objectname = tbContactObjectName.Text
+        newobjectdisplayname = tbContactDisplayname.Text
+        newobjectname = tbContactObjectName.Text
 
-        If objectdomain Is Nothing Or
-           objectcontainer Is Nothing Or
-           _objectdisplayname = "" Or
-           _objectname = "" Then
-            ThrowCustomException("Не заполнены необходимые поля")
+        If destinationdomain Is Nothing Or
+           destinationcontainer Is Nothing Or
+           newobjectdisplayname = "" Or
+           newobjectname = "" Then
+            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
             Return Nothing
         End If
 
@@ -307,9 +300,9 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("CN=" & _objectname, "contact")
+                    Dim entry As DirectoryServices.DirectoryEntry = destinationcontainer.Entry.Children.Add("CN=" & newobjectname, "contact")
                     entry.CommitChanges()
-                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                    newobject = New clsDirectoryObject(entry, destinationdomain)
                 Catch ex As Exception
                     ThrowException(ex, "Create Contact")
                 End Try
@@ -317,9 +310,9 @@ Public Class wndCreateObject
                 Threading.Thread.Sleep(500)
 
                 Try
-                    _currentobject.displayName = _objectdisplayname
-                    _currentobject.givenName = If(Split(_objectdisplayname, " ").Count >= 2, Split(_objectdisplayname, " ")(1), "")
-                    _currentobject.sn = If(Split(_objectdisplayname, " ").Count >= 1, Split(_objectdisplayname, " ")(0), "")
+                    newobject.displayName = newobjectdisplayname
+                    newobject.givenName = If(Split(newobjectdisplayname, " ").Count >= 2, Split(newobjectdisplayname, " ")(1), "")
+                    newobject.sn = If(Split(newobjectdisplayname, " ").Count >= 1, Split(newobjectdisplayname, " ")(0), "")
                 Catch ex As Exception
                     ThrowException(ex, "Set Contact attributes")
                 End Try
@@ -328,20 +321,20 @@ Public Class wndCreateObject
 
             End Sub)
 
-        _currentobject.Refresh()
+        newobject.Refresh()
 
-        Return _currentobject
+        Return newobject
     End Function
 
     Private Async Function CreateOrganizationaUnit() As Task(Of clsDirectoryObject)
-        Dim _currentobject As clsDirectoryObject = Nothing
+        Dim newobject As clsDirectoryObject = Nothing
 
-        _objectname = tbOrganizationalUnitObjectName.Text
+        newobjectname = tbOrganizationalUnitObjectName.Text
 
-        If objectdomain Is Nothing Or
-           objectcontainer Is Nothing Or
-           _objectname = "" Then
-            ThrowCustomException("Не заполнены необходимые поля")
+        If destinationdomain Is Nothing Or
+           destinationcontainer Is Nothing Or
+           newobjectname = "" Then
+            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
             Return Nothing
         End If
 
@@ -349,9 +342,9 @@ Public Class wndCreateObject
             Sub()
 
                 Try
-                    Dim entry As DirectoryServices.DirectoryEntry = objectcontainer.Entry.Children.Add("OU=" & _objectname, "organizationalUnit")
+                    Dim entry As DirectoryServices.DirectoryEntry = destinationcontainer.Entry.Children.Add("OU=" & newobjectname, "organizationalUnit")
                     entry.CommitChanges()
-                    _currentobject = New clsDirectoryObject(entry, objectdomain)
+                    newobject = New clsDirectoryObject(entry, destinationdomain)
                 Catch ex As Exception
                     ThrowException(ex, "Create OrganizationalUnit")
                 End Try
@@ -360,6 +353,6 @@ Public Class wndCreateObject
 
             End Sub)
 
-        Return _currentobject
+        Return newobject
     End Function
 End Class

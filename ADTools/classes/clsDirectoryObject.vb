@@ -940,7 +940,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property groupTypeScopeDomainGlobal() As Boolean
+    Public Property groupTypeScopeGlobal() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_GLOBAL_GROUP
         End Get
@@ -962,7 +962,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property groupTypeScopeDomainUniversal() As Boolean
+    Public Property groupTypeScopeUniversal() As Boolean
         Get
             Return groupType And ADS_GROUP_TYPE_UNIVERSAL_GROUP
         End Get
