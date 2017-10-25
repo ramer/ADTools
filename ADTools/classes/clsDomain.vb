@@ -568,6 +568,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
     Public Property IsSearchable() As Boolean
         Get
             Return _issearchable

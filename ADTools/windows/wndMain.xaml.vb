@@ -27,6 +27,7 @@ Class wndMain
         RefreshDomainTree()
         RebuildColumns()
 
+        DataObject.AddPastingHandler(cmboSearchPattern, AddressOf cmboSearchPattern_OnPaste)
         cmboSearchPattern.ItemsSource = ADToolsApplication.ocGlobalSearchHistory
         cmboSearchPattern.Focus()
 
@@ -568,6 +569,28 @@ Class wndMain
         If sender.Tag Is Nothing Then Exit Sub
         Dim current As clsDirectoryObject = CType(sender.Tag, clsDirectoryObject)
         OpenObject(current)
+    End Sub
+
+    Private Sub cmboSearchPattern_OnPaste(sender As Object, e As DataObjectPastingEventArgs)
+        Dim istext = e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText, True)
+        If Not istext Then Exit Sub
+
+        Dim texttopase As String = e.SourceDataObject.GetData(DataFormats.UnicodeText).ToString.Replace(vbNewLine, " / ")
+        Dim cmboTextBoxChild As TextBox = cmboSearchPattern.Template.FindName("PART_EditableTextBox", cmboSearchPattern)
+
+        Dim start As Integer = cmboTextBoxChild.SelectionStart
+        Dim length As Integer = cmboTextBoxChild.SelectionLength
+        Dim caret As Integer = cmboTextBoxChild.CaretIndex
+
+        Dim text As String = cmboTextBoxChild.Text.Substring(0, start)
+        text += cmboTextBoxChild.Text.Substring(start + length)
+
+        Dim newText As String = text.Substring(0, cmboTextBoxChild.CaretIndex) + texttopase
+        newText += text.Substring(caret)
+        cmboTextBoxChild.Text = newText
+        cmboTextBoxChild.CaretIndex = caret + texttopase.Length
+
+        e.CancelCommand()
     End Sub
 
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown

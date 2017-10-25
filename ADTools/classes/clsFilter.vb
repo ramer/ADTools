@@ -30,8 +30,6 @@ Public Class clsFilter
         attributes = If(attributes, attributesForSearchDefault)
         searchobjectclasses = If(searchobjectclasses, New clsSearchObjectClasses)
 
-
-
         Dim attrfilter = ""
         attributes.ToList.ForEach(
             Sub(a As clsAttribute)
