@@ -25,7 +25,7 @@ Public Class clsFilter
 
         Me.Pattern = pattern
 
-        Dim patterns() As String = If(Not String.IsNullOrEmpty(pattern), pattern.Split({"/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries), {""})
+        Dim patterns() As String = If(Not String.IsNullOrEmpty(pattern), pattern.Split({"|", "/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries), {""})
 
         attributes = If(attributes, attributesForSearchDefault)
         searchobjectclasses = If(searchobjectclasses, New clsSearchObjectClasses)
