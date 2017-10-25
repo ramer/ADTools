@@ -39,7 +39,7 @@ Public Class ctlUserWorkstations
             If ._currentobject IsNot Nothing AndAlso ._currentobject.userWorkstations.Count > 0 Then
                 ._currentselectedobjects = .searcher.BasicSearchSync(
                     New clsDirectoryObject(._currentobject.Domain.DefaultNamingContext, ._currentobject.Domain),
-                    New clsFilter(Join(._currentobject.userWorkstations, "/"), Nothing, New clsSearchObjectClasses(False, False, True, False, False), False))
+                    New clsFilter("""" & Join(._currentobject.userWorkstations, """/""") & """", Nothing, New clsSearchObjectClasses(False, False, True, False, False)))
             End If
             .lvSelectedObjects.ItemsSource = If(._currentselectedobjects IsNot Nothing, ._currentselectedobjects, Nothing)
             .lvDomainObjects.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomainobjects, Nothing)
@@ -52,7 +52,7 @@ Public Class ctlUserWorkstations
             Await searcher.BasicSearchAsync(
                 _currentdomainobjects,
                 Nothing,
-                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, False, False), False),
+                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, False, False)),
                 New ObservableCollection(Of clsDomain)({_currentobject.Domain}))
         End If
     End Sub

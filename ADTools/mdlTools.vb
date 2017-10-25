@@ -110,8 +110,6 @@ Module mdlTools
     Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
         {New clsAttribute("name", "Имя объекта")},
         {New clsAttribute("displayName", "Отображаемое имя")},
-        {New clsAttribute("givenName", "Имя")},
-        {New clsAttribute("sn", "Фамилия")},
         {New clsAttribute("userPrincipalName", "Имя входа")},
         {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
     }

@@ -573,7 +573,7 @@ Class wndMain
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
         If e.Key = Key.Enter Then
             If mnuSearchModeDefault.IsChecked = True Then
-                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses, False))
+                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses))
             ElseIf mnuSearchModeAdvanced.IsChecked = True Then
                 StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
             End If
@@ -584,7 +584,7 @@ Class wndMain
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If mnuSearchModeDefault.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses, False))
+            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses))
         ElseIf mnuSearchModeAdvanced.IsChecked = True Then
             StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
         End If

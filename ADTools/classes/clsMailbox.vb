@@ -828,7 +828,7 @@ Public Class clsMailbox
 
             Return searcher.BasicSearchSync(
                     New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
-                    New clsFilter(Join(rights, "/"), attributesForSearchExchangePermissionSendAs, New clsSearchObjectClasses(True, True, True, True, False), False))
+                    New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionSendAs, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property
 
@@ -881,7 +881,7 @@ Public Class clsMailbox
 
             Return searcher.BasicSearchSync(
                     New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
-                    New clsFilter(Join(rights, "/"), attributesForSearchExchangePermissionFullAccess, New clsSearchObjectClasses(True, True, True, True, False), False))
+                    New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionFullAccess, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property
 
@@ -930,7 +930,7 @@ Public Class clsMailbox
 
             Return searcher.BasicSearchSync(
                     New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
-                    New clsFilter(Join(rights, "/"), attributesForSearchExchangePermissionSendOnBehalf, New clsSearchObjectClasses(True, True, True, True, False), False))
+                    New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionSendOnBehalf, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property
 

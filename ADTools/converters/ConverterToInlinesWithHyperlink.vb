@@ -45,7 +45,7 @@ Public Class ConverterToInlinesWithHyperlink
         If w Is Nothing Then Exit Sub
         If TypeOf w Is wndMain Then
             Dim wm = CType(w, wndMain)
-            wm.StartSearch(Nothing, New clsFilter(CType(sender, Hyperlink).Tag.ToString, attributesForSearchDefault, wm.searchobjectclasses, False, True))
+            wm.StartSearch(Nothing, New clsFilter("""" & CType(sender, Hyperlink).Tag.ToString & """", attributesForSearchDefault, wm.searchobjectclasses))
         End If
     End Sub
 
