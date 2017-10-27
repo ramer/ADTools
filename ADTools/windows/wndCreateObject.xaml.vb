@@ -99,13 +99,13 @@ Public Class wndCreateObject
            newobjectuserprincipalnamedomain = "" Or
            newobjectname = "" Or
         newobjectsamaccountname = "" Then
-            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
+            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
             Return Nothing
         End If
 
         newobjectissharedmailbox = chbUserSharedMailbox.IsChecked
 
-        If destinationdomain.DefaultPassword = "" Then IMsgBox("Стандартный пароль не указан", vbOK + vbExclamation, "Создание объекта") : Return Nothing
+        If destinationdomain.DefaultPassword = "" Then IMsgBox(My.Resources.wndCreateObject_msg_DefaultPasswordIsNotSet, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject) : Return Nothing
 
         Await Task.Run(
             Sub()
@@ -181,7 +181,7 @@ Public Class wndCreateObject
            destinationcontainer Is Nothing Or
            newobjectname = "" Or
            newobjectsamaccountname = "" Then
-            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
+            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
             Return Nothing
         End If
 
@@ -236,7 +236,7 @@ Public Class wndCreateObject
            destinationcontainer Is Nothing Or
            newobjectname = "" Or
            newobjectsamaccountname = "" Then
-            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
+            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
             Return Nothing
         End If
 
@@ -292,7 +292,7 @@ Public Class wndCreateObject
            destinationcontainer Is Nothing Or
            newobjectdisplayname = "" Or
            newobjectname = "" Then
-            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
+            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
             Return Nothing
         End If
 
@@ -334,7 +334,7 @@ Public Class wndCreateObject
         If destinationdomain Is Nothing Or
            destinationcontainer Is Nothing Or
            newobjectname = "" Then
-            IMsgBox("Не заполнены необходимые поля", vbOK + vbExclamation, "Создание объекта")
+            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
             Return Nothing
         End If
 

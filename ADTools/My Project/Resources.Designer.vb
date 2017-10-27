@@ -395,6 +395,231 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Close window on create.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_CloseWindowOnCreate() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_CloseWindowOnCreate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Computer.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Computer() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Computer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Contact.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Contact() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Contact", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Container.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Container() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Container", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Create.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Create() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Create", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Create object.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_CreateObject() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_CreateObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Display name.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_DisplayName() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_DisplayName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Domain.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Domain() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Domain", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Group.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_Group() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_Group", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Group scope.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupScope() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupScope", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Domain local.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupScopeDomainLocal() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupScopeDomainLocal", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Global.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupScopeGlobal() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupScopeGlobal", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Universal.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupScopeUniversal() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupScopeUniversal", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Group type.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupType() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupType", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Distribution.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupTypeDistribution() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupTypeDistribution", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Security.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_GroupTypeSecurity() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_GroupTypeSecurity", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object (CN).
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_ObjectName() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_ObjectName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Open object.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_OpenObject() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_OpenObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Organizational unit.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_OrganizationalUnit() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_OrganizationalUnit", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon name (pre-Windows 2000).
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_SAMAccountName() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_SAMAccountName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на shared mailbox.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_SharedMailbox() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_SharedMailbox", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на User.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_User() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_User", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon name.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_lbl_UserPrincipalName() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_lbl_UserPrincipalName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Default password is not set.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_msg_DefaultPasswordIsNotSet() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_msg_DefaultPasswordIsNotSet", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Missed required fields.
+        '''</summary>
+        Public ReadOnly Property wndCreateObject_msg_MissedRequiredFields() As String
+            Get
+                Return ResourceManager.GetString("wndCreateObject_msg_MissedRequiredFields", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Domains.
         '''</summary>
         Public ReadOnly Property wndDomains() As String

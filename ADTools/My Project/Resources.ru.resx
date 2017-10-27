@@ -620,4 +620,79 @@
   <data name="wndObject_lbl_ExchangeShare" xml:space="preserve">
     <value>Общий доступ...</value>
   </data>
+  <data name="wndCreateObject_lbl_CreateObject" xml:space="preserve">
+    <value>Создание объекта</value>
+  </data>
+  <data name="wndCreateObject_lbl_Domain" xml:space="preserve">
+    <value>Домен</value>
+  </data>
+  <data name="wndCreateObject_lbl_Container" xml:space="preserve">
+    <value>Контейнер</value>
+  </data>
+  <data name="wndCreateObject_lbl_User" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="wndCreateObject_lbl_Computer" xml:space="preserve">
+    <value>Компьютер</value>
+  </data>
+  <data name="wndCreateObject_lbl_Group" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="wndCreateObject_lbl_Contact" xml:space="preserve">
+    <value>Контакт</value>
+  </data>
+  <data name="wndCreateObject_lbl_OrganizationalUnit" xml:space="preserve">
+    <value>Подразделение</value>
+  </data>
+  <data name="wndCreateObject_lbl_DisplayName" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="wndCreateObject_lbl_SharedMailbox" xml:space="preserve">
+    <value>общий почтовый ящик</value>
+  </data>
+  <data name="wndCreateObject_lbl_UserPrincipalName" xml:space="preserve">
+    <value>Имя входа</value>
+  </data>
+  <data name="wndCreateObject_lbl_ObjectName" xml:space="preserve">
+    <value>Объект (CN)</value>
+  </data>
+  <data name="wndCreateObject_lbl_SAMAccountName" xml:space="preserve">
+    <value>Имя входа (пред-Windows 2000)</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupScope" xml:space="preserve">
+    <value>Область действия группы</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupScopeDomainLocal" xml:space="preserve">
+    <value>Локальная в домене</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupScopeGlobal" xml:space="preserve">
+    <value>Глобальная</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupScopeUniversal" xml:space="preserve">
+    <value>Универсальная</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupType" xml:space="preserve">
+    <value>Тип группы</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupTypeSecurity" xml:space="preserve">
+    <value>Группа безопасности</value>
+  </data>
+  <data name="wndCreateObject_lbl_GroupTypeDistribution" xml:space="preserve">
+    <value>Группа распространения</value>
+  </data>
+  <data name="wndCreateObject_lbl_CloseWindowOnCreate" xml:space="preserve">
+    <value>Закрыть окно после создания</value>
+  </data>
+  <data name="wndCreateObject_lbl_OpenObject" xml:space="preserve">
+    <value>Открыть объект</value>
+  </data>
+  <data name="wndCreateObject_lbl_Create" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="wndCreateObject_msg_MissedRequiredFields" xml:space="preserve">
+    <value>Не заполнены необходимые поля</value>
+  </data>
+  <data name="wndCreateObject_msg_DefaultPasswordIsNotSet" xml:space="preserve">
+    <value>Стандартный пароль не указан</value>
+  </data>
 </root>
