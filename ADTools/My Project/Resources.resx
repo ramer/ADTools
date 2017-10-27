@@ -664,10 +664,43 @@ To container:
   <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
     <value>Set primary</value>
   </data>
-  <data name="wndObject_lbl_ExchangeShow" xml:space="preserve">
+  <data name="wndObject_lbl_ExchangeHiddenShow" xml:space="preserve">
     <value>Show</value>
   </data>
-  <data name="wndObject_lbl_ExchangeHide" xml:space="preserve">
+  <data name="wndObject_lbl_ExchangeHiddenHide" xml:space="preserve">
     <value>Hide</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeQuotas" xml:space="preserve">
+    <value>Quotas...</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeShared" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeServer" xml:space="preserve">
+    <value>Exchange Server</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeState" xml:space="preserve">
+    <value>Connection state: </value>
+  </data>
+  <data name="wndObject_lbl_ExchangeSizeBusy" xml:space="preserve">
+    <value>busy:</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeSizeQuota" xml:space="preserve">
+    <value>quota:</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeEmailAddress" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeHiddenToolTip" xml:space="preserve">
+    <value>Show/hide the address in the address book</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeToolTip" xml:space="preserve">
+    <value>Convert mailbox to user/shared</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeShare" xml:space="preserve">
+    <value>Share...</value>
   </data>
 </root>

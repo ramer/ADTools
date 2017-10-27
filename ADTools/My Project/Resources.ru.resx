@@ -581,10 +581,43 @@
   <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
     <value>Сделать основным</value>
   </data>
-  <data name="wndObject_lbl_ExchangeShow" xml:space="preserve">
+  <data name="wndObject_lbl_ExchangeHiddenShow" xml:space="preserve">
     <value>Показать</value>
   </data>
-  <data name="wndObject_lbl_ExchangeHide" xml:space="preserve">
+  <data name="wndObject_lbl_ExchangeHiddenHide" xml:space="preserve">
     <value>Скрыть</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeQuotas" xml:space="preserve">
+    <value>Квоты...</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeUser" xml:space="preserve">
+    <value>Пользоват.</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeShared" xml:space="preserve">
+    <value>Общий</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeServer" xml:space="preserve">
+    <value>Exchange Server</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeState" xml:space="preserve">
+    <value>Статус подключения: </value>
+  </data>
+  <data name="wndObject_lbl_ExchangeSizeBusy" xml:space="preserve">
+    <value>занято:</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeSizeQuota" xml:space="preserve">
+    <value>квота:</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeEmailAddress" xml:space="preserve">
+    <value>Почтовый адрес</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeHiddenToolTip" xml:space="preserve">
+    <value>Показать/скрыть адрес в адресной книге</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeTypeToolTip" xml:space="preserve">
+    <value>Конвертировать ящик в пользовательской/общий</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeShare" xml:space="preserve">
+    <value>Общий доступ...</value>
   </data>
 </root>

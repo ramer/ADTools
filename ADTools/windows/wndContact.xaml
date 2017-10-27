@@ -57,7 +57,7 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="130"/>
-                                <ComboBox x:Name="сmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[TelephoneNumber]}">
+                                <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[TelephoneNumber]}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -144,7 +144,7 @@
             <TabItem x:Name="tabctlContactExchange" Header="{x:Static r:Resources.wndObject_lbl_Exchange}" IsEnabled="{Binding Domain.UseExchange}">
                 <local:ctlContactMailbox x:Name="ctlContact" Margin="5"/>
             </TabItem>
-            <TabItem Header="Все атрибуты">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
             </TabItem>
         </TabControl>

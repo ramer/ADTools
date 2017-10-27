@@ -1460,11 +1460,47 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Email address.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeEmailAddress() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeEmailAddress", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Hide.
         '''</summary>
-        Public ReadOnly Property wndObject_lbl_ExchangeHide() As String
+        Public ReadOnly Property wndObject_lbl_ExchangeHiddenHide() As String
             Get
-                Return ResourceManager.GetString("wndObject_lbl_ExchangeHide", resourceCulture)
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeHiddenHide", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Show.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeHiddenShow() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeHiddenShow", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Show/hide the address in the address book.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeHiddenToolTip() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeHiddenToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Quotas....
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeQuotas() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeQuotas", resourceCulture)
             End Get
         End Property
         
@@ -1478,6 +1514,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Exchange Server.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeServer() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeServer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Set primary.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_ExchangeSetPrimary() As String
@@ -1487,11 +1532,65 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Show.
+        '''  Ищет локализованную строку, похожую на Share....
         '''</summary>
-        Public ReadOnly Property wndObject_lbl_ExchangeShow() As String
+        Public ReadOnly Property wndObject_lbl_ExchangeShare() As String
             Get
-                Return ResourceManager.GetString("wndObject_lbl_ExchangeShow", resourceCulture)
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeShare", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на busy:.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeSizeBusy() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeSizeBusy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на quota:.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeSizeQuota() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeSizeQuota", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Connection state: .
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeState() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeState", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Shared.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeTypeShared() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeTypeShared", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Convert mailbox to user/shared.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeTypeToolTip() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeTypeToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на User.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ExchangeTypeUser() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ExchangeTypeUser", resourceCulture)
             End Get
         End Property
         

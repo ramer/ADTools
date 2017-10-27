@@ -58,7 +58,7 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="Телефон" Width="130"/>
-                                <ComboBox x:Name="сmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
+                                <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Setter Property="SnapsToDevicePixels" Value="True"/>

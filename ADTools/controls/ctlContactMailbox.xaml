@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADTools"
+             xmlns:r="clr-namespace:ADTools.My.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518">
     <UserControl.DataContext>
@@ -29,7 +30,7 @@
                     </TextBlock>
                     <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server"></TextBlock>
                     <StackPanel Width="180" IsEnabled="{Binding Connected}">
-                        <Button x:Name="btnContactAdd" Content="&lt; Добавить адрес" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnContactAdd" Content="{x:Static r:Resources.wndObject_lbl_ExchangeAdd}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -37,7 +38,7 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactEdit" Content="Изменить адрес" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnContactEdit" Content="{x:Static r:Resources.wndObject_lbl_ExchangeChange}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -46,9 +47,9 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactRemove" Content="Удалить адрес &gt;" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnContactSetPrimary" Content="Сделать основным" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <CheckBox x:Name="chbContactHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="Показать/скрыть почтовый ящик в адресной книге">
+                        <Button x:Name="btnContactRemove" Content="{x:Static r:Resources.wndObject_lbl_ExchangeRemove}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnContactSetPrimary" Content="{x:Static r:Resources.wndObject_lbl_ExchangeSetPrimary}" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <CheckBox x:Name="chbContactHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenToolTip}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
@@ -84,8 +85,8 @@
 
                                                             <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
 
-                                                            <TextBlock Text="Показать" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="Скрыть" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         </Grid>
                                                     </Border>
 
@@ -136,7 +137,7 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
                                 <GridView.Columns>
-                                    <GridViewColumn Header="Почтовый адрес" Width="410">
+                                    <GridViewColumn Header="{x:Static r:Resources.wndObject_lbl_ExchangeEmailAddress}" Width="410">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <DockPanel>
