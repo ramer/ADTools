@@ -802,4 +802,28 @@
   <data name="ctlNetwork_msg_Unknown" xml:space="preserve">
     <value>Неизвестно</value>
   </data>
+  <data name="ctlObjectAttributes_lbl_WithValue" xml:space="preserve">
+    <value>Имеющие значения</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_All" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Changed" xml:space="preserve">
+    <value>Измененные</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Attribute" xml:space="preserve">
+    <value>Атрибут</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Value" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_NewValue" xml:space="preserve">
+    <value>Новое значение</value>
+  </data>
+  <data name="ctlObjectAttributes_ctxmnuCopy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="ctlObjectAttributes_ctxmnuCopyValues" xml:space="preserve">
+    <value>Копировать значения</value>
+  </data>
 </root>

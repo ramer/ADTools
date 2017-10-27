@@ -885,4 +885,28 @@ Combinations:
   <data name="ctlNetwork_msg_Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="ctlObjectAttributes_lbl_WithValue" xml:space="preserve">
+    <value>With value</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Changed" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Attribute" xml:space="preserve">
+    <value>Attribute</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ctlObjectAttributes_lbl_NewValue" xml:space="preserve">
+    <value>New value</value>
+  </data>
+  <data name="ctlObjectAttributes_ctxmnuCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ctlObjectAttributes_ctxmnuCopyValues" xml:space="preserve">
+    <value>Copy values</value>
+  </data>
 </root>

@@ -448,6 +448,78 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_ctxmnuCopy() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_ctxmnuCopy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy values.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_ctxmnuCopyValues() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_ctxmnuCopyValues", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на All.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_All() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_All", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Attribute.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_Attribute() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_Attribute", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Changed.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_Changed() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_Changed", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на New value.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_NewValue() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_NewValue", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Value.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_Value() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_Value", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на With value.
+        '''</summary>
+        Public ReadOnly Property ctlObjectAttributes_lbl_WithValue() As String
+            Get
+                Return ResourceManager.GetString("ctlObjectAttributes_lbl_WithValue", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property domain() As System.Drawing.Icon

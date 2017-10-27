@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADTools"
+             xmlns:r="clr-namespace:ADTools.My.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -14,9 +15,9 @@
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
-                <RadioButton x:Name="rbAttributesWithValue" Content="Имеющие значения" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
-                <RadioButton x:Name="rbAttributesAll" Content="Все" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                <RadioButton x:Name="rbAttributesChanged" Content="Измененные" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <RadioButton x:Name="rbAttributesWithValue" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_WithValue}" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
+                <RadioButton x:Name="rbAttributesAll" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_All}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                <RadioButton x:Name="rbAttributesChanged" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_Changed}" Margin="0,0,10,0" VerticalAlignment="Center"/>
                 <Button x:Name="btnAttributesRefresh" Content="↺" Height="17" Width="17" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
             </StackPanel>
             <TextBox x:Name="tbAttributesFilter" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
@@ -34,13 +35,13 @@
                     >
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="ctxmnuCopy" Header="Копировать"/>
-                        <MenuItem x:Name="ctxmnuCopyValues" Header="Копировать значения"/>
+                        <MenuItem x:Name="ctxmnuCopy" Header="{x:Static r:Resources.ctlObjectAttributes_ctxmnuCopy}"/>
+                        <MenuItem x:Name="ctxmnuCopyValues" Header="{x:Static r:Resources.ctlObjectAttributes_ctxmnuCopyValues}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
 
-                    <DataGridTextColumn Binding="{Binding Name}" Header="Атрибут" Width="250" SortMemberPath="Name" CanUserSort="True" IsReadOnly="True">
+                    <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static r:Resources.ctlObjectAttributes_lbl_Attribute}" Width="250" SortMemberPath="Name" CanUserSort="True" IsReadOnly="True">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -48,15 +49,15 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Header="Значение" Width="*" SortMemberPath="Value" CanUserSort="True">
+                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_Value}" Width="*" SortMemberPath="Value" CanUserSort="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Value, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    
-                    <DataGridTemplateColumn Header="Новое значение" Width="*" SortMemberPath="Value" CanUserSort="True">
+
+                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_NewValue}" Width="*" SortMemberPath="Value" CanUserSort="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding NewValue, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
