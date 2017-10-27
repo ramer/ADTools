@@ -3,7 +3,7 @@ Imports System.ComponentModel
 Imports System.Management.Automation
 Imports System.Management.Automation.Runspaces
 Imports System.Text.RegularExpressions
-Imports System.Threading.Tasks
+Imports IPrompt.VisualBasic
 
 Public Class clsMailbox
     Implements INotifyPropertyChanged
@@ -11,7 +11,7 @@ Public Class clsMailbox
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     Private _currentobject As clsDirectoryObject
-    Private exchangeconnector As clsPowerShell = Nothing
+    Private _exchangeconnection As clsPowerShell = Nothing
 
     Private _exchangeserver As PSObject
     Private _mailbox As PSObject = Nothing
@@ -37,32 +37,30 @@ Public Class clsMailbox
     Sub New(ByRef currentobject As clsDirectoryObject)
         _currentobject = currentobject
 
-        If exchangeconnector IsNot Nothing Then Exit Sub
+        If _exchangeconnection IsNot Nothing Then Exit Sub
 
-        Try
-            exchangeconnector = New clsPowerShell(_currentobject.Domain.Username, _currentobject.Domain.Password, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)
-            GetExchangeInfo()
-        Catch ex As Exception
-            exchangeconnector = Nothing
-            ThrowException(ex, "New clsExchange")
-        End Try
+        _exchangeconnection = New clsPowerShell(_currentobject.Domain.Username, _currentobject.Domain.Password, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)
+        NotifyPropertyChanged("State")
+        NotifyPropertyChanged("ExchangeConnection")
+        NotifyPropertyChanged("Conncected")
+
+        GetExchangeInfo()
     End Sub
 
     Public Sub GetExchangeInfo()
-        If Not exchangeconnector.State.State = RunspaceState.Opened Then Exit Sub
+        If Not _exchangeconnection.State.State = RunspaceState.Opened Then Exit Sub
 
         Try
-            _exchangeserver = GetExchangeServer(exchangeconnector, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)
+            _exchangeserver = GetExchangeServer(_exchangeconnection, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)
             NotifyPropertyChanged("Version")
             NotifyPropertyChanged("VersionFormatted")
-            NotifyPropertyChanged("State")
         Catch ex As Exception
             _exchangeserver = Nothing
             ThrowException(ex, "GetExchangeServer")
         End Try
 
         Try
-            _mailboxaccepteddomain = GetAcceptedDomain(exchangeconnector)
+            _mailboxaccepteddomain = GetAcceptedDomain(_exchangeconnection)
             NotifyPropertyChanged("AcceptedDomain")
         Catch ex As Exception
             _mailboxaccepteddomain = Nothing
@@ -73,9 +71,9 @@ Public Class clsMailbox
     End Sub
 
     Public Sub Close()
-        If exchangeconnector IsNot Nothing Then
-            exchangeconnector.Dispose()
-            exchangeconnector = Nothing
+        If _exchangeconnection IsNot Nothing Then
+            _exchangeconnection.Dispose()
+            _exchangeconnection = Nothing
             _mailbox = Nothing
         End If
     End Sub
@@ -88,7 +86,7 @@ Public Class clsMailbox
             _mailboxadpermission = Nothing
             _mailboxpermission = Nothing
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("Exist")
             NotifyPropertyChanged("CurrentProhibitSendQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendQuota")
@@ -108,7 +106,7 @@ Public Class clsMailbox
         If _mailbox IsNot Nothing Then
 
             Try
-                _mailboxstatistics = GetMailboxStatistics(exchangeconnector, _currentobject.objectGUID)
+                _mailboxstatistics = GetMailboxStatistics(_exchangeconnection, _currentobject.objectGUID)
                 NotifyPropertyChanged("Size")
                 NotifyPropertyChanged("SizeFormatted")
             Catch ex As Exception
@@ -117,7 +115,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxdatabase = GetMailboxDatabase(exchangeconnector)
+                _mailboxdatabase = GetMailboxDatabase(_exchangeconnection)
                 NotifyPropertyChanged("DatabaseIssueWarningQuota")
                 NotifyPropertyChanged("DatabaseProhibitSendQuota")
                 NotifyPropertyChanged("DatabaseProhibitSendReceiveQuota")
@@ -129,7 +127,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(exchangeconnector, _currentobject.objectGUID)
+                _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
                 NotifyPropertyChanged("SentItemsConfigurationSendAs")
                 NotifyPropertyChanged("SentItemsConfigurationSendOnBehalf")
             Catch ex As Exception
@@ -138,7 +136,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxadpermission = GetMailboxADPermission(exchangeconnector, _currentobject.objectGUID)
+                _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
                 NotifyPropertyChanged("PermissionSendAs")
             Catch ex As Exception
                 _mailboxadpermission = Nothing
@@ -146,7 +144,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxpermission = GetMailboxPermission(exchangeconnector, _currentobject.objectGUID)
+                _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
                 NotifyPropertyChanged("PermissionFullAccess")
             Catch ex As Exception
                 _mailboxpermission = Nothing
@@ -187,7 +185,7 @@ Public Class clsMailbox
         Dim cmd As New PSCommand
         cmd.AddCommand("Get-AcceptedDomain")
 
-        Dim obj As Collection(Of PSObject) = exchangeconnector.Command(cmd)
+        Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
         If obj Is Nothing Then Return Nothing
 
         Return obj
@@ -198,7 +196,7 @@ Public Class clsMailbox
         cmd.AddCommand("Get-MailboxStatistics")
         cmd.AddParameter("Identity", objectGUID)
 
-        Dim obj As Collection(Of PSObject) = exchangeconnector.Command(cmd)
+        Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
         If obj Is Nothing OrElse (obj.Count <> 1) Then Return Nothing
 
         Return obj(0)
@@ -209,7 +207,7 @@ Public Class clsMailbox
         cmd.AddCommand("Get-MailboxDatabase")
         cmd.AddParameter("Identity", _mailbox.Properties("Database").Value)
 
-        Dim obj As Collection(Of PSObject) = exchangeconnector.Command(cmd)
+        Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
         If obj Is Nothing OrElse (obj.Count <> 1) Then Return Nothing
 
         Return obj(0)
@@ -255,19 +253,31 @@ Public Class clsMailbox
         End Get
     End Property
 
-    Public ReadOnly Property State
+    Public ReadOnly Property State As RunspaceStateInfo
         Get
-            If exchangeconnector IsNot Nothing Then
-                Return exchangeconnector.State
+            If _exchangeconnection IsNot Nothing Then
+                Return _exchangeconnection.State
             Else
                 Return Nothing
             End If
         End Get
     End Property
 
+    Public ReadOnly Property ExchangeConnection As clsPowerShell
+        Get
+            Return _exchangeconnection
+        End Get
+    End Property
+
+    Public ReadOnly Property Connected As Boolean
+        Get
+            Return _exchangeconnection IsNot Nothing AndAlso _exchangeconnection.State.State = RunspaceState.Opened
+        End Get
+    End Property
+
     Public ReadOnly Property VersionFormatted As String
         Get
-            If _exchangeserver Is Nothing Then Return Nothing
+            If _exchangeserver Is Nothing Then Return ""
 
             Dim obj As String = _exchangeserver.Properties("AdminDisplayVersion").Value
 
@@ -354,8 +364,8 @@ Public Class clsMailbox
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("IssueWarningQuota", If(value < 0, "unlimited", value))
-            Dim obj As Object = exchangeconnector.Command(cmd)
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            Dim obj As Object = _exchangeconnection.Command(cmd)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("IssueWarningQuota")
         End Set
     End Property
@@ -375,8 +385,8 @@ Public Class clsMailbox
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("ProhibitSendQuota", If(value < 0, "unlimited", value))
-            Dim obj As Object = exchangeconnector.Command(cmd)
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            Dim obj As Object = _exchangeconnection.Command(cmd)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("CurrentProhibitSendQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendQuota")
             NotifyPropertyChanged("ProhibitSendQuota")
@@ -398,8 +408,8 @@ Public Class clsMailbox
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("ProhibitSendReceiveQuota", If(value < 0, "unlimited", value))
-            Dim obj As Object = exchangeconnector.Command(cmd)
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            Dim obj As Object = _exchangeconnection.Command(cmd)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("ProhibitSendReceiveQuota")
         End Set
     End Property
@@ -414,8 +424,8 @@ Public Class clsMailbox
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("UseDatabaseQuotaDefaults", value)
-            Dim obj As Object = exchangeconnector.Command(cmd)
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            Dim obj As Object = _exchangeconnection.Command(cmd)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("UseDatabaseQuotaDefaults")
             NotifyPropertyChanged("CurrentProhibitSendReceiveQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendReceiveQuota")
@@ -497,9 +507,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("HiddenFromAddressListsEnabled", value)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
 
             NotifyPropertyChanged("HiddenFromAddressListsEnabled")
         End Set
@@ -527,9 +537,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Type", If(value, "Shared", "Regular"))
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
 
             NotifyPropertyChanged("Type")
         End Set
@@ -549,9 +559,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("EmailAddresses", obj)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("EmailAddresses")
 
         Else
@@ -562,14 +572,14 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Alias", name)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Customattribute1", domain)
 
-            Dim dummy2 = exchangeconnector.Command(cmd)
+            Dim dummy2 = _exchangeconnection.Command(cmd)
 
             For I As Integer = 0 To 30
                 Threading.Thread.Sleep(1000)
@@ -578,7 +588,7 @@ Public Class clsMailbox
                 cmd.AddCommand("Get-Mailbox")
                 cmd.AddParameter("Identity", _currentobject.objectGUID)
 
-                Dim obj As Collection(Of PSObject) = exchangeconnector.Command(cmd)
+                Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj IsNot Nothing AndAlso (obj.Count = 1) Then Exit For
             Next
 
@@ -599,14 +609,14 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Alias", newname)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Customattribute1", newdomain)
 
-            Dim dummy2 = exchangeconnector.Command(cmd)
+            Dim dummy2 = _exchangeconnection.Command(cmd)
 
             Dim obj As PSObject = _mailbox.Properties("EmailAddresses").Value
             If obj Is Nothing Then Exit Sub
@@ -624,9 +634,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("EmailAddresses", obj)
 
-            Dim dummy3 = exchangeconnector.Command(cmd)
+            Dim dummy3 = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("EmailAddresses")
         Else
 
@@ -646,9 +656,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("EmailAddresses", obj)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
 
             NotifyPropertyChanged("EmailAddresses")
         End If
@@ -666,7 +676,7 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("Confirm", False)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
             For I As Integer = 0 To 30
                 Threading.Thread.Sleep(1000)
@@ -675,7 +685,7 @@ Public Class clsMailbox
                 cmd.AddCommand("Get-Mailbox")
                 cmd.AddParameter("Identity", _currentobject.objectGUID)
 
-                Dim obj As Collection(Of PSObject) = exchangeconnector.Command(cmd)
+                Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj Is Nothing OrElse (obj.Count <> 1) Then Exit For
             Next
 
@@ -698,9 +708,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("EmailAddresses", obj)
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("EmailAddresses")
         End If
     End Sub
@@ -743,7 +753,7 @@ Public Class clsMailbox
                 cmd.AddParameter("Identity", _currentobject.objectGUID)
                 cmd.AddParameter("Alias", newname)
 
-                Dim dummy = exchangeconnector.Command(cmd)
+                Dim dummy = _exchangeconnection.Command(cmd)
             End If
 
             If olddomain <> newdomain Then
@@ -752,10 +762,10 @@ Public Class clsMailbox
                 cmd.AddParameter("Identity", _currentobject.objectGUID)
                 cmd.AddParameter("Customattribute1", newdomain)
 
-                Dim dummy = exchangeconnector.Command(cmd)
+                Dim dummy = _exchangeconnection.Command(cmd)
             End If
 
-            _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("EmailAddresses")
         End If
     End Sub
@@ -779,9 +789,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("SendAsItemsCopiedTo", If(value, "SenderAndFrom", "Sender"))
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(exchangeconnector, _currentobject.objectGUID)
+            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("SentItemsConfigurationSendAs")
         End Set
     End Property
@@ -804,9 +814,9 @@ Public Class clsMailbox
             cmd.AddParameter("Identity", _currentobject.objectGUID)
             cmd.AddParameter("SendOnBehalfOfItemsCopiedTo", If(value, "SenderAndFrom", "Sender"))
 
-            Dim dummy = exchangeconnector.Command(cmd)
+            Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(exchangeconnector, _currentobject.objectGUID)
+            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
             NotifyPropertyChanged("SentItemsConfigurationSendOnBehalf")
         End Set
     End Property
@@ -841,9 +851,9 @@ Public Class clsMailbox
         cmd.AddParameter("Extendedrights", "Send-As")
         cmd.AddParameter("Confirm", False)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxadpermission = GetMailboxADPermission(exchangeconnector, _currentobject.objectGUID)
+        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
         NotifyPropertyChanged("PermissionSendAs")
     End Sub
 
@@ -856,9 +866,9 @@ Public Class clsMailbox
         cmd.AddParameter("Extendedrights", "Send-As")
         cmd.AddParameter("Confirm", False)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxadpermission = GetMailboxADPermission(exchangeconnector, _currentobject.objectGUID)
+        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
         NotifyPropertyChanged("PermissionSendAs")
     End Sub
 
@@ -894,9 +904,9 @@ Public Class clsMailbox
         cmd.AddParameter("InheritanceType", "All")
         cmd.AddParameter("Confirm", False)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxpermission = GetMailboxPermission(exchangeconnector, _currentobject.objectGUID)
+        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
         NotifyPropertyChanged("PermissionFullAccess")
     End Sub
 
@@ -909,9 +919,9 @@ Public Class clsMailbox
         cmd.AddParameter("InheritanceType", "All")
         cmd.AddParameter("Confirm", False)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxpermission = GetMailboxPermission(exchangeconnector, _currentobject.objectGUID)
+        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
         NotifyPropertyChanged("PermissionFullAccess")
     End Sub
 
@@ -948,9 +958,9 @@ Public Class clsMailbox
         cmd.AddParameter("Identity", _currentobject.objectGUID)
         cmd.AddParameter("GrantSendOnBehalfTo", obj)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
     End Sub
 
     Public Sub RemovePermissionSendOnBehalf(user As clsDirectoryObject)
@@ -972,9 +982,9 @@ Public Class clsMailbox
         cmd.AddParameter("Identity", _currentobject.objectGUID)
         cmd.AddParameter("GrantSendOnBehalfTo", obj)
 
-        Dim dummy = exchangeconnector.Command(cmd)
+        Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailbox = GetMailbox(exchangeconnector, _currentobject.objectGUID)
+        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
         NotifyPropertyChanged("PermissionSendOnBehalf")
     End Sub
 

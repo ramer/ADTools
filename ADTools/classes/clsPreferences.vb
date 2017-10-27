@@ -10,13 +10,10 @@ Public Class clsPreferences
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     ' basic
-    Private _clipboardsource As Boolean?
-    Private _clipboardsourcelimit As Boolean?
-    Private _searchresultgrouping As Boolean?
-    Private _searchresultincludeusers As Boolean?
-    Private _searchresultincludecomputers As Boolean?
-    Private _searchresultincludegroups As Boolean?
-    Private _powershelldebug As Boolean?
+    Private _clipboardsource As Boolean = False
+    Private _clipboardsourcelimit As Boolean = True
+    Private _searchresultgrouping As Boolean = False
+    Private _powershelldebug As Boolean = False
 
     ' layout
     Private _columns As New ObservableCollection(Of clsDataGridColumnInfo)
@@ -60,72 +57,42 @@ Public Class clsPreferences
 
     End Sub
 
-    Public Property ClipboardSource As Boolean?
+    Public Property ClipboardSource As Boolean
         Get
             Return _clipboardsource
         End Get
-        Set(value As Boolean?)
-            _clipboardsource = If(value, False)
+        Set(value As Boolean)
+            _clipboardsource = value
             NotifyPropertyChanged("ClipboardSource")
         End Set
     End Property
 
-    Public Property ClipboardSourceLimit As Boolean?
+    Public Property ClipboardSourceLimit As Boolean
         Get
             Return _clipboardsourcelimit
         End Get
-        Set(value As Boolean?)
-            _clipboardsourcelimit = If(value, True)
+        Set(value As Boolean)
+            _clipboardsourcelimit = value
             NotifyPropertyChanged("ClipboardSourceLimit")
         End Set
     End Property
 
-    Public Property SearchResultGrouping As Boolean?
+    Public Property SearchResultGrouping As Boolean
         Get
             Return _searchresultgrouping
         End Get
-        Set(value As Boolean?)
-            _searchresultgrouping = If(value, False)
+        Set(value As Boolean)
+            _searchresultgrouping = value
             NotifyPropertyChanged("SearchResultGrouping")
         End Set
     End Property
 
-    Public Property SearchResultIncludeUsers As Boolean?
-        Get
-            Return _searchresultincludeusers
-        End Get
-        Set(value As Boolean?)
-            _searchresultincludeusers = If(value, True)
-            NotifyPropertyChanged("SearchResultIncludeUsers")
-        End Set
-    End Property
-
-    Public Property SearchResultIncludeComputers As Boolean?
-        Get
-            Return _searchresultincludecomputers
-        End Get
-        Set(value As Boolean?)
-            _searchresultincludecomputers = If(value, True)
-            NotifyPropertyChanged("SearchResultIncludeComputers")
-        End Set
-    End Property
-
-    Public Property SearchResultIncludeGroups As Boolean?
-        Get
-            Return _searchresultincludegroups
-        End Get
-        Set(value As Boolean?)
-            _searchresultincludegroups = If(value, True)
-            NotifyPropertyChanged("SearchResultIncludeGroups")
-        End Set
-    End Property
-
-    Public Property PowershellDebug As Boolean?
+    Public Property PowershellDebug As Boolean
         Get
             Return _powershelldebug
         End Get
-        Set(value As Boolean?)
-            _powershelldebug = If(value, False)
+        Set(value As Boolean)
+            _powershelldebug = value
             NotifyPropertyChanged("PowershellDebug")
         End Set
     End Property

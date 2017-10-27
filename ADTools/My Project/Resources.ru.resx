@@ -117,524 +117,441 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="app" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\app.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="computer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\computer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="computer_blocked" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\computer_blocked.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="computer_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\computer_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="computer_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\computer_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="contact" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\contact.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="contact_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\contact_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="container" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\container.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="container_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\container_unknown.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="domain" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\domain.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="domain_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\domain_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="favorite_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\favorite_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="filter_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\filter_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="group" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\group.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="group_distribution" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\group_distribution.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="group_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\group_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="network_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\network_folder.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="object_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\object_unknown.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="organizationalunit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\organizationalunit.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="properties" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\properties.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="splash" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\splash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="splash1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\splash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="user" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\user.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="user_blocked" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\user_blocked.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="user_expired" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\user_expired.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="user_image" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\user_image.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\warning.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="wndDomains" xml:space="preserve">
-    <value>Domains</value>
+    <value>Домены</value>
   </data>
   <data name="wndDomains_btnDomainsAdd" xml:space="preserve">
-    <value>Add</value>
+    <value>Добавить</value>
   </data>
   <data name="wndDomains_btnDomainsRemove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="wndDomains_dgPatternTelephoneNumbers1" xml:space="preserve">
-    <value>Name</value>
+    <value>Название</value>
   </data>
   <data name="wndDomains_dgPatternTelephoneNumbers2" xml:space="preserve">
-    <value>Pattern</value>
+    <value>Шаблон</value>
   </data>
   <data name="wndDomains_dgPatternTelephoneNumbers3" xml:space="preserve">
-    <value>Range</value>
+    <value>Диапазон</value>
   </data>
   <data name="wndDomains_lbl_Connect" xml:space="preserve">
-    <value>Connect</value>
+    <value>Подключить</value>
   </data>
   <data name="wndDomains_lbl_DomainName" xml:space="preserve">
-    <value>Domain name</value>
+    <value>Имя домена</value>
   </data>
   <data name="wndDomains_lbl_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Пароль</value>
   </data>
   <data name="wndDomains_lbl_PatternsExample" xml:space="preserve">
-    <value>For example:</value>
+    <value>Например:</value>
   </data>
   <data name="wndDomains_lbl_PatternsExampleDef" xml:space="preserve">
     <value>user-{{n}} = user-1 / user-2 / user-3 / user-100</value>
   </data>
   <data name="wndDomains_lbl_Patterns_Computer" xml:space="preserve">
-    <value>Computer (list or comma-separated)</value>
+    <value>Компьютер (списком или через запятую)</value>
   </data>
   <data name="wndDomains_lbl_Patterns_DefaultPassword" xml:space="preserve">
-    <value>Default password</value>
+    <value>Стандарт. пароль</value>
   </data>
   <data name="wndDomains_lbl_Patterns_Exchange" xml:space="preserve">
-    <value>A template for naming a mailbox in the handlebars format (see the "Templates" tab)</value>
+    <value>Шаблон именования почтового ящика в формате handlebars (см. вкладку "Шаблоны")</value>
   </data>
   <data name="wndDomains_lbl_Patterns_PhoneNumbers" xml:space="preserve">
-    <value>Phone numbers</value>
+    <value>Номера телефонов</value>
   </data>
   <data name="wndDomains_lbl_Patterns_Username" xml:space="preserve">
-    <value>Username (list or comma-separated)</value>
+    <value>Учетная запись (списком или через запятую)</value>
   </data>
   <data name="wndDomains_lbl_SearchRoot" xml:space="preserve">
-    <value>Search root</value>
+    <value>Корень поиска</value>
   </data>
   <data name="wndDomains_lbl_Username" xml:space="preserve">
-    <value>Username</value>
+    <value>Имя входа</value>
   </data>
   <data name="wndDomains_lvDomainProperties1" xml:space="preserve">
-    <value>Property</value>
+    <value>Параметр</value>
   </data>
   <data name="wndDomains_lvDomainProperties2" xml:space="preserve">
-    <value>Value</value>
-  </data>
-  <data name="wndDomains_tabctlDomain1" xml:space="preserve">
-    <value>Domain</value>
-  </data>
-  <data name="wndDomains_tabctlDomain2" xml:space="preserve">
-    <value>Search root</value>
+    <value>Значение</value>
   </data>
   <data name="wndDomains_tabctlDomain_Exchange" xml:space="preserve">
     <value>Exchange</value>
   </data>
   <data name="wndDomains_tabctlDomain_Groups" xml:space="preserve">
-    <value>Groups</value>
+    <value>Группы</value>
   </data>
   <data name="wndDomains_tabctlDomain_Patterns" xml:space="preserve">
-    <value>Patterns</value>
+    <value>Шаблоны</value>
   </data>
   <data name="wndDomains_txt_Exchange" xml:space="preserve">
-    <value>If your organization uses Microsoft Exchange Server, specify the Exchange server name and mail domain list.
-This information is used to manage users' mailboxes using PowerShell. </value>
+    <value>Если в вашей организации используется Microsoft Exchange Server, укажите имя сервера Exchange и список почтовых доменов.
+
+Данные сведения используются для управления почтовыми ящиками пользователей средствами PowerShell.</value>
   </data>
   <data name="wndDomains_txt_Groups" xml:space="preserve">
-    <value>Select the standard domain security groups.
-The created users will be automatically added as the group member. </value>
+    <value>Выберите стандартные группы безопасности домена.
+
+Создаваемые пользователи будут автоматически добавляться в данные группы.</value>
   </data>
   <data name="wndDomains_txt_Patterns" xml:space="preserve">
-    <value>Specify the format for naming objects in the handlebars format, specifying the arguments in double curly braces, where the arguments are:
-{{n}} - number;
-{{displayname}} - display name;</value>
+    <value>Укажите формат именования объектов в формате handlebars, с указанием аргументов в двойных фигурных скобках, где аргументы:
+{{n}} - номер;
+{{displayname}} - отображаемое имя;</value>
   </data>
   <data name="wndDomains_txt_SearchRoot" xml:space="preserve">
-    <value>In the next field, you must specify (select) the container in which the objects will be searched.
+    <value>В следующем поле необходимо указать (выбрать) контейнер, в котором будет выполняться поиск объектов.
 
-In most cases, user objects are located in a specific container. Searching in such a container will shorten the search time.
+В большинстве случаев пользовательские объекты расположены в конкретном контейнере. Поиск в таком контейнере сократит время поиска.
 
-However, you can also specify the root of the domain as the root of the search.</value>
+Однако, вы можете указать и корень домена в качестве корня поиска.</value>
   </data>
   <data name="wndDomains_txt_UseExchange" xml:space="preserve">
-    <value>Use Exchange Server</value>
+    <value>Использовать Exchange Server</value>
   </data>
   <data name="wndMain_btnWindowClone" xml:space="preserve">
-    <value>Clone window</value>
+    <value>Клонировать окно</value>
   </data>
   <data name="lbl_ObjectsSelected" xml:space="preserve">
-    <value>Selected: </value>
+    <value>Выделено: </value>
   </data>
   <data name="lbl_ObjectsTotal" xml:space="preserve">
-    <value>Objects: </value>
+    <value>Объектов: </value>
   </data>
   <data name="wndMain_lbl_SearchFilter" xml:space="preserve">
-    <value>Filter</value>
+    <value>Фильтр</value>
   </data>
   <data name="wndMain_lbl_SearchResults" xml:space="preserve">
-    <value>Search results:</value>
+    <value>Результаты поиска: </value>
   </data>
   <data name="wndMain_mnuEdit" xml:space="preserve">
-    <value>Edit</value>
+    <value>Правка</value>
   </data>
   <data name="wndMain_mnuEdit_CreateObject" xml:space="preserve">
-    <value>Create object ...</value>
+    <value>Создать объект</value>
   </data>
   <data name="wndMain_mnuFile" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="wndMain_mnuFile_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Выход</value>
   </data>
   <data name="wndMain_mnuFile_Print" xml:space="preserve">
-    <value>Print</value>
+    <value>Печать</value>
   </data>
   <data name="wndMain_mnuHelp" xml:space="preserve">
-    <value>Help</value>
+    <value>Справка</value>
   </data>
   <data name="wndMain_mnuHelp_About" xml:space="preserve">
-    <value>About ...</value>
+    <value>О программе …</value>
   </data>
   <data name="wndMain_mnuSearch" xml:space="preserve">
-    <value>Search</value>
+    <value>Поиск</value>
   </data>
   <data name="wndMain_mnuSearchDomains" xml:space="preserve">
-    <value>Domains</value>
+    <value>Классы</value>
   </data>
   <data name="wndMain_mnuSearchMode" xml:space="preserve">
-    <value>Mode</value>
+    <value>Режим</value>
   </data>
   <data name="wndMain_mnuSearchMode_Advanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Расширенный</value>
   </data>
   <data name="wndMain_mnuSearchMode_Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Стандартный</value>
   </data>
   <data name="wndMain_mnuSearchObjectClasses" xml:space="preserve">
-    <value>Classes</value>
+    <value>Домены</value>
   </data>
   <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
-    <value>Save current filter ...</value>
+    <value>Сохранить текущий фильтр …</value>
   </data>
   <data name="wndMain_mnuService" xml:space="preserve">
-    <value>Service</value>
+    <value>Сервис</value>
   </data>
   <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
-    <value>Domain options ...</value>
+    <value>Настройки доменов …</value>
   </data>
   <data name="wndMain_mnuService_ErrorLog" xml:space="preserve">
-    <value>Error log ...</value>
+    <value>Журнал ошибок …</value>
   </data>
   <data name="wndMain_mnuService_Log" xml:space="preserve">
-    <value>Log ...</value>
+    <value>Журнал …</value>
   </data>
   <data name="wndMain_mnuService_Preferences" xml:space="preserve">
-    <value>Preferences ...</value>
+    <value>Настройки приложения …</value>
+  </data>
+  <data name="wndDomains_tabctlDomain1" xml:space="preserve">
+    <value>Домен</value>
+  </data>
+  <data name="wndDomains_tabctlDomain2" xml:space="preserve">
+    <value>Корень поиска</value>
   </data>
   <data name="wndMain_msg_CannotSaveCurrentFilter" xml:space="preserve">
-    <value>Current filter is empty.</value>
+    <value>Текущий фильтр пуст.</value>
   </data>
   <data name="wndMain_msg_EnterFilterName" xml:space="preserve">
-    <value>Enter new filter name:</value>
+    <value>Введите имя фильтра:</value>
   </data>
   <data name="wndMain_tviFavorites" xml:space="preserve">
-    <value>Favorites</value>
+    <value>Избранное</value>
   </data>
   <data name="wndMain_tviDomains" xml:space="preserve">
-    <value>Domains</value>
+    <value>Домены</value>
   </data>
   <data name="wndMain_tviFilters" xml:space="preserve">
-    <value>Filters</value>
+    <value>Фильтры</value>
   </data>
   <data name="wndMain_ctxmnutviFavoritesRemoveFromFavorites" xml:space="preserve">
-    <value>Remove from favorites</value>
+    <value>Удалить из панели избранного</value>
   </data>
   <data name="wndMain_ctxmnutviFavoritesProperties" xml:space="preserve">
-    <value>Properties...</value>
+    <value>Свойства...</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsCreateObject" xml:space="preserve">
-    <value>Create object...</value>
+    <value>Создать объект...</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsCopy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Копировать</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsCut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Вырезать</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsPaste" xml:space="preserve">
-    <value>Paste</value>
+    <value>Вставить</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsRename" xml:space="preserve">
-    <value>Rename...</value>
+    <value>Переименовать...</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsRemove" xml:space="preserve">
-    <value>Delete</value>
+    <value>Удалить</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsAddToFavorites" xml:space="preserve">
-    <value>Add to favorites</value>
+    <value>Добавить в избранное</value>
   </data>
   <data name="wndMain_ctxmnutviFavoritesOpenObjectLocation" xml:space="preserve">
-    <value>Object location</value>
+    <value>Расположение объекта</value>
   </data>
   <data name="wndMain_ctxmnutviDomainsProperties" xml:space="preserve">
-    <value>Properties...</value>
+    <value>Свойства...</value>
   </data>
   <data name="wndMain_tviFiltersRemoveFromFilters" xml:space="preserve">
-    <value>Remove filter</value>
+    <value>Удалить фильтр</value>
   </data>
   <data name="wndMain_ctxmnuObjectsExternalSoftware" xml:space="preserve">
-    <value>External software</value>
+    <value>Внешние приложения</value>
   </data>
   <data name="wndMain_ctxmnuObjectsSelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Выделить все</value>
   </data>
   <data name="wndMain_ctxmnuObjectsCreateObject" xml:space="preserve">
-    <value>Create object...</value>
+    <value>Создать объект...</value>
   </data>
   <data name="wndMain_ctxmnuObjectsCopy" xml:space="preserve">
-    <value>Copy</value>
+    <value>Копировать</value>
   </data>
   <data name="wndMain_ctxmnuObjectsCut" xml:space="preserve">
-    <value>Cut</value>
+    <value>Вырезать</value>
   </data>
   <data name="wndMain_ctxmnuObjectsPaste" xml:space="preserve">
-    <value>Paste</value>
+    <value>Вставить</value>
   </data>
   <data name="wndMain_ctxmnuObjectsRename" xml:space="preserve">
-    <value>Rename...</value>
+    <value>Переименовать...</value>
   </data>
   <data name="wndMain_ctxmnuObjectsRemove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Удалить</value>
   </data>
   <data name="wndMain_ctxmnuObjectsAddToFavorites" xml:space="preserve">
-    <value>Add to favorites</value>
+    <value>Добавить в избранное</value>
   </data>
   <data name="wndMain_ctxmnuObjectsOpenObjectLocation" xml:space="preserve">
-    <value>Object location</value>
+    <value>Расположение объекта</value>
   </data>
   <data name="wndMain_ctxmnuObjectsResetPassword" xml:space="preserve">
-    <value>Reset password to default</value>
+    <value>Сбросить пароль на стандартный</value>
   </data>
   <data name="wndMain_ctxmnuObjectsDisableEnable" xml:space="preserve">
-    <value>Disable/Enable</value>
+    <value>Заблокировать/разблокировать</value>
   </data>
   <data name="wndMain_ctxmnuObjectsExpirationDate" xml:space="preserve">
-    <value>Set expiration date to midnight...</value>
+    <value>Установить срок действия на полночь...</value>
   </data>
   <data name="wndMain_ctxmnuObjectsProperties" xml:space="preserve">
-    <value>Properties...</value>
+    <value>Свойства...</value>
   </data>
   <data name="wndMain_msg_AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
+    <value>Вы уверены?</value>
   </data>
   <data name="wndMain_msg_RemoveObject" xml:space="preserve">
-    <value>Remove object</value>
+    <value>Удаление объекта</value>
   </data>
   <data name="wndMain_msg_ThisIsOrganizationaUnit" xml:space="preserve">
-    <value>This is Organizational Unit!</value>
+    <value>Это подразделение!</value>
   </data>
   <data name="wndMain_msg_EnterObjectName" xml:space="preserve">
-    <value>Enter object name:</value>
+    <value>Введите новое имя объекта:</value>
   </data>
   <data name="wndMain_msg_RenameObject" xml:space="preserve">
-    <value>Rename object</value>
+    <value>Переименование объекта</value>
   </data>
   <data name="wndMain_msg_MovingIsProhibited" xml:space="preserve">
-    <value>Moving to another domain is prohibited</value>
+    <value>Перемещение в другие домены запрещено</value>
   </data>
   <data name="wndMain_msg_MoveObject" xml:space="preserve">
-    <value>Move object</value>
+    <value>Перемещение объектов</value>
   </data>
   <data name="wndMain_msg_ObjectUnknownClass" xml:space="preserve">
-    <value>Unknown class of the object to be copied</value>
+    <value>Неизвестный класс копируемого объекта</value>
   </data>
   <data name="wndMain_msg_CopyObject" xml:space="preserve">
-    <value>Copy object</value>
+    <value>Копирование объекта</value>
   </data>
   <data name="wndMain_msg_MoveObjectToContainer" xml:space="preserve">
-    <value>Move:
+    <value>Перемещение:
 {0}
 
-To container:
+В контейнер:
 {1}</value>
   </data>
   <data name="wndMain_msg_NObjects" xml:space="preserve">
-    <value>{0} objects</value>
+    <value>{0} объектов</value>
   </data>
   <data name="wndMain_msg_PasteObject" xml:space="preserve">
-    <value>Paste object</value>
+    <value>Вставить объект</value>
   </data>
   <data name="wndMain_msg_CopyOneObjectWithinDomain" xml:space="preserve">
-    <value>Within a domain, you can copy only one object</value>
+    <value>В пределах домена можно копировать только один объект</value>
   </data>
   <data name="wndObject_lbl_BasicInformation" xml:space="preserve">
-    <value>Basic information</value>
+    <value>Основные сведения</value>
   </data>
   <data name="wndObject_lbl_SAMAccountName" xml:space="preserve">
-    <value>Logon name (pre-Windows 2000)</value>
+    <value>Имя входа (пред-Windows 2000)</value>
   </data>
   <data name="wndObject_lbl_DNSName" xml:space="preserve">
-    <value>DNS-name</value>
+    <value>DNS-имя</value>
   </data>
   <data name="wndObject_lbl_Description" xml:space="preserve">
-    <value>Description</value>
+    <value>Описание</value>
   </data>
   <data name="wndObject_lbl_Location" xml:space="preserve">
-    <value>Location</value>
+    <value>Местонахождение</value>
   </data>
   <data name="wndObject_lbl_OS" xml:space="preserve">
-    <value>Operating system</value>
+    <value>Операционная система</value>
   </data>
   <data name="wndObject_lbl_Version" xml:space="preserve">
-    <value>Version</value>
+    <value>Версия</value>
   </data>
   <data name="wndObject_lbl_Object" xml:space="preserve">
-    <value>Object</value>
-  </data>
-  <data name="wndObject_tt_Created" xml:space="preserve">
-    <value>Created</value>
-  </data>
-  <data name="wndObject_tt_LastLogon" xml:space="preserve">
-    <value>Last logon</value>
+    <value>Объект</value>
   </data>
   <data name="wndObject_tt_AccountExpires" xml:space="preserve">
-    <value>Account expires</value>
+    <value>Объект истекает</value>
+  </data>
+  <data name="wndObject_tt_LastLogon" xml:space="preserve">
+    <value>Последний вход</value>
+  </data>
+  <data name="wndObject_tt_Created" xml:space="preserve">
+    <value>Создан</value>
   </data>
   <data name="wndObject_lbl_MemberOf" xml:space="preserve">
-    <value>Member of</value>
+    <value>Член групп</value>
   </data>
   <data name="wndObject_lbl_Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Сеть</value>
   </data>
   <data name="wndObject_LoginEventLog" xml:space="preserve">
-    <value>Login event log</value>
+    <value>Журнал входов</value>
   </data>
   <data name="wndObject_msg_RetrievingLoginsWMI" xml:space="preserve">
-    <value>Retrieving the login/logout events using WMI</value>
+    <value>Получения данных журнала входов/выходов средствами WMI</value>
   </data>
   <data name="wndObject_lbl_Period" xml:space="preserve">
-    <value>Period</value>
+    <value>Период</value>
   </data>
   <data name="wndObject_lbl_Search" xml:space="preserve">
-    <value>Search</value>
+    <value>Поиск</value>
   </data>
   <data name="wndObject_lbl_Display" xml:space="preserve">
-    <value>Display:</value>
+    <value>Отображать:</value>
   </data>
   <data name="wndObject_lbl_EventAll" xml:space="preserve">
-    <value>All</value>
+    <value>Все</value>
   </data>
   <data name="wndObject_lbl_EventSuccess" xml:space="preserve">
-    <value>Success</value>
+    <value>Успех</value>
   </data>
   <data name="wndObject_lbl_EventFailure" xml:space="preserve">
-    <value>Failure</value>
+    <value>Отказ</value>
   </data>
   <data name="lbl_Objects" xml:space="preserve">
-    <value>Objects:</value>
+    <value>Объектов:</value>
   </data>
   <data name="ctlNetwork_lbl_NetworkAvailabilityICMP" xml:space="preserve">
-    <value>Availability (ICMP):</value>
+    <value>Доступность (ICMP):</value>
   </data>
   <data name="ctlNetwork_lbl_NetworkTraceRoute" xml:space="preserve">
-    <value>Trace route:</value>
+    <value>Трассировка маршрута:</value>
   </data>
   <data name="ctlNetwork_lbl_NetworkAvailabilityTCP" xml:space="preserve">
-    <value>Availability (TCP):</value>
+    <value>Доступность портов (TCP):</value>
   </data>
   <data name="wndObject_lbl_EventCategory" xml:space="preserve">
-    <value>Category</value>
+    <value>Категория</value>
   </data>
   <data name="wndObject_lbl_EventCode" xml:space="preserve">
-    <value>Code</value>
+    <value>Код</value>
   </data>
   <data name="wndObject_lbl_EventAccountName" xml:space="preserve">
-    <value>Account name</value>
+    <value>Имя входа</value>
   </data>
   <data name="wndObject_lbl_EventLogonType" xml:space="preserve">
-    <value>Logon type</value>
+    <value>Тип входа</value>
   </data>
   <data name="wndObject_lbl_EventSourceAddress" xml:space="preserve">
-    <value>Source address</value>
+    <value>Адрес источника</value>
   </data>
   <data name="wndObject_lbl_EventTimeGenerated" xml:space="preserve">
-    <value>Time</value>
+    <value>Время</value>
   </data>
   <data name="wndObject_lbl_AllAttributes" xml:space="preserve">
-    <value>All attributes</value>
-  </data>
-  <data name="ready" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\ready.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>Все атрибуты</value>
   </data>
   <data name="wndObject_lbl_GivenName" xml:space="preserve">
-    <value>Given name</value>
+    <value>Имя</value>
   </data>
   <data name="wndObject_Initials" xml:space="preserve">
-    <value>Initials</value>
+    <value>Инициалы</value>
   </data>
   <data name="wndObject_lbl_Surname" xml:space="preserve">
-    <value>Surname</value>
+    <value>Фамилия</value>
   </data>
   <data name="wndObject_lbl_DisplayName" xml:space="preserve">
-    <value>Display name</value>
+    <value>Отображаемое имя</value>
   </data>
   <data name="wndObject_lbl_OfficeName" xml:space="preserve">
-    <value>Office</value>
+    <value>Офис</value>
   </data>
   <data name="wndObject_lbl_TelephoneNumber" xml:space="preserve">
-    <value>Telephone number</value>
+    <value>Основной номер</value>
   </data>
   <data name="wndObject_lbl_HomePhone" xml:space="preserve">
-    <value>Home phone</value>
+    <value>Городской номер</value>
   </data>
   <data name="wndObject_lbl_IpPhone" xml:space="preserve">
-    <value>IP phone</value>
+    <value>Дополнительный номер</value>
   </data>
   <data name="wndObject_lbl_Mobile" xml:space="preserve">
-    <value>Mobile</value>
+    <value>Мобильный номер</value>
   </data>
   <data name="wndObject_lbl_Mail" xml:space="preserve">
-    <value>Mail</value>
+    <value>Основной адрес</value>
   </data>
   <data name="wndObject_lbl_Title" xml:space="preserve">
-    <value>Title</value>
+    <value>Должность</value>
   </data>
 </root>

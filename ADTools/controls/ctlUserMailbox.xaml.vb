@@ -38,15 +38,26 @@ Public Class ctlUserMailbox
     Public Async Sub InitializeAsync()
         If _currentobject Is Nothing Then Exit Sub
 
-        tbMailbox.Text = GetNextUserMailbox(_currentobject)
-
         If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso _currentobject.Domain.ExchangeServer IsNot Nothing Then
             capexchange.Visibility = Visibility.Visible
 
+            tbMailbox.Text = GetNextUserMailbox(_currentobject)
+
             mailbox = Await Task.Run(Function() New clsMailbox(_currentobject))
+
             Me.DataContext = mailbox
 
             capexchange.Visibility = Visibility.Hidden
+            End If
+    End Sub
+
+    Private Sub hlState_Click(sender As Object, e As RoutedEventArgs) Handles hlState.Click
+        If mailbox IsNot Nothing AndAlso
+           mailbox.ExchangeConnection IsNot Nothing AndAlso
+           mailbox.ExchangeConnection.State IsNot Nothing AndAlso
+           mailbox.ExchangeConnection.State.Reason IsNot Nothing Then
+
+            IMsgBox(mailbox.ExchangeConnection.State.Reason.Message, vbExclamation + vbOKOnly, "Ошибка подключения", Window.GetWindow(Me))
         End If
     End Sub
 

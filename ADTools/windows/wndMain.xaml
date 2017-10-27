@@ -17,8 +17,8 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
-                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}" Style="{DynamicResource ToolbarButton}"/>
-                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed" Style="{DynamicResource ToolbarButton}"/>
+                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
+                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
                 <TextBlock x:Name="tblckDummy" DockPanel.Dock="Right"/>
                 <Menu>
                     <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
@@ -64,7 +64,7 @@
             </DockPanel>
             <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorMenuBackground}" Margin="0,0,0,5">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Height="23">
-                    <Button x:Name="btnBack" Width="23" Style="{DynamicResource ToolbarButton}" Margin="5,0,5,0">
+                    <Button x:Name="btnBack" Width="23" Margin="5,0,5,0">
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
                             <TextBlock.RenderTransform>
                                 <TransformGroup>
@@ -75,7 +75,7 @@
                                 </TransformGroup>
                             </TextBlock.RenderTransform>
                         </TextBlock>                    </Button>
-                    <Button x:Name="btnForward" Width="23" Style="{DynamicResource ToolbarButton}" Margin="0,0,5,0">
+                    <Button x:Name="btnForward" Width="23" Margin="0,0,5,0">
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="-3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
                             <TextBlock.RenderTransform>
                                 <TransformGroup>
@@ -87,7 +87,7 @@
                             </TextBlock.RenderTransform>
                         </TextBlock>
                     </Button>
-                    <Button x:Name="btnUp" Width="23" Style="{DynamicResource ToolbarButton}" >
+                    <Button x:Name="btnUp" Width="23">
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
                     </Button>
                 </StackPanel>
@@ -96,11 +96,11 @@
 
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0">
                 <TextBlock>
-                    <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsTotal}"/>
+                    <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
                     <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock>
-                    <Run Text="{x:Static r:Resources.wndMain_lbl_ObjectsSelected}"/>
+                    <Run Text="{x:Static r:Resources.lbl_ObjectsSelected}"/>
                     <Run Text="{Binding ElementName=dgObjects, Path=SelectedItems.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <StatusBarItem HorizontalAlignment="Right">
@@ -121,7 +121,7 @@
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/favorite_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Избранное"/>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviFavorites}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
@@ -129,9 +129,10 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFavorites">
-                                            <MenuItem x:Name="tviFavoritesRemoveFromFavorites" Header="Удалить из панели избранного" Click="ctxmnutviFavoritesRemoveFromFavorites_Click"/>
+                                            <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesRemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="tviFavoritesProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                            <MenuItem x:Name="ctxmnutviFavoritesOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
+                                            <MenuItem x:Name="ctxmnutviFavoritesProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -145,7 +146,7 @@
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/domain_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Домены"/>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviDomains}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
@@ -154,18 +155,17 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviDomains">
-                                            <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="Создать объект..." Click="ctxmnuSharedCreateObject_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsCopy" Header="Копировать" Click="ctxmnuSharedCopy_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsCut" Header="Вырезать" Click="ctxmnuSharedCut_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsPaste" Header="Вставить" Click="ctxmnuSharedPaste_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsRename" Header="Переименовать..." Click="ctxmnuSharedRename_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsRemove" Header="Удалить" Click="ctxmnuSharedRemove_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCopy" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCopy}" Click="ctxmnuSharedCopy_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCut" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCut}" Click="ctxmnuSharedCut_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsPaste" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsPaste}" Click="ctxmnuSharedPaste_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsRename" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsRename}" Click="ctxmnuSharedRename_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsRemove" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsRemove}" Click="ctxmnuSharedRemove_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="Добавить в избранное" Click="ctxmnuSharedAddToFavorites_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsOpenObjectLocation" Header="Расположение объекта" Click="ctxmnuSharedOpenObjectLocation_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -178,7 +178,7 @@
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}">
                                 <Image Source="/images/filter_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Фильтры"/>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviFilters}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
@@ -186,7 +186,7 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviFilters_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFilters">
-                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="Удалить фильтр" Click="ctxmnutviFiltersRemoveFromFilters_Click"/>
+                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="{x:Static r:Resources.wndMain_tviFiltersRemoveFromFilters}" Click="ctxmnutviFiltersRemoveFromFilters_Click"/>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="/images/filter.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -195,25 +195,6 @@
                             </DataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
-                    <TreeViewItem x:Name="tviNetworks" IsExpanded="True">
-                        <TreeViewItem.Header>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
-                                <Image Source="/images/network_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Сеть"/>
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                        <!--<TreeViewItem.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tvDomains_TreeViewItem_MouseLeftButtonDown">
-                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>-->
-                    </TreeViewItem>
-
-
-
                 </TreeView>
                 <DockPanel Grid.Column="2" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
@@ -254,62 +235,51 @@
                             SelectionMode="Extended"
                             ScrollViewer.CanContentScroll ="False"
                             Margin="0,0,0,5">
+                            
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Expander IsExpanded="True">
+                                                            <Expander.Header>
+                                                                <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
+                                                            </Expander.Header>
+                                                            <ItemsPresenter />
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
+
                             <DataGrid.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">
-                                    <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="Внешние приложения"/>
-                                    <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="Выделить все"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
                                     <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="Создать объект..." Click="ctxmnuSharedCreateObject_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
                                     <Separator x:Name="ctxmnuObjectsCopySeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="Копировать" Click="ctxmnuSharedCopy_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsCut" Header="Вырезать" Click="ctxmnuSharedCut_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsPaste" Header="Вставить" Click="ctxmnuSharedPaste_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsRename" Header="Переименовать..." Click="ctxmnuSharedRename_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsRemove" Header="Удалить" Click="ctxmnuSharedRemove_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
                                     <Separator x:Name="ctxmnuObjectsAddToFavoritesSeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="Добавить в избранное" Click="ctxmnuSharedAddToFavorites_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="Расположение объекта" Click="ctxmnuSharedOpenObjectLocation_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="Сбросить пароль на стандартный" />
-                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="Заблокировать/разблокировать"/>
-                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="Установить срок действия на полночь..."/>
+                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" />
+                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}"/>
                                     <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="Свойства..." FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="⬕" Width="32">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Image Source="{Binding Image, Mode=OneWay}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="Имя" Width="400" SortMemberPath="name" CanUserSort="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding name, Mode=OneWay}" ToolTip="name" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="Класс" Width="150" SortMemberPath="SchemaClassName" CanUserSort="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding SchemaClassName, Mode=OneWay}" ToolTip="SchemaClassName" VerticalAlignment="Center" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="Создан" Width="110" SortMemberPath="whenCreated" CanUserSort="True">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding whenCreated, Mode=OneWay}" ToolTip="whenCreated" VerticalAlignment="Center" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                 </DockPanel>

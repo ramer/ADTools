@@ -221,7 +221,7 @@ Class wndMain
         ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
-        ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1)
+        ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
         ctxmnuObjectsAddToFavoritesSeparator.Visibility = ctxmnuObjectsAddToFavorites.Visibility
 
         ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
@@ -342,7 +342,7 @@ Class wndMain
         If ClipboardAction = enmClipboardAction.Copy Then ' copy
 
             If sourceobjects(0).Domain Is destination.Domain Then ' same domain
-                If sourceobjects.Count > 1 Then IMsgBox("В пределах домена можно копировать только один объект", vbOKOnly + vbExclamation, "Копирование объектов", Me) : Exit Sub
+                If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me) : Exit Sub
 
                 ' single object
 
@@ -386,12 +386,12 @@ Class wndMain
                         w.tabctlObject.SelectedIndex = 4
 
                     Case Else
-                        IMsgBox("Неизвестный класс копируемого объекта", vbOKOnly + vbExclamation, "Копирование объектов", Me)
+                        IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me)
                 End Select
                 ShowWindow(w, False, Me, False)
 
             Else ' another domain
-
+                ' TODO
                 If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка", Me) <> MessageBoxResult.Yes Then Exit Sub
 
             End If
@@ -401,12 +401,13 @@ Class wndMain
             Dim organizationalunitaffected As Boolean = False
 
             ' another domain
-            If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox("Перемещение в другие домены запрещено", vbOKOnly + vbExclamation, "Перемещение объектов", Me) : Exit Sub
+            If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject, Me) : Exit Sub
 
             ' same domain
-            If IMsgBox("Вы уверены?" & vbCrLf & vbCrLf &
-                       "Перемещение: " & vbCrLf & If(sourceobjects.Count > 1, sourceobjects.Count & " объектов", sourceobjects(0).name) & vbCrLf & vbCrLf &
-                       "В контейнер: " & vbCrLf & destination.distinguishedNameFormated, vbYesNo + vbQuestion, "Вставка", Me) <> MessageBoxResult.Yes Then Exit Sub
+            If IMsgBox(My.Resources.wndMain_msg_AreYouSure & vbCrLf & vbCrLf &
+                       String.Format(My.Resources.wndMain_msg_MoveObjectToContainer,
+                                     If(sourceobjects.Count > 1, String.Format(My.Resources.wndMain_msg_NObjects, sourceobjects.Count), sourceobjects(0).name),
+                                     destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_PasteObject, Me) <> MessageBoxResult.Yes Then Exit Sub
 
             Try
                 For Each obj In sourceobjects
@@ -434,7 +435,7 @@ Class wndMain
             Dim organizationalunitaffected As Boolean = False
 
             Dim obj As clsDirectoryObject = objects(0)
-            Dim name As String = IInputBox("Введите новое имя объекта", "Переименование объекта", objects(0).name, vbQuestion, Me)
+            Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion, Me)
             If Len(name) > 0 Then
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
                     obj.Entry.Rename("OU=" & name)
@@ -462,9 +463,9 @@ Class wndMain
         Try
             Dim currentcontaineraffected As Boolean = False
 
-            If IMsgBox("Вы уверены?", vbYesNo + vbQuestion, "Удаление объекта", Me) <> MsgBoxResult.Yes Then Exit Sub
+            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
             If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-                If IMsgBox("Это подразделение!" & vbCrLf & vbCrLf & "Вы уверены?", vbYesNo + vbExclamation, "Удаление объекта", Me) <> MsgBoxResult.Yes Then Exit Sub
+                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
                 If currentcontainer IsNot Nothing AndAlso objects(0).Entry.Path = currentcontainer.Entry.Path Then currentcontaineraffected = True
             End If
 
@@ -765,7 +766,7 @@ Class wndMain
 
         Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist)
 
-        If preferences.SearchResultGrouping Then
+        If preferences.SearchResultGrouping AndAlso root Is Nothing Then
             Try
                 CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
             Catch

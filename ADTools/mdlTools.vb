@@ -10,6 +10,9 @@ Imports HandlebarsDotNet
 Imports System.Windows.Markup
 Imports System.Globalization
 Imports System.Security
+Imports System.Net
+Imports System.Net.Sockets
+Imports System.Net.NetworkInformation
 
 Module mdlTools
 
@@ -158,6 +161,15 @@ Module mdlTools
         "location",
         "operatingSystem",
         "operatingSystemVersion"}
+
+    Public portlistDefault As New Dictionary(Of Integer, String) From
+        {{135, "RPC"},
+        {139, "NETBIOS-SSN"},
+        {445, "SMB over TCP"},
+        {3389, "RDP"},
+        {4899, "Radmin"},
+        {5900, "VNC"},
+        {6129, "DameWare RC"}}
 
     Public Sub initializePreferences()
         preferences = IRegistrySerializer.Deserialize(GetType(clsPreferences), regPreferences)
@@ -696,6 +708,98 @@ Module mdlTools
             s.AppendChar(c)
         Next
         Return s
+    End Function
+
+
+    Public Function Ping(hostname As String) As PingReply
+        Dim pingsender As New Ping
+        Dim pingoptions As New PingOptions
+        Dim pingtimeout As Integer = 1000
+        Dim pingreplytask As Task(Of PingReply) = Nothing
+        Dim pingreply As PingReply = Nothing
+        Dim pingbuffer() As Byte = Text.Encoding.ASCII.GetBytes(Space(32))
+        Dim addresses() As IPAddress
+
+        Try
+            addresses = Dns.GetHostAddresses(hostname)
+        Catch ex As Exception
+            Return Nothing
+        End Try
+
+        If addresses.Count = 0 Then Return Nothing
+
+        pingoptions.Ttl = 128
+        pingoptions.DontFragment = False
+        pingreplytask = Task.Run(Function() pingsender.Send(addresses(0), pingtimeout, pingbuffer, pingoptions))
+        pingreplytask.Wait()
+
+        Return pingreplytask.Result
+    End Function
+
+    Public Function TraceRoute(hostname As String) As List(Of PingReply)
+        Dim pingsender As New Ping
+        Dim pingoptions As New PingOptions
+        Dim pingtimeout As Integer = 1000
+        Dim pingreplytask As Task(Of PingReply) = Nothing
+        Dim pingreply As PingReply = Nothing
+        Dim pingbuffer() As Byte = Text.Encoding.ASCII.GetBytes(Space(32))
+        Dim addresses() As IPAddress
+
+        Try
+            addresses = Dns.GetHostAddresses(hostname)
+        Catch ex As Exception
+            Return New List(Of PingReply)
+        End Try
+
+        If addresses.Count = 0 Then Return New List(Of PingReply)
+
+        Dim resultlist As New List(Of PingReply)
+
+        For ttl As Integer = 1 To 128
+            pingoptions.Ttl = ttl
+            pingoptions.DontFragment = False
+
+            pingreplytask = Task.Run(Function() pingsender.Send(addresses(0), pingtimeout, pingbuffer, pingoptions))
+            pingreplytask.Wait()
+
+            resultlist.Add(pingreplytask.Result)
+            If pingreplytask.Result.Status = IPStatus.Success Then Exit For
+        Next
+
+        Return resultlist
+    End Function
+
+    Public Function PortScan(hostname As String, portlist As Dictionary(Of Integer, String)) As Dictionary(Of Integer, Boolean)
+        Dim resultlist As New Dictionary(Of Integer, Boolean)
+
+        For Each port As Integer In portlist.Keys
+            Dim tcpClient = New TcpClient()
+            Dim connectionTask = tcpClient.ConnectAsync(hostname, port).ContinueWith(Function(tsk) If(tsk.IsFaulted, Nothing, tcpClient))
+            Dim timeoutTask = Task.Delay(1000).ContinueWith(Of TcpClient)(Function(tsk) Nothing)
+            Dim resultTask = Task.WhenAny(connectionTask, timeoutTask).Unwrap()
+
+            resultTask.Wait()
+            Dim resultTcpClient = resultTask.Result
+            If resultTcpClient IsNot Nothing Then
+                resultlist.Add(port, resultTcpClient.Connected)
+                resultTcpClient.Close()
+            Else
+                resultlist.Add(port, False)
+            End If
+        Next
+
+        Return resultlist
+    End Function
+
+    Public Function GetLocalIPAddress() As String
+        Dim host = Dns.GetHostEntry(Dns.GetHostName())
+        For Each ip As IPAddress In host.AddressList
+            If ip.AddressFamily = AddressFamily.InterNetwork Then
+                Return ip.ToString()
+            End If
+        Next
+        ThrowCustomException("Local IP Address Not Found!")
+        Return Nothing
     End Function
 
 End Module

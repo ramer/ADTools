@@ -740,9 +740,6 @@
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
             <Setter Property="BorderThickness" Value="0"/>
             <Style.Triggers>
-                <!--<Trigger Property="DataGridCell.IsSelected" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ColorButtonBackground}" />
-                </Trigger>-->
                 <MultiTrigger>
                     <MultiTrigger.Conditions>
                         <Condition Property="IsSelected" Value="True" />
@@ -760,6 +757,111 @@
             </Style.Triggers>
         </Style>
 
+        <ControlTemplate x:Key="GridViewExpanderToggleButton" TargetType="{x:Type ToggleButton}">
+            <Grid Margin="10,0,0,0">
+                <Ellipse Fill="{DynamicResource ColorButtonBackground}" Width="24" Height="24"/>
+                <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
+                <Path x:Name="CollapsedArrow"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Data="M 2 1 L 5 4 L 2 7 L 3 8 L 7 4 L 3 0 Z"
+                        Fill="{DynamicResource ColorText}"/>
+                <Path x:Name="ExpandededArrow"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        Data="M 1 3 L 5 7 L 9 3 L 8 2 L 5 5 L 2 2 Z"
+                        Fill="{DynamicResource ColorText}"/>
+                
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition GeneratedDuration="0:0:0.2" />
+                            <VisualTransition GeneratedDuration="0" To="Pressed" />
+                        </VisualStateGroup.Transitions>
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Pressed">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.6" Duration="0"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Disabled"/>
+                    </VisualStateGroup>
+                    <VisualStateGroup x:Name="CheckStates">
+                        <VisualState x:Name="Checked">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                               Storyboard.TargetName="CollapsedArrow">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                          Value="{x:Static Visibility.Hidden}" />
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                               Storyboard.TargetName="ExpandededArrow">
+                                    <DiscreteObjectKeyFrame KeyTime="0"
+                                          Value="{x:Static Visibility.Visible}" />
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unchecked" />
+                        <VisualState x:Name="Indeterminate" />
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Grid>
+        </ControlTemplate>
+
+        <Style TargetType="{x:Type Expander}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Expander}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition x:Name="ContentRow" Height="0" />
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver" />
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="Border"
+                                  Grid.Row="0"
+                                  BorderThickness="1"
+                                  CornerRadius="2,2,0,0">
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton OverridesDefaultStyle="True" Template="{StaticResource GridViewExpanderToggleButton}" IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    <ContentPresenter Grid.Column="1" Margin="4" ContentSource="Header" RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                            <Border x:Name="Content"
+                                  Grid.Row="1"
+                                  BorderThickness="1,0,1,1"
+                                  CornerRadius="0,0,2,2">
+                                <ContentPresenter Margin="4" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ContentRow" Property="Height" Value="{Binding Height, ElementName=Content}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+       
+        
         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
             <Grid>
                 <Grid.ColumnDefinitions>

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="ctlNetwork"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADTools"
+             xmlns:r="clr-namespace:ADTools.My.Resources"
+             mc:Ignorable="d" 
+             d:DesignHeight="413" d:DesignWidth="518"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <UserControl.Resources>
+        <local:ConverterToSingleLine x:Key="ConverterToSingleLine" />
+    </UserControl.Resources>
+    <Grid>
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
+        <DockPanel Margin="5">
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkAvailabilityICMP}" Margin="0,0,0,5"/>
+                <WrapPanel x:Name="wpPing"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top">
+                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkTraceRoute}" Margin="0,10,0,5"/>
+                <WrapPanel x:Name="wpTrace"/>
+                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkAvailabilityTCP}" Margin="0,10,0,5"/>
+            </StackPanel>
+            <WrapPanel x:Name="wpPorts" Orientation="Vertical" VerticalAlignment="Stretch"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

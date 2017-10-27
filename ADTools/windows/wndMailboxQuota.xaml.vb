@@ -46,6 +46,8 @@ Public Class wndMailboxQuota
     End Sub
 
     Private Sub ValidateIssueWarningQuota()
+        If chbIssueWarningQuota.IsChecked = False Then Exit Sub
+
         If Int(StringToLong(tbIssueWarningQuota.Text) < 512) Then tbIssueWarningQuota.Text = 512
         If Int(StringToLong(tbIssueWarningQuota.Text) + 512) > StringToLong(tbProhibitSendQuota.Text) And chbProhibitSendQuota.IsChecked Then
             tbProhibitSendQuota.Text = Int(StringToLong(tbIssueWarningQuota.Text) + 512)
@@ -56,6 +58,8 @@ Public Class wndMailboxQuota
     End Sub
 
     Private Sub ValidateProhibitSendQuota()
+        If chbProhibitSendQuota.IsChecked = False Then Exit Sub
+
         If Int(StringToLong(tbProhibitSendQuota.Text) < 1024) Then tbProhibitSendQuota.Text = 1024
         If Int(StringToLong(tbProhibitSendQuota.Text) - 512) < StringToLong(tbIssueWarningQuota.Text) And chbIssueWarningQuota.IsChecked And Int(StringToLong(tbProhibitSendQuota.Text) - 512) > 0 Then
             tbIssueWarningQuota.Text = Int(StringToLong(tbProhibitSendQuota.Text) - 512)
@@ -66,6 +70,8 @@ Public Class wndMailboxQuota
     End Sub
 
     Private Sub ValidateProhibitSendReceiveQuota()
+        If chbProhibitSendReceiveQuota.IsChecked = False Then Exit Sub
+
         If Int(StringToLong(tbProhibitSendReceiveQuota.Text) < 1536) Then tbProhibitSendReceiveQuota.Text = 1536
         If Int(StringToLong(tbProhibitSendReceiveQuota.Text) - 512) < StringToLong(tbProhibitSendQuota.Text) And chbProhibitSendQuota.IsChecked And Int(StringToLong(tbProhibitSendReceiveQuota.Text) - 512) > 0 Then
             tbProhibitSendQuota.Text = Int(StringToLong(tbProhibitSendReceiveQuota.Text) - 512)
@@ -175,7 +181,7 @@ Public Class wndMailboxQuota
 
         ValidateIssueWarningQuota()
         ValidateProhibitSendQuota()
-        ValidateProhibitSendQuota()
+        ValidateProhibitSendReceiveQuota()
 
         Dim d = chbUseDatabaseQuotaDefaults.IsChecked
         Await Task.Run(Sub() mailbox.UseDatabaseQuotaDefaults = d)
@@ -191,8 +197,8 @@ Public Class wndMailboxQuota
 
     Private Function StringToLong(str) As Long
         Dim lng As Double
-        If Not Double.TryParse(str, lng) Then lng = 0
-        Return Int(lng)
+        If Not Long.TryParse(str, lng) Then lng = 0
+        Return lng
     End Function
 
 End Class

@@ -51,6 +51,9 @@
     <ApplicationIcon>
     </ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CredentialManagement">
       <HintPath>libraries\CredentialManagement.dll</HintPath>
@@ -74,6 +77,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\System.Management.Automation.dll</HintPath>
@@ -100,6 +104,7 @@
     <Compile Include="classes\clsDataGridColumnInfo.vb" />
     <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
+    <Compile Include="classes\clsEvent.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
     <Compile Include="classes\clsFilter.vb" />
     <Compile Include="classes\clsLog.vb" />
@@ -112,7 +117,11 @@
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
+    <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
+    <Compile Include="controls\ctlNetwork.xaml.vb">
+      <DependentUpon>ctlNetwork.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\ctlUserMailbox.xaml.vb">
       <DependentUpon>ctlUserMailbox.xaml</DependentUpon>
     </Compile>
@@ -193,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlGroupMemberOf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlNetwork.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -330,8 +343,10 @@
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <LastGenOutput>Resources2.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.ru.resx" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -341,9 +356,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="images\app.ico" />
     <Resource Include="images\splash.png" />
@@ -355,6 +368,7 @@
     <Resource Include="images\domain_folder.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="images\ready.ico" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />

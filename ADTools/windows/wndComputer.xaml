@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
         Height="467"
@@ -19,7 +20,7 @@
     
     <Grid>
         <TabControl x:Name="tabctlComputer" Margin="5">
-            <TabItem Header="Основные сведения">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_BasicInformation}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
@@ -29,90 +30,83 @@
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Имя входа (пред-Windows 2000)" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_SAMAccountName}" Width="200"/>
                                 <TextBox x:Name="tbSAMAccountName" Height="23" Text="{Binding sAMAccountName, Mode=OneWay}" IsReadOnly="True"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="DNS-имя" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DNSName}" Width="200"/>
                                 <TextBox x:Name="tbDNSHostName" Height="23" Text="{Binding dNSHostName, Mode=OneWay}" IsReadOnly="True"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Описание" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="200"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Местонахождение" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Location}" Width="200"/>
                                 <TextBox Name="tbLocation" Height="23" Text="{Binding location}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[location]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,50,5,0">
-                                <TextBlock Text="Операционная система" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OS}" Width="200"/>
                                 <TextBox Name="tbOperatingSystem" Height="23" Text="{Binding operatingSystem, Mode=OneWay}" IsReadOnly="True"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Версия" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Version}" Width="200"/>
                                 <TextBox Name="tbOperatingSystemVersion" Height="23" Text="{Binding operatingSystemVersion, Mode=OneWay}" IsReadOnly="True"/>
                             </DockPanel>
 
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Объект" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="200"/>
                                 <StackPanel Orientation="Horizontal" Height="23">
-                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="Создан" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="Последний вход" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="Объект истекает" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_LastLogon}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_AccountExpires}" Margin="0,0,10,0"/>
                                 </StackPanel>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Член групп">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
-            <TabItem Header="Сеть">
-                <StackPanel Margin="5">
-                    <TextBlock Text="Доступность (ICMP):" Margin="0,0,0,5"/>
-                    <WrapPanel x:Name="wpPing"/>
-                    <TextBlock Text="Трассировка маршрута:" Margin="0,10,0,5"/>
-                    <WrapPanel x:Name="wpTrace"/>
-                    <TextBlock Text="Доступность портов (TCP):" Margin="0,10,0,5"/>
-                    <WrapPanel x:Name="wpPorts"/>
-                </StackPanel>
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_Network}">
+                <local:ctlNetwork x:Name="ctlNet"/>
             </TabItem>
-            <TabItem Header="Журнал входов">
+            <TabItem Header="{x:Static r:Resources.wndObject_LoginEventLog}">
                 <DockPanel LastChildFill="True" Margin="5">
                     <StackPanel DockPanel.Dock="Top">
-                        <TextBlock Text="Получения данных журнала входов/выходов средствами WMI"/>
+                        <TextBlock Text="{x:Static r:Resources.wndObject_msg_RetrievingLoginsWMI}"/>
                         <StackPanel>
                             <DockPanel Margin="0,10,0,0" LastChildFill="True">
-                                <TextBlock Text="Период" Margin="0,0,5,0" DockPanel.Dock="Left"></TextBlock>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Period}" Margin="0,0,5,0" DockPanel.Dock="Left"></TextBlock>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <!--<xctk:DateTimePicker x:Name="dtpPeriodFrom" Grid.Column="0" Margin="0,2,2,0" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
-                                    <xctk:DateTimePicker x:Name="dtpPeriodTo" Grid.Column="1" Margin="0,2,2,0" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>-->
+                                    <xctk:DateTimePicker x:Name="dtpPeriodFrom" Grid.Column="0" Margin="0,2,2,0" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
+                                    <xctk:DateTimePicker x:Name="dtpPeriodTo" Grid.Column="1" Margin="0,2,2,0" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
                                 </Grid>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="0,5,0,0">
-                                <Button x:Name="btnEventsSearch" Content="Поиск" Width="100" Margin="2,0,2,0" Height="21" DockPanel.Dock="Right"/>
+                                <Button x:Name="btnEventsSearch" Content="{x:Static r:Resources.wndObject_lbl_Search}" Width="100" Margin="2,0,2,0" Height="21" DockPanel.Dock="Right"/>
 
                                 <WrapPanel VerticalAlignment="Center">
-                                    <TextBlock Text="Отображать:" Margin="0,0,5,0" VerticalAlignment="Center"></TextBlock>
-                                    <RadioButton x:Name="rbEventAll" Content="Все" Margin="0,0,5,0" VerticalAlignment="Center" IsChecked="True"/>
-                                    <RadioButton x:Name="rbEventSuccess" Content="Успех" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                                    <RadioButton x:Name="rbEventFailure" Content="Отказ" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Display}" Margin="0,0,5,0" VerticalAlignment="Center"></TextBlock>
+                                    <RadioButton x:Name="rbEventAll" Content="{x:Static r:Resources.wndObject_lbl_EventAll}" Margin="0,0,5,0" VerticalAlignment="Center" IsChecked="True"/>
+                                    <RadioButton x:Name="rbEventSuccess" Content="{x:Static r:Resources.wndObject_lbl_EventSuccess}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <RadioButton x:Name="rbEventFailure" Content="{x:Static r:Resources.wndObject_lbl_EventFailure}" Margin="0,0,5,0" VerticalAlignment="Center"/>
                                 </WrapPanel>
                             </DockPanel>
                         </StackPanel>
                     </StackPanel>
                     <StatusBar Height="30" DockPanel.Dock="Bottom" >
                         <TextBlock>
-                    <Run Text="Объектов: "/>
+                    <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
                     <Run Text="{Binding ElementName=dgEvents, Path=Items.Count, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBlock>
-                    <Run Text="Выделено: "/>
+                    <Run Text="{x:Static r:Resources.lbl_ObjectsSelected}"/>
                     <Run Text="{Binding ElementName=dgEvents, Path=SelectedItems.Count, Mode=OneWay}"/>
                         </TextBlock>
                         <StatusBarItem HorizontalAlignment="Right">
@@ -133,7 +127,7 @@
                         IsReadOnly="True"
                     >
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Категория" Width="150" CanUserSort="True" SortMemberPath="Image">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventCategory}" Width="150" CanUserSort="True" SortMemberPath="Image">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <VirtualizingStackPanel Orientation="Horizontal">
@@ -144,7 +138,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Код" Width="50" CanUserSort="True" SortMemberPath="EventCode">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventCode}" Width="50" CanUserSort="True" SortMemberPath="EventCode">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding EventCode}" TextWrapping="Wrap"/>
@@ -152,7 +146,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Имя входа" Width="80" CanUserSort="True" SortMemberPath="MessageAccountName">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventAccountName}" Width="80" CanUserSort="True" SortMemberPath="MessageAccountName">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding MessageAccountName}" TextWrapping="Wrap"/>
@@ -160,7 +154,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Тип входа" Width="100" CanUserSort="True" SortMemberPath="MessageLogonType">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventLogonType}" Width="100" CanUserSort="True" SortMemberPath="MessageLogonType">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding MessageLogonType}" TextWrapping="Wrap"/>
@@ -168,7 +162,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Адрес источника" Width="110" CanUserSort="True" SortMemberPath="MessageSourceAddress">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventSourceAddress}" Width="110" CanUserSort="True" SortMemberPath="MessageSourceAddress">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding MessageSourceAddress}" TextWrapping="Wrap"/>
@@ -176,7 +170,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Дата" Width="110" CanUserSort="True" SortMemberPath="TimeGenerated">
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.wndObject_lbl_EventTimeGenerated}" Width="110" CanUserSort="True" SortMemberPath="TimeGenerated">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding TimeGenerated}" TextWrapping="Wrap"/>
@@ -188,7 +182,7 @@
                     </DataGrid>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Все атрибуты">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
             </TabItem>
         </TabControl>

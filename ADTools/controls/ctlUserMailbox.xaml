@@ -20,10 +20,15 @@
             <DockPanel LastChildFill="True">
 
                 <DockPanel DockPanel.Dock="Right" Margin="5,0,0,0">
-                    <TextBlock DockPanel.Dock="Bottom" x:Name="tblckState" TextAlignment="Center" Text="{Binding State}" Margin="0,0,0,10"></TextBlock>
-                    <TextBlock DockPanel.Dock="Bottom" x:Name="tblckVersion" TextAlignment="Center" Text="{Binding VersionFormatted}"></TextBlock>
-                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server" Margin="0,10,0,0"></TextBlock>
-                    <StackPanel Width="180">
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                        <Run Text="{Binding VersionFormatted, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                        <Run Text="Connection state: "/>
+                        <Hyperlink x:Name="hlState"><Run Text="{Binding State, Mode=OneWay}"/></Hyperlink>
+                    </TextBlock>
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server"></TextBlock>
+                    <StackPanel Width="180" IsEnabled="{Binding Connected}">
                         <Button x:Name="btnMailboxAdd" Content="&lt; Добавить адрес" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
@@ -54,7 +59,7 @@
                                                 <ControlTemplate.Resources>
                                                     <Storyboard x:Key="OnChecking">
                                                         <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="80"/>
+                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
                                                         </DoubleAnimationUsingKeyFrames>
                                                     </Storyboard>
                                                     <Storyboard x:Key="OnUnchecking">
@@ -131,7 +136,7 @@
                                                 <ControlTemplate.Resources>
                                                     <Storyboard x:Key="OnChecking">
                                                         <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="80"/>
+                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
                                                         </DoubleAnimationUsingKeyFrames>
                                                     </Storyboard>
                                                     <Storyboard x:Key="OnUnchecking">
@@ -201,7 +206,7 @@
                         <Button x:Name="btnMailboxShare" Content="Общий доступ" Height="23" Margin="0,0,0,5" IsEnabled="{Binding Exist}"></Button>
                     </StackPanel>
                 </DockPanel>
-                <DockPanel LastChildFill="True">
+                <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
                     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
                         <ComboBox x:Name="cmboMailboxDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" Height="23" Width="150" DockPanel.Dock="Right"/>
                         <TextBox x:Name="tbMailbox" Height="23" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />

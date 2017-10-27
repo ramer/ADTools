@@ -35,6 +35,8 @@ Public Class clsFilter
             Sub(a As clsAttribute)
                 patterns.ToList.ForEach(
                     Sub(p)
+                        p = Trim(p)
+
                         Dim freeprefix As Boolean = False
                         Dim freesuffix As Boolean = True
 
@@ -48,7 +50,7 @@ Public Class clsFilter
                             freesuffix = False
                         End If
 
-                        attrfilter &= String.Format("({0}={1}{2}{3})", a.Name, If(freeprefix, "*", ""), Trim(p), If(freesuffix, "*", ""))
+                        If Not String.IsNullOrEmpty(p) Then attrfilter &= String.Format("({0}={1}{2}{3})", a.Name, If(freeprefix, "*", ""), p, If(freesuffix, "*", ""))
                     End Sub)
             End Sub)
 

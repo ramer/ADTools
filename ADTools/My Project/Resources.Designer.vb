@@ -151,6 +151,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Availability (ICMP):.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_lbl_NetworkAvailabilityICMP() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_lbl_NetworkAvailabilityICMP", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Availability (TCP):.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_lbl_NetworkAvailabilityTCP() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_lbl_NetworkAvailabilityTCP", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Trace route:.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_lbl_NetworkTraceRoute() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_lbl_NetworkTraceRoute", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property domain() As System.Drawing.Icon
@@ -221,6 +248,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects:.
+        '''</summary>
+        Public ReadOnly Property lbl_Objects() As String
+            Get
+                Return ResourceManager.GetString("lbl_Objects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Selected: .
+        '''</summary>
+        Public ReadOnly Property lbl_ObjectsSelected() As String
+            Get
+                Return ResourceManager.GetString("lbl_ObjectsSelected", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects: .
+        '''</summary>
+        Public ReadOnly Property lbl_ObjectsTotal() As String
+            Get
+                Return ResourceManager.GetString("lbl_ObjectsTotal", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property network_folder() As System.Drawing.Icon
@@ -256,6 +310,16 @@ Namespace My.Resources
         Public ReadOnly Property properties() As System.Drawing.Icon
             Get
                 Dim obj As Object = ResourceManager.GetObject("properties", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property ready() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("ready", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
@@ -618,20 +682,227 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Selected: .
+        '''  Ищет локализованную строку, похожую на Add to favorites.
         '''</summary>
-        Public ReadOnly Property wndMain_lbl_ObjectsSelected() As String
+        Public ReadOnly Property wndMain_ctxmnuObjectsAddToFavorites() As String
             Get
-                Return ResourceManager.GetString("wndMain_lbl_ObjectsSelected", resourceCulture)
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsAddToFavorites", resourceCulture)
             End Get
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Objects: .
+        '''  Ищет локализованную строку, похожую на Copy.
         '''</summary>
-        Public ReadOnly Property wndMain_lbl_ObjectsTotal() As String
+        Public ReadOnly Property wndMain_ctxmnuObjectsCopy() As String
             Get
-                Return ResourceManager.GetString("wndMain_lbl_ObjectsTotal", resourceCulture)
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCopy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Create object....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsCreateObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCreateObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Cut.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsCut() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCut", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Disable/Enable.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsDisableEnable() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsDisableEnable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Set expiration date to midnight....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsExpirationDate() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsExpirationDate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на External software.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsExternalSoftware() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsExternalSoftware", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object location.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsOpenObjectLocation() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsOpenObjectLocation", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Paste.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsPaste() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsPaste", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Properties....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsProperties() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsProperties", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsRemove() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsRemove", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Rename....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsRename() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsRename", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Reset password to default.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsResetPassword() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsResetPassword", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Select all.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsSelectAll() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsSelectAll", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Add to favorites.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsAddToFavorites() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsAddToFavorites", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsCopy() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsCopy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Create object....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsCreateObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsCreateObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Cut.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsCut() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsCut", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Paste.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsPaste() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsPaste", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Properties....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsProperties() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsProperties", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Delete.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsRemove() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsRemove", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Rename....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviDomainsRename() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviDomainsRename", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object location.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviFavoritesOpenObjectLocation() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviFavoritesOpenObjectLocation", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Properties....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviFavoritesProperties() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviFavoritesProperties", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove from favorites.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnutviFavoritesRemoveFromFavorites() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnutviFavoritesRemoveFromFavorites", resourceCulture)
             End Get
         End Property
         
@@ -825,6 +1096,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Are you sure?.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_AreYouSure() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_AreYouSure", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Current filter is empty..
         '''</summary>
         Public ReadOnly Property wndMain_msg_CannotSaveCurrentFilter() As String
@@ -834,11 +1114,510 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_CopyObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_CopyObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Within a domain, you can copy only one object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_CopyOneObjectWithinDomain() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_CopyOneObjectWithinDomain", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Enter new filter name:.
         '''</summary>
         Public ReadOnly Property wndMain_msg_EnterFilterName() As String
             Get
                 Return ResourceManager.GetString("wndMain_msg_EnterFilterName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Enter object name:.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_EnterObjectName() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_EnterObjectName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Move object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_MoveObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_MoveObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Move:
+        '''{0}
+        '''
+        '''To container:
+        '''{1}.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_MoveObjectToContainer() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_MoveObjectToContainer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Moving to another domain is prohibited.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_MovingIsProhibited() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_MovingIsProhibited", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} objects.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_NObjects() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_NObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Unknown class of the object to be copied.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_ObjectUnknownClass() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_ObjectUnknownClass", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Paste object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_PasteObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_PasteObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_RemoveObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_RemoveObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Rename object.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_RenameObject() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_RenameObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на This is Organizational Unit!.
+        '''</summary>
+        Public ReadOnly Property wndMain_msg_ThisIsOrganizationaUnit() As String
+            Get
+                Return ResourceManager.GetString("wndMain_msg_ThisIsOrganizationaUnit", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Domains.
+        '''</summary>
+        Public ReadOnly Property wndMain_tviDomains() As String
+            Get
+                Return ResourceManager.GetString("wndMain_tviDomains", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Favorites.
+        '''</summary>
+        Public ReadOnly Property wndMain_tviFavorites() As String
+            Get
+                Return ResourceManager.GetString("wndMain_tviFavorites", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Filters.
+        '''</summary>
+        Public ReadOnly Property wndMain_tviFilters() As String
+            Get
+                Return ResourceManager.GetString("wndMain_tviFilters", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove filter.
+        '''</summary>
+        Public ReadOnly Property wndMain_tviFiltersRemoveFromFilters() As String
+            Get
+                Return ResourceManager.GetString("wndMain_tviFiltersRemoveFromFilters", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Initials.
+        '''</summary>
+        Public ReadOnly Property wndObject_Initials() As String
+            Get
+                Return ResourceManager.GetString("wndObject_Initials", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на All attributes.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AllAttributes() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AllAttributes", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Basic information.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_BasicInformation() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_BasicInformation", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Description.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Description() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Description", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Display:.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Display() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Display", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Display name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_DisplayName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_DisplayName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на DNS-name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_DNSName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_DNSName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Account name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventAccountName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventAccountName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на All.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventAll() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventAll", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Category.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventCategory() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventCategory", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Code.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventCode() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventCode", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Failure.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventFailure() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventFailure", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon type.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventLogonType() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventLogonType", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Source address.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventSourceAddress() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventSourceAddress", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Success.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventSuccess() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventSuccess", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Time.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_EventTimeGenerated() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_EventTimeGenerated", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Given name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_GivenName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_GivenName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Home phone.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_HomePhone() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_HomePhone", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на IP phone.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_IpPhone() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_IpPhone", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Location.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Location() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Location", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Mail.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Mail() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Mail", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Member of.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_MemberOf() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_MemberOf", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Mobile.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Mobile() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Mobile", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Network.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Network() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Network", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Object() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Object", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Office.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_OfficeName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_OfficeName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Operating system.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_OS() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_OS", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Period.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Period() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Period", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon name (pre-Windows 2000).
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_SAMAccountName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_SAMAccountName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Search.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Search() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Search", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Surname.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Surname() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Surname", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Telephone number.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_TelephoneNumber() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_TelephoneNumber", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Title.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Title() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Title", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Version.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Version() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Version", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Login event log.
+        '''</summary>
+        Public ReadOnly Property wndObject_LoginEventLog() As String
+            Get
+                Return ResourceManager.GetString("wndObject_LoginEventLog", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Retrieving the login/logout events using WMI.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_RetrievingLoginsWMI() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_RetrievingLoginsWMI", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Account expires.
+        '''</summary>
+        Public ReadOnly Property wndObject_tt_AccountExpires() As String
+            Get
+                Return ResourceManager.GetString("wndObject_tt_AccountExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Created.
+        '''</summary>
+        Public ReadOnly Property wndObject_tt_Created() As String
+            Get
+                Return ResourceManager.GetString("wndObject_tt_Created", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Last logon.
+        '''</summary>
+        Public ReadOnly Property wndObject_tt_LastLogon() As String
+            Get
+                Return ResourceManager.GetString("wndObject_tt_LastLogon", resourceCulture)
             End Get
         End Property
     End Module

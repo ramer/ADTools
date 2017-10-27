@@ -9,27 +9,31 @@ Imports System.Management.Automation.Runspaces
 'Set-Item WSMan:\localhost\Client\TrustedHosts -Value SERVERNAME -Force
 
 Public Class clsPowerShell
-    Private securepassword As New System.Security.SecureString
     Private _credential As PSCredential
     Private _connectionInfo As WSManConnectionInfo
     Private _rspace As Runspace
     Private _ps As PowerShell
 
     Sub New(login As String, password As String, server As String)
+        Dim securepassword As New System.Security.SecureString
+
         For Each c As Char In password
             securepassword.AppendChar(c)
         Next
 
-        _credential = New PSCredential(login, securepassword)
-        _connectionInfo = New WSManConnectionInfo(New Uri("http://" & server & "/powershell?serializationLevel=Full"), "http://schemas.microsoft.com/powershell/Microsoft.Exchange", _credential)
-        _connectionInfo.AuthenticationMechanism = AuthenticationMechanism.Kerberos
+        Try
+            _credential = New PSCredential(login, securepassword)
+            _connectionInfo = New WSManConnectionInfo(New Uri("http://" & server & "/powershell?serializationLevel=Full"), "http://schemas.microsoft.com/powershell/Microsoft.Exchange", _credential)
+            _connectionInfo.AuthenticationMechanism = AuthenticationMechanism.Kerberos
 
-        _ps = PowerShell.Create
+            _ps = PowerShell.Create
 
-        _rspace = RunspaceFactory.CreateRunspace(_connectionInfo)
-        _rspace.Open()
+            _rspace = RunspaceFactory.CreateRunspace(_connectionInfo)
+            _rspace.Open()
 
-        _ps.Runspace = _rspace
+            _ps.Runspace = _rspace
+        Catch ex As Exception
+        End Try
     End Sub
 
     Public ReadOnly Property State() As RunspaceStateInfo
