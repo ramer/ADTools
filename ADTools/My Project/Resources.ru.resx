@@ -787,4 +787,19 @@
   <data name="ctlGroupMemberOf_lbl_Groups" xml:space="preserve">
     <value>Группы</value>
   </data>
+  <data name="ctlNetwork_msg_Available" xml:space="preserve">
+    <value>Доступен</value>
+  </data>
+  <data name="ctlNetwork_msg_NotAvailable" xml:space="preserve">
+    <value>Не доступен</value>
+  </data>
+  <data name="ctlNetwork_msg_ReplyFrom" xml:space="preserve">
+    <value>Ответ от </value>
+  </data>
+  <data name="ctlNetwork_msg_AddressUnknown" xml:space="preserve">
+    <value>Адрес неизвестен</value>
+  </data>
+  <data name="ctlNetwork_msg_Unknown" xml:space="preserve">
+    <value>Неизвестно</value>
+  </data>
 </root>

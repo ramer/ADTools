@@ -403,6 +403,51 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Unknown address.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_msg_AddressUnknown() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_msg_AddressUnknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Available.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_msg_Available() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_msg_Available", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Not available.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_msg_NotAvailable() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_msg_NotAvailable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Reply from .
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_msg_ReplyFrom() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_msg_ReplyFrom", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Unknown.
+        '''</summary>
+        Public ReadOnly Property ctlNetwork_msg_Unknown() As String
+            Get
+                Return ResourceManager.GetString("ctlNetwork_msg_Unknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property domain() As System.Drawing.Icon
