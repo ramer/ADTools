@@ -620,6 +620,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Domain browser.
+        '''</summary>
+        Public ReadOnly Property wndDomainBrowser_lbl_DomainBrowser() As String
+            Get
+                Return ResourceManager.GetString("wndDomainBrowser_lbl_DomainBrowser", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на OK.
+        '''</summary>
+        Public ReadOnly Property wndDomainBrowser_lbl_OK() As String
+            Get
+                Return ResourceManager.GetString("wndDomainBrowser_lbl_OK", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Domains.
         '''</summary>
         Public ReadOnly Property wndDomains() As String

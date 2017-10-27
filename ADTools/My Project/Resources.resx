@@ -778,4 +778,10 @@ To container:
   <data name="wndCreateObject_msg_DefaultPasswordIsNotSet" xml:space="preserve">
     <value>Default password is not set</value>
   </data>
+  <data name="wndDomainBrowser_lbl_DomainBrowser" xml:space="preserve">
+    <value>Domain browser</value>
+  </data>
+  <data name="wndDomainBrowser_lbl_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Обозреватель домена"
+        Title="{x:Static r:Resources.wndDomainBrowser_lbl_DomainBrowser}"
         Height="800"
         Width="400"
         WindowStartupLocation="CenterOwner"
@@ -16,7 +17,7 @@
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel Margin="5">
             <DockPanel DockPanel.Dock="Bottom" Margin="0,5,0,0" LastChildFill="True">
-                <Button x:Name="btnOK" Content="OK" Height="24" Width="100" Margin="5,0,0,0" DockPanel.Dock="Right" IsDefault="True"/>
+                <Button x:Name="btnOK" Content="{x:Static r:Resources.wndDomainBrowser_lbl_OK}" Height="24" Width="100" Margin="5,0,0,0" DockPanel.Dock="Right" IsDefault="True"/>
                 <TextBox x:Name="tbCurrentObject" IsReadOnly="True"/>
             </DockPanel>
             <TreeView x:Name="tvObjects" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SnapsToDevicePixels="True">

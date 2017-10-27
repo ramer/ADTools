@@ -695,4 +695,10 @@
   <data name="wndCreateObject_msg_DefaultPasswordIsNotSet" xml:space="preserve">
     <value>Стандартный пароль не указан</value>
   </data>
+  <data name="wndDomainBrowser_lbl_DomainBrowser" xml:space="preserve">
+    <value>Обозреватель домена</value>
+  </data>
+  <data name="wndDomainBrowser_lbl_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>
