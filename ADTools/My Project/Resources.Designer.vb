@@ -376,6 +376,35 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Connection error.
+        '''</summary>
+        Public ReadOnly Property ctlMailbox_msg_ConnectionError() As String
+            Get
+                Return ResourceManager.GetString("ctlMailbox_msg_ConnectionError", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Removing the primary address means completely removing the mailbox
+        '''
+        '''Are you sure?.
+        '''</summary>
+        Public ReadOnly Property ctlMailbox_msg_RemovingPrimaryAddress() As String
+            Get
+                Return ResourceManager.GetString("ctlMailbox_msg_RemovingPrimaryAddress", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove mailbox.
+        '''</summary>
+        Public ReadOnly Property ctlMailbox_msg_RemovingPrimaryAddressTitle() As String
+            Get
+                Return ResourceManager.GetString("ctlMailbox_msg_RemovingPrimaryAddressTitle", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Availability (ICMP):.
         '''</summary>
         Public ReadOnly Property ctlNetwork_lbl_NetworkAvailabilityICMP() As String

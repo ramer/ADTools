@@ -57,7 +57,7 @@ Public Class ctlContactMailbox
            contact.ExchangeConnection.State IsNot Nothing AndAlso
            contact.ExchangeConnection.State.Reason IsNot Nothing Then
 
-            IMsgBox(contact.ExchangeConnection.State.Reason.Message, vbExclamation + vbOKOnly, "Ошибка подключения", Window.GetWindow(Me))
+            IMsgBox(contact.ExchangeConnection.State.Reason.Message, vbExclamation + vbOKOnly, My.Resources.ctlMailbox_msg_ConnectionError, Window.GetWindow(Me))
         End If
     End Sub
 
@@ -108,7 +108,7 @@ Public Class ctlContactMailbox
 
         Dim oldaddress As clsEmailAddress = lvEmailAddresses.SelectedItem
 
-        If oldaddress.IsPrimary AndAlso IMsgBox("Удаление основного адреса подразумевает полное удаление почтового ящика" & vbCrLf & vbCrLf & "Вы уверены?", vbYesNo + vbQuestion, "Удаление почтового ящика") = vbNo Then
+        If oldaddress.IsPrimary AndAlso IMsgBox(My.Resources.ctlMailbox_msg_RemovingPrimaryAddress, vbYesNo + vbQuestion, My.Resources.ctlMailbox_msg_RemovingPrimaryAddressTitle) = vbNo Then
             capexchange.Visibility = Visibility.Hidden
             Exit Sub
         End If

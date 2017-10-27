@@ -826,4 +826,15 @@
   <data name="ctlObjectAttributes_ctxmnuCopyValues" xml:space="preserve">
     <value>Копировать значения</value>
   </data>
+  <data name="ctlMailbox_msg_RemovingPrimaryAddress" xml:space="preserve">
+    <value>Удаление основного адреса подразумевает полное удаление почтового ящика
+
+Вы уверены?</value>
+  </data>
+  <data name="ctlMailbox_msg_RemovingPrimaryAddressTitle" xml:space="preserve">
+    <value>Удаление почтового ящика</value>
+  </data>
+  <data name="ctlMailbox_msg_ConnectionError" xml:space="preserve">
+    <value>Ошибка подключения</value>
+  </data>
 </root>
