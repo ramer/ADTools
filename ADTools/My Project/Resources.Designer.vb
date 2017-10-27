@@ -549,6 +549,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Selected Workstations.
+        '''</summary>
+        Public ReadOnly Property ctlUserWorkstations_lbl_SelectedWorkstations() As String
+            Get
+                Return ResourceManager.GetString("ctlUserWorkstations_lbl_SelectedWorkstations", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Workstations.
+        '''</summary>
+        Public ReadOnly Property ctlUserWorkstations_lbl_Workstations() As String
+            Get
+                Return ResourceManager.GetString("ctlUserWorkstations_lbl_Workstations", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Workstations list.
+        '''</summary>
+        Public ReadOnly Property ctlUserWorkstations_lbl_WorkstationsList() As String
+            Get
+                Return ResourceManager.GetString("ctlUserWorkstations_lbl_WorkstationsList", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property domain() As System.Drawing.Icon

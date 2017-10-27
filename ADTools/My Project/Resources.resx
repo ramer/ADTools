@@ -920,4 +920,13 @@ Are you sure?</value>
   <data name="ctlMailbox_msg_ConnectionError" xml:space="preserve">
     <value>Connection error</value>
   </data>
+  <data name="ctlUserWorkstations_lbl_SelectedWorkstations" xml:space="preserve">
+    <value>Selected Workstations</value>
+  </data>
+  <data name="ctlUserWorkstations_lbl_WorkstationsList" xml:space="preserve">
+    <value>Workstations list</value>
+  </data>
+  <data name="ctlUserWorkstations_lbl_Workstations" xml:space="preserve">
+    <value>Workstations</value>
+  </data>
 </root>

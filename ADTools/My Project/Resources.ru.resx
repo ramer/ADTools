@@ -837,4 +837,13 @@
   <data name="ctlMailbox_msg_ConnectionError" xml:space="preserve">
     <value>Ошибка подключения</value>
   </data>
+  <data name="ctlUserWorkstations_lbl_SelectedWorkstations" xml:space="preserve">
+    <value>Выбранные компьютеры</value>
+  </data>
+  <data name="ctlUserWorkstations_lbl_WorkstationsList" xml:space="preserve">
+    <value>Список компьютеров</value>
+  </data>
+  <data name="ctlUserWorkstations_lbl_Workstations" xml:space="preserve">
+    <value>Компьютеры</value>
+  </data>
 </root>
