@@ -941,4 +941,28 @@ Are you sure?</value>
   <data name="wndLog_ctxmnuCopy" xml:space="preserve">
     <value>Copy</value>
   </data>
+  <data name="wndMailboxQuota_lbl_Quotas" xml:space="preserve">
+    <value>Quotas</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_StoreQuotas" xml:space="preserve">
+    <value>Store quotas</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_UseDatabaseDefaults" xml:space="preserve">
+    <value>Use the default settings for the mailbox database</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_WhenExceeds" xml:space="preserve">
+    <value>When the mailbox size exceeds the specified value:</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_Warning" xml:space="preserve">
+    <value>Warning on (MB)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_ProhibitSend" xml:space="preserve">
+    <value>Prohibit send on (MB)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_ProhibitSendReceive" xml:space="preserve">
+    <value>Prohibit send and receive on (MB)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

@@ -858,4 +858,28 @@
   <data name="wndLog_ctxmnuCopy" xml:space="preserve">
     <value>Копировать</value>
   </data>
+  <data name="wndMailboxQuota_lbl_Quotas" xml:space="preserve">
+    <value>Квоты</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_StoreQuotas" xml:space="preserve">
+    <value>Квоты хранилища</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_UseDatabaseDefaults" xml:space="preserve">
+    <value>Использовать настройки по умолчанию базы данных почтовых ящиков</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_WhenExceeds" xml:space="preserve">
+    <value>Когда размер почтового ящика превышает указанное значение:</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_Warning" xml:space="preserve">
+    <value>Предупреждение о проблеме в (МБ)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_ProhibitSend" xml:space="preserve">
+    <value>Запретить отправку при (МБ)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_ProhibitSendReceive" xml:space="preserve">
+    <value>Запретить отправку и получение при (МБ)</value>
+  </data>
+  <data name="wndMailboxQuota_lbl_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

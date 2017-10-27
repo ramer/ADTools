@@ -1421,6 +1421,78 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на OK.
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_OK() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_OK", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Prohibit send on (MB).
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_ProhibitSend() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_ProhibitSend", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Prohibit send and receive on (MB).
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_ProhibitSendReceive() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_ProhibitSendReceive", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Quotas.
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_Quotas() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_Quotas", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Store quotas.
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_StoreQuotas() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_StoreQuotas", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use the default settings for the mailbox database.
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_UseDatabaseDefaults() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_UseDatabaseDefaults", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Warning on (MB).
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_Warning() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_Warning", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на When the mailbox size exceeds the specified value:.
+        '''</summary>
+        Public ReadOnly Property wndMailboxQuota_lbl_WhenExceeds() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxQuota_lbl_WhenExceeds", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Clone window.
         '''</summary>
         Public ReadOnly Property wndMain_btnWindowClone() As String

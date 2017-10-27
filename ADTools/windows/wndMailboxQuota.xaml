@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Квоты" Height="254" Width="459.377" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
+        Title="{x:Static r:Resources.wndMailboxQuota_lbl_Quotas}" Height="254" Width="459.377" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
 
     <Window.Resources>
         <local:ConverterBooleanInverted x:Key="ConverterBooleanInverted" />
@@ -15,12 +16,12 @@
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
             <StackPanel Margin="5">
-                <TextBlock Margin="0,0,0,10" FontSize="14" FontWeight="Bold">Квоты хранилища</TextBlock>
-                <CheckBox x:Name="chbUseDatabaseQuotaDefaults" Margin="0,0,0,10" Content="Использовать настройки по умолчанию базы данных почтовых ящиков"/>
+                <TextBlock Margin="0,0,0,10" FontSize="14" FontWeight="Bold" Text="{x:Static r:Resources.wndMailboxQuota_lbl_StoreQuotas}"/>
+                <CheckBox x:Name="chbUseDatabaseQuotaDefaults" Margin="0,0,0,10" Content="{x:Static r:Resources.wndMailboxQuota_lbl_UseDatabaseDefaults}"/>
                 <DockPanel Margin="0,0,0,10" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
                     <Button x:Name="btnIncreaseAll" DockPanel.Dock="Right" Width="20" Height="20" Content="✚"/>
                     <Button x:Name="btnDecreaseAll" DockPanel.Dock="Right" Width="20" Height="20" Content="➖"/>
-                    <TextBlock Margin="0,0,0,10">Когда размер почтового ящика превышает указанное значение:</TextBlock>
+                    <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.wndMailboxQuota_lbl_WhenExceeds}"/>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
                     <WrapPanel DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbIssueWarningQuota, Path=IsChecked}">
@@ -28,7 +29,7 @@
                         <Button x:Name="btnIssueWarningQuotaDecrease" Width="20" Height="20" Content="➖"/>
                         <Button x:Name="btnIssueWarningQuotaIncrease" Width="20" Height="20" Content="✚"/>
                     </WrapPanel>
-                    <CheckBox x:Name="chbIssueWarningQuota" Content="Предупреждение о проблеме в (МБ)"/>
+                    <CheckBox x:Name="chbIssueWarningQuota" Content="{x:Static r:Resources.wndMailboxQuota_lbl_Warning}"/>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
                     <WrapPanel DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbProhibitSendQuota, Path=IsChecked}">
@@ -36,7 +37,7 @@
                         <Button x:Name="btnProhibitSendQuotaDecrease" Width="20" Height="20" Content="➖"/>
                         <Button x:Name="btnProhibitSendQuotaIncrease" Width="20" Height="20" Content="✚"/>
                     </WrapPanel>
-                    <CheckBox x:Name="chbProhibitSendQuota" Content="Запретить отправку при (МБ)"/>
+                    <CheckBox x:Name="chbProhibitSendQuota" Content="{x:Static r:Resources.wndMailboxQuota_lbl_ProhibitSend}"/>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,10" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
                     <WrapPanel DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbProhibitSendReceiveQuota, Path=IsChecked}">
@@ -44,9 +45,9 @@
                         <Button x:Name="btnProhibitSendReceiveQuotaDecrease" Width="20" Height="20" Content="➖"/>
                         <Button x:Name="btnProhibitSendReceiveQuotaIncrease" Width="20" Height="20" Content="✚"/>
                     </WrapPanel>
-                    <CheckBox x:Name="chbProhibitSendReceiveQuota" Content="Запретить отправку и получение при (МБ)"/>
+                    <CheckBox x:Name="chbProhibitSendReceiveQuota" Content="{x:Static r:Resources.wndMailboxQuota_lbl_ProhibitSendReceive}"/>
                 </DockPanel>
-                <Button x:Name="btnOK" Content="OK" Width="100" Height="23" HorizontalAlignment="Right"/>
+                <Button x:Name="btnOK" Content="{x:Static r:Resources.wndMailboxQuota_lbl_OK}" Width="100" Height="23" HorizontalAlignment="Right"/>
             </StackPanel>
         </Border>
     </Grid>
