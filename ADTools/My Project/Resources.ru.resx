@@ -846,4 +846,16 @@
   <data name="ctlUserWorkstations_lbl_Workstations" xml:space="preserve">
     <value>Компьютеры</value>
   </data>
+  <data name="wndLog_lbl_Log" xml:space="preserve">
+    <value>Журнал событий</value>
+  </data>
+  <data name="wndLog_lbl_Timestamp" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="wndLog_lbl_Event" xml:space="preserve">
+    <value>Событие</value>
+  </data>
+  <data name="wndLog_ctxmnuCopy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
 </root>

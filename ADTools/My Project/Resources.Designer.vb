@@ -1385,6 +1385,42 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy.
+        '''</summary>
+        Public ReadOnly Property wndLog_ctxmnuCopy() As String
+            Get
+                Return ResourceManager.GetString("wndLog_ctxmnuCopy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Event.
+        '''</summary>
+        Public ReadOnly Property wndLog_lbl_Event() As String
+            Get
+                Return ResourceManager.GetString("wndLog_lbl_Event", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Event log.
+        '''</summary>
+        Public ReadOnly Property wndLog_lbl_Log() As String
+            Get
+                Return ResourceManager.GetString("wndLog_lbl_Log", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Time.
+        '''</summary>
+        Public ReadOnly Property wndLog_lbl_Timestamp() As String
+            Get
+                Return ResourceManager.GetString("wndLog_lbl_Timestamp", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Clone window.
         '''</summary>
         Public ReadOnly Property wndMain_btnWindowClone() As String

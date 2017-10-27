@@ -929,4 +929,16 @@ Are you sure?</value>
   <data name="ctlUserWorkstations_lbl_Workstations" xml:space="preserve">
     <value>Workstations</value>
   </data>
+  <data name="wndLog_lbl_Log" xml:space="preserve">
+    <value>Event log</value>
+  </data>
+  <data name="wndLog_lbl_Timestamp" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="wndLog_lbl_Event" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="wndLog_ctxmnuCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
 </root>

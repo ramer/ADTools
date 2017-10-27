@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Журнал"
+        Title="{x:Static r:Resources.wndLog_lbl_Log}"
         Height="667.364"
         Width="795.188"
         WindowStartupLocation="Manual"
@@ -33,7 +34,7 @@
             </DataGrid.InputBindings>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="ctxmnuErrorCopy" Header="Копировать" InputGestureText="Ctrl+C"/>
+                    <MenuItem x:Name="ctxmnuErrorCopy" Header="{x:Static r:Resources.wndLog_ctxmnuCopy}" InputGestureText="Ctrl+C"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
@@ -45,7 +46,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Время" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
+                <DataGridTemplateColumn Header="{x:Static r:Resources.wndLog_lbl_Timestamp}" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding TimeStamp}" TextWrapping="Wrap" VerticalAlignment="Center" />
@@ -53,7 +54,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Событие" Width="*" SortMemberPath="Message" CanUserSort="True">
+                <DataGridTemplateColumn Header="{x:Static r:Resources.wndLog_lbl_Event}" Width="*" SortMemberPath="Message" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" />
