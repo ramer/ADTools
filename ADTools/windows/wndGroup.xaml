@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
         Height="467"
@@ -24,7 +25,7 @@
     
     <Grid>
         <TabControl x:Name="tabctlGroup" Margin="5">
-            <TabItem Header="Основные сведения">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_BasicInformation}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
@@ -34,15 +35,15 @@
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Имя входа (пред-Windows 2000)" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_SAMAccountName}" Width="200"/>
                                 <TextBox x:Name="tbSAMAccountName" Height="23" Text="{Binding sAMAccountName, Mode=OneWay}" IsReadOnly="True"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Описание" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="200"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="E-mail" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="200"/>
                                 <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                             </DockPanel>
                             <Grid Margin="5,5,5,0" IsEnabled="{Binding CanWrite[groupType]}">
@@ -51,32 +52,32 @@
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Margin="0,10,0,0" Grid.Column="0">
-                                    <TextBlock Text="Область действия группы"/>
-                                    <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="Локальная в домене" IsChecked="{Binding groupTypeScopeDomainLocal}"/>
-                                    <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="Глобальная" IsChecked="{Binding groupTypeScopeGlobal}"/>
-                                    <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="Универсальная" IsChecked="{Binding groupTypeScopeUniversal}"/>
+                                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GroupScope}"/>
+                                    <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeDomainLocal}" IsChecked="{Binding groupTypeScopeDomainLocal}"/>
+                                    <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeGlobal}" IsChecked="{Binding groupTypeScopeGlobal}"/>
+                                    <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeUniversal}" IsChecked="{Binding groupTypeScopeUniversal}"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0" Grid.Column="1">
-                                    <TextBlock Text="Тип группы"/>
-                                    <RadioButton x:Name="rbGroupTypeSecurity" Margin="0,10,0,0" Content="Группа безопасности" IsChecked="{Binding groupTypeSecurity}"/>
-                                    <RadioButton x:Name="rbGroupTypeDistribution" Margin="0,5,0,0" Content="Группа распространения" IsChecked="{Binding groupTypeDistribution, Mode=OneWay}"/>
+                                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GroupType}"/>
+                                    <RadioButton x:Name="rbGroupTypeSecurity" Margin="0,10,0,0" Content="{x:Static r:Resources.wndObject_lbl_GroupTypeSecurity}" IsChecked="{Binding groupTypeSecurity}"/>
+                                    <RadioButton x:Name="rbGroupTypeDistribution" Margin="0,5,0,0" Content="{x:Static r:Resources.wndObject_lbl_GroupTypeDistribution}" IsChecked="{Binding groupTypeDistribution, Mode=OneWay}"/>
                                 </StackPanel>
                             </Grid>
                             <StackPanel Margin="5,10,5,0">
-                                <TextBlock Text="Заметки"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Info}"/>
                                 <TextBox Name="tbInfo" Height="170" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Члены группы">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_Members}">
                 <local:ctlGroupMember x:Name="ctlMember"/>
             </TabItem>
-            <TabItem Header="Член групп">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
-            <TabItem Header="Все атрибуты">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
             </TabItem>
         </TabControl>

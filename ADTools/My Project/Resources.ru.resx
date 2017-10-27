@@ -566,59 +566,8 @@
   <data name="wndObject_lbl_Manager" xml:space="preserve">
     <value>Руководитель</value>
   </data>
-  <data name="wndObject_lbl_Exchange" xml:space="preserve">
-    <value>Exchange</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeAdd" xml:space="preserve">
+  <data name="ctlMailbox_lbl_Add" xml:space="preserve">
     <value>&lt; Добавить адрес</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeChange" xml:space="preserve">
-    <value>Изменить адрес</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeRemove" xml:space="preserve">
-    <value>Удалить адрес &gt;</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
-    <value>Сделать основным</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenShow" xml:space="preserve">
-    <value>Показать</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenHide" xml:space="preserve">
-    <value>Скрыть</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeQuotas" xml:space="preserve">
-    <value>Квоты...</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeUser" xml:space="preserve">
-    <value>Пользоват.</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeShared" xml:space="preserve">
-    <value>Общий</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeServer" xml:space="preserve">
-    <value>Exchange Server</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeState" xml:space="preserve">
-    <value>Статус подключения: </value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSizeBusy" xml:space="preserve">
-    <value>занято:</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSizeQuota" xml:space="preserve">
-    <value>квота:</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeEmailAddress" xml:space="preserve">
-    <value>Почтовый адрес</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenToolTip" xml:space="preserve">
-    <value>Показать/скрыть адрес в адресной книге</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeToolTip" xml:space="preserve">
-    <value>Конвертировать ящик в пользовательской/общий</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeShare" xml:space="preserve">
-    <value>Общий доступ...</value>
   </data>
   <data name="wndCreateObject_lbl_CreateObject" xml:space="preserve">
     <value>Создание объекта</value>
@@ -700,5 +649,142 @@
   </data>
   <data name="wndDomainBrowser_lbl_OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExampleDefinition" xml:space="preserve">
+    <value>Используемые переменные:
+{{n}} - номер;  
+{{displayname}} - отображаемое имя;
+
+Используемые функции:
+{{lz number data}} - добавить (number) ведущих нулей к (data)
+{{lz 5 n}} = 00777
+
+{{fst number data}} - взять первые (number) символов (data)
+{{fst 4 displayname}} = иван     [ов иван иванович]
+
+{{trans data}} - транслитерация в латинский алфавит
+{{trans displayname}} = ivanov ivan ivanovich
+
+{{split 2 displayname}} = александрович
+
+Комбинации:
+{{fst 1 (trans (split 1 displayname))}}.{{trans (split 0 displayname)}}</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExampleDefinitionHandlebars" xml:space="preserve">
+    <value>Handlebars</value>
+  </data>
+  <data name="wndErrorLog_lbl_Debug" xml:space="preserve">
+    <value>Отладка</value>
+  </data>
+  <data name="wndErrorLog_lbl_Timestamp" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="wndErrorLog_lbl_Exception" xml:space="preserve">
+    <value>Описание ошибки</value>
+  </data>
+  <data name="wndErrorLog_ctxmnuErrorCopy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="wndObject_lbl_GroupScope" xml:space="preserve">
+    <value>Область действия группы</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeDomainLocal" xml:space="preserve">
+    <value>Локальная в домене</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeGlobal" xml:space="preserve">
+    <value>Глобальная</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeUniversal" xml:space="preserve">
+    <value>Универсальная</value>
+  </data>
+  <data name="wndObject_lbl_GroupType" xml:space="preserve">
+    <value>Тип группы</value>
+  </data>
+  <data name="wndObject_lbl_GroupTypeSecurity" xml:space="preserve">
+    <value>Группа безопасности</value>
+  </data>
+  <data name="wndObject_lbl_GroupTypeDistribution" xml:space="preserve">
+    <value>Группа распространения</value>
+  </data>
+  <data name="wndObject_lbl_Info" xml:space="preserve">
+    <value>Заметки</value>
+  </data>
+  <data name="wndObject_lbl_Members" xml:space="preserve">
+    <value>Члены группы</value>
+  </data>
+  <data name="ctlMailbox_lbl_Change" xml:space="preserve">
+    <value>Изменить адрес</value>
+  </data>
+  <data name="ctlMailbox_lbl_EmailAddress" xml:space="preserve">
+    <value>Почтовый адрес</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenHide" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenShow" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenToolTip" xml:space="preserve">
+    <value>Показать/скрыть адрес в адресной книге</value>
+  </data>
+  <data name="ctlMailbox_lbl_Quotas" xml:space="preserve">
+    <value>Квоты...</value>
+  </data>
+  <data name="ctlMailbox_lbl_Remove" xml:space="preserve">
+    <value>Удалить адрес &gt;</value>
+  </data>
+  <data name="ctlMailbox_lbl_Server" xml:space="preserve">
+    <value>Exchange Server</value>
+  </data>
+  <data name="ctlMailbox_lbl_SetPrimary" xml:space="preserve">
+    <value>Сделать основным</value>
+  </data>
+  <data name="ctlMailbox_lbl_Share" xml:space="preserve">
+    <value>Общий доступ...</value>
+  </data>
+  <data name="ctlMailbox_lbl_SizeBusy" xml:space="preserve">
+    <value>занято:</value>
+  </data>
+  <data name="ctlMailbox_lbl_SizeQuota" xml:space="preserve">
+    <value>квота:</value>
+  </data>
+  <data name="ctlMailbox_lbl_State" xml:space="preserve">
+    <value>Статус подключения: </value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeShared" xml:space="preserve">
+    <value>Общий</value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeToolTip" xml:space="preserve">
+    <value>Конвертировать ящик в пользовательской/общий</value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeUser" xml:space="preserve">
+    <value>Пользоват.</value>
+  </data>
+  <data name="wndObject_lbl_Exchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
+  <data name="ctlGroupMember_lbl_SelectedObjects" xml:space="preserve">
+    <value>Выбранные объекты</value>
+  </data>
+  <data name="ctlGroupMember_lbl_ObjectsList" xml:space="preserve">
+    <value>Список объектов</value>
+  </data>
+  <data name="ctlGroupMember_lbl_Objects" xml:space="preserve">
+    <value>Объекты</value>
+  </data>
+  <data name="ctlGroupMember_msg_AnotherDomain" xml:space="preserve">
+    <value>Из другого домена нельзя же!</value>
+  </data>
+  <data name="ctlGroupMember_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Ну тычоваще :(</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_SelectedGroups" xml:space="preserve">
+    <value>Выбранные группы</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_GroupsList" xml:space="preserve">
+    <value>Список групп</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_Groups" xml:space="preserve">
+    <value>Группы</value>
   </data>
 </root>

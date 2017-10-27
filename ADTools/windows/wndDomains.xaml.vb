@@ -1,6 +1,7 @@
 ﻿
 Imports System.ComponentModel
 Imports IRegisty
+Imports IPrompt.VisualBasic
 
 Public Class wndDomains
 
@@ -75,4 +76,7 @@ Public Class wndDomains
         End If
     End Sub
 
+    Private Sub hlTemplateHelp_Click(sender As Object, e As RoutedEventArgs) Handles hlTemplateHelp.Click
+        IMsgBox(My.Resources.wndDomains_lbl_PatternsExampleDefinition, vbOKOnly + vbInformation, My.Resources.wndDomains_lbl_PatternsExampleDefinitionHandlebars)
+    End Sub
 End Class

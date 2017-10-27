@@ -37,8 +37,6 @@ Public Class ctlGroupMember
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
-            '.lvSelectedObjects.Items.Clear()
-            'CType(._currentobject.member, ObservableCollection(Of clsDirectoryObject)).ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedObjects.Items.Add(x))
             .lvDomainObjects.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomainobjects, Nothing)
         End With
     End Sub
@@ -129,7 +127,7 @@ Public Class ctlGroupMember
 
             For Each obj In dragged
                 If sender Is lvSelectedObjects Then ' adding member
-                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox("Из другого домена нельзя же!", vbOKOnly + vbExclamation, "Ну тычоваще :(") : Exit Sub
+                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
                 Else
                     RemoveMember(obj)

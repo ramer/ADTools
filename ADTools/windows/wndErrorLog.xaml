@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Отладка"
+        Title="{x:Static r:Resources.wndErrorLog_lbl_Debug}"
         Height="667.364"
         Width="795.188"
         WindowStartupLocation="Manual"
@@ -24,6 +25,7 @@
                 GridLinesVisibility="None"
                 IsSynchronizedWithCurrentItem="True"
                 IsReadOnly="True"
+                ScrollViewer.CanContentScroll ="False"
             >
             <DataGrid.CommandBindings>
                 <CommandBinding Command="Copy" Executed="ctxmnuErrorCopy_Click" />
@@ -33,7 +35,7 @@
             </DataGrid.InputBindings>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="ctxmnuErrorCopy" Header="Копировать" InputGestureText="Ctrl+C"/>
+                    <MenuItem x:Name="ctxmnuErrorCopy" Header="{x:Static r:Resources.wndErrorLog_ctxmnuErrorCopy}" InputGestureText="Ctrl+C"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>
@@ -45,7 +47,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Время" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
+                <DataGridTemplateColumn Header="{x:Static r:Resources.wndErrorLog_lbl_Timestamp}" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding TimeStamp}" TextWrapping="Wrap" VerticalAlignment="Center" />
@@ -53,26 +55,14 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Команда" Width="150" SortMemberPath="Command" CanUserSort="True">
+                <DataGridTemplateColumn Header="{x:Static r:Resources.wndErrorLog_lbl_Exception}" Width="*" SortMemberPath="Command" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Command}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="Объект" Width="150" SortMemberPath="Result" CanUserSort="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Obj}" TextWrapping="Wrap" VerticalAlignment="Center" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="Ошибка" Width="*" SortMemberPath="Err" CanUserSort="True">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Err}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Command}" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Obj}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Err}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

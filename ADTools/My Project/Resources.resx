@@ -649,59 +649,8 @@ To container:
   <data name="wndObject_lbl_Manager" xml:space="preserve">
     <value>Manager</value>
   </data>
-  <data name="wndObject_lbl_Exchange" xml:space="preserve">
-    <value>Exchange</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeAdd" xml:space="preserve">
+  <data name="ctlMailbox_lbl_Add" xml:space="preserve">
     <value>&lt; Add</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeChange" xml:space="preserve">
-    <value>Change</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeRemove" xml:space="preserve">
-    <value>Remove &gt;</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
-    <value>Set primary</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenShow" xml:space="preserve">
-    <value>Show</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenHide" xml:space="preserve">
-    <value>Hide</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeQuotas" xml:space="preserve">
-    <value>Quotas...</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeUser" xml:space="preserve">
-    <value>User</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeShared" xml:space="preserve">
-    <value>Shared</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeServer" xml:space="preserve">
-    <value>Exchange Server</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeState" xml:space="preserve">
-    <value>Connection state: </value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSizeBusy" xml:space="preserve">
-    <value>busy:</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSizeQuota" xml:space="preserve">
-    <value>quota:</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeEmailAddress" xml:space="preserve">
-    <value>Email address</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHiddenToolTip" xml:space="preserve">
-    <value>Show/hide the address in the address book</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeTypeToolTip" xml:space="preserve">
-    <value>Convert mailbox to user/shared</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeShare" xml:space="preserve">
-    <value>Share...</value>
   </data>
   <data name="wndCreateObject_lbl_CreateObject" xml:space="preserve">
     <value>Create object</value>
@@ -783,5 +732,142 @@ To container:
   </data>
   <data name="wndDomainBrowser_lbl_OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExampleDefinition" xml:space="preserve">
+    <value>The variables used are:
+{{n}} - number;
+{{displayname}} - display name;
+
+Used functions:
+{{lz number data}} - add (number) leading zeros to (data)
+{{lz 5 n}} = 00777
+
+{{fst number data}} - take the first (number) characters (data)
+{{fst 3 displayname}} = Arn    [old Alois Schwarzenegger]
+
+{{trans data}} - transliteration into the Latin alphabet
+{{trans displayname}} = ivanov ivan ivanovich
+
+{{split 2 displayname}} = Alois
+
+Combinations:
+{{fst 1 (trans (split 1 displayname))}}. {{trans (split 0 displayname)}}</value>
+  </data>
+  <data name="wndDomains_lbl_PatternsExampleDefinitionHandlebars" xml:space="preserve">
+    <value>Handlebars</value>
+  </data>
+  <data name="wndErrorLog_lbl_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="wndErrorLog_lbl_Timestamp" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="wndErrorLog_lbl_Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="wndErrorLog_ctxmnuErrorCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="wndObject_lbl_GroupScope" xml:space="preserve">
+    <value>Group scope</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeDomainLocal" xml:space="preserve">
+    <value>Domain local</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeGlobal" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="wndObject_lbl_GroupScopeUniversal" xml:space="preserve">
+    <value>Universal</value>
+  </data>
+  <data name="wndObject_lbl_GroupType" xml:space="preserve">
+    <value>Group type</value>
+  </data>
+  <data name="wndObject_lbl_GroupTypeSecurity" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="wndObject_lbl_GroupTypeDistribution" xml:space="preserve">
+    <value>Distribution</value>
+  </data>
+  <data name="wndObject_lbl_Info" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="wndObject_lbl_Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="ctlMailbox_lbl_Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="ctlMailbox_lbl_EmailAddress" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenHide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenShow" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="ctlMailbox_lbl_HiddenToolTip" xml:space="preserve">
+    <value>Show/hide the address in the address book</value>
+  </data>
+  <data name="ctlMailbox_lbl_Quotas" xml:space="preserve">
+    <value>Quotas...</value>
+  </data>
+  <data name="ctlMailbox_lbl_Remove" xml:space="preserve">
+    <value>Remove &gt;</value>
+  </data>
+  <data name="ctlMailbox_lbl_Server" xml:space="preserve">
+    <value>Exchange Server</value>
+  </data>
+  <data name="ctlMailbox_lbl_SetPrimary" xml:space="preserve">
+    <value>Set primary</value>
+  </data>
+  <data name="ctlMailbox_lbl_Share" xml:space="preserve">
+    <value>Share...</value>
+  </data>
+  <data name="ctlMailbox_lbl_SizeBusy" xml:space="preserve">
+    <value>busy:</value>
+  </data>
+  <data name="ctlMailbox_lbl_SizeQuota" xml:space="preserve">
+    <value>quota:</value>
+  </data>
+  <data name="ctlMailbox_lbl_State" xml:space="preserve">
+    <value>Connection state: </value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeShared" xml:space="preserve">
+    <value>Shared</value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeToolTip" xml:space="preserve">
+    <value>Convert mailbox to user/shared</value>
+  </data>
+  <data name="ctlMailbox_lbl_TypeUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="wndObject_lbl_Exchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
+  <data name="ctlGroupMember_lbl_SelectedObjects" xml:space="preserve">
+    <value>Selected objects</value>
+  </data>
+  <data name="ctlGroupMember_lbl_ObjectsList" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="ctlGroupMember_lbl_Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="ctlGroupMember_msg_AnotherDomain" xml:space="preserve">
+    <value>From another domain you can not!</value>
+  </data>
+  <data name="ctlGroupMember_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Whatareyoudoing :(</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_SelectedGroups" xml:space="preserve">
+    <value>Selected groups</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_GroupsList" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="ctlGroupMemberOf_lbl_Groups" xml:space="preserve">
+    <value>Groups</value>
   </data>
 </root>

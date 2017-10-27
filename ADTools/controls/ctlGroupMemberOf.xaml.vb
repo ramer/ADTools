@@ -52,9 +52,6 @@ Public Class ctlGroupMemberOf
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomain = CType(e.NewValue, clsDirectoryObject).Domain
             ._currentdomaingroups.Clear()
-            '.lvSelectedGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentobject.memberOf, Nothing)
-            '.lvSelectedGroups.Items.Clear()
-            '._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -65,9 +62,6 @@ Public Class ctlGroupMemberOf
             ._currentobject = Nothing
             ._currentdomain = CType(e.NewValue, clsDomain)
             ._currentdomaingroups.Clear()
-            '.lvSelectedGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomain.DefaultGroups, Nothing)
-            '.lvSelectedGroups.Items.Clear()
-            '._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -170,7 +164,7 @@ Public Class ctlGroupMemberOf
 
             For Each obj In dragged
                 If sender Is lvSelectedGroups Then ' adding member
-                    If mode() = 0 AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox("Из другого домена нельзя же!", vbOKOnly + vbExclamation, "Ну тычоваще :(") : Exit Sub
+                    If mode() = 0 AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
                 Else
                     RemoveMember(obj)

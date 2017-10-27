@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
         Height="467"
@@ -184,7 +185,7 @@
             <TabItem Header="Член групп">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
-            <TabItem x:Name="tabctlUserExchange" Header="Exchange">
+            <TabItem x:Name="tabctlUserExchange" Header="{x:Static r:Resources.wndObject_lbl_Exchange}">
                 <local:ctlUserMailbox x:Name="ctlMailbox" Margin="5"/>
             </TabItem>
             <TabItem Header="Все атрибуты">

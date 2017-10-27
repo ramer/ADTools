@@ -30,7 +30,7 @@
                     </TextBlock>
                     <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server"></TextBlock>
                     <StackPanel Width="180" IsEnabled="{Binding Connected}">
-                        <Button x:Name="btnContactAdd" Content="{x:Static r:Resources.wndObject_lbl_ExchangeAdd}" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnContactAdd" Content="{x:Static r:Resources.ctlMailbox_lbl_Add}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -38,7 +38,7 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactEdit" Content="{x:Static r:Resources.wndObject_lbl_ExchangeChange}" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnContactEdit" Content="{x:Static r:Resources.ctlMailbox_lbl_Change}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -47,9 +47,9 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactRemove" Content="{x:Static r:Resources.wndObject_lbl_ExchangeRemove}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnContactSetPrimary" Content="{x:Static r:Resources.wndObject_lbl_ExchangeSetPrimary}" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <CheckBox x:Name="chbContactHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenToolTip}">
+                        <Button x:Name="btnContactRemove" Content="{x:Static r:Resources.ctlMailbox_lbl_Remove}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnContactSetPrimary" Content="{x:Static r:Resources.ctlMailbox_lbl_SetPrimary}" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <CheckBox x:Name="chbContactHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_HiddenToolTip}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
@@ -85,8 +85,8 @@
 
                                                             <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
 
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         </Grid>
                                                     </Border>
 
@@ -137,7 +137,7 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
                                 <GridView.Columns>
-                                    <GridViewColumn Header="{x:Static r:Resources.wndObject_lbl_ExchangeEmailAddress}" Width="410">
+                                    <GridViewColumn Header="{x:Static r:Resources.ctlMailbox_lbl_EmailAddress}" Width="410">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <DockPanel>

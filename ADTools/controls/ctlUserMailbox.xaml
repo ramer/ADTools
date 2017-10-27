@@ -25,12 +25,12 @@
                         <Run Text="{Binding VersionFormatted, Mode=OneWay}"/>
                     </TextBlock>
                     <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
-                        <Run Text="{x:Static r:Resources.wndObject_lbl_ExchangeState}"/>
+                        <Run Text="{x:Static r:Resources.ctlMailbox_lbl_State}"/>
                         <Hyperlink x:Name="hlState"><Run Text="{Binding State, Mode=OneWay}"/></Hyperlink>
                     </TextBlock>
-                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="{x:Static r:Resources.wndObject_lbl_ExchangeServer}"></TextBlock>
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="{x:Static r:Resources.ctlMailbox_lbl_Server}"></TextBlock>
                     <StackPanel Width="180" IsEnabled="{Binding Connected}">
-                        <Button x:Name="btnMailboxAdd" Content="{x:Static r:Resources.wndObject_lbl_ExchangeAdd}" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnMailboxAdd" Content="{x:Static r:Resources.ctlMailbox_lbl_Add}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbMailbox" Path="Text.Length" />
@@ -38,7 +38,7 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnMailboxEdit" Content="{x:Static r:Resources.wndObject_lbl_ExchangeChange}" Height="23" Margin="0,0,0,5">
+                        <Button x:Name="btnMailboxEdit" Content="{x:Static r:Resources.ctlMailbox_lbl_Change}" Height="23" Margin="0,0,0,5">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbMailbox" Path="Text.Length" />
@@ -47,10 +47,10 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnMailboxRemove" Content="{x:Static r:Resources.wndObject_lbl_ExchangeRemove}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnMailboxSetPrimary" Content="{x:Static r:Resources.wndObject_lbl_ExchangeSetPrimary}" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnMailboxQuota" Content="{x:Static r:Resources.wndObject_lbl_ExchangeQuotas}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding Exist}"></Button>
-                        <CheckBox x:Name="chbMailboxHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenToolTip}">
+                        <Button x:Name="btnMailboxRemove" Content="{x:Static r:Resources.ctlMailbox_lbl_Remove}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnMailboxSetPrimary" Content="{x:Static r:Resources.ctlMailbox_lbl_SetPrimary}" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnMailboxQuota" Content="{x:Static r:Resources.ctlMailbox_lbl_Quotas}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding Exist}"></Button>
+                        <CheckBox x:Name="chbMailboxHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_HiddenToolTip}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
@@ -86,8 +86,8 @@
 
                                                             <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
 
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeHiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         </Grid>
                                                     </Border>
 
@@ -127,7 +127,7 @@
                                 </Style>
                             </CheckBox.Style>
                         </CheckBox>
-                        <CheckBox x:Name="chbMailboxType" Height="23" Margin="0,0,0,5" IsChecked="{Binding Type}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.wndObject_lbl_ExchangeTypeToolTip}">
+                        <CheckBox x:Name="chbMailboxType" Height="23" Margin="0,0,0,5" IsChecked="{Binding Type}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_TypeToolTip}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
@@ -163,8 +163,8 @@
 
                                                             <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
 
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeTypeUser}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ExchangeTypeShared}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_TypeUser}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_TypeShared}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         </Grid>
                                                     </Border>
 
@@ -204,7 +204,7 @@
                                 </Style>
                             </CheckBox.Style>
                         </CheckBox>
-                        <Button x:Name="btnMailboxShare" Content="{x:Static r:Resources.wndObject_lbl_ExchangeShare}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding Exist}"></Button>
+                        <Button x:Name="btnMailboxShare" Content="{x:Static r:Resources.ctlMailbox_lbl_Share}" Height="23" Margin="0,0,0,5" IsEnabled="{Binding Exist}"></Button>
                     </StackPanel>
                 </DockPanel>
                 <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
@@ -216,9 +216,9 @@
                         <Grid Height="23">
                             <ProgressBar x:Name="pbMailboxSpace" Value="{Binding Size, Mode=OneWay}" Maximum="{Binding CurrentProhibitSendQuota, Mode=OneWay}"  Background="{x:Null}" ToolTip="size"></ProgressBar>
                             <TextBlock x:Name="tblckMailboxSpace" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
-                                <Run Text="{x:Static r:Resources.wndObject_lbl_ExchangeSizeBusy}"/>
+                                <Run Text="{x:Static r:Resources.ctlMailbox_lbl_SizeBusy}"/>
                                 <Run Text="{Binding SizeFormatted, Mode=OneWay}"/>,
-                                <Run Text="{x:Static r:Resources.wndObject_lbl_ExchangeSizeQuota}"/>
+                                <Run Text="{x:Static r:Resources.ctlMailbox_lbl_SizeQuota}"/>
                                 <Run Text="{Binding CurrentProhibitSendQuotaFormatted, Mode=OneWay}"/>
                             </TextBlock>
                         </Grid>
@@ -227,7 +227,7 @@
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
                                 <GridView.Columns>
-                                    <GridViewColumn Header="{x:Static r:Resources.wndObject_lbl_ExchangeEmailAddress}" Width="410">
+                                    <GridViewColumn Header="{x:Static r:Resources.ctlMailbox_lbl_EmailAddress}" Width="410">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <DockPanel>

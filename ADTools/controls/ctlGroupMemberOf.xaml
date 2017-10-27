@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ADTools"
+             xmlns:r="clr-namespace:ADTools.My.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -18,14 +19,14 @@
 
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
         <DockPanel LastChildFill="True" Grid.Column="0">
-            <Label Margin="0,0,3,0" Content="Выбранные группы" DockPanel.Dock="Top"/>
+            <Label Margin="0,0,3,0" Content="{x:Static r:Resources.ctlGroupMemberOf_lbl_SelectedGroups}" DockPanel.Dock="Top"/>
             <Grid>
                 <Button x:Name="btnDefaultGroups" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="1" ToolTip="По умолчанию" Margin="0,0,3,0"/>
                 <ListView x:Name="lvSelectedGroups" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="Группа" Width="230" local:clsSorter.PropertyName="name">
+                                <GridViewColumn Header="{x:Static r:Resources.ctlGroupMemberOf_lbl_Groups}" Width="230" local:clsSorter.PropertyName="name">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -42,13 +43,13 @@
             </Grid>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Column="1">
-            <Label Margin="3,0,0,0" Content="Список групп" DockPanel.Dock="Top"/>
+            <Label Margin="3,0,0,0" Content="{x:Static r:Resources.ctlGroupMemberOf_lbl_GroupsList}" DockPanel.Dock="Top"/>
             <TextBox x:Name="tbDomainGroupsFilter" Margin="3,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
             <ListView x:Name="lvDomainGroups" AlternationCount="2" DockPanel.Dock="Bottom" Margin="3,0,0,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
                 <ListView.View>
                     <GridView AllowsColumnReorder="False">
                         <GridView.Columns>
-                            <GridViewColumn Header="Группа" Width="230" local:clsSorter.PropertyName="name">
+                            <GridViewColumn Header="{x:Static r:Resources.ctlGroupMemberOf_lbl_Groups}" Width="230" local:clsSorter.PropertyName="name">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <DockPanel>
