@@ -557,34 +557,4 @@
   <data name="wndObject_lbl_Department" xml:space="preserve">
     <value>Подразделение</value>
   </data>
-  <data name="wndObject_lbl_Company" xml:space="preserve">
-    <value>Компания</value>
-  </data>
-  <data name="wndObject_lbl_StreetAddress" xml:space="preserve">
-    <value>Расположение</value>
-  </data>
-  <data name="wndObject_lbl_Manager" xml:space="preserve">
-    <value>Руководитель</value>
-  </data>
-  <data name="wndObject_lbl_Exchange" xml:space="preserve">
-    <value>Exchange</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeAdd" xml:space="preserve">
-    <value>&lt; Добавить адрес</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeChange" xml:space="preserve">
-    <value>Изменить адрес</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeRemove" xml:space="preserve">
-    <value>Удалить адрес &gt;</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
-    <value>Сделать основным</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeShow" xml:space="preserve">
-    <value>Показать</value>
-  </data>
-  <data name="wndObject_lbl_ExchangeHide" xml:space="preserve">
-    <value>Скрыть</value>
-  </data>
 </root>

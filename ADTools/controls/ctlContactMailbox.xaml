@@ -1,0 +1,170 @@
+﻿<UserControl x:Class="ctlContactMailbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ADTools"
+             mc:Ignorable="d" 
+             d:DesignHeight="413" d:DesignWidth="518">
+    <UserControl.DataContext>
+        <local:clsContact/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
+    </UserControl.Resources>
+
+    <Grid>
+        <local:ctlCap x:Name="capexchange" Panel.ZIndex="1" Visibility="Hidden"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+            <DockPanel LastChildFill="True">
+
+                <DockPanel DockPanel.Dock="Right" Margin="5,0,0,0">
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                        <Run Text="{Binding VersionFormatted, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                        <Run Text="Connection state: "/>
+                        <Hyperlink x:Name="hlState"><Run Text="{Binding State, Mode=OneWay}"/></Hyperlink>
+                    </TextBlock>
+                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server"></TextBlock>
+                    <StackPanel Width="180" IsEnabled="{Binding Connected}">
+                        <Button x:Name="btnContactAdd" Content="&lt; Добавить адрес" Height="23" Margin="0,0,0,5">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
+                                    <Binding ElementName="tbContact" Path="Text.Length" />
+                                    <Binding ElementName="cmboContactDomain" Path="SelectedItems.Count" />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                        <Button x:Name="btnContactEdit" Content="Изменить адрес" Height="23" Margin="0,0,0,5">
+                            <Button.IsEnabled>
+                                <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
+                                    <Binding ElementName="tbContact" Path="Text.Length" />
+                                    <Binding ElementName="cmboContactDomain" Path="SelectedItems.Count" />
+                                    <Binding ElementName="lvEmailAddresses" Path="SelectedItems.Count"  />
+                                </MultiBinding>
+                            </Button.IsEnabled>
+                        </Button>
+                        <Button x:Name="btnContactRemove" Content="Удалить адрес &gt;" Height="23" Margin="0,0,0,5" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnContactSetPrimary" Content="Сделать основным" Height="23" Margin="0,0,0,15" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <CheckBox x:Name="chbContactHidden" Height="23" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="Показать/скрыть почтовый ящик в адресной книге">
+                            <CheckBox.Style>
+                                <Style TargetType="{x:Type CheckBox}">
+                                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                <ControlTemplate.Resources>
+                                                    <Storyboard x:Key="OnChecking">
+                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                    <Storyboard x:Key="OnUnchecking">
+                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
+                                                        </DoubleAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </ControlTemplate.Resources>
+
+                                                <DockPanel x:Name="dockPanel">
+                                                    <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                        <Grid Background="{DynamicResource ColorElementBackground}">
+                                                            <Border HorizontalAlignment="Left" x:Name="slider" Width="90" BorderThickness="1,1,1,1" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource ColorButtonBackground}" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                                <Border.RenderTransform>
+                                                                    <TransformGroup>
+                                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                                        <SkewTransform AngleX="0" AngleY="0"/>
+                                                                        <RotateTransform Angle="0"/>
+                                                                        <TranslateTransform X="0" Y="0"/>
+                                                                    </TransformGroup>
+                                                                </Border.RenderTransform>
+                                                            </Border>
+
+                                                            <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
+
+                                                            <TextBlock Text="Показать" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="Скрыть" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        </Grid>
+                                                    </Border>
+
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="CommonStates">
+                                                            <VisualStateGroup.Transitions>
+                                                                <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                            </VisualStateGroup.Transitions>
+                                                            <VisualState x:Name="Normal" />
+                                                            <VisualState x:Name="MouseOver">
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                                                </Storyboard>
+                                                            </VisualState>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                </DockPanel>
+
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
+                                                        </Trigger.ExitActions>
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
+                                                        </Trigger.EnterActions>
+                                                    </Trigger>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter TargetName="slider" Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+                                                        <Setter TargetName="slider" Property="BorderThickness" Value="0"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </CheckBox.Style>
+                        </CheckBox>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
+                        <ComboBox x:Name="cmboContactDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" Height="23" Width="150" DockPanel.Dock="Right"/>
+                        <TextBox x:Name="tbContact" Height="23" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />
+                    </DockPanel>
+                    <ListView x:Name="lvEmailAddresses" AlternationCount="2" ItemsSource="{Binding EmailAddresses}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridView.Columns>
+                                    <GridViewColumn Header="Почтовый адрес" Width="410">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <DockPanel>
+                                                    <TextBlock TextWrapping="Wrap" Text="{Binding Address}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsPrimary}" Value="True">
+                                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </DockPanel>
+
+            </DockPanel>
+        </ScrollViewer>
+    </Grid>
+
+</UserControl>

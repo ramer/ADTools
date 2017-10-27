@@ -101,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\clsAttribute.vb" />
+    <Compile Include="classes\clsContact.vb" />
     <Compile Include="classes\clsDataGridColumnInfo.vb" />
     <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
@@ -119,6 +120,9 @@
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
+    <Compile Include="controls\ctlContactMailbox.xaml.vb">
+      <DependentUpon>ctlContactMailbox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\ctlNetwork.xaml.vb">
       <DependentUpon>ctlNetwork.xaml</DependentUpon>
     </Compile>
@@ -192,6 +196,10 @@
     <Page Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="controls\ctlContactMailbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlCap.xaml">
       <SubType>Designer</SubType>
@@ -341,10 +349,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
-      <LastGenOutput>Resources2.Designer.vb</LastGenOutput>
-      <SubType>Designer</SubType>
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.ru.resx" />
     <None Include="My Project\Settings.settings">

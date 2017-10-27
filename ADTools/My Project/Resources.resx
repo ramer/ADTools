@@ -637,4 +637,37 @@ To container:
   <data name="wndObject_lbl_Title" xml:space="preserve">
     <value>Title</value>
   </data>
+  <data name="wndObject_lbl_Department" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="wndObject_lbl_Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="wndObject_lbl_StreetAddress" xml:space="preserve">
+    <value>Street address</value>
+  </data>
+  <data name="wndObject_lbl_Manager" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="wndObject_lbl_Exchange" xml:space="preserve">
+    <value>Exchange</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeAdd" xml:space="preserve">
+    <value>&lt; Add</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeChange" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeRemove" xml:space="preserve">
+    <value>Remove &gt;</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeSetPrimary" xml:space="preserve">
+    <value>Set primary</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeShow" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="wndObject_lbl_ExchangeHide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
 </root>
