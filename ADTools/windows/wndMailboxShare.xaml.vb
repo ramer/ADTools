@@ -76,7 +76,7 @@ Public Class wndMailboxShare
 
             If sender Is lvSendAs Then
                 If Not mailbox.PermissionSendAs.Contains(obj) Then
-                    If lvSendAs.Items.Count = 0 AndAlso Not chbSentItemsConfigurationSendAs.IsChecked = True AndAlso IMsgBox("Помещать копии писем в папку ""Отправленные""?", vbYesNo + vbQuestion, "Действие при отправке") = MsgBoxResult.Yes Then
+                    If lvSendAs.Items.Count = 0 AndAlso Not chbSentItemsConfigurationSendAs.IsChecked = True AndAlso IMsgBox(My.Resources.wndMailboxShare_msg_SendAsCopyToSent, vbYesNo + vbQuestion, My.Resources.wndMailboxShare_msg_SendAction) = MsgBoxResult.Yes Then
                         Await Task.Run(Sub() mailbox.SentItemsConfigurationSendAs = True)
                     End If
                     Await Task.Run(Sub() mailbox.AddPermissionSendAs(obj))
@@ -87,7 +87,7 @@ Public Class wndMailboxShare
                 End If
             ElseIf sender Is lvSendOnBehalf Then
                 If Not mailbox.PermissionSendOnBehalf.Contains(obj) Then
-                    If lvSendAs.Items.Count = 0 AndAlso Not chbSentItemsConfigurationSendOnBehalf.IsChecked = True AndAlso IMsgBox("Помещать копии писем в папку ""Отправленные""?", vbYesNo + vbQuestion, "Действие при отправке") = MsgBoxResult.Yes Then
+                    If lvSendAs.Items.Count = 0 AndAlso Not chbSentItemsConfigurationSendOnBehalf.IsChecked = True AndAlso IMsgBox(My.Resources.wndMailboxShare_msg_SendOnBehalfCopyToSent, vbYesNo + vbQuestion, My.Resources.wndMailboxShare_msg_SendAction) = MsgBoxResult.Yes Then
                         Await Task.Run(Sub() mailbox.SentItemsConfigurationSendOnBehalf = True)
                     End If
                     Await Task.Run(Sub() mailbox.AddPermissionSendOnBehalf(obj))

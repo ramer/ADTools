@@ -1493,6 +1493,114 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Full access.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_FullAccess() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_FullAccess", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Name.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_Name() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_Name", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects list.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_ObjectsList() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_ObjectsList", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Send as.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_SendAs() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_SendAs", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy messages to the Sent folder.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_SendAsCopyToSent() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_SendAsCopyToSent", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Send on behalf.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_SendOnBehalf() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_SendOnBehalf", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy messages to the Sent folder.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_SendOnBehalfCopyToSent() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_SendOnBehalfCopyToSent", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Shared mailbox.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_SharedMailbox() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_SharedMailbox", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon name.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_lbl_UserPrincipalName() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_lbl_UserPrincipalName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Send action.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_msg_SendAction() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_msg_SendAction", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy messages to the Sent folder?.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_msg_SendAsCopyToSent() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_msg_SendAsCopyToSent", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy messages to the Sent folder?.
+        '''</summary>
+        Public ReadOnly Property wndMailboxShare_msg_SendOnBehalfCopyToSent() As String
+            Get
+                Return ResourceManager.GetString("wndMailboxShare_msg_SendOnBehalfCopyToSent", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Clone window.
         '''</summary>
         Public ReadOnly Property wndMain_btnWindowClone() As String

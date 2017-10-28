@@ -965,4 +965,40 @@ Are you sure?</value>
   <data name="wndMailboxQuota_lbl_OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="wndMailboxShare_lbl_SharedMailbox" xml:space="preserve">
+    <value>Shared mailbox</value>
+  </data>
+  <data name="wndMailboxShare_lbl_FullAccess" xml:space="preserve">
+    <value>Full access</value>
+  </data>
+  <data name="wndMailboxShare_lbl_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="wndMailboxShare_lbl_UserPrincipalName" xml:space="preserve">
+    <value>Logon name</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendAs" xml:space="preserve">
+    <value>Send as</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendOnBehalf" xml:space="preserve">
+    <value>Send on behalf</value>
+  </data>
+  <data name="wndMailboxShare_lbl_ObjectsList" xml:space="preserve">
+    <value>Objects list</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendAsCopyToSent" xml:space="preserve">
+    <value>Copy messages to the Sent folder</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendOnBehalfCopyToSent" xml:space="preserve">
+    <value>Copy messages to the Sent folder</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendAsCopyToSent" xml:space="preserve">
+    <value>Copy messages to the Sent folder?</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendAction" xml:space="preserve">
+    <value>Send action</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendOnBehalfCopyToSent" xml:space="preserve">
+    <value>Copy messages to the Sent folder?</value>
+  </data>
 </root>

@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Общий доступ к почтовому ящику" Height="674.893" Width="821.546"
+        Title="{x:Static r:Resources.wndMailboxShare_lbl_SharedMailbox}" Height="674.893" Width="821.546"
         DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
@@ -20,12 +21,12 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
-                <TextBlock Text="Полный доступ" DockPanel.Dock="Top"/>
+                <TextBlock Text="{x:Static r:Resources.wndMailboxShare_lbl_FullAccess}" DockPanel.Dock="Top"/>
                 <ListView x:Name="lvFullAccess" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionFullAccess, Mode=OneWay}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="Имя" Width="250">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_Name}" Width="250">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -35,7 +36,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Имя входа" Width="120">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_UserPrincipalName}" Width="120">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -50,13 +51,13 @@
                 </ListView>
             </DockPanel>
             <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1">
-                <TextBlock Text="Отправить" DockPanel.Dock="Top"/>
-                <CheckBox x:Name="chbSentItemsConfigurationSendAs" DockPanel.Dock="Bottom" Margin="5,5,5,5" IsChecked="{Binding SentItemsConfigurationSendAs}" Content="Помещать копии писем в папку &quot;Отправленные&quot;"/>
+                <TextBlock Text="{x:Static r:Resources.wndMailboxShare_lbl_SendAs}" DockPanel.Dock="Top"/>
+                <CheckBox x:Name="chbSentItemsConfigurationSendAs" DockPanel.Dock="Bottom" Margin="5,5,5,5" IsChecked="{Binding SentItemsConfigurationSendAs}" Content="{x:Static r:Resources.wndMailboxShare_lbl_SendAsCopyToSent}"/>
                 <ListView x:Name="lvSendAs" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendAs, Mode=OneWay}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="Имя" Width="250">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_Name}" Width="250">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -66,7 +67,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Имя входа" Width="120">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_UserPrincipalName}" Width="120">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -81,13 +82,13 @@
                 </ListView>
             </DockPanel>
             <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="2">
-                <TextBlock Text="Отправить от имени" DockPanel.Dock="Top"/>
-                <CheckBox x:Name="chbSentItemsConfigurationSendOnBehalf" DockPanel.Dock="Bottom" Margin="5,8,5,5" IsChecked="{Binding SentItemsConfigurationSendOnBehalf}" Content="Помещать копии писем в папку &quot;Отправленные&quot;"/>
+                <TextBlock Text="{x:Static r:Resources.wndMailboxShare_lbl_SendOnBehalf}" DockPanel.Dock="Top"/>
+                <CheckBox x:Name="chbSentItemsConfigurationSendOnBehalf" DockPanel.Dock="Bottom" Margin="5,8,5,5" IsChecked="{Binding SentItemsConfigurationSendOnBehalf}" Content="{x:Static r:Resources.wndMailboxShare_lbl_SendOnBehalfCopyToSent}"/>
                 <ListView x:Name="lvSendOnBehalf" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendOnBehalf, Mode=OneWay}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="Имя" Width="250">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_Name}" Width="250">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -97,7 +98,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Имя входа" Width="120">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_UserPrincipalName}" Width="120">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -112,13 +113,13 @@
                 </ListView>
             </DockPanel>
             <DockPanel LastChildFill="True" Grid.Column="1" Grid.RowSpan="3" Margin="5,0,0,0">
-                <TextBlock Text="Поиск пользователей" DockPanel.Dock="Top"/>
+                <TextBlock Text="{x:Static r:Resources.wndMailboxShare_lbl_ObjectsList}" DockPanel.Dock="Top"/>
                 <TextBox x:Name="tbSearchPattern" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
                 <ListView x:Name="lvUsers" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding users}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="Имя" Width="250">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_Name}" Width="250">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
@@ -128,7 +129,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Имя входа" Width="120">
+                                <GridViewColumn Header="{x:Static r:Resources.wndMailboxShare_lbl_UserPrincipalName}" Width="120">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>

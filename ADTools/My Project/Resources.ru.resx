@@ -882,4 +882,40 @@
   <data name="wndMailboxQuota_lbl_OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="wndMailboxShare_lbl_SharedMailbox" xml:space="preserve">
+    <value>Общий доступ к почтовому ящику</value>
+  </data>
+  <data name="wndMailboxShare_lbl_FullAccess" xml:space="preserve">
+    <value>Полный доступ</value>
+  </data>
+  <data name="wndMailboxShare_lbl_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="wndMailboxShare_lbl_UserPrincipalName" xml:space="preserve">
+    <value>Имя входа</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendAs" xml:space="preserve">
+    <value>Отправить </value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendOnBehalf" xml:space="preserve">
+    <value>Отправить от имени</value>
+  </data>
+  <data name="wndMailboxShare_lbl_ObjectsList" xml:space="preserve">
+    <value>Список объектов</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendAsCopyToSent" xml:space="preserve">
+    <value>Помещать копии писем в папку Отправленные</value>
+  </data>
+  <data name="wndMailboxShare_lbl_SendOnBehalfCopyToSent" xml:space="preserve">
+    <value>Помещать копии писем в папку Отправленные</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendAsCopyToSent" xml:space="preserve">
+    <value>Помещать копии писем в папку Отправленные?</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendAction" xml:space="preserve">
+    <value>Действие при отправке</value>
+  </data>
+  <data name="wndMailboxShare_msg_SendOnBehalfCopyToSent" xml:space="preserve">
+    <value>Помещать копии писем в папку Отправленные?</value>
+  </data>
 </root>
