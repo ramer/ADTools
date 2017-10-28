@@ -24,7 +24,7 @@ Public Class clsSearcher
             End Try
 
             basicsearchtasks.Clear()
-            Log("Список задач очищен")
+            Log("Task list cleared")
         End If
     End Function
 
@@ -56,22 +56,22 @@ Public Class clsSearcher
                     Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
                 End Function, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
-            Log(String.Format("Задача на поиск в домене ""{0}"" создана", root.name))
+            Log(String.Format("Task created: domain {0} search", root.name))
 
             Dim lt = mt.ContinueWith(
                 Function(parenttask As Task(Of ObservableCollection(Of clsDirectoryObject)))
                     basicsearchtasks.Remove(mt)
-                    Log(String.Format("Вывод {0} результатов в домене ""{1}""", parenttask.Result.Count, If(parenttask.Result.Count > 0, parenttask.Result(0).Domain.Name, "null")))
+                    Log(String.Format("Task created: collect domain {1} search results ({0})", parenttask.Result.Count, If(parenttask.Result.Count > 0, parenttask.Result(0).Domain.Name, "(unknown)")))
                     For Each result In parenttask.Result
                         If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
                         returncollection.Add(result)
                         If searchscope = SearchScope.Subtree Then Thread.Sleep(50)
                     Next
-                    Log("Задача на поиск закрыта")
+                    Log("Task completed: domain search")
                     Return True
                 End Function)
             basicsearchtasks.Add(lt)
-            Log(String.Format("Задача на вывод результатов домена ""{0}"" создана", root.name))
+            Log(String.Format("Task created: display domain {0} search results", root.name))
 
             Dim ft = lt.ContinueWith(
                 Function(parenttask As Task(Of Boolean))
@@ -80,7 +80,7 @@ Public Class clsSearcher
                     Catch
                         basicsearchtasks.Clear()
                     End Try
-                    Log("Задача на вывод результатов закрыта")
+                    Log("Task completed: display search results")
                     Return True
                 End Function)
         Next
