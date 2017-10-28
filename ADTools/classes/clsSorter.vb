@@ -1,6 +1,5 @@
 ﻿Imports System.ComponentModel
 
-
 Public Class clsSorter
 
 #Region "Attached properties"

@@ -1098,4 +1098,7 @@
   <data name="clsEvent_msg_LogonTypeCachedInteractive" xml:space="preserve">
     <value>Кешированный, интерактивный</value>
   </data>
+  <data name="mdlMain_msg_UnhandledException" xml:space="preserve">
+    <value>Необработанное исключение</value>
+  </data>
 </root>

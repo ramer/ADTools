@@ -1024,6 +1024,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Unhandled exception.
+        '''</summary>
+        Public ReadOnly Property mdlMain_msg_UnhandledException() As String
+            Get
+                Return ResourceManager.GetString("mdlMain_msg_UnhandledException", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property network_folder() As System.Drawing.Icon

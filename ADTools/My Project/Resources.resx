@@ -1181,4 +1181,7 @@ Are you sure?</value>
   <data name="clsEvent_msg_LogonTypeCachedInteractive" xml:space="preserve">
     <value>Cached, interactive</value>
   </data>
+  <data name="mdlMain_msg_UnhandledException" xml:space="preserve">
+    <value>Unhandled exception</value>
+  </data>
 </root>

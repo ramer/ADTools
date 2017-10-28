@@ -12,6 +12,4 @@ Public Class clsSearchParameters
     Private searchobjectclasses As clsSearchObjectClasses = Nothing
     Private freesearch As Boolean = False
 
-
-
 End Class

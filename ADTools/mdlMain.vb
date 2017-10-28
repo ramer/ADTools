@@ -97,13 +97,6 @@ Public Class ADToolsApplication
             ' preferences setup
             initializePreferences()
 
-
-            '    ' register SIP
-            '    initializeSIP()
-
-            '    ' start Redmine monitoring
-            '    initializeRedmine()
-
             If Not minimizedstart Then
                 ' loading main form
                 wndMainActivate()
@@ -127,14 +120,10 @@ Public Class ADToolsApplication
             ' save preferences
             deinitializePreferences()
 
-            '    ' unregister SIP
-            '    deinitializeSIP()
+            ' removing unhandled exception handler
+            RemoveHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
+            RemoveHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
-            '    ' stop Redmine monitoring
-            '    deinitializeRedmine()
-
-            '    ' removing unhandled exception handler
-            '    RemoveHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
         Catch ex As Exception
 
         End Try
@@ -154,50 +143,6 @@ Public Class ADToolsApplication
             wndMainActivate()
         End If
     End Sub
-
-    'Private Shared Sub ni_BalloonTipClicked(sender As Object, e As EventArgs) Handles nicon.BalloonTipClicked
-    '    If nicon.Tag IsNot Nothing Then
-
-    '        If TypeOf (nicon.Tag) Is LumiSoft.Net.SIP.Stack.SIP_Request Then ' IncomingCall
-    '            Dim w As New wndIncomingCall
-
-    '            Dim request = CType(nicon.Tag, LumiSoft.Net.SIP.Stack.SIP_Request)
-    '            Dim displayname As String = Encoding.UTF8.GetString(Encoding.GetEncoding(1251).GetBytes(request.From.Address.DisplayName))
-    '            Dim uri() As String = request.From.Address.Uri.Value.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)
-
-    '            w.rnDisplayName.Text = displayname
-
-    '            If uri.Count > 0 Then
-    '                w.rnURI.Text = uri(0)
-    '                w.Search("""*" & uri(0) & """")
-    '            Else
-    '                w.rnURI.Text = ""
-    '            End If
-
-    '            w.Show()
-    '            w.Activate()
-    '            w.Topmost = True
-    '            w.Topmost = False
-    '        End If
-
-    '        If TypeOf (nicon.Tag) Is Issue Then ' IncomingCall
-    '            Dim w As New wndRedmineIssue
-
-    '            Dim issue = CType(nicon.Tag, Issue)
-
-    '            w.rnAuthor.Text = issue.Author.Name
-    '            w.rnId.Text = issue.Id
-    '            If issue.CreatedOn.HasValue Then w.tblckTimeStamp.Text = issue.CreatedOn.Value.ToString
-    '            w.tblckSubject.Text = issue.Subject
-    '            w.wbDescription.NavigateToString("<head><meta http-equiv='Content-Type' content='text/html;charset=UTF-8'></head>" & issue.Description)
-    '            w.Show()
-    '            w.Activate()
-    '            w.Topmost = True
-    '            w.Topmost = False
-    '        End If
-
-    '    End If
-    'End Sub
 
     Public Shared Sub wndMainActivate()
         Try
@@ -231,21 +176,21 @@ Public Class ADToolsApplication
                 w.Topmost = False
             End If
         Catch ex As Exception
-            'ThrowException(ex, "wndMainActivate")
+            ThrowException(ex, "wndMainActivate")
         End Try
     End Sub
 
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)
-        ThrowException(e.Exception, "Необработанное исключение")
+        ThrowException(e.Exception, My.Resources.mdlMain_msg_UnhandledException)
         e.Handled = True
     End Sub
 
     Public Shared Sub AppDomain_CurrentDomain_UnhandledException(sender As Object, e As Object)
         Dim ex = TryCast(e, UnhandledExceptionEventArgs)
         If ex IsNot Nothing Then
-            ThrowException(ex.Exception, "Необработанное исключение")
+            ThrowException(ex.Exception, My.Resources.mdlMain_msg_UnhandledException)
         Else
-            ThrowCustomException("Необработанное исключение")
+            ThrowCustomException(My.Resources.mdlMain_msg_UnhandledException)
         End If
     End Sub
 
