@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
         Height="467"
@@ -19,7 +20,7 @@
     
     <Grid>
         <TabControl x:Name="tabctlUnknownObject" Margin="5">
-            <TabItem Header="Основные сведения">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_BasicInformation}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
@@ -29,20 +30,20 @@
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Описание" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="200"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Объект" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="200"/>
                                 <StackPanel Orientation="Horizontal" Height="23">
-                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="Создан" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
                                 </StackPanel>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Все атрибуты">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
             </TabItem>
         </TabControl>
