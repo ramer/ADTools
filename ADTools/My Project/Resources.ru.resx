@@ -981,4 +981,94 @@
   <data name="wndObject_msg_ClearPhoto" xml:space="preserve">
     <value>Удалить фото</value>
   </data>
+  <data name="cls_msg_SelectedAddressAlreadyPrimary" xml:space="preserve">
+    <value>Выбранный адрес уже используется как основной</value>
+  </data>
+  <data name="cls_msg_Never" xml:space="preserve">
+    <value>никогда</value>
+  </data>
+  <data name="cls_msg_Unknown" xml:space="preserve">
+    <value>неизвестно</value>
+  </data>
+  <data name="cls_msg_PasswordExpiresUnknown" xml:space="preserve">
+    <value>Срок действия пароля неизвестен</value>
+  </data>
+  <data name="cls_msg_PasswordExpired" xml:space="preserve">
+    <value>Срок действия пароля истек</value>
+  </data>
+  <data name="cls_msg_ObjectExpiresUnknown" xml:space="preserve">
+    <value>Срок действия объекта неизвестен</value>
+  </data>
+  <data name="cls_msg_ObjectExpired" xml:space="preserve">
+    <value>Срок действия объекта истек</value>
+  </data>
+  <data name="cls_msg_ObjectStatusUnknown" xml:space="preserve">
+    <value>Статус объекта неизвестен</value>
+  </data>
+  <data name="cls_msg_ObjectDisabled" xml:space="preserve">
+    <value>Объект заблокирован</value>
+  </data>
+  <data name="cls_msg_DefaultPasswordIsNotSet" xml:space="preserve">
+    <value>Стандартный пароль не указан</value>
+  </data>
+  <data name="cls_msg_PasswordChanged" xml:space="preserve">
+    <value>Пароль изменен</value>
+  </data>
+  <data name="cls_msg_Expired" xml:space="preserve">
+    <value>истек</value>
+  </data>
+  <data name="cls_msg_Disabled" xml:space="preserve">
+    <value>Заблокирован</value>
+  </data>
+  <data name="cls_msg_Enabled" xml:space="preserve">
+    <value>Разблокирован</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutThreshold" xml:space="preserve">
+    <value>Пороговое значение блокировки</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutThresholdFormat" xml:space="preserve">
+    <value>{0} ошибок входа</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutDuration" xml:space="preserve">
+    <value>Время до сброса счетчика блокировки</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutDurationFormat" xml:space="preserve">
+    <value>{0} минут</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutObservationWindow" xml:space="preserve">
+    <value>Продолжительность блокировки учетной записи</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutObservationWindowFormat" xml:space="preserve">
+    <value>{0} минут</value>
+  </data>
+  <data name="clsDomain_msg_PropMaximumPasswordAge" xml:space="preserve">
+    <value>Максимальный срок действия пароля</value>
+  </data>
+  <data name="clsDomain_msg_PropMaximumPasswordAgeFormat" xml:space="preserve">
+    <value>{0} дней</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordAge" xml:space="preserve">
+    <value>Минимальный срок действия пароля</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordAgeFormat" xml:space="preserve">
+    <value>{0} дней</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordLenght" xml:space="preserve">
+    <value>Минимальная длина пароля</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordLenghtFormat" xml:space="preserve">
+    <value>{0} символов</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordComplexityRequirements" xml:space="preserve">
+    <value>Пароль должен отвечать требованиям сложности</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordComplexityRequirementsFormat" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordHistory" xml:space="preserve">
+    <value>Вести журнал паролей</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordHistoryFormat" xml:space="preserve">
+    <value>{0} сохраненных паролей</value>
+  </data>
 </root>

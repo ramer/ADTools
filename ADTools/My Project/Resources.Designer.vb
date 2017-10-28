@@ -71,6 +71,276 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Default password is not set.
+        '''</summary>
+        Public ReadOnly Property cls_msg_DefaultPasswordIsNotSet() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_DefaultPasswordIsNotSet", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Disabled.
+        '''</summary>
+        Public ReadOnly Property cls_msg_Disabled() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_Disabled", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Enabled.
+        '''</summary>
+        Public ReadOnly Property cls_msg_Enabled() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_Enabled", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на expired.
+        '''</summary>
+        Public ReadOnly Property cls_msg_Expired() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_Expired", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на never.
+        '''</summary>
+        Public ReadOnly Property cls_msg_Never() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_Never", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object disabled.
+        '''</summary>
+        Public ReadOnly Property cls_msg_ObjectDisabled() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_ObjectDisabled", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object expired.
+        '''</summary>
+        Public ReadOnly Property cls_msg_ObjectExpired() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_ObjectExpired", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object expiration is unknown.
+        '''</summary>
+        Public ReadOnly Property cls_msg_ObjectExpiresUnknown() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_ObjectExpiresUnknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object status is unknown.
+        '''</summary>
+        Public ReadOnly Property cls_msg_ObjectStatusUnknown() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_ObjectStatusUnknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password changed.
+        '''</summary>
+        Public ReadOnly Property cls_msg_PasswordChanged() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_PasswordChanged", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password expired.
+        '''</summary>
+        Public ReadOnly Property cls_msg_PasswordExpired() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_PasswordExpired", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password expiration is unknown.
+        '''</summary>
+        Public ReadOnly Property cls_msg_PasswordExpiresUnknown() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_PasswordExpiresUnknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на The selected address is already used as the primary.
+        '''</summary>
+        Public ReadOnly Property cls_msg_SelectedAddressAlreadyPrimary() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_SelectedAddressAlreadyPrimary", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на unknown.
+        '''</summary>
+        Public ReadOnly Property cls_msg_Unknown() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_Unknown", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Account lockout duration.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutDuration() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutDuration", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} minutes.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutDurationFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutDurationFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Reset account lockout counter after.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutObservationWindow() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutObservationWindow", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} minutes.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutObservationWindowFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutObservationWindowFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Account lockout threshold.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutThreshold() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutThreshold", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} invalid logon attempts.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropLockoutThresholdFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropLockoutThresholdFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Maximum password age.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMaximumPasswordAge() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMaximumPasswordAge", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} days.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMaximumPasswordAgeFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMaximumPasswordAgeFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Minimum password age.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMinimumPasswordAge() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMinimumPasswordAge", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} days.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMinimumPasswordAgeFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMinimumPasswordAgeFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Minimum password lenght.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMinimumPasswordLenght() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMinimumPasswordLenght", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} characters.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropMinimumPasswordLenghtFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropMinimumPasswordLenghtFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password must meet complexity requirements.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropPasswordComplexityRequirements() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropPasswordComplexityRequirements", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0}.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropPasswordComplexityRequirementsFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropPasswordComplexityRequirementsFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Enforce password history.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropPasswordHistory() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropPasswordHistory", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на {0} passwords remembered.
+        '''</summary>
+        Public ReadOnly Property clsDomain_msg_PropPasswordHistoryFormat() As String
+            Get
+                Return ResourceManager.GetString("clsDomain_msg_PropPasswordHistoryFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property computer() As System.Drawing.Icon

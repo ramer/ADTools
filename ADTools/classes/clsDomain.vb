@@ -173,14 +173,14 @@ Public Class clsDomain
                 Dim p As New ObservableCollection(Of clsDomainProperty)
                 Try
                     p.Clear()
-                    p.Add(New clsDomainProperty("Пороговое значение блокировки", String.Format("{0} ошибок входа", GetLDAPProperty(_defaultnamingcontext.Properties, "lockoutThreshold"))))
-                    p.Add(New clsDomainProperty("Время до сброса счетчика блокировки", String.Format("{0} минут", -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockoutDuration")(0))).Minutes)))
-                    p.Add(New clsDomainProperty("Продолжительность блокировки учетной записи", String.Format("{0} минут", -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockOutObservationWindow")(0))).Minutes)))
-                    p.Add(New clsDomainProperty("Максимальный срок действия пароля", String.Format("{0} дней", -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("maxPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty("Минимальный срок действия пароля", String.Format("{0} дней", -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("minPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty("Минимальная длина пароля", String.Format("{0} символов", GetLDAPProperty(_defaultnamingcontext.Properties, "minPwdLength") & " симв.")))
-                    p.Add(New clsDomainProperty("Пароль должен отвечать требованиям сложности", String.Format("{0}", GetLDAPProperty(_defaultnamingcontext.Properties, "pwdProperties"))))
-                    p.Add(New clsDomainProperty("Вести журнал паролей", String.Format("{0} сохраненных паролей", GetLDAPProperty(_defaultnamingcontext.Properties, "pwdHistoryLength"))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutThreshold, String.Format(My.Resources.clsDomain_msg_PropLockoutThresholdFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "lockoutThreshold"))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutDuration, String.Format(My.Resources.clsDomain_msg_PropLockoutDurationFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockoutDuration")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutObservationWindow, String.Format(My.Resources.clsDomain_msg_PropLockoutObservationWindowFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockOutObservationWindow")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMaximumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMaximumPasswordAgeFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("maxPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordAgeFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("minPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordLenght, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordLenghtFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "minPwdLength"))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordComplexityRequirements, String.Format(My.Resources.clsDomain_msg_PropPasswordComplexityRequirementsFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "pwdProperties"))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordHistory, String.Format(My.Resources.clsDomain_msg_PropPasswordHistoryFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "pwdHistoryLength"))))
                 Catch
                     p.Clear()
                 End Try

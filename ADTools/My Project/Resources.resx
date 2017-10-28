@@ -1064,4 +1064,94 @@ Are you sure?</value>
   <data name="wndObject_msg_ClearPhoto" xml:space="preserve">
     <value>Clear photo</value>
   </data>
+  <data name="cls_msg_SelectedAddressAlreadyPrimary" xml:space="preserve">
+    <value>The selected address is already used as the primary</value>
+  </data>
+  <data name="cls_msg_Never" xml:space="preserve">
+    <value>never</value>
+  </data>
+  <data name="cls_msg_Unknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="cls_msg_PasswordExpiresUnknown" xml:space="preserve">
+    <value>Password expiration is unknown</value>
+  </data>
+  <data name="cls_msg_PasswordExpired" xml:space="preserve">
+    <value>Password expired</value>
+  </data>
+  <data name="cls_msg_ObjectExpiresUnknown" xml:space="preserve">
+    <value>Object expiration is unknown</value>
+  </data>
+  <data name="cls_msg_ObjectExpired" xml:space="preserve">
+    <value>Object expired</value>
+  </data>
+  <data name="cls_msg_ObjectStatusUnknown" xml:space="preserve">
+    <value>Object status is unknown</value>
+  </data>
+  <data name="cls_msg_ObjectDisabled" xml:space="preserve">
+    <value>Object disabled</value>
+  </data>
+  <data name="cls_msg_DefaultPasswordIsNotSet" xml:space="preserve">
+    <value>Default password is not set</value>
+  </data>
+  <data name="cls_msg_PasswordChanged" xml:space="preserve">
+    <value>Password changed</value>
+  </data>
+  <data name="cls_msg_Expired" xml:space="preserve">
+    <value>expired</value>
+  </data>
+  <data name="cls_msg_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="cls_msg_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutThreshold" xml:space="preserve">
+    <value>Account lockout threshold</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutThresholdFormat" xml:space="preserve">
+    <value>{0} invalid logon attempts</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutDuration" xml:space="preserve">
+    <value>Account lockout duration</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutDurationFormat" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutObservationWindow" xml:space="preserve">
+    <value>Reset account lockout counter after</value>
+  </data>
+  <data name="clsDomain_msg_PropLockoutObservationWindowFormat" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="clsDomain_msg_PropMaximumPasswordAge" xml:space="preserve">
+    <value>Maximum password age</value>
+  </data>
+  <data name="clsDomain_msg_PropMaximumPasswordAgeFormat" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordAge" xml:space="preserve">
+    <value>Minimum password age</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordAgeFormat" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordLenght" xml:space="preserve">
+    <value>Minimum password lenght</value>
+  </data>
+  <data name="clsDomain_msg_PropMinimumPasswordLenghtFormat" xml:space="preserve">
+    <value>{0} characters</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordComplexityRequirements" xml:space="preserve">
+    <value>Password must meet complexity requirements</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordComplexityRequirementsFormat" xml:space="preserve">
+    <value>{0}</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordHistory" xml:space="preserve">
+    <value>Enforce password history</value>
+  </data>
+  <data name="clsDomain_msg_PropPasswordHistoryFormat" xml:space="preserve">
+    <value>{0} passwords remembered</value>
+  </data>
 </root>

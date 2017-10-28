@@ -379,25 +379,25 @@ Public Class clsDirectoryObject
 
             If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
-                    _statusFormated &= "Срок действия пароля неизвестен" & vbCr
+                    _statusFormated &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate() = Nothing Then
-                        _statusFormated &= "Срок действия пароля неизвестен" & vbCr
+                        _statusFormated &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
                     ElseIf passwordExpiresDate() <= Now Then
-                        _statusFormated &= "Срок действия пароля истек" & vbCr
+                        _statusFormated &= My.Resources.cls_msg_PasswordExpired & vbCr
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _statusFormated &= "Срок действия объекта неизвестен" & vbCr
+                    _statusFormated &= My.Resources.cls_msg_ObjectExpiresUnknown & vbCr
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _statusFormated &= "Срок действия объекта истек" & vbCr
+                    _statusFormated &= My.Resources.cls_msg_ObjectExpired & vbCr
                 End If
 
                 If disabled Is Nothing Then
-                    _statusFormated &= "Статус объекта неизвестен" & vbCr
+                    _statusFormated &= My.Resources.cls_msg_ObjectStatusUnknown & vbCr
                 ElseIf disabled Then
-                    _statusFormated &= "Объект заблокирован" & vbCr
+                    _statusFormated &= My.Resources.cls_msg_ObjectDisabled & vbCr
                 End If
                 If _statusFormated.Length > 1 Then _statusFormated = _statusFormated.Remove(_statusFormated.Length - 1)
             End If
@@ -507,19 +507,19 @@ Public Class clsDirectoryObject
     End Property
 
     Public Sub ResetPassword()
-        If Domain.DefaultPassword = "" Then Throw New Exception("Стандартный пароль в целевом домене не указан")
+        If Domain.DefaultPassword = "" Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
 
         _entry.Invoke("SetPassword", Domain.DefaultPassword)
         pwdLastSet = 0
         _entry.CommitChanges()
-        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+        description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
     Public Sub SetPassword(password As String)
         _entry.Invoke("SetPassword", password)
         pwdLastSet = -1
         _entry.CommitChanges()
-        description = String.Format("{0} {1} ({2})", "Пароль сброшен", Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+        description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
 
@@ -778,11 +778,11 @@ Public Class clsDirectoryObject
         Get
             If _memberOf Is Nothing Then
                 Dim g As Object = LdapProperty("memberOf")
-                If IsArray(g) Then          'если групп несколько
+                If IsArray(g) Then          ' few groups
                     _memberOf = New ObservableCollection(Of clsDirectoryObject)(CType(g, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                ElseIf g Is Nothing Then    'если групп нет
+                ElseIf g Is Nothing Then    ' groups is null
                     _memberOf = New ObservableCollection(Of clsDirectoryObject)
-                Else                        'если группа одна
+                Else                        ' one group
                     _memberOf = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + g.ToString, Domain.Username, Domain.Password), Domain)})
                 End If
             End If
@@ -1025,11 +1025,11 @@ Public Class clsDirectoryObject
         Get
             If _member Is Nothing Then
                 Dim o As Object = LdapProperty("member")
-                If IsArray(o) Then          'если объектов несколько
+                If IsArray(o) Then          ' few members
                     _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                ElseIf o Is Nothing Then    'если объектов нет
+                ElseIf o Is Nothing Then    ' membres is null
                     _member = New ObservableCollection(Of clsDirectoryObject)
-                Else                        'если объект один
+                Else                        ' one member
                     _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + o.ToString, Domain.Username, Domain.Password), Domain)})
                 End If
             End If
@@ -1120,12 +1120,12 @@ Public Class clsDirectoryObject
         Get
             If accountExpires IsNot Nothing Then
                 If accountExpires = 0 Or accountExpires = 9223372036854775807 Then
-                    Return "никогда"
+                    Return My.Resources.cls_msg_Never
                 Else
                     Return Date.FromFileTime(accountExpires).ToString
                 End If
             Else
-                Return "неизвестно"
+                Return My.Resources.cls_msg_Unknown
             End If
         End Get
     End Property
@@ -1220,9 +1220,9 @@ Public Class clsDirectoryObject
     Public ReadOnly Property lastLogonFormated() As String
         Get
             If lastLogon IsNot Nothing Then
-                Return If(lastLogon <= 0, "никогда", Date.FromFileTime(lastLogon).ToString)
+                Return If(lastLogon <= 0, My.Resources.cls_msg_Never, Date.FromFileTime(lastLogon).ToString)
             Else
-                Return "неизвестно"
+                Return My.Resources.cls_msg_Unknown
             End If
         End Get
     End Property
@@ -1295,7 +1295,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property pwdLastSetFormated() As String
         Get
-            Return If(pwdLastSet Is Nothing, "неизвестно", If(pwdLastSet = 0, "истек", Date.FromFileTime(pwdLastSet).ToString))
+            Return If(pwdLastSet Is Nothing, My.Resources.cls_msg_Unknown, If(pwdLastSet = 0, My.Resources.cls_msg_Expired, Date.FromFileTime(pwdLastSet).ToString))
         End Get
     End Property
 
@@ -1314,9 +1314,9 @@ Public Class clsDirectoryObject
     Public ReadOnly Property passwordExpiresFormated() As String
         Get
             If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
-                Return "никогда"
+                Return My.Resources.cls_msg_Never
             Else
-                Return If(pwdLastSet Is Nothing, "неизвестно", If(pwdLastSet = 0, "истек", Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge).ToString))
+                Return If(pwdLastSet Is Nothing, My.Resources.cls_msg_Unknown, If(pwdLastSet = 0, My.Resources.cls_msg_Expired, Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge).ToString))
             End If
         End Get
     End Property
@@ -1407,7 +1407,7 @@ Public Class clsDirectoryObject
                     userAccountControl = userAccountControl - ADS_UF_ACCOUNTDISABLE
                 End If
             End If
-            description = String.Format("{0} {1} ({2})", If(value, "Заблокирован", "Разблокирован"), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+            description = String.Format("{0} {1} ({2})", If(value, My.Resources.cls_msg_Disabled, My.Resources.cls_msg_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
         End Set
     End Property
 
@@ -1421,7 +1421,7 @@ Public Class clsDirectoryObject
                     Return ""
                 End If
             Else
-                Return "неизвестно"
+                Return My.Resources.cls_msg_Unknown
             End If
         End Get
     End Property
@@ -1455,7 +1455,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreatedFormated() As String
         Get
-            Return If(whenCreated = Nothing, "неизвестно", whenCreated.ToString)
+            Return If(whenCreated = Nothing, My.Resources.cls_msg_Unknown, whenCreated.ToString)
         End Get
     End Property
 

@@ -388,7 +388,7 @@ Public Class clsContact
 
         If mail.IsPrimary Then
 
-            ThrowCustomException("Выбранный адрес уже используется как основной")
+            ThrowCustomException(My.Resources.cls_msg_SelectedAddressAlreadyPrimary)
 
         Else
 
