@@ -4,7 +4,7 @@ Imports System.Management.Automation.Runspaces
 
 'https://www.experts-exchange.com/questions/26329738/Programmatically-create-mailbox-in-Exchange-2010-Without-powershell.html
 
-'если нет подключения к Exchange, на машине пользователя надо в PowerShell от имени админа:
+'if there is no connection to Exchange, the user's machine must be in PowerShell on behalf of the admin and type:
 'winrm quickconfig
 'Set-Item WSMan:\localhost\Client\TrustedHosts -Value SERVERNAME -Force
 
@@ -72,15 +72,15 @@ Public Class clsPowerShell
             If psHadException = False And _ps.HadErrors = False Then Exit For
         Next
 
-        If psResult IsNot Nothing Then res &= "Объектов получено: " & psResult.Count & ". "
+        If psResult IsNot Nothing Then res &= "Objects count: " & psResult.Count & ". "
 
         If psHadException = True Then
-            res &= "Ошибка: " & If(psException IsNot Nothing, psException.Message & vbCrLf, "")
+            res &= "Error: " & If(psException IsNot Nothing, psException.Message & vbCrLf, "")
         End If
 
         If _ps.HadErrors = True Then
             For Each ex As ErrorRecord In _ps.Streams.Error
-                res &= "Ошибка: " & ex.Exception.Message & vbCrLf & "- CategoryInfo.Activity: " & ex.CategoryInfo.Activity & vbCrLf & "- CategoryInfo.Reason: " & ex.CategoryInfo.Reason
+                res &= "Error: " & ex.Exception.Message & vbCrLf & "- CategoryInfo.Activity: " & ex.CategoryInfo.Activity & vbCrLf & "- CategoryInfo.Reason: " & ex.CategoryInfo.Reason
             Next
         End If
 
