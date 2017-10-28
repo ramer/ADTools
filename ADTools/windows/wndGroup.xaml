@@ -46,6 +46,12 @@
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="200"/>
                                 <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                             </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="200"/>
+                                <StackPanel Orientation="Horizontal" Height="23">
+                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
+                                </StackPanel>
+                            </DockPanel>
                             <Grid Margin="5,5,5,0" IsEnabled="{Binding CanWrite[groupType]}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
@@ -65,7 +71,7 @@
                             </Grid>
                             <StackPanel Margin="5,10,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Info}"/>
-                                <TextBox Name="tbInfo" Height="170" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
+                                <TextBox Name="tbInfo" Height="140" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>
