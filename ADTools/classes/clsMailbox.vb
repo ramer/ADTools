@@ -230,7 +230,7 @@ Public Class clsMailbox
         cmd.AddParameter("Identity", objectGUID)
         cmd.AddCommand("Get-ADPermission")
 
-        Dim obj1 As Collection(Of PSObject) = exch.Command(cmd) 'список прав
+        Dim obj1 As Collection(Of PSObject) = exch.Command(cmd)
         If obj1 Is Nothing Then Return Nothing
 
         Return obj1
@@ -241,7 +241,7 @@ Public Class clsMailbox
         cmd.AddCommand("Get-MailboxPermission")
         cmd.AddParameter("Identity", objectGUID)
 
-        Dim obj1 As Collection(Of PSObject) = exch.Command(cmd) 'список прав
+        Dim obj1 As Collection(Of PSObject) = exch.Command(cmd)
         If obj1 Is Nothing Then Return Nothing
 
         Return obj1
@@ -725,7 +725,7 @@ Public Class clsMailbox
 
         If mail.IsPrimary Then
 
-            ThrowCustomException("Выбранный адрес уже используется как основной")
+            ThrowCustomException(My.Resources.cls_msg_SelectedAddressAlreadyPrimary)
 
         Else
 
@@ -931,7 +931,7 @@ Public Class clsMailbox
 
             If _mailbox Is Nothing Then Return Nothing
 
-            Dim obj1 As PSObject = _mailbox.Properties("GrantSendOnBehalfTo").Value 'список прав
+            Dim obj1 As PSObject = _mailbox.Properties("GrantSendOnBehalfTo").Value
             If obj1 Is Nothing Then Return Nothing
 
             Dim rights As String() = CType(obj1.BaseObject, ArrayList).ToArray().Select(Function(x) GetUserPartFromExchangeUsername(x.ToString)).ToArray
