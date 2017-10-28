@@ -341,6 +341,87 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Batch.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeBatch() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeBatch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Cached, interactive.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeCachedInteractive() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeCachedInteractive", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Interactive.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeInteractive() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeInteractive", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Network.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeNetwork() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeNetwork", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Network, cleartext password.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeNetworkCleartext() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeNetworkCleartext", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на New credentials.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeNewCredentials() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeNewCredentials", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remote, interactive.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeRemoteInteractive() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeRemoteInteractive", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Service.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeService() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeService", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Unlock.
+        '''</summary>
+        Public ReadOnly Property clsEvent_msg_LogonTypeUnlock() As String
+            Get
+                Return ResourceManager.GetString("clsEvent_msg_LogonTypeUnlock", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property computer() As System.Drawing.Icon

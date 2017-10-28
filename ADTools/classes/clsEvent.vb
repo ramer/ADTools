@@ -313,15 +313,15 @@ Public Class clsEvent
 
     Private Function GetLogonTypeString(lt As String) As String
         Select Case lt
-            Case 2 : Return "Интерактивный"
-            Case 3 : Return "Сетевой"
-            Case 4 : Return "Пакет"
-            Case 5 : Return "Служба"
-            Case 7 : Return "Разблокировка"
-            Case 8 : Return "NetworkCleartext"
-            Case 9 : Return "NewCredentials"
-            Case 10 : Return "RemoteInteractive"
-            Case 11 : Return "CachedInteractive"
+            Case 2 : Return My.Resources.clsEvent_msg_LogonTypeInteractive
+            Case 3 : Return My.Resources.clsEvent_msg_LogonTypeNetwork
+            Case 4 : Return My.Resources.clsEvent_msg_LogonTypeBatch
+            Case 5 : Return My.Resources.clsEvent_msg_LogonTypeService
+            Case 7 : Return My.Resources.clsEvent_msg_LogonTypeUnlock
+            Case 8 : Return My.Resources.clsEvent_msg_LogonTypeNetworkCleartext
+            Case 9 : Return My.Resources.clsEvent_msg_LogonTypeNewCredentials
+            Case 10 : Return My.Resources.clsEvent_msg_LogonTypeRemoteInteractive
+            Case 11 : Return My.Resources.clsEvent_msg_LogonTypeCachedInteractive
             Case Else : Return ""
         End Select
 

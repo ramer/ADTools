@@ -1154,4 +1154,31 @@ Are you sure?</value>
   <data name="clsDomain_msg_PropPasswordHistoryFormat" xml:space="preserve">
     <value>{0} passwords remembered</value>
   </data>
+  <data name="clsEvent_msg_LogonTypeInteractive" xml:space="preserve">
+    <value>Interactive</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNetwork" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeBatch" xml:space="preserve">
+    <value>Batch</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeService" xml:space="preserve">
+    <value>Service</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeUnlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNetworkCleartext" xml:space="preserve">
+    <value>Network, cleartext password</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNewCredentials" xml:space="preserve">
+    <value>New credentials</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeRemoteInteractive" xml:space="preserve">
+    <value>Remote, interactive</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeCachedInteractive" xml:space="preserve">
+    <value>Cached, interactive</value>
+  </data>
 </root>

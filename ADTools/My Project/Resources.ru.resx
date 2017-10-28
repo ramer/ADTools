@@ -1071,4 +1071,31 @@
   <data name="clsDomain_msg_PropPasswordHistoryFormat" xml:space="preserve">
     <value>{0} сохраненных паролей</value>
   </data>
+  <data name="clsEvent_msg_LogonTypeInteractive" xml:space="preserve">
+    <value>Интерактивный</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNetwork" xml:space="preserve">
+    <value>Сетевой</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeBatch" xml:space="preserve">
+    <value>Пакет</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeService" xml:space="preserve">
+    <value>Служба</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeUnlock" xml:space="preserve">
+    <value>Разблокировка</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNetworkCleartext" xml:space="preserve">
+    <value>Сетевой, открытый пароль</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeNewCredentials" xml:space="preserve">
+    <value>Другие реквизиты</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeRemoteInteractive" xml:space="preserve">
+    <value>Удаленный, интерактивный</value>
+  </data>
+  <data name="clsEvent_msg_LogonTypeCachedInteractive" xml:space="preserve">
+    <value>Кешированный, интерактивный</value>
+  </data>
 </root>
