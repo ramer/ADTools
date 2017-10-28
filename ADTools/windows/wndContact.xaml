@@ -8,8 +8,8 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="518.78"
-        Width="674.343"
+        Height="540"
+        Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">
@@ -34,29 +34,29 @@
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GivenName}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GivenName}" Width="140"/>
                                 <TextBox x:Name="tbInitials" Width="50" Height="23" Text="{Binding initials}" DockPanel.Dock="Right" MaxLength="6" IsReadOnly="{Binding IsReadOnly[initials]}"/>
                                 <TextBlock Text="{x:Static r:Resources.wndObject_Initials}" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
                                 <TextBox x:Name="tbGivenName" Height="23" Text="{Binding givenName}" TabIndex="0" MaxLength="64" IsReadOnly="{Binding IsReadOnly[givenName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Surname}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Surname}" Width="140"/>
                                 <TextBox x:Name="tbSN" Height="23" Text="{Binding sn}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[sn]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" Width="140"/>
                                 <TextBox Name="tbDisplayName" Height="24" Text="{Binding displayName}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[displayName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="140"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OfficeName}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OfficeName}" Width="140"/>
                                 <TextBox Name="tbPhysicalDeliveryOfficeName" Height="23" Text="{Binding physicalDeliveryOfficeName}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[physicalDeliveryOfficeName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="140"/>
                                 <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[TelephoneNumber]}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
@@ -93,39 +93,39 @@
                                 </ComboBox>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_HomePhone}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_HomePhone}" Width="140"/>
                                 <TextBox Name="tbHomePhone" Height="23" Text="{Binding homePhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[homePhone]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_IpPhone}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_IpPhone}" Width="140"/>
                                 <TextBox Name="tbIpPhone" Height="23" Text="{Binding ipPhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[ipPhone]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mobile}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mobile}" Width="140"/>
                                 <TextBox Name="tbMobile" Height="23" Text="{Binding mobile}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[mobile]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="140"/>
                                 <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Title}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Title}" Width="140"/>
                                 <TextBox Name="tbTitle" Height="23" Text="{Binding title}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[title]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Department}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Department}" Width="140"/>
                                 <TextBox Name="tbDepartment" Height="23" Text="{Binding department}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[department]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Company}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Company}" Width="140"/>
                                 <TextBox Name="tbCompany" Height="23" Text="{Binding company}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[company]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_StreetAddress}" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_StreetAddress}" Width="140"/>
                                 <TextBox Name="tbStreetAddress" Height="23" Text="{Binding streetAddress}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[streetAddress]}"/>
                             </DockPanel>
-                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="130"/>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0" Height="23">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
                                 <TextBlock>
                                     <Hyperlink 
                                         NavigateUri="{Binding manager.displayName}"
@@ -133,6 +133,12 @@
                                         <TextBlock Text="{Binding manager.displayName}"/>
                                     </Hyperlink>
                                 </TextBlock>
+                            </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0" Height="23">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="140"/>
+                                <StackPanel Orientation="Horizontal" Height="23">
+                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
+                                </StackPanel>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>

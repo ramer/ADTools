@@ -8,8 +8,8 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="467"
-        Width="674.343"
+        Height="340"
+        Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">
@@ -30,11 +30,11 @@
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="140"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="200"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="140"/>
                                 <StackPanel Orientation="Horizontal" Height="23">
                                     <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
                                 </StackPanel>

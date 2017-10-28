@@ -8,8 +8,8 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="467"
-        Width="674.343"
+        Height="540"
+        Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">
@@ -71,7 +71,7 @@
                             </Grid>
                             <StackPanel Margin="5,10,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Info}"/>
-                                <TextBox Name="tbInfo" Height="140" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
+                                <TextBox Name="tbInfo" Height="210" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>

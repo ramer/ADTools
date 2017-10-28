@@ -8,8 +8,8 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="467"
-        Width="674.343"
+        Height="340"
+        Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">

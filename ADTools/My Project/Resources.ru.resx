@@ -450,7 +450,7 @@
     <value>Объект</value>
   </data>
   <data name="wndObject_tt_AccountExpires" xml:space="preserve">
-    <value>Объект истекает</value>
+    <value>Срок действия объекта</value>
   </data>
   <data name="wndObject_tt_LastLogon" xml:space="preserve">
     <value>Последний вход</value>
@@ -917,5 +917,68 @@
   </data>
   <data name="wndMailboxShare_msg_SendOnBehalfCopyToSent" xml:space="preserve">
     <value>Помещать копии писем в папку Отправленные?</value>
+  </data>
+  <data name="wndObject_lbl_DepartmentResolve" xml:space="preserve">
+    <value>Получить из названия контейнера</value>
+  </data>
+  <data name="wndObject_lbl_PasswordLastSet" xml:space="preserve">
+    <value>Пароль изменен</value>
+  </data>
+  <data name="wndObject_lbl_PasswordExpires" xml:space="preserve">
+    <value>Истекает</value>
+  </data>
+  <data name="wndObject_lbl_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="wndObject_lbl_AccountDisabled" xml:space="preserve">
+    <value>Учетная запись заблокирована</value>
+  </data>
+  <data name="wndObject_lbl_MustChangePasswordNextLogon" xml:space="preserve">
+    <value>Пользователь должен сменить пароль при следующем входе</value>
+  </data>
+  <data name="wndObject_lbl_UserPrincipalName" xml:space="preserve">
+    <value>Имя входа</value>
+  </data>
+  <data name="wndObject_lbl_AccountExpires" xml:space="preserve">
+    <value>Срок действия объекта</value>
+  </data>
+  <data name="wndObject_lbl_AccountExpiresAt" xml:space="preserve">
+    <value>Истекает</value>
+  </data>
+  <data name="wndObject_lbl_AccountNeverExpires" xml:space="preserve">
+    <value>Не ограничен</value>
+  </data>
+  <data name="wndObject_lbl_AllowedWorkstations" xml:space="preserve">
+    <value>Разрешить вход на следующие рабочие станции</value>
+  </data>
+  <data name="wndObject_lbl_PasswordNeverExpires" xml:space="preserve">
+    <value>Срок действия пароля не ограничен</value>
+  </data>
+  <data name="wndObject_lbl_ResetPassword" xml:space="preserve">
+    <value>Сбросить пароль на стандартный</value>
+  </data>
+  <data name="wndObject_lbl_SetPassword" xml:space="preserve">
+    <value>Задать пароль</value>
+  </data>
+  <data name="wndObject_lbl_ClearPhoto" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="wndObject_msg_AreYouSure" xml:space="preserve">
+    <value>Вы уверены?</value>
+  </data>
+  <data name="wndObject_msg_ResetPassword" xml:space="preserve">
+    <value>Сброс пароля</value>
+  </data>
+  <data name="wndObject_msg_EnterNewPassword" xml:space="preserve">
+    <value>Введите новый пароль:</value>
+  </data>
+  <data name="wndObject_msg_ChangePassword" xml:space="preserve">
+    <value>Смена пароля</value>
+  </data>
+  <data name="wndObject_msg_PasswordChanged" xml:space="preserve">
+    <value>Пароль изменен</value>
+  </data>
+  <data name="wndObject_msg_ClearPhoto" xml:space="preserve">
+    <value>Удалить фото</value>
   </data>
 </root>

@@ -1001,4 +1001,67 @@ Are you sure?</value>
   <data name="wndMailboxShare_msg_SendOnBehalfCopyToSent" xml:space="preserve">
     <value>Copy messages to the Sent folder?</value>
   </data>
+  <data name="wndObject_lbl_DepartmentResolve" xml:space="preserve">
+    <value>Resolve Department from container</value>
+  </data>
+  <data name="wndObject_lbl_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="wndObject_lbl_PasswordLastSet" xml:space="preserve">
+    <value>Last set</value>
+  </data>
+  <data name="wndObject_lbl_PasswordExpires" xml:space="preserve">
+    <value>Expires</value>
+  </data>
+  <data name="wndObject_lbl_UserPrincipalName" xml:space="preserve">
+    <value>Logon name</value>
+  </data>
+  <data name="wndObject_lbl_MustChangePasswordNextLogon" xml:space="preserve">
+    <value>User must change password next logon</value>
+  </data>
+  <data name="wndObject_lbl_AccountDisabled" xml:space="preserve">
+    <value>Account is disabled</value>
+  </data>
+  <data name="wndObject_lbl_AccountExpires" xml:space="preserve">
+    <value>Account expires</value>
+  </data>
+  <data name="wndObject_lbl_AccountNeverExpires" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="wndObject_lbl_AccountExpiresAt" xml:space="preserve">
+    <value>Expires at</value>
+  </data>
+  <data name="wndObject_lbl_AllowedWorkstations" xml:space="preserve">
+    <value>Allow access to the following workstations</value>
+  </data>
+  <data name="wndObject_lbl_PasswordNeverExpires" xml:space="preserve">
+    <value>Password never expires</value>
+  </data>
+  <data name="wndObject_lbl_ResetPassword" xml:space="preserve">
+    <value>Reset password to default</value>
+  </data>
+  <data name="wndObject_lbl_SetPassword" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="wndObject_lbl_ClearPhoto" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="wndObject_msg_AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="wndObject_msg_ResetPassword" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="wndObject_msg_EnterNewPassword" xml:space="preserve">
+    <value>Enter new password:</value>
+  </data>
+  <data name="wndObject_msg_ChangePassword" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="wndObject_msg_PasswordChanged" xml:space="preserve">
+    <value>Password changed</value>
+  </data>
+  <data name="wndObject_msg_ClearPhoto" xml:space="preserve">
+    <value>Clear photo</value>
+  </data>
 </root>

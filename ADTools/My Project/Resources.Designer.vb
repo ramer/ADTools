@@ -2208,6 +2208,42 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Account is disabled.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AccountDisabled() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AccountDisabled", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Account expires.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AccountExpires() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AccountExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Expires at.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AccountExpiresAt() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AccountExpiresAt", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Never.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AccountNeverExpires() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AccountNeverExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на All attributes.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_AllAttributes() As String
@@ -2217,11 +2253,29 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Allow access to the following workstations.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_AllowedWorkstations() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_AllowedWorkstations", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Basic information.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_BasicInformation() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_BasicInformation", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Clear.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ClearPhoto() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ClearPhoto", resourceCulture)
             End Get
         End Property
         
@@ -2240,6 +2294,15 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_Department() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Department", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Resolve Department from container.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_DepartmentResolve() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_DepartmentResolve", resourceCulture)
             End Get
         End Property
         
@@ -2523,6 +2586,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на User must change password next logon.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_MustChangePasswordNextLogon() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_MustChangePasswordNextLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Network.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Network() As String
@@ -2559,11 +2631,56 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Password.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Password() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Password", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Expires.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_PasswordExpires() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_PasswordExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Last set.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_PasswordLastSet() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_PasswordLastSet", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password never expires.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_PasswordNeverExpires() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_PasswordNeverExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Period.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Period() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Period", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Reset password to default.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ResetPassword() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ResetPassword", resourceCulture)
             End Get
         End Property
         
@@ -2582,6 +2699,15 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_Search() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Search", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Set password.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_SetPassword() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_SetPassword", resourceCulture)
             End Get
         End Property
         
@@ -2622,6 +2748,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Logon name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_UserPrincipalName() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_UserPrincipalName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Version.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Version() As String
@@ -2636,6 +2771,60 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_LoginEventLog() As String
             Get
                 Return ResourceManager.GetString("wndObject_LoginEventLog", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Are you sure?.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_AreYouSure() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_AreYouSure", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Change password.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_ChangePassword() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_ChangePassword", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Clear photo.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_ClearPhoto() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_ClearPhoto", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Enter new password:.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_EnterNewPassword() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_EnterNewPassword", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password changed.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_PasswordChanged() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_PasswordChanged", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Reset password.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_ResetPassword() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_ResetPassword", resourceCulture)
             End Get
         End Property
         

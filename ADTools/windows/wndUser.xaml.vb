@@ -37,7 +37,7 @@ Public Class wndUser
     End Sub
 
     Private Sub btnClearPhoto_Click(sender As Object, e As RoutedEventArgs) Handles btnClearPhoto.Click
-        If IMsgBox("Вы уверены?", vbYesNo + vbQuestion, "Удаление фото") = MsgBoxResult.Yes Then currentobject.thumbnailPhoto = Nothing
+        If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ClearPhoto) = MsgBoxResult.Yes Then currentobject.thumbnailPhoto = Nothing
     End Sub
 
     Private Sub imgPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgPhoto.MouseDown
@@ -78,10 +78,10 @@ Public Class wndUser
     Private Sub btnResetPassword_Click(sender As Object, e As RoutedEventArgs) Handles btnResetPassword.Click
         Try
             If currentobject Is Nothing Then Exit Sub
-            If IMsgBox("Вы уверены?", vbYesNo + vbQuestion, "Сброс пароля") = vbYes Then
+            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword) = vbYes Then
                 currentobject.ResetPassword()
                 currentobject.passwordNeverExpires = False
-                IMsgBox("Пароль сброшен.", vbOKOnly + vbInformation, "Сброс пароля")
+                IMsgBox(My.Resources.wndObject_msg_PasswordChanged, vbOKOnly + vbInformation, My.Resources.wndObject_msg_ResetPassword)
             End If
         Catch ex As Exception
             ThrowException(ex, "btnResetPassword_Click")
@@ -92,10 +92,10 @@ Public Class wndUser
         Try
             If currentobject Is Nothing Then Exit Sub
             Dim newpassword As String
-            newpassword = IPasswordBox("Введите новый пароль:", "Смена пароля", vbQuestion)
+            newpassword = IPasswordBox(My.Resources.wndObject_msg_EnterNewPassword, My.Resources.wndObject_msg_ChangePassword,, vbQuestion, Me)
             If String.IsNullOrEmpty(newpassword) Then Exit Sub
             currentobject.SetPassword(newpassword)
-            IMsgBox("Пароль сброшен.", vbOKOnly + vbInformation, "Сброс пароля")
+            IMsgBox(My.Resources.wndObject_lbl_PasswordLastSet, vbOKOnly + vbInformation, My.Resources.wndObject_msg_ChangePassword)
         Catch ex As Exception
             ThrowException(ex, "btnSetPassword_Click")
         End Try

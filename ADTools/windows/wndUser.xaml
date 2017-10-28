@@ -8,8 +8,8 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="467"
-        Width="674.343"
+        Height="540"
+        Width="675"
         WindowStartupLocation="CenterOwner" 
         ShowInTaskbar="False"
         Icon="{Binding ClassImage}">
@@ -25,40 +25,40 @@
     
     <Grid>
         <TabControl x:Name="tabctlUser" Margin="5">
-            <TabItem Header="Основные сведения">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_BasicInformation}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
                             <Border BorderThickness="1" Margin="0,0,0,5" BorderBrush="{DynamicResource ColorButtonBackground}">
                                 <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150"/>
                             </Border>
-                            <Button x:Name="btnClearPhoto" Content="Очистить" Height="20" IsEnabled="{Binding CanWrite[thumbnailPhoto]}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibility}}"/>
+                            <Button x:Name="btnClearPhoto" Content="{x:Static r:Resources.wndObject_lbl_ClearPhoto}" Height="20" IsEnabled="{Binding CanWrite[thumbnailPhoto]}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibility}}"/>
                         </StackPanel>
                         <StackPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Имя" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GivenName}" Width="140"/>
                                 <TextBox x:Name="tbInitials" Width="50" Height="23" Text="{Binding initials}" DockPanel.Dock="Right" MaxLength="6" IsReadOnly="{Binding IsReadOnly[initials]}"/>
-                                <TextBlock Text="Инициалы" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-                                <TextBox x:Name="tbGivenName" Height="23" Text="{Binding givenName}" TabIndex="0"  MaxLength="64" IsReadOnly="{Binding IsReadOnly[givenName]}"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_Initials}" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                <TextBox x:Name="tbGivenName" Height="23" Text="{Binding givenName}" TabIndex="0" MaxLength="64" IsReadOnly="{Binding IsReadOnly[givenName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Фамилия" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Surname}" Width="140"/>
                                 <TextBox x:Name="tbSN" Height="23" Text="{Binding sn}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[sn]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Отображаемое имя" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" Width="140"/>
                                 <TextBox Name="tbDisplayName" Height="24" Text="{Binding displayName}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[displayName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Описание" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="140"/>
                                 <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Офис" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OfficeName}" Width="140"/>
                                 <TextBox Name="tbPhysicalDeliveryOfficeName" Height="23" Text="{Binding physicalDeliveryOfficeName}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[physicalDeliveryOfficeName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Телефон" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="140"/>
                                 <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
@@ -95,24 +95,36 @@
                                 </ComboBox>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Основной адрес" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_HomePhone}" Width="140"/>
+                                <TextBox Name="tbHomePhone" Height="23" Text="{Binding homePhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[homePhone]}"/>
+                            </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_IpPhone}" Width="140"/>
+                                <TextBox Name="tbIpPhone" Height="23" Text="{Binding ipPhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[ipPhone]}"/>
+                            </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mobile}" Width="140"/>
+                                <TextBox Name="tbMobile" Height="23" Text="{Binding mobile}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[mobile]}"/>
+                            </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="140"/>
                                 <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Должность" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Title}" Width="140"/>
                                 <TextBox Name="tbTitle" Height="23" Text="{Binding title}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[title]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Подразделение" Width="130"/>
-                                <Button x:Name="btnResolveDepartment" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right" ToolTip="Получить из названия контейнера" IsEnabled="{Binding CanWrite[department]}"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Department}" Width="140"/>
+                                <Button x:Name="btnResolveDepartment" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right" ToolTip="{x:Static r:Resources.wndObject_lbl_DepartmentResolve}" IsEnabled="{Binding CanWrite[department]}"/>
                                 <TextBox Name="tbDepartment" Height="23" Text="{Binding department}" Margin="0,0,5,0" MaxLength="64" IsReadOnly="{Binding IsReadOnly[department]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Компания" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Company}" Width="140"/>
                                 <TextBox Name="tbCompany" Height="23" Text="{Binding company}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[company]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Руководитель" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
                                 <TextBlock Height="23">
                                     <Hyperlink 
                                         NavigateUri="{Binding manager.displayName}"
@@ -122,34 +134,34 @@
                                 </TextBlock>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Учетная запись" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="140"/>
                                 <StackPanel Orientation="Horizontal" Height="23">
-                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="Создан" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="Последний вход" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="Объект истекает" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_LastLogon}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_AccountExpires}" Margin="0,0,10,0"/>
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                <TextBlock Text="Пароль" Width="130"/>
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Password}" Width="140"/>
                                 <StackPanel Orientation="Horizontal" Height="23">
-                                    <TextBlock Text="{Binding pwdLastSetFormated}" ToolTip="Пароль изменен" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding passwordExpiresFormated}" ToolTip="Пароль истекает" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding pwdLastSetFormated}" ToolTip="{x:Static r:Resources.wndObject_lbl_PasswordLastSet}" Margin="0,0,10,0"/>
+                                    <TextBlock Text="{Binding passwordExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_lbl_PasswordExpires}" Margin="0,0,10,0"/>
                                 </StackPanel>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Объект">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_Object}">
                 <DockPanel LastChildFill="True">
                     <StackPanel DockPanel.Dock="Top">
                         <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                            <TextBlock Text="Имя входа" Width="130"/>
+                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_UserPrincipalName}" Width="140"/>
                             <ComboBox x:Name="cmboUserPrincipalNameDomain" Height="23" Width="150" Text="{Binding userPrincipalNameDomain}" ItemsSource="{Binding Domain.Suffixes}" DockPanel.Dock="Right" IsEditable="True" IsEnabled="{Binding CanWrite[userPrincipalName]}"/>
                             <TextBox x:Name="tbUserPrincipalNameName" Height="23" Text="{Binding userPrincipalNameName}" MaxLength="256" BorderThickness="1,1,0,1" TabIndex="0" IsReadOnly="{Binding IsReadOnly[userPrincipalName]}"/>
                         </DockPanel>
                         <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                            <TextBlock Text="Имя входа (пред-Windows 2000)" Width="200"/>
+                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_SAMAccountName}" Width="200"/>
                             <TextBox x:Name="tbSAMAccountName" Height="23" Text="{Binding sAMAccountName}" MaxLength="20" IsReadOnly="{Binding IsReadOnly[sAMAccountName]}"/>
                         </DockPanel>
                         <Grid Margin="0,15,0,0">
@@ -159,36 +171,36 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <CheckBox x:Name="chbMustChangePasswordNextLogon" Content="Пользователь должен сменить пароль при следующем входе" Margin="5,5,5,0" IsChecked="{Binding userMustChangePasswordNextLogon}" IsEnabled="{Binding CanWrite[pwdLastSet]}"/>
-                                <CheckBox x:Name="chbPasswordNeverExpires" Content="Срок действия пароля не ограничен" Margin="5,5,5,0" IsChecked="{Binding passwordNeverExpires}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
-                                <CheckBox x:Name="chbAccountDisabled" Content="Учетная запись заблокирована" Margin="5,5,5,0" IsChecked="{Binding disabled}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
+                                <CheckBox x:Name="chbMustChangePasswordNextLogon" Content="{x:Static r:Resources.wndObject_lbl_MustChangePasswordNextLogon}" Margin="5,5,5,0" IsChecked="{Binding userMustChangePasswordNextLogon}" IsEnabled="{Binding CanWrite[pwdLastSet]}"/>
+                                <CheckBox x:Name="chbPasswordNeverExpires" Content="{x:Static r:Resources.wndObject_lbl_PasswordNeverExpires}" Margin="5,5,5,0" IsChecked="{Binding passwordNeverExpires}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
+                                <CheckBox x:Name="chbAccountDisabled" Content="{x:Static r:Resources.wndObject_lbl_AccountDisabled}" Margin="5,5,5,0" IsChecked="{Binding disabled}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1">
-                                <Button x:Name="btnResetPassword" Content="🔑" Height="23" Width="23" Margin="5,5,5,0" ToolTip="Сбросить пароль на стандартный"/>
-                                <Button x:Name="btnSetPassword" Content="🖊" Height="23" Width="23" Margin="5,5,5,0" ToolTip="Задать новый пароль"/>
+                                <Button x:Name="btnResetPassword" Content="🔑" Height="23" Width="23" Margin="5,5,5,0" ToolTip="{x:Static r:Resources.wndObject_lbl_ResetPassword}"/>
+                                <Button x:Name="btnSetPassword" Content="🖊" Height="23" Width="23" Margin="5,5,5,0" ToolTip="{x:Static r:Resources.wndObject_lbl_SetPassword}"/>
                             </StackPanel>
 
                         </Grid>
-                        <TextBlock Text="Срок действия учетной записи" Margin="5,20,5,0"/>
+                        <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AccountExpires}" Margin="5,20,5,0"/>
                         <DockPanel LastChildFill="True" Margin="5,5,5,0" IsEnabled="{Binding CanWrite[accountExpires]}">
-                            <RadioButton x:Name="rbAccountNeverExpires" Content="Не ограничен" Margin="0,3,10,0" IsChecked="{Binding accountNeverExpires}"/>
-                            <RadioButton x:Name="rbAccountExpiresAt" Content="Истекает" Margin="0,3,10,0" IsChecked="{Binding accountExpiresAt, Mode=OneWay}"/>
+                            <RadioButton x:Name="rbAccountNeverExpires" Content="{x:Static r:Resources.wndObject_lbl_AccountNeverExpires}" Margin="0,3,10,0" IsChecked="{Binding accountNeverExpires}"/>
+                            <RadioButton x:Name="rbAccountExpiresAt" Content="{x:Static r:Resources.wndObject_lbl_AccountExpiresAt}" Margin="0,3,10,0" IsChecked="{Binding accountExpiresAt, Mode=OneWay}"/>
                             <!--<xctk:DateTimePicker x:Name="dtpStartTime" FormatString="dd.MM.yyyy HH:mm:ss dddd" IsEnabled="{Binding ElementName=rbAccountExpiresAt, Path=IsChecked}" Value="{Binding accountExpiresDate}" AutoCloseCalendar="True" Format="Custom" TimeFormat="LongTime" AllowTextInput="False" TextAlignment="Left"/>-->
                         </DockPanel>
-                        <TextBlock Text="Разрешить вход на следующие рабочие станции" Margin="5,20,5,0"/>
+                        <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AllowedWorkstations}" Margin="5,20,5,0"/>
                     </StackPanel>
                     <DockPanel IsEnabled="{Binding CanWrite[userWorkstations]}">
                         <local:ctlUserWorkstations x:Name="ctlUserWorkstations" Margin="5"/>
                     </DockPanel>
                 </DockPanel>
             </TabItem>
-            <TabItem Header="Член групп">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
             <TabItem x:Name="tabctlUserExchange" Header="{x:Static r:Resources.wndObject_lbl_Exchange}">
                 <local:ctlUserMailbox x:Name="ctlMailbox" Margin="5"/>
             </TabItem>
-            <TabItem Header="Все атрибуты">
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
             </TabItem>
         </TabControl>
