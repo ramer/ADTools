@@ -220,8 +220,8 @@
   <data name="lbl_ObjectsTotal" xml:space="preserve">
     <value>Объектов: </value>
   </data>
-  <data name="wndMain_lbl_SearchFilter" xml:space="preserve">
-    <value>Фильтр</value>
+  <data name="wndMain_lbl_SearchPattern" xml:space="preserve">
+    <value>Поиск</value>
   </data>
   <data name="wndMain_lbl_SearchResults" xml:space="preserve">
     <value>Результаты поиска: </value>
@@ -1100,5 +1100,28 @@
   </data>
   <data name="mdlMain_msg_UnhandledException" xml:space="preserve">
     <value>Необработанное исключение</value>
+  </data>
+  <data name="cls_msg_WrongGroupMember" xml:space="preserve">
+    <value>Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена.
+Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы.
+Локальная группа домена может быть членом только другой локальной группы домена.
+Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы.
+Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы.
+Универсальная группа не может быть членом глобальной группы.</value>
+  </data>
+  <data name="cls_msg_WrongGroupMemberTitle" xml:space="preserve">
+    <value>Неверный тип группы</value>
+  </data>
+  <data name="hint_poptvObjects_1" xml:space="preserve">
+    <value>Для начала необходимо</value>
+  </data>
+  <data name="hint_poptvObjects_2" xml:space="preserve">
+    <value>добавить домены</value>
+  </data>
+  <data name="hint_poptvObjects_3" xml:space="preserve">
+    <value>, с которыми мы будет работать</value>
+  </data>
+  <data name="hint_popcmboSearchPattern" xml:space="preserve">
+    <value>Воспользуйся поисковой строкой для поиска объектов</value>
   </data>
 </root>

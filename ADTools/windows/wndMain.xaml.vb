@@ -34,6 +34,14 @@ Class wndMain
         mnuSearchDomains.ItemsSource = domains
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
+
+        poptvObjects.IsOpen = domains.Count = 0
+        popcmboSearchPattern.IsOpen = preferences.FirstRun
+    End Sub
+
+    Private Sub MovePopupHints() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, cmboSearchPattern.SizeChanged
+        poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
+        popcmboSearchPattern.HorizontalOffset += 1 : popcmboSearchPattern.HorizontalOffset -= 1
     End Sub
 
     Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing, MyBase.Closing
@@ -124,7 +132,7 @@ Class wndMain
         IPrintDialog.PreviewDocument(fd)
     End Sub
 
-    Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click
+    Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click, hlpoptvObjects.Click
         ShowWindow(New wndDomains, True, Me, True)
         RefreshDomainTree()
     End Sub
@@ -651,11 +659,11 @@ Class wndMain
     End Sub
 
     Private Sub ShowPath(Optional container As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
-        For Each child In tlbrPath.Items
+        For Each child In spPath.Children
             If TypeOf child Is Button Then RemoveHandler CType(child, Button).Click, AddressOf btnPath_Click
         Next
 
-        tlbrPath.Items.Clear()
+        spPath.Children.Clear()
 
         If container IsNot Nothing Then
 
@@ -668,6 +676,7 @@ Class wndMain
                 btn.Content = If(container.objectClass.Contains("domaindns"), container.Domain.Name, container.name)
                 btn.Margin = New Thickness(2, 0, 2, 0)
                 btn.Padding = New Thickness(5, 0, 5, 0)
+                btn.VerticalAlignment = VerticalAlignment.Stretch
                 btn.Tag = container
                 buttons.Add(btn)
 
@@ -682,7 +691,7 @@ Class wndMain
 
             For Each child As Button In buttons
                 AddHandler child.Click, AddressOf btnPath_Click
-                tlbrPath.Items.Add(child)
+                spPath.Children.Add(child)
             Next
 
         ElseIf filter IsNot Nothing Then
@@ -692,7 +701,7 @@ Class wndMain
             tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern, " Advanced filter"))
             tblck.Margin = New Thickness(2, 0, 2, 0)
             tblck.Padding = New Thickness(5, 0, 5, 0)
-            tlbrPath.Items.Add(tblck)
+            spPath.Children.Add(tblck)
 
         End If
     End Sub

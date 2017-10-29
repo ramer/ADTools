@@ -15,6 +15,29 @@
         >
 
     <Grid>
+        <Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
+            <Grid Width="200" Height="70">
+                <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
+
+                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
+                    <Run Text="{x:Static r:Resources.hint_poptvObjects_1}"/>
+                    <Hyperlink x:Name="hlpoptvObjects"><Run Text="{x:Static r:Resources.hint_poptvObjects_2}"/></Hyperlink>
+                    <Run Text="{x:Static r:Resources.hint_poptvObjects_3}"/>
+                </TextBlock>
+            </Grid>
+        </Popup>
+        <Popup x:Name="popcmboSearchPattern" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=cmboSearchPattern}" Placement="Top" HorizontalOffset="80" VerticalOffset="12">
+            <Grid Width="200" Height="55">
+                <Border CornerRadius="10,10,10,0" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
+
+                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
+                    <Run Text="{x:Static r:Resources.hint_popcmboSearchPattern}"/>
+                </TextBlock>
+            </Grid>
+        </Popup>
+
+
+
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
                 <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
@@ -91,7 +114,7 @@
                         <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
                     </Button>
                 </StackPanel>
-                <ToolBar x:Name="tlbrPath" VerticalContentAlignment="Stretch" ToolBarTray.IsLocked="True" Background="Transparent"/>
+                <StackPanel x:Name="spPath" Background="Transparent" VerticalAlignment="Stretch" Orientation="Horizontal" Margin="5,0,5,0" SnapsToDevicePixels="True"/>
             </DockPanel>
 
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0">
@@ -143,6 +166,11 @@
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
                     <TreeViewItem x:Name="tviDomains" IsExpanded="True">
+                        <TreeViewItem.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="ctxmnutviDomainsDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}"/>
+                            </ContextMenu>
+                        </TreeViewItem.ContextMenu>
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
                                 <Image Source="/images/domain_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -201,7 +229,7 @@
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
                         <Grid>
                             <ComboBox x:Name="cmboSearchPattern" Text="" IsEditable="True" Margin="0,0,5,0"/>
-                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchFilter}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Setter Property="Visibility" Value="Collapsed"/>

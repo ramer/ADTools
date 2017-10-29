@@ -9,6 +9,9 @@ Public Class clsPreferences
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
+    Private _firstrun As Boolean = False
+    Private _firstversionrun As Boolean = False
+
     ' basic
     Private _clipboardsource As Boolean = False
     Private _clipboardsourcelimit As Boolean = True
@@ -56,6 +59,32 @@ Public Class clsPreferences
     Sub New()
 
     End Sub
+
+    Public Property LastVersion As String
+        Get
+            Return My.Application.Info.Version.Major.ToString() & "." & My.Application.Info.Version.Minor.ToString()
+        End Get
+        Set(value As String)
+            _firstrun = (value Is Nothing)
+            _firstversionrun = (My.Application.Info.Version.Major.ToString() & "." & My.Application.Info.Version.Minor.ToString() <> value)
+            NotifyPropertyChanged("FirstRun")
+            NotifyPropertyChanged("ShowHints")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property FirstRun As String
+        Get
+            Return _firstrun
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property FirstVersionRun As String
+        Get
+            Return _firstversionrun
+        End Get
+    End Property
 
     Public Property ClipboardSource As Boolean
         Get

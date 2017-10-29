@@ -306,8 +306,8 @@ However, you can also specify the root of the domain as the root of the search.<
   <data name="lbl_ObjectsTotal" xml:space="preserve">
     <value>Objects: </value>
   </data>
-  <data name="wndMain_lbl_SearchFilter" xml:space="preserve">
-    <value>Filter</value>
+  <data name="wndMain_lbl_SearchPattern" xml:space="preserve">
+    <value>Search</value>
   </data>
   <data name="wndMain_lbl_SearchResults" xml:space="preserve">
     <value>Search results:</value>
@@ -1183,5 +1183,28 @@ Are you sure?</value>
   </data>
   <data name="mdlMain_msg_UnhandledException" xml:space="preserve">
     <value>Unhandled exception</value>
+  </data>
+  <data name="cls_msg_WrongGroupMember" xml:space="preserve">
+    <value>A global group can be a member of another global group, a universal group, or a local domain group.
+A universal group can be a member of another universal group or a local domain group, but can not be a member of a global group.
+A local domain group can only be a member of another local domain group.
+A local domain group can be converted to a universal group only if this local domain group does not contain other members of the local domain group. A local domain group can not be a member of a universal group.
+A global group can be converted to a universal group only if this global group is not member of another global group.
+A universal group can not be a member of a global group.</value>
+  </data>
+  <data name="cls_msg_WrongGroupMemberTitle" xml:space="preserve">
+    <value>Wrong group type</value>
+  </data>
+  <data name="hint_poptvObjects_1" xml:space="preserve">
+    <value>First, you need to</value>
+  </data>
+  <data name="hint_poptvObjects_2" xml:space="preserve">
+    <value>add domains</value>
+  </data>
+  <data name="hint_poptvObjects_3" xml:space="preserve">
+    <value>that we will work with</value>
+  </data>
+  <data name="hint_popcmboSearchPattern" xml:space="preserve">
+    <value>Use the search field to search the objects</value>
   </data>
 </root>

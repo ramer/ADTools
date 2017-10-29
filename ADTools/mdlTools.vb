@@ -462,11 +462,6 @@ Module mdlTools
         Return result
     End Function
 
-    Public Sub UnhandledException(sender As Object, e As UnhandledExceptionEventArgs)
-        Dim ex As Exception = DirectCast(e.ExceptionObject, Exception)
-        ThrowException(ex, "Необработанное исключение")
-    End Sub
-
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
         ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))
     End Sub
@@ -488,12 +483,7 @@ Module mdlTools
     End Sub
 
     Public Sub ShowWrongMemberMessage()
-        IMsgBox("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." & vbCrLf &
-               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." & vbCrLf &
-               "Локальная группа домена может быть членом только другой локальной группы домена." & vbCrLf & vbCrLf &
-               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." & vbCrLf &
-               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." & vbCrLf &
-               "Универсальная группа не может быть членом глобальной группы.", vbOKOnly + vbExclamation, "Неверный тип группы")
+        IMsgBox(My.Resources.cls_msg_WrongGroupMember, vbOKOnly + vbExclamation, My.Resources.cls_msg_WrongGroupMemberTitle)
     End Sub
 
     Public Sub Log(message As String)

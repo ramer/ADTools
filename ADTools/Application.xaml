@@ -20,25 +20,23 @@
         <Style TargetType="Window">
             <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}" />
         </Style>
-        <!--<Style TargetType="{x:Type local:wndAbout}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <!--<Style TargetType="{x:Type local:wndAbout}" BasedOn="{StaticResource {x:Type Window}}"/>-->
         <Style TargetType="{x:Type local:wndComputer}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndCommander}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndContact}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndCreateObject}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndDeletedObjects}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndDomain}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndDomainBrowser}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndError}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <Style TargetType="{x:Type local:wndDomains}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <Style TargetType="{x:Type local:wndErrorLog}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndGroup}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndIncomingCall}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndLog}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndMailboxQuota}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndMailboxShare}" BasedOn="{StaticResource {x:Type Window}}"/>-->
+        <Style TargetType="{x:Type local:wndMailboxShare}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndMain}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <!--<Style TargetType="{x:Type local:wndPreferences}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndQuestion}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <Style TargetType="{x:Type local:wndOrganizationalUnit}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <Style TargetType="{x:Type local:wndPreferences}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <Style TargetType="{x:Type local:wndUnknownObject}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndUser}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndUserPhoto}" BasedOn="{StaticResource {x:Type Window}}"/>-->
+        <Style TargetType="{x:Type local:wndUserPhoto}" BasedOn="{StaticResource {x:Type Window}}"/>
 
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
@@ -1202,6 +1200,24 @@
             </Setter>
         </Style>
 
+        <Style x:Key="PopupHint" TargetType="Popup">
+            <Setter Property="StaysOpen" Value="True" />
+            <Setter Property="PopupAnimation" Value="Fade" />
+            <Setter Property="AllowsTransparency" Value="True" />
+            
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                    <BeginStoryboard>
+                        <Storyboard Storyboard.TargetProperty="(Popup.IsOpen)">
+                            <BooleanAnimationUsingKeyFrames>
+                                <DiscreteBooleanKeyFrame KeyTime="00:00:00.0" Value="False" />
+                            </BooleanAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        
     </Application.Resources>
 
 </Application>

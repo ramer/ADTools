@@ -197,6 +197,27 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на A global group can be a member of another global group, a universal group, or a local domain group.
+        '''A universal group can be a member of another universal group or a local domain group, but can not be a member of a global group.
+        '''A local domain group can only be a member of another local domain group.
+        '''A local domain group can be converted to a universal group only if this local domain group does not contain other members of the local domain group. A local domain group can not be a member of a universal gr [остаток строки не уместился]&quot;;.
+        '''</summary>
+        Public ReadOnly Property cls_msg_WrongGroupMember() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_WrongGroupMember", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Wrong group type.
+        '''</summary>
+        Public ReadOnly Property cls_msg_WrongGroupMemberTitle() As String
+            Get
+                Return ResourceManager.GetString("cls_msg_WrongGroupMemberTitle", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Account lockout duration.
         '''</summary>
         Public ReadOnly Property clsDomain_msg_PropLockoutDuration() As String
@@ -993,6 +1014,42 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("group_image", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use the search field to search the objects.
+        '''</summary>
+        Public ReadOnly Property hint_popcmboSearchPattern() As String
+            Get
+                Return ResourceManager.GetString("hint_popcmboSearchPattern", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на First, you need to.
+        '''</summary>
+        Public ReadOnly Property hint_poptvObjects_1() As String
+            Get
+                Return ResourceManager.GetString("hint_poptvObjects_1", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на add domains.
+        '''</summary>
+        Public ReadOnly Property hint_poptvObjects_2() As String
+            Get
+                Return ResourceManager.GetString("hint_poptvObjects_2", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на that we will work with.
+        '''</summary>
+        Public ReadOnly Property hint_poptvObjects_3() As String
+            Get
+                Return ResourceManager.GetString("hint_poptvObjects_3", resourceCulture)
             End Get
         End Property
         
@@ -2195,11 +2252,11 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Filter.
+        '''  Ищет локализованную строку, похожую на Search.
         '''</summary>
-        Public ReadOnly Property wndMain_lbl_SearchFilter() As String
+        Public ReadOnly Property wndMain_lbl_SearchPattern() As String
             Get
-                Return ResourceManager.GetString("wndMain_lbl_SearchFilter", resourceCulture)
+                Return ResourceManager.GetString("wndMain_lbl_SearchPattern", resourceCulture)
             End Get
         End Property
         
