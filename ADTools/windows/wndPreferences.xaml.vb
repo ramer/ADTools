@@ -42,9 +42,9 @@ Public Class wndPreferences
         Next
 
         If PluginProcessTelegramBot Is Nothing Then
-            btnPluginTelegramBotStartStop.Content = "Запустить Telegram Bot"
+            btnPluginTelegramBotStartStop.Content = My.Resources.wndPreferences_lbl_Plugins_TelegramBot_Start
         Else
-            btnPluginTelegramBotStartStop.Content = "Остановить Telegram Bot"
+            btnPluginTelegramBotStartStop.Content = My.Resources.wndPreferences_lbl_Plugins_TelegramBot_Stop
         End If
 
     End Sub
@@ -140,7 +140,7 @@ Public Class wndPreferences
             Dim obj As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
 
             If preferences.AttributesForSearch.Contains(obj) Then
-                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox("Необходим хотя бы один атрибут", vbOKOnly + vbExclamation, "Атрибуты для поиска") : Exit Sub
+                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
                 Dim afsl As ObservableCollection(Of clsAttribute) = preferences.AttributesForSearch
                 afsl.Remove(obj)
                 preferences.AttributesForSearch = afsl
@@ -153,7 +153,7 @@ Public Class wndPreferences
             Dim obj As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
 
             If preferences.AttributesForSearch.Contains(obj) Then
-                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox("Необходим хотя бы один атрибут", vbOKOnly + vbExclamation, "Атрибуты для поиска") : Exit Sub
+                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
                 Dim afsl As ObservableCollection(Of clsAttribute) = preferences.AttributesForSearch
                 afsl.Remove(obj)
                 preferences.AttributesForSearch = afsl
@@ -283,7 +283,7 @@ Public Class wndPreferences
 
     Private Sub cmboTheme_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmboTheme.SelectionChanged
         Select Case cmboTheme.SelectedIndex
-            Case 0 ' светло-серая
+            Case 0 ' light gray
                 With preferences
                     .ColorText = Colors.Black
                     .ColorWindowBackground = Colors.WhiteSmoke
@@ -294,7 +294,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.White
                     .ColorListviewAlternationRow = Colors.WhiteSmoke
                 End With
-            Case 1 ' светло-синяя
+            Case 1 ' light blue
                 With preferences
                     .ColorText = Colors.Black
                     .ColorWindowBackground = Colors.WhiteSmoke
@@ -305,7 +305,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.White
                     .ColorListviewAlternationRow = Colors.AliceBlue
                 End With
-            Case 2 ' светло-зеленая
+            Case 2 ' light green
                 With preferences
                     .ColorText = Colors.Black
                     .ColorWindowBackground = Colors.WhiteSmoke
@@ -316,7 +316,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.White
                     .ColorListviewAlternationRow = Colors.Honeydew
                 End With
-            Case 3 ' темно-серая
+            Case 3 ' dark gray
                 With preferences
                     .ColorText = Colors.WhiteSmoke
                     .ColorWindowBackground = Colors.Black
@@ -327,7 +327,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.Black
                     .ColorListviewAlternationRow = ColorConverter.ConvertFromString("#FF2E2E2E")
                 End With
-            Case 4 ' темно-синяя
+            Case 4 ' dark blue
                 With preferences
                     .ColorText = Colors.WhiteSmoke
                     .ColorWindowBackground = Colors.Black
@@ -338,7 +338,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.Black
                     .ColorListviewAlternationRow = ColorConverter.ConvertFromString("#FF2E2E2E")
                 End With
-            Case 5 ' темно-зеленая
+            Case 5 ' dark green
                 With preferences
                     .ColorText = Colors.WhiteSmoke
                     .ColorWindowBackground = Colors.Black
@@ -349,7 +349,7 @@ Public Class wndPreferences
                     .ColorListviewRow = Colors.Black
                     .ColorListviewAlternationRow = ColorConverter.ConvertFromString("#FF2E2E2E")
                 End With
-            Case 6 ' темно-оранжевая
+            Case 6 ' dark orange
                 With preferences
                     .ColorText = Colors.WhiteSmoke
                     .ColorWindowBackground = Colors.Black
@@ -389,7 +389,7 @@ Public Class wndPreferences
         Try
             Dim es As clsExternalSoftware = CType(sender, FrameworkElement).DataContext
             Dim dlg As New Forms.OpenFileDialog
-            dlg.Filter = "Приложение|*.exe"
+            dlg.Filter = My.Resources.wndPreferences_lbl_ExternalSoftware_DialogFilter & "|*.exe"
             If dlg.ShowDialog = Forms.DialogResult.OK Then
                 es.Path = dlg.FileName
             End If

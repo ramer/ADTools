@@ -1230,6 +1230,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Change log:.
+        '''</summary>
+        Public ReadOnly Property wndAbout_lbl_ChangeHistory() As String
+            Get
+                Return ResourceManager.GetString("wndAbout_lbl_ChangeHistory", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Close window on create.
         '''</summary>
         Public ReadOnly Property wndCreateObject_lbl_CloseWindowOnCreate() As String
@@ -3311,6 +3320,195 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Control element background.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorButtonBackground() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorButtonBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Control element background (inactive).
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorButtonInactiveBackground() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorButtonInactiveBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Element background.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorElementBackground() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorElementBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на List background (alternative).
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorListviewAlternationRow() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorListviewAlternationRow", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на List background.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorListviewRow() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorListviewRow", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Menu background.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorMenuBackground() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorMenuBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Advanced.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Available colors.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorPicker_AvailableColors() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorPicker_AvailableColors", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Standard.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorPicker_StandartButton() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorPicker_StandartButton", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Standard colors.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorPicker_StandartColors() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorPicker_StandartColors", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Colors:.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_Colors() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_Colors", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Text.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorText() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Window background.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_ColorWindowBackground() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_ColorWindowBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Main application theme.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Dark blue.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_DarkBlue() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_DarkBlue", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Dark gray.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_DarkGray() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_DarkGray", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Dark green.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_DarkGreen() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_DarkGreen", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Dark orange.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_DarkOrange() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_DarkOrange", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Light blue.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_LightBlue() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_LightBlue", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Light gray.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_LightGray() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_LightGray", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Light green.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance_MainTheme_LightGreen() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance_MainTheme_LightGreen", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Basic.
         '''</summary>
         Public ReadOnly Property wndPreferences_lbl_Basic() As String
@@ -3383,11 +3581,119 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Close on [✖] button.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_CloseOnXButton() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_CloseOnXButton", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Clicking [✖] in the last instance of the main window will terminate the application..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_CloseOnXButtonDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_CloseOnXButtonDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start on logon.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_StartOnLogon() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_StartOnLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на The application will be launched after log on to the system..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_StartOnLogonDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_StartOnLogonDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start minimized.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_StartOnLogonMinimized() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_StartOnLogonMinimized", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на In case of autorun, the application will be launched in a minimized form..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на External software.
         '''</summary>
         Public ReadOnly Property wndPreferences_lbl_ExternalSoftware() As String
             Get
                 Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Argument patterns.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_ArgumentPatterns() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_ArgumentPatterns", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Arguments.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_Arguments() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_Arguments", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Cur. cred..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_CurrentCredentials() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_CurrentCredentials", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Application.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_DialogFilter() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_DialogFilter", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Label.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_Label() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_Label", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Path.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware_Path() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware_Path", resourceCulture)
             End Get
         End Property
         
@@ -3401,11 +3707,190 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на LDAP-name.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_Attributes_LdapName() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_Attributes_LdapName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Name.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_Attributes_Name() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_Attributes_Name", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Basic attributes.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_AttributesDefault() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_AttributesDefault", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Extended attributes.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_AttributesExtended() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_AttributesExtended", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Get extended attributes from domains.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_AttributesExtendedGet() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_AttributesExtendedGet", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Attributes to search.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_AttributesForSearch() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_AttributesForSearch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Default.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_AttributesForSearchDefault() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_AttributesForSearchDefault", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Main window layout.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_Layout() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_Layout", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Add column.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_LayoutAddColumn() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_LayoutAddColumn", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Default.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_LayoutDefault() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_LayoutDefault", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Remove last column.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Plugins.
         '''</summary>
         Public ReadOnly Property wndPreferences_lbl_Plugins() As String
             Get
                 Return ResourceManager.GetString("wndPreferences_lbl_Plugins", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на You can create a Telegram-bot and manage user accounts via the Telegram messenger.
+        '''You must have messenger @Username and bot API key.
+        '''
+        '''To obtain the API key:
+        '''1) open the Telegram application and search for the bot calls &quot;BotFather&quot;
+        '''2) press the /Start button to start the dialogue with BotFather
+        '''3) send the command /newbot, after which BotFather will prompt you to select the name of your new bot
+        '''4) send the display name of your bot, for example &quot;MyPersonalADToolsAssistant&quot;
+        '''5) now send @username of yo [остаток строки не уместился]&quot;;.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Plugins_TelegramBot_Instructions() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Plugins_TelegramBot_Instructions", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start Telegram bot.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Plugins_TelegramBot_Start() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Plugins_TelegramBot_Start", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start Telegram Bot on logon.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Stop Telegram bot.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Plugins_TelegramBot_Stop() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Plugins_TelegramBot_Stop", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Preferences.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Preferences() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Preferences", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на You must select at least one attribute.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_msg_MainWindow_AttributesAtLeastOne() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_msg_MainWindow_AttributesAtLeastOne", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Attributes to search.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_msg_MainWindow_AttributesForSearch() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_msg_MainWindow_AttributesForSearch", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use current credentials on start.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_tt_ExternalSoftware_CurrentCredentials() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_tt_ExternalSoftware_CurrentCredentials", resourceCulture)
             End Get
         End Property
     End Module

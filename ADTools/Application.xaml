@@ -20,7 +20,7 @@
         <Style TargetType="Window">
             <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}" />
         </Style>
-        <!--<Style TargetType="{x:Type local:wndAbout}" BasedOn="{StaticResource {x:Type Window}}"/>-->
+        <Style TargetType="{x:Type local:wndAbout}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndComputer}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndContact}" BasedOn="{StaticResource {x:Type Window}}"/>
         <Style TargetType="{x:Type local:wndCreateObject}" BasedOn="{StaticResource {x:Type Window}}"/>

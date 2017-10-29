@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="Настройки"
+        Title="{x:Static r:Resources.wndPreferences_lbl_Preferences}"
         Height="561"
         Width="983"
         WindowStartupLocation="CenterOwner"
@@ -34,10 +34,10 @@
                         <DockPanel DockPanel.Dock="Bottom">
                             <DockPanel LastChildFill="True">
                                 <DockPanel DockPanel.Dock="Top">
-                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="Добавить столбец в конец"/>
-                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="Удалить последний столбец"/>
-                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="По умолчанию" Margin="0,0,5,0"/>
-                                    <TextBlock Text="Макет главного окна" DockPanel.Dock="Left"/>
+                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutAddColumn}"/>
+                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn}"/>
+                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutDefault}" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Layout}" DockPanel.Dock="Left"/>
                                 </DockPanel>
                                 <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
                                     <Grid x:Name="grdLayout" ShowGridLines="True" AllowDrop="True" Background="Transparent" Height="150" >
@@ -69,21 +69,21 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Основные атрибуты" Grid.Column="0" Grid.Row="0"/>
-                                <TextBlock Text="Дополнительные атрибуты" Grid.Column="1" Grid.Row="0"/>
-                                <TextBlock Text="Атрибуты для поиска" Grid.Column="2" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesDefault}" Grid.Column="0" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesExtended}" Grid.Column="1" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearch}" Grid.Column="2" Grid.Row="0"/>
                                 <ListView x:Name="lvAttributesDefault" Grid.Column="0" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
                                     <ListView.View>
                                         <GridView AllowsColumnReorder="False">
                                             <GridView.Columns>
-                                                <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Label}"/>
                                                         </DataTemplate>
                                                     </GridViewColumn.CellTemplate>
                                                 </GridViewColumn>
-                                                <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Name}"/>
@@ -96,19 +96,19 @@
                                 </ListView>
                                 <Grid Grid.Column="1" Grid.Row="1" >
                                     <local:ctlCap x:Name="cap1" Panel.ZIndex="2" Visibility="Hidden"/>
-                                    <Button x:Name="btnGetExtendedAttributes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="🔎" Panel.ZIndex="1" ToolTip="Получить дополнительные атрибуты из доменов"/>
+                                    <Button x:Name="btnGetExtendedAttributes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="🔎" Panel.ZIndex="1" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesExtendedGet}"/>
                                     <ListView x:Name="lvAttributesExtended" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
                                         <ListView.View>
                                             <GridView AllowsColumnReorder="False">
                                                 <GridView.Columns>
-                                                    <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Label}"/>
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
-                                                    <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Name}"/>
@@ -121,19 +121,19 @@
                                     </ListView>
                                 </Grid>
                                 <Grid Grid.Column="2" Grid.Row="1">
-                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="1" ToolTip="По умолчанию" />
+                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="1" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearchDefault}" />
                                     <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True">
                                         <ListView.View>
                                             <GridView AllowsColumnReorder="False">
                                                 <GridView.Columns>
-                                                    <GridViewColumn Header="Имя" Width="120" local:clsSorter.PropertyName="Label">
+                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Label}"/>
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
-                                                    <GridViewColumn Header="LDAP-имя" Width="120" local:clsSorter.PropertyName="Name">
+                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Name}"/>
@@ -151,35 +151,35 @@
                 </TabItem>
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Behavior}">
                     <StackPanel Margin="5">
-                        <CheckBox x:Name="chbStartOnLogon" Content="Запускать вместе с Windows" IsChecked="{Binding StartWithWindows}" />
-                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">ADViewer будет запущен при загрузке операционной системы.</TextBlock>
-                        <CheckBox x:Name="chbStartOnLogonMinimized" Content="Запускать свернутым" IsChecked="{Binding StartWithWindowsMinimized}" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Margin="20,0,0,0"/>
-                        <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" >В случае автозапуска приложение будет запущено в свернутом виде.</TextBlock>
-                        <CheckBox Content="Закрывать при нажатии на [✖]" IsChecked="{Binding CloseOnXButton}" />
-                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При нажатии на [✖] в последнем экземпляре главного окна работа приложения будет завершена.</TextBlock>
+                        <CheckBox x:Name="chbStartOnLogon" Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogon}" IsChecked="{Binding StartWithWindows}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonDefinition}"/>
+                        <CheckBox x:Name="chbStartOnLogonMinimized" Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonMinimized}" IsChecked="{Binding StartWithWindowsMinimized}" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Margin="20,0,0,0"/>
+                        <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition}"/>
+                        <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButton}" IsChecked="{Binding CloseOnXButton}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButtonDefinition}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Appearance}">
                     <StackPanel Margin="5">
-                        <TextBlock>Основная тема приложения</TextBlock>
+                        <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme}"/>
                         <ComboBox x:Name="cmboTheme" Margin="0,0,0,10">
-                            <ComboBoxItem>Светло-серая</ComboBoxItem>
-                            <ComboBoxItem>Светло-голубая</ComboBoxItem>
-                            <ComboBoxItem>Светло-зеленая</ComboBoxItem>
-                            <ComboBoxItem>Темно-серая</ComboBoxItem>
-                            <ComboBoxItem>Темно-синяя</ComboBoxItem>
-                            <ComboBoxItem>Темно-зеленая</ComboBoxItem>
-                            <ComboBoxItem>Темно-оранжевая</ComboBoxItem>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightGray}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightBlue}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightGreen}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkGray}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkBlue}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkGreen}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkOrange}"/>
                         </ComboBox>
-                        <TextBlock Margin="0,0,0,10">Цвета</TextBlock>
+                        <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_Colors}"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.Resources>
                                 <Style TargetType="{x:Type xctk:ColorPicker}">
                                     <Setter Property="DisplayColorAndName" Value="True"/>
-                                    <Setter Property="AvailableColorsHeader" Value="Доступные цвета"/>
-                                    <Setter Property="StandardColorsHeader" Value="Стандартные цвета"/>
-                                    <Setter Property="AdvancedButtonHeader" Value="Дополнительно"/>
-                                    <Setter Property="StandardButtonHeader" Value="Стандарт"/>
+                                    <Setter Property="AvailableColorsHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_AvailableColors}"/>
+                                    <Setter Property="StandardColorsHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_StandartColors}"/>
+                                    <Setter Property="AdvancedButtonHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton}"/>
+                                    <Setter Property="StandardButtonHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_StandartButton}"/>
                                 </Style>
                             </Grid.Resources>
 
@@ -196,14 +196,14 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0" TextWrapping="Wrap" Margin="20,0,0,10">Текст</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Margin="20,0,0,10">Фон окон</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,10">Фон элементов</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="3" TextWrapping="Wrap" Margin="20,0,0,10">Пункты меню</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="Wrap" Margin="20,0,0,10">Элементы управления</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="Wrap" Margin="20,0,0,10">Элементы управления (не активные)</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="6" TextWrapping="Wrap" Margin="20,0,0,10">Фон списков</TextBlock>
-                            <TextBlock Grid.Column="0" Grid.Row="7" TextWrapping="Wrap" Margin="20,0,0,10">Фон списков (альтернативный)</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="0" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorText}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorWindowBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorElementBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="3" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorMenuBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorButtonBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorButtonInactiveBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="6" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorListviewRow}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="7" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorListviewAlternationRow}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="0" Height="26" SelectedColor="{Binding ColorText}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="1" Height="26" SelectedColor="{Binding ColorWindowBackground}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="2" Height="26" SelectedColor="{Binding ColorElementBackground}"/>
@@ -218,7 +218,7 @@
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware}">
                     <DockPanel Margin="5">
                         <StackPanel DockPanel.Dock="Bottom">
-                            <TextBlock Text="Шаблоны аргументов" Margin="0,5,0,0"/>
+                            <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_ArgumentPatterns}" Margin="0,5,0,0"/>
                             <TextBox  TextWrapping="Wrap" AcceptsReturn="True" 
                                  VerticalScrollBarVisibility="Auto" Height="60" IsReadOnly="True" 
                                  Text="{}{{myusername}} {{mypassword}} {{mydomain}}&#x0d;&#x0a;{{name}} {{description}} {{displayName}} {{sAMAccountName}} {{userPrincipalName}} {{distinguishedName}} {{telephoneNumber}} {{physicalDeliveryOfficeName}} {{title}} {{department}} {{company}} {{mail}} ..."/>
@@ -244,7 +244,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Binding="{Binding Label}" Header="Название"  Width="150" SortMemberPath="Label" CanUserSort="True">
+                                <DataGridTextColumn Binding="{Binding Label}" Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Label}"  Width="150" SortMemberPath="Label" CanUserSort="True">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -252,7 +252,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTemplateColumn Header="Путь" Width="200" SortMemberPath="Path" CanUserSort="True">
+                                <DataGridTemplateColumn Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Path}" Width="200" SortMemberPath="Path" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel LastChildFill="True">
@@ -263,7 +263,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Binding="{Binding Arguments}" Header="Агрументы" Width="330" SortMemberPath="Arguments" CanUserSort="True">
+                                <DataGridTextColumn Binding="{Binding Arguments}" Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Arguments}" Width="330" SortMemberPath="Arguments" CanUserSort="True">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -271,10 +271,10 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTemplateColumn Header="Тек. рек." Width="36" SortMemberPath="CurrentCredentials" CanUserSort="True">
+                                <DataGridTemplateColumn Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_CurrentCredentials}" Width="36" SortMemberPath="CurrentCredentials" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding CurrentCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Использовать текущие реквизиты при запуске" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <CheckBox IsChecked="{Binding CurrentCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{x:Static r:Resources.wndPreferences_tt_ExternalSoftware_CurrentCredentials}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -287,29 +287,18 @@
                     <TabControl>
                         <TabItem Header="Telegram Bot">
                             <StackPanel Margin="5">
-                                <TextBlock Margin="0,0,0,10">
-                                    Вы можете создась себе Telegram бота и управлять учетными записями пользователей через мессенджер Telegram.<LineBreak/>
-                                    Для этого вам необходимо иметь @Username мессенджера и API ключ бота.<LineBreak/><LineBreak/>
-                                    Для получения API-ключа:<LineBreak/>
-                                    1) откройте приложение Telegram и найдите в контактах бота "BotFather"<LineBreak/>
-                                    2) нажмите кнопку /Start для начала диалога с BotFather<LineBreak/>
-                                    3) отправьте команду /newbot, после чего BotFather предложит выбрать имя вашего нового бота<LineBreak/>
-                                    4) отправьте отображаемое имя вашего бота, например "MyPersonalADToolsAssistant" или "Тыжпрограммист"<LineBreak/>
-                                    5) теперь отправьте @username вашего бота, оканчивающегося на "bot", например "MyPersonalADToolsBot"<LineBreak/>
-                                    6) если @username бота уникальное, BotFather выдаст вам API ключ<LineBreak/>
-                                    7) найдите в контактах вашего нового бота по имени.
-                                </TextBlock>
+                                <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_Instructions}"/>
                                 <StackPanel HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="@Username" Width="100"/>
                                         <TextBox x:Name="tbPluginTelegramBotUsername" Width="400"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                        <TextBlock Text="API-ключ" Width="100"/>
+                                        <TextBlock Text="API" Width="100"/>
                                         <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400"/>
                                     </StackPanel>
-                                    <Button x:Name="btnPluginTelegramBotStartStop" Content="Запустить Telegram Bot" Width="200" Height="24" Margin="0,0,0,20"/>
-                                    <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="Запускать Telegram Bot при входе в систему" Margin="0,0,0,10"/>
+                                    <Button x:Name="btnPluginTelegramBotStartStop" Content="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_Start}" Width="200" Height="24" Margin="0,0,0,20"/>
+                                    <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon}" Margin="0,0,0,10"/>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>

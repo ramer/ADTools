@@ -734,8 +734,9 @@ Class wndMain
         ElseIf filter IsNot Nothing Then
 
             Dim tblck As New TextBlock
+            tblck.VerticalAlignment = VerticalAlignment.Center
             tblck.Background = Brushes.Transparent
-            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern, " Advanced filter"))
+            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern.Replace(vbNewLine, " "), " Advanced filter"))
             tblck.Margin = New Thickness(2, 0, 2, 0)
             tblck.Padding = New Thickness(5, 0, 5, 0)
             spPath.Children.Add(tblck)

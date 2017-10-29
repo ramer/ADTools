@@ -1249,4 +1249,173 @@ A universal group can not be a member of a global group.</value>
   <data name="donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\donate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="wndAbout_lbl_ChangeHistory" xml:space="preserve">
+    <value>Change log:</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesDefault" xml:space="preserve">
+    <value>Basic attributes</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesExtended" xml:space="preserve">
+    <value>Extended attributes</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesForSearch" xml:space="preserve">
+    <value>Attributes to search</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Layout" xml:space="preserve">
+    <value>Main window layout</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutAddColumn" xml:space="preserve">
+    <value>Add column</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn" xml:space="preserve">
+    <value>Remove last column</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesExtendedGet" xml:space="preserve">
+    <value>Get extended attributes from domains</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesForSearchDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Attributes_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Attributes_LdapName" xml:space="preserve">
+    <value>LDAP-name</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogon" xml:space="preserve">
+    <value>Start on logon</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonDefinition" xml:space="preserve">
+    <value>The application will be launched after log on to the system.</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimized" xml:space="preserve">
+    <value>Start minimized</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition" xml:space="preserve">
+    <value>In case of autorun, the application will be launched in a minimized form.</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_CloseOnXButton" xml:space="preserve">
+    <value>Close on [✖] button</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_CloseOnXButtonDefinition" xml:space="preserve">
+    <value>Clicking [✖] in the last instance of the main window will terminate the application.</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme" xml:space="preserve">
+    <value>Main application theme</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGray" xml:space="preserve">
+    <value>Light gray</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightBlue" xml:space="preserve">
+    <value>Light blue</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGreen" xml:space="preserve">
+    <value>Light green</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGray" xml:space="preserve">
+    <value>Dark gray</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkBlue" xml:space="preserve">
+    <value>Dark blue</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGreen" xml:space="preserve">
+    <value>Dark green</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkOrange" xml:space="preserve">
+    <value>Dark orange</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_Colors" xml:space="preserve">
+    <value>Colors:</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorWindowBackground" xml:space="preserve">
+    <value>Window background</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorElementBackground" xml:space="preserve">
+    <value>Element background</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorMenuBackground" xml:space="preserve">
+    <value>Menu background</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorButtonBackground" xml:space="preserve">
+    <value>Control element background</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorButtonInactiveBackground" xml:space="preserve">
+    <value>Control element background (inactive)</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorListviewRow" xml:space="preserve">
+    <value>List background</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorListviewAlternationRow" xml:space="preserve">
+    <value>List background (alternative)</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_AvailableColors" xml:space="preserve">
+    <value>Available colors</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartColors" xml:space="preserve">
+    <value>Standard colors</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartButton" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_ArgumentPatterns" xml:space="preserve">
+    <value>Argument patterns</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Arguments" xml:space="preserve">
+    <value>Arguments</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+    <value>Cur. cred.</value>
+  </data>
+  <data name="wndPreferences_tt_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+    <value>Use current credentials on start</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Instructions" xml:space="preserve">
+    <value>You can create a Telegram-bot and manage user accounts via the Telegram messenger.
+You must have messenger @Username and bot API key.
+
+To obtain the API key:
+1) open the Telegram application and search for the bot calls "BotFather"
+2) press the /Start button to start the dialogue with BotFather
+3) send the command /newbot, after which BotFather will prompt you to select the name of your new bot
+4) send the display name of your bot, for example "MyPersonalADToolsAssistant"
+5) now send @username of your bot ending with "bot", for example "MyPersonalADToolsBot"
+6) if the @username of your bot is unique, BotFather will give you the API key
+7) search for your new bot by name.</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Start" xml:space="preserve">
+    <value>Start Telegram bot</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Stop" xml:space="preserve">
+    <value>Stop Telegram bot</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon" xml:space="preserve">
+    <value>Start Telegram Bot on logon</value>
+  </data>
+  <data name="wndPreferences_lbl_Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="wndPreferences_msg_MainWindow_AttributesForSearch" xml:space="preserve">
+    <value>Attributes to search</value>
+  </data>
+  <data name="wndPreferences_msg_MainWindow_AttributesAtLeastOne" xml:space="preserve">
+    <value>You must select at least one attribute</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_DialogFilter" xml:space="preserve">
+    <value>Application</value>
+  </data>
 </root>

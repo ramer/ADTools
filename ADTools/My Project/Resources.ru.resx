@@ -1160,4 +1160,173 @@
   <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
     <value>Результаты поиска будут сгруппированы по имени домена.</value>
   </data>
+  <data name="wndAbout_lbl_ChangeHistory" xml:space="preserve">
+    <value>История изменений:</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesDefault" xml:space="preserve">
+    <value>Основные атрибуты</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesExtended" xml:space="preserve">
+    <value>Дополнительные атрибуты</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesForSearch" xml:space="preserve">
+    <value>Атрибуты для поиска</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Layout" xml:space="preserve">
+    <value>Макет главного окна</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutDefault" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn" xml:space="preserve">
+    <value>Удалить последний столбец</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_LayoutAddColumn" xml:space="preserve">
+    <value>Добавить столбец в конец</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesExtendedGet" xml:space="preserve">
+    <value>Получить дополнительные атрибуты из доменов</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_AttributesForSearchDefault" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Attributes_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow_Attributes_LdapName" xml:space="preserve">
+    <value>LDAP-имя</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogon" xml:space="preserve">
+    <value>Запускать при входе в систему</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonDefinition" xml:space="preserve">
+    <value>Приложение будет запущено при входе в систему.</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimized" xml:space="preserve">
+    <value>Запускать свернутым</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition" xml:space="preserve">
+    <value>В случае автозапуска приложение будет запущено в свернутом виде.</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_CloseOnXButtonDefinition" xml:space="preserve">
+    <value>При нажатии на [✖] в последнем экземпляре главного окна работа приложения будет завершена.</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_CloseOnXButton" xml:space="preserve">
+    <value>Закрывать при нажатии на [✖]</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme" xml:space="preserve">
+    <value>Основная тема приложения</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGray" xml:space="preserve">
+    <value>Светло-серая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightBlue" xml:space="preserve">
+    <value>Светло-голубая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGreen" xml:space="preserve">
+    <value>Светло-зеленая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGray" xml:space="preserve">
+    <value>Темно-серая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkBlue" xml:space="preserve">
+    <value>Темно-синяя</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGreen" xml:space="preserve">
+    <value>Темно-зеленая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkOrange" xml:space="preserve">
+    <value>Темно-оранжевая</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_Colors" xml:space="preserve">
+    <value>Цвета:</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorText" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorWindowBackground" xml:space="preserve">
+    <value>Фон окон</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorElementBackground" xml:space="preserve">
+    <value>Фон элементов</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorMenuBackground" xml:space="preserve">
+    <value>Пункты меню</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorButtonBackground" xml:space="preserve">
+    <value>Элементы управления</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorButtonInactiveBackground" xml:space="preserve">
+    <value>Элементы управления (не активные)</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorListviewRow" xml:space="preserve">
+    <value>Фон списков</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorListviewAlternationRow" xml:space="preserve">
+    <value>Фон списков (альтернативный)</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_AvailableColors" xml:space="preserve">
+    <value>Доступные цвета</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartColors" xml:space="preserve">
+    <value>Стандартные цвета</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton" xml:space="preserve">
+    <value>Дополнительно</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartButton" xml:space="preserve">
+    <value>Стандарт</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_ArgumentPatterns" xml:space="preserve">
+    <value>Шаблоны аргументов</value>
+  </data>
+  <data name="wndPreferences_tt_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+    <value>Использовать текущие реквизиты при запуске</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+    <value>Тек. рек.</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Arguments" xml:space="preserve">
+    <value>Агрументы</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Path" xml:space="preserve">
+    <value>Путь</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_Label" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Instructions" xml:space="preserve">
+    <value>Вы можете создать Telegram бота и управлять учетными записями пользователей через мессенджер Telegram.
+Для этого вам необходимо иметь @Username мессенджера и API ключ бота.
+
+Для получения API-ключа:
+1) откройте приложение Telegram и найдите в контактах бота "BotFather"
+2) нажмите кнопку /Start для начала диалога с BotFather
+3) отправьте команду /newbot, после чего BotFather предложит выбрать имя вашего нового бота
+4) отправьте отображаемое имя вашего бота, например "MyPersonalADToolsAssistant" или "Тыжпрограммист"
+5) теперь отправьте @username вашего бота, оканчивающегося на "bot", например "MyPersonalADToolsBot"
+6) если @username бота уникальное, BotFather выдаст вам API ключ
+7) найдите в контактах вашего нового бота по имени.</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon" xml:space="preserve">
+    <value>Запускать Telegram бота при входе в систему</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Start" xml:space="preserve">
+    <value>Запустить Telegram бота</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins_TelegramBot_Stop" xml:space="preserve">
+    <value>Остановить Telegram бота</value>
+  </data>
+  <data name="wndPreferences_lbl_Preferences" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="wndPreferences_msg_MainWindow_AttributesForSearch" xml:space="preserve">
+    <value>Атрибуты для поиска</value>
+  </data>
+  <data name="wndPreferences_msg_MainWindow_AttributesAtLeastOne" xml:space="preserve">
+    <value>Необходимо выбрать хотя бы один атрибут</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware_DialogFilter" xml:space="preserve">
+    <value>Приложение</value>
+  </data>
 </root>
