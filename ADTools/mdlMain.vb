@@ -135,7 +135,7 @@ Public Class ADToolsApplication
 
 
     Private Shared Sub ni_ctxmenuExit(sender As Object, e As EventArgs)
-        Current.Shutdown()
+        ApplicationDeactivate()
     End Sub
 
     Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
@@ -145,39 +145,8 @@ Public Class ADToolsApplication
     End Sub
 
     Public Shared Sub wndMainActivate()
-        Try
-            Dim w As wndMain
-
-            If Application.Current.Windows.Count > 0 Then
-                w = Nothing
-                For Each wnd In Application.Current.Windows
-                    If GetType(wndMain) Is wnd.GetType Then
-                        w = wnd
-
-                        w.Show()
-                        w.Activate()
-
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-
-                        w.Topmost = True
-                        w.Topmost = False
-                    End If
-                Next
-                If w Is Nothing Then w = New wndMain
-            Else
-                w = New wndMain
-
-                w.Show()
-                w.Activate()
-
-                If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-
-                w.Topmost = True
-                w.Topmost = False
-            End If
-        Catch ex As Exception
-            ThrowException(ex, "wndMainActivate")
-        End Try
+        Dim w As New wndMain
+        ShowWindow(w, True, Nothing, False)
     End Sub
 
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)

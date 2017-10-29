@@ -41,7 +41,7 @@
                 <DataGridTemplateColumn Header="⬕" Width="30">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -49,7 +49,7 @@
                 <DataGridTemplateColumn Header="{x:Static r:Resources.wndLog_lbl_Timestamp}" Width="150" SortMemberPath="TimeStamp" CanUserSort="True" SortDirection="Descending">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding TimeStamp}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding TimeStamp}" TextWrapping="Wrap" VerticalAlignment="Top" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -57,7 +57,7 @@
                 <DataGridTemplateColumn Header="{x:Static r:Resources.wndLog_lbl_Event}" Width="*" SortMemberPath="Message" CanUserSort="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap" VerticalAlignment="Top" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

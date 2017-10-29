@@ -20,6 +20,9 @@ Class wndMain
 
     Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True, False)
 
+    Public WithEvents clipboardTimer As New Threading.DispatcherTimer()
+    Private clipboardlastdata As String
+
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
         Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshDataGrid))
@@ -37,6 +40,9 @@ Class wndMain
 
         poptvObjects.IsOpen = domains.Count = 0
         popcmboSearchPattern.IsOpen = preferences.FirstRun
+
+        clipboardTimer.Interval = New TimeSpan(0, 0, 1)
+        clipboardTimer.Start()
     End Sub
 
     Private Sub MovePopupHints() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, cmboSearchPattern.SizeChanged
@@ -51,7 +57,7 @@ Class wndMain
             If GetType(wndMain) Is wnd.GetType Then count += 1
         Next
 
-        If preferences.CloseOnXButton AndAlso count <= 1 Then Application.Current.Shutdown()
+        If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
     End Sub
 
 #Region "Main Menu"
@@ -141,6 +147,16 @@ Class wndMain
         ShowWindow(New wndPreferences, True, Me, True)
     End Sub
 
+    Private Sub mnuServiceLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceLog.Click
+        Dim w As New wndLog
+        ShowWindow(w, True, Nothing, False)
+    End Sub
+
+    Private Sub mnuServiceErrorLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceErrorLog.Click
+        Dim w As New wndErrorLog
+        ShowWindow(w, True, Nothing, False)
+    End Sub
+
     Private Sub mnuSearchSaveCurrentFilter_Click(sender As Object, e As RoutedEventArgs) Handles mnuSearchSaveCurrentFilter.Click
         If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Me) : Exit Sub
 
@@ -150,6 +166,11 @@ Class wndMain
 
         currentfilter.Name = name
         preferences.Filters.Add(currentfilter)
+    End Sub
+
+    Private Sub mnuHelpAbout_Click(sender As Object, e As RoutedEventArgs) Handles mnuHelpAbout.Click
+        Dim w As New wndAbout
+        ShowWindow(w, True, Me, False)
     End Sub
 
 #End Region
@@ -526,6 +547,18 @@ Class wndMain
 
 #Region "Events"
 
+    Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
+        If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
+        Dim newclipboarddata As String = Clipboard.GetText
+        If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
+        If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
+
+        If clipboardlastdata <> newclipboarddata Then
+            clipboardlastdata = newclipboarddata
+            StartSearch(Nothing, New clsFilter(clipboardlastdata, Nothing, searchobjectclasses))
+        End If
+    End Sub
+
     Private Sub dgObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgObjects.PreviewKeyDown
         Select Case e.Key
             Case Key.Enter
@@ -630,6 +663,10 @@ Class wndMain
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
         Dim w As New wndMain
         w.Show()
+    End Sub
+
+    Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click
+        Throw New StackOverflowException("some bad data")
     End Sub
 
 #End Region
@@ -744,6 +781,8 @@ Class wndMain
     End Sub
 
     Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
+        If root Is Nothing And (filter Is Nothing OrElse String.IsNullOrEmpty(filter.Pattern)) Then Exit Sub
+
         While searchhistory.Count > searchhistoryindex + 1
             searchhistory.RemoveAt(searchhistory.Count - 1)
         End While
@@ -844,8 +883,6 @@ Class wndMain
 
         Return column
     End Function
-
-
 
 
 

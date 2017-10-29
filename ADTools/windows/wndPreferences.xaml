@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"         
         xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="Настройки"
         Height="561"
@@ -16,22 +17,19 @@
     <Grid>
         <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
             <TabControl TabStripPlacement="Left" Margin="0,-1,-1,-1">
-                <TabItem Header="Основные">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Basic}">
                     <DockPanel LastChildFill="True">
                         <StackPanel DockPanel.Dock="Top" Margin="5">
-                            <CheckBox x:Name="chbClipboardSource" Content="Использовать буфер обмена" IsChecked="{Binding ClipboardSource}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При копировании в буфер обмена текстовых данных из других приложений ADViewer автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</TextBlock>
-                            <CheckBox Content="Ограничить объем данных для поиска" IsChecked="{Binding ClipboardSourceLimit}" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Margin="20,0,0,0"/>
-                            <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" >Поиск будет производится в случае, если количество слов в буфере обмена не превышает трех.</TextBlock>
-                            <CheckBox Content="Группировать результаты поиска" IsChecked="{Binding SearchResultGrouping}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">Результаты поиска будут сгруппированны по имени домена.</TextBlock>
-                            <CheckBox Content="Включить режим отладки Powershell" IsChecked="{Binding PowershellDebug}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При выполнении команд Powershell будет открываться окно с информацией о результатах выполнения команд.</TextBlock>
-
+                            <CheckBox x:Name="chbClipboardSource" Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSource}" IsChecked="{Binding ClipboardSource}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceDefinition}"/>
+                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimit}" IsChecked="{Binding ClipboardSourceLimit}" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Margin="20,0,0,0"/>
+                            <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition}"/>
+                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGrouping}" IsChecked="{Binding SearchResultGrouping}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGroupingDefinition}"/>
                         </StackPanel>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="Главное окно">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow}">
                     <DockPanel Margin="5">
                         <DockPanel DockPanel.Dock="Bottom">
                             <DockPanel LastChildFill="True">
@@ -151,7 +149,7 @@
                         </DockPanel>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="Поведение">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Behavior}">
                     <StackPanel Margin="5">
                         <CheckBox x:Name="chbStartOnLogon" Content="Запускать вместе с Windows" IsChecked="{Binding StartWithWindows}" />
                         <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">ADViewer будет запущен при загрузке операционной системы.</TextBlock>
@@ -161,7 +159,7 @@
                         <TextBlock TextWrapping="Wrap" Margin="20,0,0,10">При нажатии на [✖] в последнем экземпляре главного окна работа приложения будет завершена.</TextBlock>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Внешний вид">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Appearance}">
                     <StackPanel Margin="5">
                         <TextBlock>Основная тема приложения</TextBlock>
                         <ComboBox x:Name="cmboTheme" Margin="0,0,0,10">
@@ -217,7 +215,7 @@
                         </Grid>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Внешние приложения">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware}">
                     <DockPanel Margin="5">
                         <StackPanel DockPanel.Dock="Bottom">
                             <TextBlock Text="Шаблоны аргументов" Margin="0,5,0,0"/>
@@ -285,8 +283,7 @@
                         </DataGrid>
                     </DockPanel>
                 </TabItem>
-
-                <TabItem Header="Плагины">
+                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Plugins}">
                     <TabControl>
                         <TabItem Header="Telegram Bot">
                             <StackPanel Margin="5">

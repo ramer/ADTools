@@ -150,6 +150,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="windows\wndAbout.xaml.vb">
+      <DependentUpon>wndAbout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndAboutDonate.xaml.vb">
+      <DependentUpon>wndAboutDonate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="windows\wndComputer.xaml.vb">
       <DependentUpon>wndComputer.xaml</DependentUpon>
     </Compile>
@@ -225,6 +231,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlUserWorkstations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndAboutDonate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -375,6 +389,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\ready.ico" />
+    <Resource Include="images\log.ico" />
+    <Resource Include="images\donate.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />

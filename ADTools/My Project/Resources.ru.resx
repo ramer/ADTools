@@ -1124,4 +1124,40 @@
   <data name="hint_popcmboSearchPattern" xml:space="preserve">
     <value>Воспользуйся поисковой строкой для поиска объектов</value>
   </data>
+  <data name="wndPreferences_lbl_Basic" xml:space="preserve">
+    <value>Основные</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow" xml:space="preserve">
+    <value>Главное окно</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance" xml:space="preserve">
+    <value>Внешний вид</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior" xml:space="preserve">
+    <value>Поведение</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware" xml:space="preserve">
+    <value>Внешние приложения</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins" xml:space="preserve">
+    <value>Плагины</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSource" xml:space="preserve">
+    <value>Использовать буфер обмена</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceDefinition" xml:space="preserve">
+    <value>При копировании в буфер обмена текстовых данных из других приложений ADViewer автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimit" xml:space="preserve">
+    <value>Ограничить объем данных для поиска</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition" xml:space="preserve">
+    <value>Поиск будет производится в случае, если количество слов в буфере обмена не превышает трех.</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_SearchResultGrouping" xml:space="preserve">
+    <value>Группировать результаты поиска</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
+    <value>Результаты поиска будут сгруппированы по имени домена.</value>
+  </data>
 </root>

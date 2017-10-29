@@ -16,7 +16,6 @@ Public Class clsPreferences
     Private _clipboardsource As Boolean = False
     Private _clipboardsourcelimit As Boolean = True
     Private _searchresultgrouping As Boolean = False
-    Private _powershelldebug As Boolean = False
 
     ' layout
     Private _columns As New ObservableCollection(Of clsDataGridColumnInfo)
@@ -113,16 +112,6 @@ Public Class clsPreferences
         Set(value As Boolean)
             _searchresultgrouping = value
             NotifyPropertyChanged("SearchResultGrouping")
-        End Set
-    End Property
-
-    Public Property PowershellDebug As Boolean
-        Get
-            Return _powershelldebug
-        End Get
-        Set(value As Boolean)
-            _powershelldebug = value
-            NotifyPropertyChanged("PowershellDebug")
         End Set
     End Property
 

@@ -23,6 +23,8 @@ Module mdlTools
     Public preferences As clsPreferences
     Public domains As New ObservableCollection(Of clsDomain)
 
+    Public applicationdeactivating As Boolean = False
+
     Public Enum enmClipboardAction
         Copy
         Cut
@@ -231,6 +233,10 @@ Module mdlTools
     End Sub
 
     Public Function ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
+        If applicationdeactivating Then Return Nothing
+
+        If w Is Nothing Then Return Nothing
+
         If singleinstance Then
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
@@ -791,5 +797,20 @@ Module mdlTools
         ThrowCustomException("Local IP Address Not Found!")
         Return Nothing
     End Function
+
+    Public Function CountWords(str As String) As Integer
+        If String.IsNullOrEmpty(str) Then Return 0
+        Return str.Split({" "}, StringSplitOptions.RemoveEmptyEntries).Count
+    End Function
+
+    Public Sub ApplicationDeactivate()
+        Dim w As New wndAboutDonate
+        ShowWindow(w, True, Nothing, True)
+        applicationdeactivating = True
+    End Sub
+
+    Public Sub Donate()
+        Process.Start("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6YFL9PWPKYHWN&lc=GB&item_name=ADTools&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted")
+    End Sub
 
 End Module

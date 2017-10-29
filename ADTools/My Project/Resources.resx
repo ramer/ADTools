@@ -1207,4 +1207,46 @@ A universal group can not be a member of a global group.</value>
   <data name="hint_popcmboSearchPattern" xml:space="preserve">
     <value>Use the search field to search the objects</value>
   </data>
+  <data name="wndPreferences_lbl_Basic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="wndPreferences_lbl_MainWindow" xml:space="preserve">
+    <value>Main window</value>
+  </data>
+  <data name="wndPreferences_lbl_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior" xml:space="preserve">
+    <value>Behavior</value>
+  </data>
+  <data name="wndPreferences_lbl_ExternalSoftware" xml:space="preserve">
+    <value>External software</value>
+  </data>
+  <data name="wndPreferences_lbl_Plugins" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSource" xml:space="preserve">
+    <value>Use clipboard</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceDefinition" xml:space="preserve">
+    <value>After copying text data from other applications to the clipboard, ADTools will automatically search for objects using this data as a search pattern.</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimit" xml:space="preserve">
+    <value>Limit the amount of data to search for</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition" xml:space="preserve">
+    <value>Search will be performed if the number of words in the clipboard does not exceed three.</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_SearchResultGrouping" xml:space="preserve">
+    <value>Search result grouping</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
+    <value>The search results will be grouped by domain name.</value>
+  </data>
+  <data name="log" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\log.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="donate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\donate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

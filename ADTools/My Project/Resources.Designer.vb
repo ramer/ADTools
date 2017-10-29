@@ -968,6 +968,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property donate() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("donate", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property favorite_folder() As System.Drawing.Icon
@@ -1077,6 +1087,16 @@ Namespace My.Resources
         Public ReadOnly Property lbl_ObjectsTotal() As String
             Get
                 Return ResourceManager.GetString("lbl_ObjectsTotal", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''</summary>
+        Public ReadOnly Property log() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("log", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
         
@@ -3278,6 +3298,114 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_tt_LastLogon() As String
             Get
                 Return ResourceManager.GetString("wndObject_tt_LastLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Appearance.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Appearance() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Appearance", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Basic.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use clipboard.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ClipboardSource() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ClipboardSource", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на After copying text data from other applications to the clipboard, ADTools will automatically search for objects using this data as a search pattern..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ClipboardSourceDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ClipboardSourceDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Limit the amount of data to search for.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ClipboardSourceLimit() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ClipboardSourceLimit", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Search will be performed if the number of words in the clipboard does not exceed three..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Search result grouping.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_SearchResultGrouping() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_SearchResultGrouping", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на The search results will be grouped by domain name..
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_SearchResultGroupingDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_SearchResultGroupingDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Behavior.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на External software.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_ExternalSoftware() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_ExternalSoftware", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Main window.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_MainWindow() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_MainWindow", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Plugins.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Plugins() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Plugins", resourceCulture)
             End Get
         End Property
     End Module
