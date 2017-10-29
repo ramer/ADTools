@@ -62,6 +62,9 @@ Class wndMain
 
 #Region "Main Menu"
 
+    Private Sub mnuFileExit_Click(sender As Object, e As RoutedEventArgs) Handles mnuFileExit.Click
+        Me.Close()
+    End Sub
 
     Private Sub mnuFilePrint_Click(sender As Object, e As RoutedEventArgs) Handles mnuFilePrint.Click
         Dim fd As New FlowDocument
@@ -884,6 +887,7 @@ Class wndMain
 
         Return column
     End Function
+
 
 
 
