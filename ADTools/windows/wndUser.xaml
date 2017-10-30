@@ -185,7 +185,7 @@
                         <DockPanel LastChildFill="True" Margin="5,5,5,0" IsEnabled="{Binding CanWrite[accountExpires]}">
                             <RadioButton x:Name="rbAccountNeverExpires" Content="{x:Static r:Resources.wndObject_lbl_AccountNeverExpires}" Margin="0,3,10,0" IsChecked="{Binding accountNeverExpires}"/>
                             <RadioButton x:Name="rbAccountExpiresAt" Content="{x:Static r:Resources.wndObject_lbl_AccountExpiresAt}" Margin="0,3,10,0" IsChecked="{Binding accountExpiresAt, Mode=OneWay}"/>
-                            <!--<xctk:DateTimePicker x:Name="dtpStartTime" FormatString="dd.MM.yyyy HH:mm:ss dddd" IsEnabled="{Binding ElementName=rbAccountExpiresAt, Path=IsChecked}" Value="{Binding accountExpiresDate}" AutoCloseCalendar="True" Format="Custom" TimeFormat="LongTime" AllowTextInput="False" TextAlignment="Left"/>-->
+                            <xctk:DateTimePicker x:Name="dtpStartTime" FormatString="dd.MM.yyyy HH:mm:ss dddd" IsEnabled="{Binding ElementName=rbAccountExpiresAt, Path=IsChecked}" Value="{Binding accountExpiresDate}" AutoCloseCalendar="True" Format="Custom" TimeFormat="LongTime" AllowTextInput="False" TextAlignment="Left"/>
                         </DockPanel>
                         <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AllowedWorkstations}" Margin="5,20,5,0"/>
                     </StackPanel>

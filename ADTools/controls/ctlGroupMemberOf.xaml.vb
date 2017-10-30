@@ -52,6 +52,8 @@ Public Class ctlGroupMemberOf
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomain = CType(e.NewValue, clsDirectoryObject).Domain
             ._currentdomaingroups.Clear()
+            .lvSelectedGroups.Items.Clear()
+            ._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -62,6 +64,8 @@ Public Class ctlGroupMemberOf
             ._currentobject = Nothing
             ._currentdomain = CType(e.NewValue, clsDomain)
             ._currentdomaingroups.Clear()
+            .lvSelectedGroups.Items.Clear()
+            ._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -194,6 +198,7 @@ Public Class ctlGroupMemberOf
                 Next
 
                 _currentdomain.DefaultGroups.Add([object])
+                _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
                 lvSelectedGroups.Items.Add([object])
 
             End If
@@ -219,6 +224,7 @@ Public Class ctlGroupMemberOf
 
                 If Not _currentdomain.DefaultGroups.Contains([object]) Then Exit Sub
                 _currentdomain.DefaultGroups.Remove([object])
+                _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
                 lvSelectedGroups.Items.Remove([object])
 
             End If

@@ -3248,6 +3248,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Disable object.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_Disable() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_Disable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Enable object.
+        '''</summary>
+        Public ReadOnly Property wndObject_msg_Enable() As String
+            Get
+                Return ResourceManager.GetString("wndObject_msg_Enable", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Enter new password:.
         '''</summary>
         Public ReadOnly Property wndObject_msg_EnterNewPassword() As String

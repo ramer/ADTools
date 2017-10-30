@@ -95,10 +95,11 @@ Public Class clsDomain
                 'connecttester = SchemaNamingContext.NativeObject
                 SearchRoot = New DirectoryEntry(SearchRootPath, Username, Password)
                 connecttester = SearchRoot.NativeObject
-                If DefaultGroupPaths.Count > 0 Then DefaultGroups = DefaultGroupPaths.Select(Function(x) New clsDirectoryObject(New DirectoryEntry(x, Username, Password), Me))
+                If DefaultGroupPaths.Count > 0 Then DefaultGroups = New ObservableCollection(Of clsDirectoryObject)(DefaultGroupPaths.Select(Function(x) New clsDirectoryObject(New DirectoryEntry(x, Username, Password), Me)).ToList)
 
                 Validated = True
-            Catch
+            Catch ex As Exception
+
             End Try
         End If
     End Sub

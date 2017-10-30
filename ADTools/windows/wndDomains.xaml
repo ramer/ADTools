@@ -195,7 +195,7 @@
                             <TextBlock Text="{x:Static r:Resources.wndDomains_tabctlDomain_Groups}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.wndDomains_txt_Groups}"/>
                         </StackPanel>
-                        <!--<local:ctlGroupMemberOf CurrentDomain="{Binding ElementName=lvDomains, Path=SelectedItem}"/>-->
+                        <local:ctlGroupMemberOf CurrentDomain="{Binding ElementName=lvDomains, Path=SelectedItem}"/>
                     </DockPanel>
                 </TabItem>
                 <TabItem Header="{x:Static r:Resources.wndDomains_tabctlDomain_Exchange}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">

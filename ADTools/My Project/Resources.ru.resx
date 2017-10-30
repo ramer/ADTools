@@ -1329,4 +1329,10 @@
   <data name="wndPreferences_lbl_ExternalSoftware_DialogFilter" xml:space="preserve">
     <value>Приложение</value>
   </data>
+  <data name="wndObject_msg_Enable" xml:space="preserve">
+    <value>Разблокировать объект</value>
+  </data>
+  <data name="wndObject_msg_Disable" xml:space="preserve">
+    <value>Заблокировать объект</value>
+  </data>
 </root>

@@ -1418,4 +1418,10 @@ To obtain the API key:
   <data name="wndPreferences_lbl_ExternalSoftware_DialogFilter" xml:space="preserve">
     <value>Application</value>
   </data>
+  <data name="wndObject_msg_Disable" xml:space="preserve">
+    <value>Disable object</value>
+  </data>
+  <data name="wndObject_msg_Enable" xml:space="preserve">
+    <value>Enable object</value>
+  </data>
 </root>

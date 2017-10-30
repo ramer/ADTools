@@ -301,9 +301,9 @@
                                     <Separator x:Name="ctxmnuObjectsAddToFavoritesSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" />
-                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}"/>
-                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click"/>
                                     <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>

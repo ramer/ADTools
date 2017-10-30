@@ -337,7 +337,7 @@ Class wndMain
     Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf))
+        Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
 
         ClipboardBuffer = objects.Where(Function(obj) obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
                                                 obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
@@ -351,7 +351,7 @@ Class wndMain
     Private Sub ctxmnuSharedCut_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf))
+        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
 
         ClipboardBuffer = objects.Where(Function(obj) obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
                                                 obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
@@ -525,6 +525,56 @@ Class wndMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If objects.Count = 1 Then OpenObject(New clsDirectoryObject(objects(0).Entry.Parent, objects(0).Domain))
+    End Sub
+
+    Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count <> 1 Then Exit Sub
+        If objects(0).SchemaClass <> clsDirectoryObject.enmSchemaClass.User Then Exit Sub
+
+        Try
+            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword, Me) = MsgBoxResult.Yes Then
+                objects(0).ResetPassword()
+                objects(0).passwordNeverExpires = False
+                IMsgBox(My.Resources.wndObject_msg_PasswordChanged, vbOKOnly + vbInformation, My.Resources.wndObject_msg_ResetPassword)
+            End If
+
+        Catch ex As Exception
+            ThrowException(ex, "ctxmnuSharedResetPassword_Click")
+        End Try
+    End Sub
+
+    Private Sub ctxmnuSharedDisableEnable_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count <> 1 Then Exit Sub
+        If Not (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer) Then Exit Sub
+
+        Try
+            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.wndObject_msg_Enable, My.Resources.wndObject_msg_Disable), Me) = MsgBoxResult.Yes Then
+                objects(0).disabled = Not objects(0).disabled
+            End If
+
+        Catch ex As Exception
+            ThrowException(ex, "ctxmnuSharedDisableEnable_Click")
+        End Try
+    End Sub
+
+    Private Sub ctxmnuSharedExpirationDate_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count <> 1 Then Exit Sub
+        If objects(0).SchemaClass <> clsDirectoryObject.enmSchemaClass.User Then Exit Sub
+
+        Try
+            objects(0).accountExpiresDate = Today.AddDays(1)
+            Dim w As Window = ShowDirectoryObjectProperties(objects(0), Me)
+            If GetType(wndUser) Is w.GetType Then CType(w, wndUser).tabctlUser.SelectedIndex = 1
+
+        Catch ex As Exception
+            ThrowException(ex, "ctxmnuSharedExpirationDate_Click")
+        End Try
     End Sub
 
     Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
@@ -887,6 +937,7 @@ Class wndMain
 
         Return column
     End Function
+
 
 
 
