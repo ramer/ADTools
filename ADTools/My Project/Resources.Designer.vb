@@ -2128,6 +2128,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Object location in the tree.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsOpenObjectTree() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsOpenObjectTree", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Paste.
         '''</summary>
         Public ReadOnly Property wndMain_ctxmnuObjectsPaste() As String

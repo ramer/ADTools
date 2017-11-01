@@ -140,7 +140,15 @@
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
-                <TreeView x:Name="tvObjects" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SnapsToDevicePixels="True">
+                <TreeView 
+                    x:Name="tvObjects" 
+                    Grid.Column="0" 
+                    VirtualizingStackPanel.IsVirtualizing="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                    SnapsToDevicePixels="True">
+                    
                     <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
@@ -301,6 +309,7 @@
                                     <Separator x:Name="ctxmnuObjectsAddToFavoritesSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click"/>

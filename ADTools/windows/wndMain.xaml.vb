@@ -141,6 +141,13 @@ Class wndMain
         IPrintDialog.PreviewDocument(fd)
     End Sub
 
+    Private Sub mnuEditCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles mnuEditCreateObject.Click
+        Dim w As New wndCreateObject
+        w.destinationcontainer = Nothing
+        w.destinationdomain = Nothing
+        ShowWindow(w, False, Me, False)
+    End Sub
+
     Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click, hlpoptvObjects.Click
         ShowWindow(New wndDomains, True, Me, True)
         RefreshDomainTree()
@@ -205,8 +212,8 @@ Class wndMain
     Private Sub tviDomains_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
         Dim obj As clsDirectoryObject = Nothing
         If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
-        If obj Is Nothing And currentcontainer Is Nothing Then Exit Sub
-        If obj Is Nothing Then obj = currentcontainer
+        If obj Is Nothing Then Exit Sub
+
         CType(sender, StackPanel).ContextMenu.Tag = {obj}
     End Sub
 
@@ -254,6 +261,7 @@ Class wndMain
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
+        ctxmnuObjectsOpenObjectTree.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
         ctxmnuObjectsAddToFavoritesSeparator.Visibility = ctxmnuObjectsAddToFavorites.Visibility
 
         ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
@@ -310,20 +318,18 @@ Class wndMain
         dgObjects.SelectAll()
     End Sub
 
-    Private Sub mnuEditCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles mnuEditCreateObject.Click
-        Dim w As New wndCreateObject
-        w.destinationcontainer = Nothing
-        w.destinationdomain = Nothing
-        ShowWindow(w, False, Me, False)
-    End Sub
-
     Private Sub ctxmnuSharedCreateObject_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
 
         Dim w As New wndCreateObject
 
-        If objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then
+        If objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then
+
             w.destinationcontainer = objects(0)
             w.destinationdomain = objects(0).Domain
         Else
@@ -339,11 +345,14 @@ Class wndMain
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
 
-        ClipboardBuffer = objects.Where(Function(obj) obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User).ToArray
+        ClipboardBuffer = objects.Where(
+            Function(obj)
+                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+            End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Copy
     End Sub
@@ -351,13 +360,16 @@ Class wndMain
     Private Sub ctxmnuSharedCut_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        Clipboard.SetText(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
+        Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
 
-        ClipboardBuffer = objects.Where(Function(obj) obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-                                                obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User).ToArray
+        ClipboardBuffer = objects.Where(
+            Function(obj)
+                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+            End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Cut
     End Sub
@@ -365,7 +377,11 @@ Class wndMain
     Private Sub ctxmnuSharedPaste_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim destinations() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If Not (destinations.Count = 1 AndAlso (destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS)) Then Exit Sub
+        If Not (destinations.Count = 1 AndAlso (
+            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
+            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
+            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer)) Then Exit Sub
+
         If Not (ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0) Then Exit Sub
 
         Dim destination As clsDirectoryObject = destinations(0)
@@ -461,7 +477,12 @@ Class wndMain
     Private Sub ctxmnuSharedRename_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count <> 1 Then Exit Sub
+        If Not (objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim organizationalunitaffected As Boolean = False
@@ -490,7 +511,12 @@ Class wndMain
     Private Sub ctxmnuSharedRemove_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count <> 1 Then Exit Sub
+        If Not (objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim currentcontaineraffected As Boolean = False
@@ -527,11 +553,17 @@ Class wndMain
         If objects.Count = 1 Then OpenObject(New clsDirectoryObject(objects(0).Entry.Parent, objects(0).Domain))
     End Sub
 
+    Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+        If objects.Count = 1 Then ShowTree(New clsDirectoryObject(objects(0).Entry.Parent, objects(0).Domain))
+    End Sub
+
     Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count <> 1 Then Exit Sub
-        If objects(0).SchemaClass <> clsDirectoryObject.enmSchemaClass.User Then Exit Sub
+        If Not (objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword, Me) = MsgBoxResult.Yes Then
@@ -548,8 +580,9 @@ Class wndMain
     Private Sub ctxmnuSharedDisableEnable_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count <> 1 Then Exit Sub
-        If Not (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer) Then Exit Sub
+        If Not (objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.wndObject_msg_Enable, My.Resources.wndObject_msg_Disable), Me) = MsgBoxResult.Yes Then
@@ -564,8 +597,8 @@ Class wndMain
     Private Sub ctxmnuSharedExpirationDate_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count <> 1 Then Exit Sub
-        If objects(0).SchemaClass <> clsDirectoryObject.enmSchemaClass.User Then Exit Sub
+        If Not (objects.Count = 1 AndAlso (
+            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)
@@ -795,6 +828,53 @@ Class wndMain
             spPath.Children.Add(tblck)
 
         End If
+    End Sub
+
+    Private Async Sub ShowTree(container As clsDirectoryObject)
+        If container Is Nothing Then Exit Sub
+
+        Dim treepath As New List(Of clsDirectoryObject)
+
+        Do ' find all parents to the root
+            treepath.Add(container)
+
+            If container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path Then
+                Exit Do
+            Else
+                container = New clsDirectoryObject(container.Entry.Parent, container.Domain)
+            End If
+        Loop
+
+        treepath.Reverse()
+
+        Dim currentparentnode = tviDomains
+        For I = 0 To treepath.Count - 1
+            For j = 0 To currentparentnode.Items.Count - 1
+                If CType(currentparentnode.Items(j), clsDirectoryObject).Entry.Path <> treepath(I).Entry.Path Then Continue For
+
+                If currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated Then
+                    Await Task.Run(
+                        Sub()
+                            Dim timeout As Integer
+                            Do While currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated And timeout < 100 ' 10 sec
+                                Threading.Thread.Sleep(100)
+                                timeout += 1
+                            Loop
+                        End Sub)
+                End If
+
+                Dim st = currentparentnode.ItemContainerGenerator.Status
+                Dim childnode As TreeViewItem = currentparentnode.ItemContainerGenerator.ContainerFromIndex(j)
+                If childnode Is Nothing Then Exit Sub
+
+                childnode.SetValue(TreeViewItem.IsExpandedProperty, True)
+                childnode.ApplyTemplate()
+                childnode.UpdateLayout()
+
+                currentparentnode = childnode
+                Exit For
+            Next
+        Next
     End Sub
 
     Public Sub RebuildColumns()

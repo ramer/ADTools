@@ -1335,4 +1335,7 @@
   <data name="wndObject_msg_Disable" xml:space="preserve">
     <value>Заблокировать объект</value>
   </data>
+  <data name="wndMain_ctxmnuObjectsOpenObjectTree" xml:space="preserve">
+    <value>Расположение в дереве</value>
+  </data>
 </root>

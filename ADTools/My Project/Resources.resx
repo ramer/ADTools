@@ -1424,4 +1424,7 @@ To obtain the API key:
   <data name="wndObject_msg_Enable" xml:space="preserve">
     <value>Enable object</value>
   </data>
+  <data name="wndMain_ctxmnuObjectsOpenObjectTree" xml:space="preserve">
+    <value>Object location in the tree</value>
+  </data>
 </root>
