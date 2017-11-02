@@ -20,7 +20,21 @@
                 <RadioButton x:Name="rbAttributesChanged" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_Changed}" Margin="0,0,10,0" VerticalAlignment="Center"/>
                 <Button x:Name="btnAttributesRefresh" Content="↺" Height="17" Width="17" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
             </StackPanel>
-            <TextBox x:Name="tbAttributesFilter" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
+            <Grid Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom">
+                <TextBox x:Name="tbAttributesFilter"/>
+                <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=tbAttributesFilter}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
             <DataGrid 
                     Name="dgAttributes"
                     Foreground="Black"

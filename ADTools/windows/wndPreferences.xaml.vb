@@ -7,9 +7,6 @@ Imports IPrompt.VisualBasic
 
 Public Class wndPreferences
 
-    Private sourceobject As Object
-    Private allowdrag As Boolean
-
     Private attributesExtended As New ObservableCollection(Of clsAttribute)
     Private Property PluginProcessTelegramBot As Process
 
@@ -108,23 +105,10 @@ Public Class wndPreferences
         preferences.Columns = layout
     End Sub
 
-    Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvAttributesDefault.PreviewMouseLeftButtonDown, lvAttributesExtended.PreviewMouseLeftButtonDown, lvAttributesForSearch.PreviewMouseLeftButtonDown
-        Dim listView As ListView = TryCast(sender, ListView)
-        allowdrag = e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And e.GetPosition(sender).Y < listView.ActualHeight - SystemParameters.HorizontalScrollBarHeight
-    End Sub
-
-    Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvAttributesDefault.MouseMove, lvAttributesExtended.MouseMove, lvAttributesForSearch.MouseMove
-        Dim listView As ListView = TryCast(sender, ListView)
-
-        If e.LeftButton = MouseButtonState.Pressed And listView.SelectedItem IsNot Nothing And allowdrag Then
-            sourceobject = listView
-
-            Dim obj As clsAttribute = CType(listView.SelectedItem, clsAttribute)
-            Dim dragData As New DataObject("clsAttribute", obj)
-
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy)
-        End If
-    End Sub
+    'Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvAttributesDefault.PreviewMouseLeftButtonDown, lvAttributesExtended.PreviewMouseLeftButtonDown, lvAttributesForSearch.PreviewMouseLeftButtonDown
+    '    Dim listView As ListView = TryCast(sender, ListView)
+    '    allowdrag = e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And e.GetPosition(sender).Y < listView.ActualHeight - SystemParameters.HorizontalScrollBarHeight
+    'End Sub
 
     Private Sub btnAttributesForSearchDefault_Click(sender As Object, e As RoutedEventArgs) Handles btnAttributesForSearchDefault.Click
         Dim afsl As New ObservableCollection(Of clsAttribute)
@@ -135,45 +119,69 @@ Public Class wndPreferences
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch
     End Sub
 
-    Private Sub lvAttributesDefault_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesDefault.Drop
-        If e.Data.GetDataPresent("clsAttribute") And sourceobject Is lvAttributesForSearch Then
-            Dim obj As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
+    Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvAttributesDefault.MouseMove, lvAttributesExtended.MouseMove, lvAttributesForSearch.MouseMove
+        Dim listView As ListView = TryCast(sender, ListView)
 
-            If preferences.AttributesForSearch.Contains(obj) Then
-                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
-                Dim afsl As ObservableCollection(Of clsAttribute) = preferences.AttributesForSearch
-                afsl.Remove(obj)
-                preferences.AttributesForSearch = afsl
-            End If
+        If e.LeftButton = MouseButtonState.Pressed And
+            e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+            listView.SelectedItems.Count > 0 Then
+
+            Dim dragData As New DataObject(listView.SelectedItem)
+
+            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
         End If
     End Sub
 
-    Private Sub lvAttributesExtended_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesExtended.Drop
-        If e.Data.GetDataPresent("clsAttribute") And sourceobject Is lvAttributesForSearch Then
-            Dim obj As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
-
-            If preferences.AttributesForSearch.Contains(obj) Then
-                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
-                Dim afsl As ObservableCollection(Of clsAttribute) = preferences.AttributesForSearch
-                afsl.Remove(obj)
-                preferences.AttributesForSearch = afsl
-            End If
+    Private Sub lv_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
+                                                                            trashAttributesForSearch.DragEnter,
+                                                                            lvAttributesForSearch.DragOver,
+                                                                            trashAttributesForSearch.DragOver
+        If e.Data.GetDataPresent(GetType(clsAttribute)) Then
+            e.Effects = DragDropEffects.Copy
+        Else
+            e.Effects = DragDropEffects.None
         End If
+
+        If e.Effects = DragDropEffects.Copy Then
+            If sender Is lvAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Visible
+            If sender Is trashAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Visible : trashAttributesForSearch.Background = Application.Current.Resources("ColorButtonBackground")
+        End If
+
+        e.Handled = True
     End Sub
 
-    Private Sub lvAttributesForSearch_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.Drop
-        If e.Data.GetDataPresent("clsAttribute") And sender IsNot sourceobject Then
-            Dim obj As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
+    Private Sub lvSelectedObjects_DragLeave(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragLeave,
+                                                                                            trashAttributesForSearch.DragLeave
+        If sender Is lvAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Collapsed
+        If sender Is trashAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
+    End Sub
 
-            If Not preferences.AttributesForSearch.Contains(obj) Then
-                Dim afs As ObservableCollection(Of clsAttribute) = preferences.AttributesForSearch
-                afs.Add(obj)
-                preferences.AttributesForSearch = afs
+
+    Private Sub lv_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.Drop,
+                                                                      trashAttributesForSearch.Drop
+        trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
+
+        If e.Data.GetDataPresent(GetType(clsAttribute)) Then
+            Dim obj As clsAttribute = e.Data.GetData(GetType(clsAttribute))
+
+            If sender Is lvAttributesForSearch Then ' adding attribute
+                If Not preferences.AttributesForSearch.Contains(obj) Then
+                    preferences.AttributesForSearch.Add(obj)
+                    preferences.AttributesForSearch = preferences.AttributesForSearch
+                End If
+            ElseIf sender Is trashAttributesForSearch Then
+                If preferences.AttributesForSearch.Contains(obj) Then
+                    If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
+                    preferences.AttributesForSearch.Remove(obj)
+                    preferences.AttributesForSearch = preferences.AttributesForSearch
+                End If
             End If
         End If
     End Sub
 
     Private Sub grdLayout_Drop(sender As Object, e As DragEventArgs) Handles grdLayout.Drop
+        If Not e.Data.GetDataPresent(GetType(clsAttribute)) Then Exit Sub
+
         Dim point As Point = e.GetPosition(grdLayout)
 
         Dim row As Integer = 0
@@ -202,7 +210,7 @@ Public Class wndPreferences
         If row = 0 Then Exit Sub
 
         ' create new
-        Dim attr As clsAttribute = TryCast(e.Data.GetData("clsAttribute"), clsAttribute)
+        Dim attr As clsAttribute = e.Data.GetData(GetType(clsAttribute))
         Dim tblck As New TextBlock(New Run(attr.Label))
         tblck.Tag = attr
         tblck.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap)
@@ -235,7 +243,7 @@ Public Class wndPreferences
         RemoveHandler obj.MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
 
         Dim attr As clsAttribute = obj.Tag
-        Dim dragData As New DataObject("clsAttribute", attr)
+        Dim dragData As New DataObject(attr)
 
         SaveLayout()
 

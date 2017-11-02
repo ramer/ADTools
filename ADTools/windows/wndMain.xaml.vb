@@ -204,14 +204,6 @@ Class wndMain
         CType(sender, StackPanel).ContextMenu.Tag = flt
     End Sub
 
-    Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-
-        If TypeOf sp.Tag Is clsDirectoryObject Then
-            OpenObject(CType(sp.Tag, clsDirectoryObject))
-        End If
-    End Sub
-
     Private Sub tviDomains_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
         Dim obj As clsDirectoryObject = Nothing
         If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
@@ -392,87 +384,12 @@ Class wndMain
 
         If ClipboardAction = enmClipboardAction.Copy Then ' copy
 
-            If sourceobjects(0).Domain Is destination.Domain Then ' same domain
-                If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me) : Exit Sub
-
-                ' single object
-
-                Dim w As New wndCreateObject
-                w.destinationcontainer = destination
-                w.destinationdomain = destination.Domain
-
-                Select Case sourceobjects(0).SchemaClass
-                    Case clsDirectoryObject.enmSchemaClass.User
-                        w.copyingobject = sourceobjects(0)
-                        w.tbUserDisplayname.Text = sourceobjects(0).displayName
-                        w.tbUserObjectName.Text = sourceobjects(0).displayName & "_copy"
-                        w.cmboUserUserPrincipalName.Text = sourceobjects(0).userPrincipalNameName & "_copy"
-                        w.cmboUserUserPrincipalNameDomain.SelectedItem = sourceobjects(0).userPrincipalNameDomain
-                        w.tabctlObject.SelectedIndex = 0
-
-                    Case clsDirectoryObject.enmSchemaClass.Computer
-                        w.copyingobject = sourceobjects(0)
-                        w.cmboComputerObjectName.Text = sourceobjects(0).name & "_copy"
-                        w.tabctlObject.SelectedIndex = 1
-
-                    Case clsDirectoryObject.enmSchemaClass.Group
-                        w.copyingobject = sourceobjects(0)
-                        w.rbGroupScopeDomainLocal.IsChecked = sourceobjects(0).groupTypeScopeDomainLocal
-                        w.rbGroupScopeGlobal.IsChecked = sourceobjects(0).groupTypeScopeGlobal
-                        w.rbGroupScopeUniversal.IsChecked = sourceobjects(0).groupTypeScopeUniversal
-                        w.rbGroupTypeSecurity.IsChecked = sourceobjects(0).groupTypeSecurity
-                        w.rbGroupTypeDistribution.IsChecked = sourceobjects(0).groupTypeDistribution
-                        w.tbGroupObjectName.Text = sourceobjects(0).name & "_copy"
-                        w.tabctlObject.SelectedIndex = 2
-
-                    Case clsDirectoryObject.enmSchemaClass.Contact
-                        w.copyingobject = sourceobjects(0)
-                        w.tbContactDisplayname.Text = sourceobjects(0).displayName
-                        w.tbContactObjectName.Text = sourceobjects(0).displayName & "_copy"
-                        w.tabctlObject.SelectedIndex = 3
-
-                    Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
-                        w.copyingobject = sourceobjects(0)
-                        w.tbOrganizationalUnitObjectName.Text = sourceobjects(0).name & "_copy"
-                        w.tabctlObject.SelectedIndex = 4
-
-                    Case Else
-                        IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me)
-                End Select
-                ShowWindow(w, False, Me, False)
-
-            Else ' another domain
-                ' TODO
-                If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка", Me) <> MessageBoxResult.Yes Then Exit Sub
-
-            End If
+            ObjectsCopy(destination, sourceobjects)
 
         ElseIf ClipboardAction = enmClipboardAction.Cut Then ' cut
 
-            Dim organizationalunitaffected As Boolean = False
+            ObjectsMove(destination, sourceobjects)
 
-            ' another domain
-            If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject, Me) : Exit Sub
-
-            ' same domain
-            If IMsgBox(My.Resources.wndMain_msg_AreYouSure & vbCrLf & vbCrLf &
-                       String.Format(My.Resources.wndMain_msg_MoveObjectToContainer,
-                                     If(sourceobjects.Count > 1, String.Format(My.Resources.wndMain_msg_NObjects, sourceobjects.Count), sourceobjects(0).name),
-                                     destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_PasteObject, Me) <> MessageBoxResult.Yes Then Exit Sub
-
-            Try
-                For Each obj In sourceobjects
-                    If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
-
-                    obj.Entry.MoveTo(destination.Entry)
-                    obj.NotifyMoved()
-                Next
-            Catch ex As Exception
-                ThrowException(ex, "cmdMove")
-            End Try
-
-            RefreshDataGrid()
-            If organizationalunitaffected Then RefreshDomainTree()
         End If
 
     End Sub
@@ -648,6 +565,68 @@ Class wndMain
         End If
     End Sub
 
+    Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+
+        If TypeOf sp.Tag Is clsDirectoryObject Then
+            OpenObject(CType(sp.Tag, clsDirectoryObject))
+        End If
+    End Sub
+
+    Private Sub tviDomains_TreeViewItem_DragEnterDragOver(sender As Object, e As DragEventArgs)
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
+                e.Effects = DragDropEffects.Copy
+            Else
+                e.Effects = DragDropEffects.Move
+            End If
+
+            For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
+            Next
+        Else
+            e.Effects = DragDropEffects.None
+        End If
+
+        e.Handled = True
+    End Sub
+
+    Private Sub tviDomains_TreeViewItem_Drop(sender As Object, e As DragEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+        If TypeOf sp.Tag IsNot clsDirectoryObject Then Exit Sub
+        Dim destination As clsDirectoryObject = sp.Tag
+
+        If Not (destination.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
+            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
+            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then Exit Sub
+
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
+            For Each obj As clsDirectoryObject In dropped
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then Exit Sub
+            Next
+
+            If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
+
+                ObjectsCopy(destination, dropped)
+
+            Else
+
+                ObjectsMove(destination, dropped)
+
+            End If
+
+        End If
+    End Sub
+
     Private Sub dgObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgObjects.PreviewKeyDown
         Select Case e.Key
             Case Key.Enter
@@ -682,6 +661,19 @@ Class wndMain
         End If
         If e.ChangedButton = MouseButton.XButton1 Then SearchPrevious()
         If e.ChangedButton = MouseButton.XButton2 Then SearchNext()
+    End Sub
+
+    Private Sub dgObjects_MouseMove(sender As Object, e As MouseEventArgs) Handles dgObjects.MouseMove
+        Dim datagrid As DataGrid = TryCast(sender, DataGrid)
+
+        If e.LeftButton = MouseButtonState.Pressed And
+            e.GetPosition(sender).X < datagrid.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+            datagrid.SelectedItems.Count > 0 Then
+
+            Dim dragData As New DataObject(datagrid.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
+
+            DragDrop.DoDragDrop(datagrid, dragData, DragDropEffects.All)
+        End If
     End Sub
 
     Private Sub btnBack_Click(sender As Object, e As RoutedEventArgs) Handles btnBack.Click
@@ -1025,8 +1017,89 @@ Class wndMain
         Return column
     End Function
 
+    Public Sub ObjectsCopy(destination As clsDirectoryObject, sourceobjects() As clsDirectoryObject)
+        If sourceobjects(0).Domain Is destination.Domain Then ' same domain
+            If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me) : Exit Sub
 
+            ' single object
 
+            Dim w As New wndCreateObject
+            w.destinationcontainer = destination
+            w.destinationdomain = destination.Domain
+
+            Select Case sourceobjects(0).SchemaClass
+                Case clsDirectoryObject.enmSchemaClass.User
+                    w.copyingobject = sourceobjects(0)
+                    w.tbUserDisplayname.Text = sourceobjects(0).displayName
+                    w.tbUserObjectName.Text = sourceobjects(0).displayName & "_copy"
+                    w.cmboUserUserPrincipalName.Text = sourceobjects(0).userPrincipalNameName & "_copy"
+                    w.cmboUserUserPrincipalNameDomain.SelectedItem = sourceobjects(0).userPrincipalNameDomain
+                    w.tabctlObject.SelectedIndex = 0
+
+                Case clsDirectoryObject.enmSchemaClass.Computer
+                    w.copyingobject = sourceobjects(0)
+                    w.cmboComputerObjectName.Text = sourceobjects(0).name & "_copy"
+                    w.tabctlObject.SelectedIndex = 1
+
+                Case clsDirectoryObject.enmSchemaClass.Group
+                    w.copyingobject = sourceobjects(0)
+                    w.rbGroupScopeDomainLocal.IsChecked = sourceobjects(0).groupTypeScopeDomainLocal
+                    w.rbGroupScopeGlobal.IsChecked = sourceobjects(0).groupTypeScopeGlobal
+                    w.rbGroupScopeUniversal.IsChecked = sourceobjects(0).groupTypeScopeUniversal
+                    w.rbGroupTypeSecurity.IsChecked = sourceobjects(0).groupTypeSecurity
+                    w.rbGroupTypeDistribution.IsChecked = sourceobjects(0).groupTypeDistribution
+                    w.tbGroupObjectName.Text = sourceobjects(0).name & "_copy"
+                    w.tabctlObject.SelectedIndex = 2
+
+                Case clsDirectoryObject.enmSchemaClass.Contact
+                    w.copyingobject = sourceobjects(0)
+                    w.tbContactDisplayname.Text = sourceobjects(0).displayName
+                    w.tbContactObjectName.Text = sourceobjects(0).displayName & "_copy"
+                    w.tabctlObject.SelectedIndex = 3
+
+                Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                    w.copyingobject = sourceobjects(0)
+                    w.tbOrganizationalUnitObjectName.Text = sourceobjects(0).name & "_copy"
+                    w.tabctlObject.SelectedIndex = 4
+
+                Case Else
+                    IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me)
+            End Select
+            ShowWindow(w, False, Me, False)
+
+        Else ' another domain
+            ' TODO
+            If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка", Me) <> MessageBoxResult.Yes Then Exit Sub
+
+        End If
+    End Sub
+
+    Public Sub ObjectsMove(destination As clsDirectoryObject, sourceobjects() As clsDirectoryObject)
+        Dim organizationalunitaffected As Boolean = False
+
+        ' another domain
+        If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject, Me) : Exit Sub
+
+        ' same domain
+        If IMsgBox(My.Resources.wndMain_msg_AreYouSure & vbCrLf & vbCrLf &
+                   String.Format(My.Resources.wndMain_msg_MoveObjectToContainer,
+                                 If(sourceobjects.Count > 1, String.Format(My.Resources.wndMain_msg_NObjects, sourceobjects.Count), sourceobjects(0).name),
+                                 destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_MoveObject, Me) <> MessageBoxResult.Yes Then Exit Sub
+
+        Try
+            For Each obj In sourceobjects
+                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
+
+                obj.Entry.MoveTo(destination.Entry)
+                obj.NotifyMoved()
+            Next
+        Catch ex As Exception
+            ThrowException(ex, "cmdMove")
+        End Try
+
+        RefreshDataGrid()
+        If organizationalunitaffected Then RefreshDomainTree()
+    End Sub
 
 
 #End Region

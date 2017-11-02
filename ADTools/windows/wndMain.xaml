@@ -169,7 +169,7 @@
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}" Margin="0,0,5,0"/>
-                                    <!--<TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="6">(<Run Text="{Binding DomainName}"/>)</TextBlock>-->
+                                    <TextBlock Style="{StaticResource FadeOutTextBlock}" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="8">(<Run Text="{Binding DomainName}"/>)</TextBlock>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
                         </TreeViewItem.ItemTemplate>
@@ -188,8 +188,17 @@
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers, IsAsync=True}">
-                                <!--<StackPanel Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenu="{DynamicResource ctxmnuObjects}" ContextMenuOpening="objects_TreeViewItem_ContextMenuOpening">-->
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
+                                <StackPanel Background="Transparent"
+                                            Orientation="Horizontal"
+                                            Height="23"
+                                            Tag="{Binding}"
+                                            AllowDrop="True"
+                                            MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown"
+                                            ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening"
+                                            DragEnter="tviDomains_TreeViewItem_DragEnterDragOver"
+                                            DragOver="tviDomains_TreeViewItem_DragEnterDragOver"
+                                            Drop="tviDomains_TreeViewItem_Drop">
+                                    
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviDomains">
                                             <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
