@@ -10,14 +10,15 @@ Public Class ctlGroupMember
                                                             GetType(ctlGroupMember),
                                                             New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
+    Enum enmMode
+        DomainDefaultGroups
+        ObjectMemberOf
+    End Enum
+
     Private Property _currentobject As clsDirectoryObject
     Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     WithEvents searcher As New clsSearcher
-
-    Private sourceobject As Object
-    Private dragallow As Boolean
-    Private dragobjects As New List(Of clsDirectoryObject)
 
     Public Property CurrentObject() As clsDirectoryObject
         Get
@@ -85,51 +86,66 @@ Public Class ctlGroupMember
         ShowDirectoryObjectProperties(lvSelectedObjects.SelectedItem, Window.GetWindow(Me))
     End Sub
 
-    Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvSelectedObjects.PreviewMouseLeftButtonDown,
-                                                                                                   lvDomainObjects.PreviewMouseLeftButtonDown
-        Dim listView As ListView = TryCast(sender, ListView)
-        sourceobject = Nothing
-        dragallow = e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth 'And e.GetPosition(sender).Y < listView.ActualHeight - SystemParameters.HorizontalScrollBarHeight
-        dragobjects = listView.SelectedItems.Cast(Of clsDirectoryObject).ToList
-    End Sub
-
     Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvSelectedObjects.MouseMove,
                                                                             lvDomainObjects.MouseMove
         Dim listView As ListView = TryCast(sender, ListView)
 
-        If dragobjects.Count = 0 And listView.SelectedItem IsNot Nothing Then dragobjects.Add(listView.SelectedItem)
+        If e.LeftButton = MouseButtonState.Pressed And
+            e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+            listView.SelectedItems.Count > 0 Then
 
-        sourceobject = Nothing
+            Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
 
-        If e.LeftButton = MouseButtonState.Pressed And dragobjects.Count > 0 And dragallow Then
-            sourceobject = listView
-
-            Dim dragData As New DataObject("dolist", dragobjects)
-
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy)
+            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
         End If
     End Sub
 
-    Private Sub lv_DragEnter(sender As Object, e As DragEventArgs) Handles lvSelectedObjects.DragEnter,
-                                                                            lvDomainObjects.DragEnter
-
-        If Not e.Data.GetDataPresent("dolist") OrElse sender Is sourceobject Then
+    Private Sub lvSelectedObjects_DragEnter(sender As Object, e As DragEventArgs) Handles lvSelectedObjects.DragEnter,
+                                                                            trashSelectedObjects.DragEnter,
+                                                                            lvSelectedObjects.DragOver,
+                                                                            trashSelectedObjects.DragOver
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            e.Effects = DragDropEffects.Copy
+            For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then e.Effects = DragDropEffects.None : Exit For
+            Next
+        Else
             e.Effects = DragDropEffects.None
         End If
+
+        If e.Effects = DragDropEffects.Copy Then
+            If sender Is lvSelectedObjects Then trashSelectedObjects.Visibility = Visibility.Visible
+            If sender Is trashSelectedObjects Then trashSelectedObjects.Visibility = Visibility.Visible : trashSelectedObjects.Background = Application.Current.Resources("ColorButtonBackground")
+        End If
+
+        e.Handled = True
+    End Sub
+
+    Private Sub lvSelectedObjects_DragLeave(sender As Object, e As DragEventArgs) Handles lvSelectedObjects.DragLeave,
+                                                                                            trashSelectedObjects.DragLeave
+        If sender Is lvSelectedObjects Then trashSelectedObjects.Visibility = Visibility.Collapsed
+        If sender Is trashSelectedObjects Then trashSelectedObjects.Visibility = Visibility.Collapsed : trashSelectedObjects.Background = Brushes.Transparent
     End Sub
 
     Private Sub lv_Drop(sender As Object, e As DragEventArgs) Handles lvSelectedObjects.Drop,
-                                                                        lvDomainObjects.Drop
+                                                                      trashSelectedObjects.Drop
+        trashSelectedObjects.Visibility = Visibility.Collapsed : trashSelectedObjects.Background = Brushes.Transparent
 
-        If e.Data.GetDataPresent("dolist") And sender IsNot sourceobject Then
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
+            For Each obj As clsDirectoryObject In dropped
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then Exit Sub
+            Next
 
-            Dim dragged As List(Of clsDirectoryObject) = TryCast(e.Data.GetData("dolist"), List(Of clsDirectoryObject))
-
-            For Each obj In dragged
+            For Each obj In dropped
                 If sender Is lvSelectedObjects Then ' adding member
                     If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
-                Else
+                ElseIf sender Is trashSelectedObjects Then
                     RemoveMember(obj)
                 End If
             Next

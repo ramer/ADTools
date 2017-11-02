@@ -161,14 +161,14 @@ Public Class ctlGroupMemberOf
         e.Handled = True
     End Sub
 
-    Private Sub trashSelectedGroups_DragLeave(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragLeave,
+    Private Sub lvSelectedGroups_DragLeave(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragLeave,
                                                                                             trashSelectedGroups.DragLeave
         If sender Is lvSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Collapsed
         If sender Is trashSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Collapsed : trashSelectedGroups.Background = Brushes.Transparent
     End Sub
 
-    Private Sub lv_Drop(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.Drop,
-                                                                        trashSelectedGroups.Drop
+    Private Sub lvSelectedGroups_Drop(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.Drop,
+                                                                                    trashSelectedGroups.Drop
         trashSelectedGroups.Visibility = Visibility.Collapsed : trashSelectedGroups.Background = Brushes.Transparent
 
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
