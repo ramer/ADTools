@@ -14,15 +14,18 @@ Public Class ctlGroupMemberOf
                                                     GetType(ctlGroupMemberOf),
                                                     New FrameworkPropertyMetadata(Nothing, AddressOf CurrentDomainPropertyChanged))
 
+    Enum enmMode
+        DomainDefaultGroups
+        ObjectMemberOf
+    End Enum
+
     Private Property _currentobject As clsDirectoryObject
     Private Property _currentdomain As clsDomain
     Private Property _currentdomaingroups As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     WithEvents searcher As New clsSearcher
 
-    Private sourceobject As Object
-    Private dragallow As Boolean
-    Private dragobjects As New List(Of clsDirectoryObject)
+    Private Mode As enmMode
 
     Public Property CurrentObject() As clsDirectoryObject
         Get
@@ -51,6 +54,9 @@ Public Class ctlGroupMemberOf
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomain = CType(e.NewValue, clsDirectoryObject).Domain
+
+            .Mode = enmMode.ObjectMemberOf
+
             ._currentdomaingroups.Clear()
             .lvSelectedGroups.Items.Clear()
             ._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
@@ -63,6 +69,9 @@ Public Class ctlGroupMemberOf
         With instance
             ._currentobject = Nothing
             ._currentdomain = CType(e.NewValue, clsDomain)
+
+            .Mode = enmMode.DomainDefaultGroups
+
             ._currentdomaingroups.Clear()
             .lvSelectedGroups.Items.Clear()
             ._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
@@ -72,7 +81,7 @@ Public Class ctlGroupMemberOf
 
     Private Sub ctlGroupMemberOf_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbDomainGroupsFilter.Focus()
-        btnDefaultGroups.Visibility = If(mode() = 0, Visibility.Visible, Visibility.Hidden)
+        btnDefaultGroups.Visibility = If(Mode = enmMode.ObjectMemberOf, Visibility.Visible, Visibility.Hidden)
     End Sub
 
     Public Async Sub InitializeAsync()
@@ -96,16 +105,6 @@ Public Class ctlGroupMemberOf
         End If
     End Sub
 
-    Private Function mode() As Integer
-        If _currentobject IsNot Nothing Then
-            Return 0
-        ElseIf _currentdomain IsNot Nothing Then
-            Return 1
-        Else
-            Return -1
-        End If
-    End Function
-
     Private Async Sub tbDomainGroupsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainGroupsFilter.KeyDown
         If e.Key = Key.Enter Then
             tbDomainGroupsFilter.SelectAll()
@@ -127,50 +126,62 @@ Public Class ctlGroupMemberOf
         ShowDirectoryObjectProperties(lvSelectedGroups.SelectedItem, Window.GetWindow(Me))
     End Sub
 
-    Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvSelectedGroups.PreviewMouseLeftButtonDown,
-                                                                                                   lvDomainGroups.PreviewMouseLeftButtonDown
-        Dim listView As ListView = TryCast(sender, ListView)
-        dragallow = e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth 'And e.GetPosition(sender).Y < listView.ActualHeight - SystemParameters.HorizontalScrollBarHeight
-        dragobjects = listView.SelectedItems.Cast(Of clsDirectoryObject).ToList
-    End Sub
-
     Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvSelectedGroups.MouseMove,
                                                                             lvDomainGroups.MouseMove
         Dim listView As ListView = TryCast(sender, ListView)
 
-        If dragobjects.Count = 0 And listView.SelectedItem IsNot Nothing Then dragobjects.Add(listView.SelectedItem)
+        If e.LeftButton = MouseButtonState.Pressed And
+            e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+            listView.SelectedItems.Count > 0 Then
 
-        sourceobject = Nothing
+            Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
 
-        If e.LeftButton = MouseButtonState.Pressed And dragobjects.Count > 0 And dragallow Then
-            sourceobject = listView
-
-            Dim dragData As New DataObject("dolist", dragobjects)
-
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy)
+            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
         End If
     End Sub
 
-    Private Sub lv_DragEnter(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragEnter,
-                                                                            lvDomainGroups.DragEnter
-
-        If Not e.Data.GetDataPresent("dolist") OrElse sender Is sourceobject Then
+    Private Sub lvSelectedGroups_DragEnter(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragEnter,
+                                                                                         trashSelectedGroups.DragEnter,
+                                                                                         lvSelectedGroups.DragOver,
+                                                                                         trashSelectedGroups.DragOver
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            e.Effects = DragDropEffects.Copy
+            For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
+                If obj.SchemaClass <> clsDirectoryObject.enmSchemaClass.Group Then e.Effects = DragDropEffects.None : Exit For
+            Next
+        Else
             e.Effects = DragDropEffects.None
         End If
+
+        If e.Effects = DragDropEffects.Copy Then
+            If sender Is lvSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Visible
+            If sender Is trashSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Visible : trashSelectedGroups.Background = Application.Current.Resources("ColorButtonBackground")
+        End If
+
+        e.Handled = True
+    End Sub
+
+    Private Sub trashSelectedGroups_DragLeave(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragLeave,
+                                                                                            trashSelectedGroups.DragLeave
+        If sender Is lvSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Collapsed
+        If sender Is trashSelectedGroups Then trashSelectedGroups.Visibility = Visibility.Collapsed : trashSelectedGroups.Background = Brushes.Transparent
     End Sub
 
     Private Sub lv_Drop(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.Drop,
-                                                                        lvDomainGroups.Drop
+                                                                        trashSelectedGroups.Drop
+        trashSelectedGroups.Visibility = Visibility.Collapsed : trashSelectedGroups.Background = Brushes.Transparent
 
-        If e.Data.GetDataPresent("dolist") And sender IsNot sourceobject Then
+        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
+            Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
+            For Each obj As clsDirectoryObject In dropped
+                If obj.SchemaClass <> clsDirectoryObject.enmSchemaClass.Group Then Exit Sub
+            Next
 
-            Dim dragged As List(Of clsDirectoryObject) = TryCast(e.Data.GetData("dolist"), List(Of clsDirectoryObject))
-
-            For Each obj In dragged
+            For Each obj In dropped
                 If sender Is lvSelectedGroups Then ' adding member
-                    If mode() = 0 AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
+                    If Mode = enmMode.ObjectMemberOf AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
-                Else
+                ElseIf sender Is trashSelectedGroups Then
                     RemoveMember(obj)
                 End If
             Next
@@ -180,7 +191,7 @@ Public Class ctlGroupMemberOf
     Private Sub AddMember([object] As clsDirectoryObject)
         Try
 
-            If mode() = 0 Then
+            If Mode = enmMode.ObjectMemberOf Then
 
                 For Each group As clsDirectoryObject In _currentobject.memberOf
                     If group.name = [object].name Then Exit Sub
@@ -191,7 +202,7 @@ Public Class ctlGroupMemberOf
                 _currentobject.memberOf.Add([object])
                 lvSelectedGroups.Items.Add([object])
 
-            ElseIf mode() = 1 Then
+            ElseIf Mode = enmMode.DomainDefaultGroups Then
 
                 For Each group As clsDirectoryObject In _currentdomain.DefaultGroups
                     If group.name = [object].name Then Exit Sub
@@ -211,8 +222,7 @@ Public Class ctlGroupMemberOf
 
     Private Sub RemoveMember([object] As clsDirectoryObject)
         Try
-
-            If mode() = 0 Then
+            If Mode = enmMode.ObjectMemberOf Then
 
                 If Not _currentobject.memberOf.Contains([object]) Then Exit Sub
                 [object].Entry.Invoke("Remove", _currentobject.Entry.Path)
@@ -220,7 +230,7 @@ Public Class ctlGroupMemberOf
                 _currentobject.memberOf.Remove([object])
                 lvSelectedGroups.Items.Remove([object])
 
-            ElseIf mode() = 1 Then
+            ElseIf Mode = enmMode.DomainDefaultGroups Then
 
                 If Not _currentdomain.DefaultGroups.Contains([object]) Then Exit Sub
                 _currentdomain.DefaultGroups.Remove([object])
@@ -235,7 +245,7 @@ Public Class ctlGroupMemberOf
     End Sub
 
     Private Sub btnDefaultGroups_Click(sender As Object, e As RoutedEventArgs) Handles btnDefaultGroups.Click
-        If mode() <> 0 Then Exit Sub
+        If Mode = enmMode.DomainDefaultGroups Then Exit Sub
 
         For Each group In _currentobject.memberOf
             group.Entry.Invoke("Remove", _currentobject.Entry.Path)
@@ -250,4 +260,5 @@ Public Class ctlGroupMemberOf
             lvSelectedGroups.Items.Add(group)
         Next
     End Sub
+
 End Class

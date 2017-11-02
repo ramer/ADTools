@@ -10,6 +10,7 @@ Class wndMain
     Public WithEvents searcher As New clsSearcher
 
     Public Shared hkF5 As New RoutedCommand
+    Public Shared hkEsc As New RoutedCommand
 
     Public Property currentcontainer As clsDirectoryObject
     Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
@@ -26,6 +27,8 @@ Class wndMain
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
         Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshDataGrid))
+        hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
+        Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
         RefreshDomainTree()
         RebuildColumns()
@@ -912,6 +915,10 @@ Class wndMain
         If searchhistoryindex < 0 OrElse searchhistoryindex + 2 > searchhistory.Count Then Exit Sub
         Search(searchhistory(searchhistoryindex + 1).Root, searchhistory(searchhistoryindex + 1).Filter)
         searchhistoryindex += 1
+    End Sub
+
+    Public Async Sub StopSearch()
+        Await searcher.BasicSearchStopAsync()
     End Sub
 
     Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)

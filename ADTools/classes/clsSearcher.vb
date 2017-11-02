@@ -65,7 +65,7 @@ Public Class clsSearcher
                     For Each result In parenttask.Result
                         If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
                         returncollection.Add(result)
-                        If searchscope = SearchScope.Subtree Then Thread.Sleep(50)
+                        If parenttask.Result.Count > 50 Then Thread.Sleep(50)
                     Next
                     Log("Task completed: domain search")
                     Return True
@@ -85,9 +85,9 @@ Public Class clsSearcher
                 End Function)
         Next
 
-        Await Task.WhenAny(basicsearchtasks.ToArray)
+        If basicsearchtasks.Count > 0 Then Await Task.WhenAny(basicsearchtasks.ToArray)
         RaiseEvent BasicSearchAsyncDataRecieved()
-        Await Task.WhenAll(basicsearchtasks.ToArray)
+        If basicsearchtasks.Count > 0 Then Await Task.WhenAll(basicsearchtasks.ToArray)
     End Function
 
     Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,

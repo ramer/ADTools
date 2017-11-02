@@ -125,6 +125,9 @@
     <Compile Include="controls\ctlNetwork.xaml.vb">
       <DependentUpon>ctlNetwork.xaml</DependentUpon>
     </Compile>
+    <Compile Include="controls\ctlTrash.xaml.vb">
+      <DependentUpon>ctlTrash.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\ctlUserMailbox.xaml.vb">
       <DependentUpon>ctlUserMailbox.xaml</DependentUpon>
     </Compile>
@@ -223,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlObjectAttributes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlTrash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -391,6 +398,7 @@
     <Resource Include="images\ready.ico" />
     <Resource Include="images\log.ico" />
     <Resource Include="images\donate.png" />
+    <Resource Include="images\trash.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />
