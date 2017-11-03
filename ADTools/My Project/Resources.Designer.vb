@@ -1037,6 +1037,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Press F1 in any window to view hints.
+        '''</summary>
+        Public ReadOnly Property hint_popF1Hint() As String
+            Get
+                Return ResourceManager.GetString("hint_popF1Hint", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на First, you need to.
         '''</summary>
         Public ReadOnly Property hint_poptvObjects_1() As String

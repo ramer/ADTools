@@ -251,7 +251,7 @@
     <value>Поиск</value>
   </data>
   <data name="wndMain_mnuSearchDomains" xml:space="preserve">
-    <value>Классы</value>
+    <value>Домены</value>
   </data>
   <data name="wndMain_mnuSearchMode" xml:space="preserve">
     <value>Режим</value>
@@ -263,7 +263,7 @@
     <value>Стандартный</value>
   </data>
   <data name="wndMain_mnuSearchObjectClasses" xml:space="preserve">
-    <value>Домены</value>
+    <value>Классы</value>
   </data>
   <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
     <value>Сохранить текущий фильтр …</value>
@@ -1122,7 +1122,7 @@
     <value>, с которыми мы будет работать</value>
   </data>
   <data name="hint_popcmboSearchPattern" xml:space="preserve">
-    <value>Воспользуйся поисковой строкой для поиска объектов</value>
+    <value>Воспользуйтесь поисковой строкой для поиска объектов</value>
   </data>
   <data name="wndPreferences_lbl_Basic" xml:space="preserve">
     <value>Основные</value>
@@ -1337,5 +1337,8 @@
   </data>
   <data name="wndMain_ctxmnuObjectsOpenObjectTree" xml:space="preserve">
     <value>Расположение в дереве</value>
+  </data>
+  <data name="hint_popF1Hint" xml:space="preserve">
+    <value>Нажмите F1 в любом окне для получения подсказок</value>
   </data>
 </root>

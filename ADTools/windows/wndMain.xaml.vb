@@ -10,6 +10,7 @@ Class wndMain
     Public WithEvents searcher As New clsSearcher
 
     Public Shared hkF5 As New RoutedCommand
+    Public Shared hkF1 As New RoutedCommand
     Public Shared hkEsc As New RoutedCommand
 
     Public Property currentcontainer As clsDirectoryObject
@@ -25,6 +26,8 @@ Class wndMain
     Private clipboardlastdata As String
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        hkF1.InputGestures.Add(New KeyGesture(Key.F1))
+        Me.CommandBindings.Add(New CommandBinding(hkF1, AddressOf ShowPopups))
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
         Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshDataGrid))
         hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
@@ -41,16 +44,10 @@ Class wndMain
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
 
-        poptvObjects.IsOpen = domains.Count = 0
-        popcmboSearchPattern.IsOpen = preferences.FirstRun
+        If preferences.FirstRun Then ShowPopups()
 
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
         clipboardTimer.Start()
-    End Sub
-
-    Private Sub MovePopupHints() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, cmboSearchPattern.SizeChanged
-        poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
-        popcmboSearchPattern.HorizontalOffset += 1 : popcmboSearchPattern.HorizontalOffset -= 1
     End Sub
 
     Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing, MyBase.Closing
@@ -62,6 +59,32 @@ Class wndMain
 
         If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
     End Sub
+
+#Region "Popups"
+
+    Private Sub ShowPopups()
+        poptvObjects.IsOpen = True
+        popcmboSearchPattern.IsOpen = True
+        popF1Hint.IsOpen = True
+    End Sub
+
+    Private Sub MovePopups() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, cmboSearchPattern.SizeChanged
+        poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
+        popcmboSearchPattern.HorizontalOffset += 1 : popcmboSearchPattern.HorizontalOffset -= 1
+        popF1Hint.HorizontalOffset += 1 : popF1Hint.HorizontalOffset -= 1
+    End Sub
+
+    Private Sub ClosePopups()
+        poptvObjects.IsOpen = False
+        popcmboSearchPattern.IsOpen = False
+        popF1Hint.IsOpen = False
+    End Sub
+
+    Private Sub ClosePopup(sender As Object, e As MouseButtonEventArgs) Handles poptvObjects.MouseLeftButtonDown, popcmboSearchPattern.MouseLeftButtonDown, popF1Hint.MouseLeftButtonDown
+        CType(sender, Popup).IsOpen = False
+    End Sub
+
+#End Region
 
 #Region "Main Menu"
 
@@ -753,6 +776,7 @@ Class wndMain
 #End Region
 
 #Region "Subs"
+
 
     Public Sub RefreshDomainTree()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d) If(d IsNot Nothing, New clsDirectoryObject(d.DefaultNamingContext, d), Nothing))

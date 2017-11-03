@@ -64,7 +64,7 @@ Module mdlTools
     Public columnsDefault As New ObservableCollection(Of clsDataGridColumnInfo) From {
         New clsDataGridColumnInfo("⬕", New List(Of clsAttribute) From {New clsAttribute("Image", "⬕")}, 0, 45),
         New clsDataGridColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
-        New clsDataGridColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedName", "LDAP-путь")}, 2, 450),
+        New clsDataGridColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")}, 2, 450),
         New clsDataGridColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
         New clsDataGridColumnInfo("Место работы", New List(Of clsAttribute) From {New clsAttribute("title", "Должность"), New clsAttribute("department", "Подразделение"), New clsAttribute("company", "Компания")}, 4, 300),
         New clsDataGridColumnInfo("Основной адрес", New List(Of clsAttribute) From {New clsAttribute("mail", "Основной адрес")}, 5, 170),

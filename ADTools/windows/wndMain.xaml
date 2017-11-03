@@ -36,7 +36,15 @@
             </Grid>
         </Popup>
 
+        <Popup x:Name="popF1Hint" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=mnuHelp}" Placement="Bottom" HorizontalOffset="30" VerticalOffset="-5">
+            <Grid Width="200" Height="55">
+                <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
 
+                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
+                    <Run Text="{x:Static r:Resources.hint_popF1Hint}"/>
+                </TextBlock>
+            </Grid>
+        </Popup>
 
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
