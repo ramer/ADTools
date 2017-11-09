@@ -17,7 +17,7 @@ Module mdlDialogue
 
     'Const DIALOGUE_BUTTON_CURRENTUSER = "👤 выбранный юзер"
     Const DIALOGUE_BUTTON_USERRESETPASSWORD = "🔑 сбросить пароль"
-    Const DIALOGUE_BUTTON_USERENABLEDISABLE = "⛔️ заблочить / разблочить"
+    Const DIALOGUE_BUTTON_USERENABLEDISABLE = "⛔️  заблочить / разблочить"
     Const DIALOGUE_BUTTON_USERMEMBEROF = "👥 член групп"
     Const DIALOGUE_BUTTON_USERDETAILS = "ℹ️ подробнее"
     'Const DIALOGUE_BUTTON_SHOWCONFIG = "ℹ️ показать настройки"
@@ -252,7 +252,7 @@ Module mdlDialogue
         Dim msg As String = ""
 
         For Each obj In objects
-            msg &= If(obj.disabled = True, "⛔️", "👤 ") & obj.name & vbCrLf
+            msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & obj.name & vbCrLf
             msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "📲 " & obj.userPrincipalNameName & vbCrLf)
             msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & vbCrLf)
             msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & vbCrLf & vbCrLf
@@ -273,7 +273,7 @@ Module mdlDialogue
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Выбранный юзер:" & vbCrLf & vbCrLf
-        msg &= If(currentuser.disabled = True, "⛔️", "👤 ") & currentuser.name & vbCrLf
+        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & vbCrLf
         msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalNameName), "", "📲 " & currentuser.userPrincipalNameName & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.physicalDeliveryOfficeName), "", "🏢 " & currentuser.physicalDeliveryOfficeName & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.telephoneNumber), "", "📞 " & currentuser.telephoneNumber & vbCrLf)
@@ -289,7 +289,7 @@ Module mdlDialogue
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Юзер выбран:" & vbCrLf & vbCrLf
-        msg &= If(currentuser.disabled = True, "⛔️", "👤 ") & currentuser.name & vbCrLf
+        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & vbCrLf
         msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "🔑 " & currentuser.userPrincipalName & vbCrLf)
 
@@ -329,13 +329,38 @@ Module mdlDialogue
     End Sub
 
     Private Sub SendRequestStageSearchGroup(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
-        SendTelegramMessage(responce.Message.From.Id, "Введи кусок названия группы", searchgroupkeyboard)
+        If currentuser Is Nothing Then Exit Sub
+
+        Dim msg As String = ""
+
+        If currentuser.memberOf.Count > 0 Then
+            msg &= "Текущие группы:" & vbCrLf & vbCrLf
+            For Each group As clsDirectoryObject In currentuser.memberOf
+                msg &= "👥 " & group.name & vbCrLf
+                msg &= "/" & Encode58(group.objectGUID.ToByteArray) & vbCrLf & vbCrLf
+            Next
+        End If
+
+        msg &= "Введи кусок названия группы"
+
+        SendTelegramMessage(responce.Message.From.Id, msg, searchgroupkeyboard)
     End Sub
 
     Private Sub SendRequestStageGroupConfirmMemberOf(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Добавить/удалить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в/из группы" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
+        Dim msg As String = ""
+
+        Dim newgroup As Boolean = True
+        For Each group As clsDirectoryObject In currentuser.memberOf
+            If group.name = currentgroup.name Then newgroup = False
+        Next
+
+        If newgroup Then
+            msg &= String.Format("Добавить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в группу" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
+        Else
+            msg &= String.Format("Удалить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "из группы" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
+        End If
 
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
@@ -343,27 +368,34 @@ Module mdlDialogue
     Private Sub SendRequestStageGroupMemberOfCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Добавить/удалить: готово" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в/из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+        Dim msg As String
+
+        Try
+            Dim newgroup As Boolean = True
+            For Each group As clsDirectoryObject In currentuser.memberOf
+                If group.name = currentgroup.name Then newgroup = False
+            Next
+
+            If newgroup Then
+                currentgroup.Entry.Invoke("Add", currentuser.distinguishedNameFull)
+                currentgroup.Entry.CommitChanges()
+                currentuser.memberOf.Add(currentgroup)
+                msg = String.Format("👤 {0}" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+            Else
+                currentgroup.Entry.Invoke("Remove", currentuser.distinguishedNameFull)
+                currentgroup.Entry.CommitChanges()
+
+                For Each group As clsDirectoryObject In currentuser.memberOf
+                    If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
+                Next
+                msg = String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+            End If
+
+        Catch ex As Exception
+            msg = String.Format("Не получилось добавить/удалить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в/из группы" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "{2}", currentuser.name, currentgroup.name, ex.Message)
+        End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
-
-
-    'Private Sub SendRequestStageLocation(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
-    '    Dim kb As New List(Of List(Of String))
-    '    Dim loc As New List(Of String)
-    '    loc.Add("Склад ИТ")
-
-    '    For Each dvc In Devices
-    '        If Not loc.Contains(dvc.Location) Then loc.Add(dvc.Location)
-    '    Next
-
-    '    For Each l In loc
-    '        kb.Add(New List(Of String) From {l})
-    '    Next
-    '    kb.Add(New List(Of String) From {DIALOGUE_BUTTON_BACK})
-
-    '    SendTelegramMessage(responce.Message.From.Id, "Укажи место расположения оборудования:", kb)
-    'End Sub
 
 End Module

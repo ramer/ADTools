@@ -46,6 +46,7 @@ Public Class clsDirectoryObject
     Public Sub NotifyMoved()
         NotifyPropertyChanged("distinguishedName")
         NotifyPropertyChanged("distinguishedNameFormated")
+        NotifyPropertyChanged("distinguishedNameFull")
     End Sub
 
     Public Sub NotifyRenamed()
@@ -1159,14 +1160,27 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property distinguishedNameFormated() As String
         Get
-            Dim OU() As String = Split(distinguishedName, ",")
-            Dim ResultString As String = ""
-            For I As Integer = UBound(OU) To 0 Step -1
-                If OU(I).StartsWith("OU") Then
-                    ResultString = ResultString & " \ " & Mid(OU(I), 4)
+            Try
+                Return Join(distinguishedName.Split({",", "CN=", "OU="}, StringSplitOptions.RemoveEmptyEntries).Reverse.Where(Function(x) Not x.StartsWith("DC=")).ToArray, " \ ")
+            Catch
+                Return ""
+            End Try
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property distinguishedNameFull() As String
+        Get
+            Try
+                Dim lastslash = InStrRev(Entry.Path, "/")
+                If lastslash > 0 Then
+                    Return Entry.Path.Substring(0, lastslash) & distinguishedName
+                Else
+                    Return Entry.Path
                 End If
-            Next
-            Return Mid(ResultString, 4)
+            Catch
+                Return ""
+            End Try
         End Get
     End Property
 
