@@ -81,6 +81,7 @@ Public Class ctlContactMailbox
     End Sub
 
     Private Async Sub btnContactAdd_Click(sender As Object, e As RoutedEventArgs) Handles btnContactAdd.Click
+        If contact Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim name As String = tbContact.Text
@@ -92,6 +93,7 @@ Public Class ctlContactMailbox
     End Sub
 
     Private Async Sub btnContactEdit_Click(sender As Object, e As RoutedEventArgs) Handles btnContactEdit.Click
+        If contact Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim newname As String = tbContact.Text
@@ -104,6 +106,7 @@ Public Class ctlContactMailbox
     End Sub
 
     Private Async Sub btnContactRemove_Click(sender As Object, e As RoutedEventArgs) Handles btnContactRemove.Click
+        If contact Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim oldaddress As clsEmailAddress = lvEmailAddresses.SelectedItem
@@ -120,6 +123,7 @@ Public Class ctlContactMailbox
     End Sub
 
     Private Async Sub btnContactSetPrimary_Click(sender As Object, e As RoutedEventArgs) Handles btnContactSetPrimary.Click
+        If contact Is Nothing Then Exit Sub
         If CType(lvEmailAddresses.SelectedItem, clsEmailAddress).IsPrimary = False Then CurrentObject.mail = CType(lvEmailAddresses.SelectedItem, clsEmailAddress).Address
 
         capexchange.Visibility = Visibility.Visible
@@ -131,7 +135,9 @@ Public Class ctlContactMailbox
     End Sub
 
     Private Sub ctlContact_Unloaded(sender As Object, e As RoutedEventArgs) Handles Me.Unloaded
-        If contact IsNot Nothing Then contact.Close()
+        If contact Is Nothing Then Exit Sub
+
+        contact.Close()
     End Sub
 
 End Class

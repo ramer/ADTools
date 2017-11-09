@@ -81,6 +81,7 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Async Sub btnMailboxAdd_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxAdd.Click
+        If mailbox Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim name As String = tbMailbox.Text
@@ -92,6 +93,7 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Async Sub btnMailboxEdit_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxEdit.Click
+        If mailbox Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim newname As String = tbMailbox.Text
@@ -104,6 +106,7 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Async Sub btnMailboxRemove_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxRemove.Click
+        If mailbox Is Nothing Then Exit Sub
         capexchange.Visibility = Visibility.Visible
 
         Dim oldaddress As clsEmailAddress = lvEmailAddresses.SelectedItem
@@ -120,6 +123,7 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Async Sub btnMailboxSetPrimary_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxSetPrimary.Click
+        If mailbox Is Nothing Then Exit Sub
         If CType(lvEmailAddresses.SelectedItem, clsEmailAddress).IsPrimary = False Then CurrentObject.mail = CType(lvEmailAddresses.SelectedItem, clsEmailAddress).Address
 
         capexchange.Visibility = Visibility.Visible
@@ -131,12 +135,14 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Sub btnMailboxQuota_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxQuota.Click
+        If mailbox Is Nothing Then Exit Sub
         Dim w As New wndMailboxQuota
         w.mailbox = mailbox
         ShowWindow(w, True, Window.GetWindow(Me), True)
     End Sub
 
     Private Sub btnMailboxShare_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxShare.Click
+        If mailbox Is Nothing Then Exit Sub
         Dim w As New wndMailboxShare
         w.currentuser = CurrentObject
         w.mailbox = mailbox
@@ -144,7 +150,9 @@ Public Class ctlUserMailbox
     End Sub
 
     Private Sub ctlMailbox_Unloaded(sender As Object, e As RoutedEventArgs) Handles Me.Unloaded
-        If mailbox IsNot Nothing Then mailbox.Close()
+        If mailbox Is Nothing Then Exit Sub
+
+        mailbox.Close()
     End Sub
 
 End Class
