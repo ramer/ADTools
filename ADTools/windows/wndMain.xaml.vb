@@ -584,7 +584,7 @@ Class wndMain
 
         If clipboardlastdata <> newclipboarddata Then
             clipboardlastdata = newclipboarddata
-            StartSearch(Nothing, New clsFilter(clipboardlastdata, Nothing, searchobjectclasses))
+            StartSearch(Nothing, New clsFilter(clipboardlastdata, preferences.AttributesForSearch, searchobjectclasses))
         End If
     End Sub
 
@@ -742,7 +742,7 @@ Class wndMain
     Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
         If e.Key = Key.Enter Then
             If mnuSearchModeDefault.IsChecked = True Then
-                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses))
+                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
             ElseIf mnuSearchModeAdvanced.IsChecked = True Then
                 StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
             End If
@@ -753,7 +753,7 @@ Class wndMain
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If mnuSearchModeDefault.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, Nothing, searchobjectclasses))
+            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
         ElseIf mnuSearchModeAdvanced.IsChecked = True Then
             StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
         End If
