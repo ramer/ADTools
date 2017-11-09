@@ -307,7 +307,13 @@ Module mdlDialogue
     Private Sub SendRequestStageUserConfirmEnableDisable(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Заблочить/разблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
+        Dim msg As String = ""
+
+        If currentuser.disabled = True Then
+            msg &= String.Format("Разблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
+        Else
+            msg &= String.Format("Заблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
+        End If
 
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
@@ -315,7 +321,15 @@ Module mdlDialogue
     Private Sub SendRequestStageUserResetPasswordCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Сброс пароля: готово" & vbCrLf & vbCrLf & "👤 {0}", currentuser.name)
+        Dim msg As String = ""
+
+        Try
+            currentuser.ResetPassword()
+            currentuser.passwordNeverExpires = False
+            msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "Пароль сброшен", currentuser.name)
+        Catch ex As Exception
+            msg = String.Format("Не получилось сбросить пароль:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
+        End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
@@ -323,7 +337,20 @@ Module mdlDialogue
     Private Sub SendRequestStageUserEnableDisableCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Заблочить/разблочить: готово" & vbCrLf & vbCrLf & "👤 {0}", currentuser.name)
+        Dim msg As String = ""
+
+        Try
+            If currentuser.disabled Then
+                currentuser.disabled = False
+                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "разблокирован", currentuser.name)
+            Else
+                currentuser.disabled = True
+                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "заблокирован", currentuser.name)
+            End If
+
+        Catch ex As Exception
+            msg = String.Format("Не получилось заблочить/разблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
+        End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
@@ -368,7 +395,7 @@ Module mdlDialogue
     Private Sub SendRequestStageGroupMemberOfCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
-        Dim msg As String
+        Dim msg As String = ""
 
         Try
             Dim newgroup As Boolean = True
@@ -380,7 +407,7 @@ Module mdlDialogue
                 currentgroup.Entry.Invoke("Add", currentuser.distinguishedNameFull)
                 currentgroup.Entry.CommitChanges()
                 currentuser.memberOf.Add(currentgroup)
-                msg = String.Format("👤 {0}" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
             Else
                 currentgroup.Entry.Invoke("Remove", currentuser.distinguishedNameFull)
                 currentgroup.Entry.CommitChanges()
@@ -388,7 +415,7 @@ Module mdlDialogue
                 For Each group As clsDirectoryObject In currentuser.memberOf
                     If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
                 Next
-                msg = String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
             End If
 
         Catch ex As Exception

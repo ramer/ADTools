@@ -281,6 +281,8 @@ Public Class clsDirectoryObject
 
                 Entry.CommitChanges()
 
+                If _properties.ContainsKey(name) Then _properties.Remove(name)
+
                 NotifyPropertyChanged(name)
             Catch ex As Exception
                 ThrowException(ex, "Set LdapProperty")
