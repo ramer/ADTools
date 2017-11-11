@@ -6,8 +6,11 @@ Public Class ConverterToInlinesWithHyperlink
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
         If value Is Nothing Then Return Nothing
-
         Dim spn = New Span()
+        Dim inlines As New List(Of Inline)
+        'inlines.Add(New Run(value.ToString))
+        'spn.Inlines.AddRange(inlines)
+        'Return spn.Inlines
 
         Dim regexpatterns As New List(Of String)
         For Each domain In domains
@@ -25,14 +28,15 @@ Public Class ConverterToInlinesWithHyperlink
         Dim matches As MatchCollection = regexMatchSearcher.Matches(value.ToString)
         Dim lastindex As Integer = 0
         For Each match As Match In matches
-            spn.Inlines.Add(New Run(value.ToString.Substring(lastindex, match.Index - lastindex)))
+            inlines.Add(New Run(value.ToString.Substring(lastindex, match.Index - lastindex)))
             lastindex = match.Index + match.Length
             Dim hl = New Hyperlink(New Run(match.Value)) With {.Tag = match.Value}
             AddHandler hl.Click, AddressOf Hyperlink_Click
-            spn.Inlines.Add(hl)
+            inlines.Add(hl)
         Next
-        spn.Inlines.Add(New Run(value.ToString.Substring(lastindex)))
+        inlines.Add(New Run(value.ToString.Substring(lastindex)))
 
+        spn.Inlines.AddRange(inlines)
         Return spn.Inlines
     End Function
 

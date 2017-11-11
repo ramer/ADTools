@@ -28,7 +28,7 @@ Public Class clsSearcher
         End If
     End Function
 
-    Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
+    Public Async Function BasicSearchAsync(ByVal returncollection As ObservableCollection(Of clsDirectoryObject),
                                            Optional parentobject As clsDirectoryObject = Nothing,
                                            Optional filter As clsFilter = Nothing,
                                            Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing
@@ -50,33 +50,20 @@ Public Class clsSearcher
             searchscope = SearchScope.Subtree
         End If
 
+        Dim results As New List(Of clsDirectoryObject)
+
         For Each root In roots
             Dim mt = Task.Factory.StartNew(
-                Function()
-                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
-                End Function, basicsearchtaskscts.Token)
+                Sub()
+                    results.AddRange(BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token))
+                End Sub, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
             Log(String.Format("Task created: domain {0} search", root.name))
 
-            Dim lt = mt.ContinueWith(
-                Function(parenttask As Task(Of ObservableCollection(Of clsDirectoryObject)))
-                    basicsearchtasks.Remove(mt)
-                    Log(String.Format("Task created: collect domain {1} search results ({0})", parenttask.Result.Count, If(parenttask.Result.Count > 0, parenttask.Result(0).Domain.Name, "(unknown)")))
-                    For Each result In parenttask.Result
-                        If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
-                        returncollection.Add(result)
-                        If parenttask.Result.Count > 50 Then Thread.Sleep(50)
-                    Next
-                    Log("Task completed: domain search")
-                    Return True
-                End Function)
-            basicsearchtasks.Add(lt)
-            Log(String.Format("Task created: display domain {0} search results", root.name))
-
-            Dim ft = lt.ContinueWith(
+            Dim ft = mt.ContinueWith(
                 Function(parenttask As Task(Of Boolean))
                     Try
-                        basicsearchtasks.Remove(lt)
+                        basicsearchtasks.Remove(mt)
                     Catch
                         basicsearchtasks.Clear()
                     End Try
@@ -85,9 +72,14 @@ Public Class clsSearcher
                 End Function)
         Next
 
-        If basicsearchtasks.Count > 0 Then Await Task.WhenAny(basicsearchtasks.ToArray)
-        RaiseEvent BasicSearchAsyncDataRecieved()
+        'If basicsearchtasks.Count > 0 Then Await Task.WhenAny(basicsearchtasks.ToArray)
         If basicsearchtasks.Count > 0 Then Await Task.WhenAll(basicsearchtasks.ToArray)
+
+        RaiseEvent BasicSearchAsyncDataRecieved()
+
+        For Each obj In results
+            returncollection.Add(obj)
+        Next
     End Function
 
     Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,

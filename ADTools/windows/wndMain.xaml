@@ -275,10 +275,13 @@
                         <DataGrid 
                             x:Name="dgObjects"
                             Foreground="Black"
-                            ItemsSource="{Binding currentobjects}"
+                            ItemsSource="{Binding currentobjects, IsAsync=True}"
                             AlternationCount="2"
-                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VirtualizingStackPanel.CacheLength="2"
+                            VirtualizingStackPanel.CacheLengthUnit="Page"
                             AutoGenerateColumns="False"
                             GridLinesVisibility="None"
                             IsReadOnly="True"
@@ -287,7 +290,8 @@
                             IsTextSearchEnabled="True"
                             TextSearch.TextPath="name"
                             SelectionMode="Extended"
-                            ScrollViewer.CanContentScroll ="False"
+                            ScrollViewer.CanContentScroll ="True"
+                            ScrollViewer.IsDeferredScrollingEnabled="True"
                             Margin="0,0,0,5">
                             
                             <DataGrid.GroupStyle>

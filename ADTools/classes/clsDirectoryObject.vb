@@ -82,7 +82,9 @@ Public Class clsDirectoryObject
         End Get
         Set(ByVal value As DirectoryEntry)
             Try
-                If value.Properties.Count > 0 Then _entry = value
+                If value.Properties.Count > 0 Then
+                    _entry = value
+                End If
             Catch
                 _entry = Nothing
             End Try
@@ -146,6 +148,12 @@ Public Class clsDirectoryObject
 
     Public Sub Refresh()
         _properties.Clear()
+    End Sub
+
+    Public Sub Refresh(propertynames As String())
+        For Each propertyname In propertynames
+            Dim obj = LdapProperty(propertyname)
+        Next
     End Sub
 
     <RegistrySerializerIgnorable(True)>
@@ -246,20 +254,20 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property LdapProperty(name As String) As Object
+    Public Property LdapProperty(propertyname As String) As Object
         Get
-            If _properties.ContainsKey(name) Then Return _properties(name)
+            Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, propertyname)
+            If _properties.ContainsKey(propertyname) Then Return _properties(propertyname)
 
             Dim value As Object = Nothing
             Dim valuetyped As Object = Nothing
 
             If Entry IsNot Nothing Then
                 'Entry.RefreshCache({name})
-                'Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, name)
-                Dim pvc As PropertyValueCollection = Entry.Properties(name)
+                Dim pvc As PropertyValueCollection = Entry.Properties(propertyname)
                 If pvc.Value IsNot Nothing Then value = pvc.Value
             ElseIf SearchResult IsNot Nothing Then
-                Dim rpvc As ResultPropertyValueCollection = SearchResult.Properties(name)
+                Dim rpvc As ResultPropertyValueCollection = SearchResult.Properties(propertyname)
                 If rpvc.Count > 0 AndAlso rpvc.Item(0) IsNot Nothing Then value = rpvc.Item(0)
             End If
 
@@ -286,7 +294,7 @@ Public Class clsDirectoryObject
                     End Try
             End Select
 
-            _properties.Add(name, valuetyped)
+            _properties.Add(propertyname, valuetyped)
 
             'Debug.Print("{0} LDAP property read end: {1}", Now.Second & "." & Now.Millisecond, name)
 
@@ -296,16 +304,16 @@ Public Class clsDirectoryObject
             Try
                 If Entry Is Nothing Then Exit Property
                 If IsNumeric(value) Or IsDate(value) Or Len(value) > 0 Then
-                    Entry.Properties(name).Value = Trim(value)
+                    Entry.Properties(propertyname).Value = Trim(value)
                 Else
-                    Entry.Properties(name).Clear()
+                    Entry.Properties(propertyname).Clear()
                 End If
 
                 Entry.CommitChanges()
 
-                If _properties.ContainsKey(name) Then _properties.Remove(name)
+                If _properties.ContainsKey(propertyname) Then _properties.Remove(propertyname)
 
-                NotifyPropertyChanged(name)
+                NotifyPropertyChanged(propertyname)
             Catch ex As Exception
                 ThrowException(ex, "Set LdapProperty")
             End Try
@@ -376,40 +384,46 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Status() As String
         Get
-            Dim _statusFormated As String = ""
+            If _properties.ContainsKey("Status") Then Return _properties("Status")
+
+            Dim _status As String = ""
 
             If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
-                    _statusFormated &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
+                    _status &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate() = Nothing Then
-                        _statusFormated &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
+                        _status &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
                     ElseIf passwordExpiresDate() <= Now Then
-                        _statusFormated &= My.Resources.cls_msg_PasswordExpired & vbCr
+                        _status &= My.Resources.cls_msg_PasswordExpired & vbCr
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _statusFormated &= My.Resources.cls_msg_ObjectExpiresUnknown & vbCr
+                    _status &= My.Resources.cls_msg_ObjectExpiresUnknown & vbCr
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _statusFormated &= My.Resources.cls_msg_ObjectExpired & vbCr
+                    _status &= My.Resources.cls_msg_ObjectExpired & vbCr
                 End If
 
                 If disabled Is Nothing Then
-                    _statusFormated &= My.Resources.cls_msg_ObjectStatusUnknown & vbCr
+                    _status &= My.Resources.cls_msg_ObjectStatusUnknown & vbCr
                 ElseIf disabled Then
-                    _statusFormated &= My.Resources.cls_msg_ObjectDisabled & vbCr
+                    _status &= My.Resources.cls_msg_ObjectDisabled & vbCr
                 End If
-                If _statusFormated.Length > 1 Then _statusFormated = _statusFormated.Remove(_statusFormated.Length - 1)
+                If _status.Length > 1 Then _status = _status.Remove(_status.Length - 1)
             End If
 
-            Return _statusFormated
+            _properties.Add("Status", _status)
+
+            Return _status
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
+            If _properties.ContainsKey("ClassImage") Then Return _properties("ClassImage")
+
             Dim _image As String = ""
 
             Select Case SchemaClass
@@ -435,13 +449,18 @@ Public Class clsDirectoryObject
                     _image = "object_unknown.ico"
             End Select
 
-            Return New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
+            Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
+            _properties.Add("ClassImage", bi)
+
+            Return bi
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Image() As BitmapImage
         Get
+            If _properties.ContainsKey("Image") Then Return _properties("Image")
+
             Dim _image As String = ""
 
             If SchemaClass = enmSchemaClass.User Then
@@ -503,7 +522,10 @@ Public Class clsDirectoryObject
                 Return ClassImage
             End If
 
-            Return New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
+            Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
+            _properties.Add("Image", bi)
+
+            Return bi
         End Get
     End Property
 
@@ -794,14 +816,6 @@ Public Class clsDirectoryObject
 
             NotifyPropertyChanged("memberOf")
         End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property msExchHideFromAddressLists() As Boolean
-        Get
-            _entry.RefreshCache({"msExchHideFromAddressLists"})
-            Return LdapProperty("msExchHideFromAddressLists")
-        End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>

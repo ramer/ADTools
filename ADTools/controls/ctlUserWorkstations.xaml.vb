@@ -11,7 +11,7 @@ Public Class ctlUserWorkstations
 
     Private Property _currentobject As clsDirectoryObject
     Private Property _currentselectedobjects As New ObservableCollection(Of clsDirectoryObject)
-    Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Private Property _currentdomainobjects As New ObservableCollection(Of clsDirectoryObject)
 
     WithEvents searcher As New clsSearcher
 

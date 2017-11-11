@@ -711,11 +711,6 @@
         </Style>
         <Style TargetType="{x:Type DataGridRow}">
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="LayoutTransform">
-                <Setter.Value>
-                    <ScaleTransform x:Name="transform" />
-                </Setter.Value>
-            </Setter>
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
                     <Setter Property="Background" Value="{DynamicResource ColorListviewRow}" />

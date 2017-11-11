@@ -14,7 +14,7 @@ Class wndMain
     Public Shared hkEsc As New RoutedCommand
 
     Public Property currentcontainer As clsDirectoryObject
-    Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Public Property currentobjects As New ObservableCollection(Of clsDirectoryObject)
     Public Property currentfilter As clsFilter
 
     Private searchhistoryindex As Integer
@@ -1014,7 +1014,6 @@ Class wndMain
                 bind.Converter = New ConverterToInlinesWithHyperlink
                 text.SetBinding(CustomTextBlock.InlineCollectionProperty, bind)
                 text.SetValue(TextBlock.ToolTipProperty, attr.Label)
-                'text.SetValue(TextBlock.TextWrappingProperty, TextWrapping.WrapWithOverflow)
                 panel.AppendChild(text)
 
             Else
@@ -1030,7 +1029,6 @@ Class wndMain
                 panel.AppendChild(img)
 
             End If
-            'Status
         Next
 
         Dim template As New DataTemplate()
