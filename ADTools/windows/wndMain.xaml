@@ -338,7 +338,7 @@
                                     <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
-
+                            
                         </DataGrid>
                     </Grid>
                 </DockPanel>

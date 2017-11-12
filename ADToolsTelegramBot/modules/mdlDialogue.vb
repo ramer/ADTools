@@ -278,7 +278,7 @@ Module mdlDialogue
         msg &= If(String.IsNullOrEmpty(currentuser.physicalDeliveryOfficeName), "", "🏢 " & currentuser.physicalDeliveryOfficeName & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.telephoneNumber), "", "📞 " & currentuser.telephoneNumber & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.mail), "", "✉️ " & currentuser.mail & vbCrLf)
-        msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & vbCrLf)
+        msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & ", " & currentuser.department & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.passwordExpiresFormated), "", "🔑 " & currentuser.passwordExpiresFormated & vbCrLf)
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)

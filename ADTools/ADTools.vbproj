@@ -149,6 +149,7 @@
       <DependentUpon>ctlUserWorkstations.xaml</DependentUpon>
     </Compile>
     <Compile Include="classes\clsPreferences.vb" />
+    <Compile Include="converters\ConverterDataToUIElement.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
     <Compile Include="My Project\Resources.Designer.vb">

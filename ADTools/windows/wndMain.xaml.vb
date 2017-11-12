@@ -691,6 +691,7 @@ Class wndMain
 
         If e.LeftButton = MouseButtonState.Pressed And
             e.GetPosition(sender).X < datagrid.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+            e.GetPosition(sender).Y < datagrid.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
             datagrid.SelectedItems.Count > 0 Then
 
             Dim dragData As New DataObject(datagrid.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
@@ -991,49 +992,29 @@ Class wndMain
         column.Header = columninfo.Header
         column.SetValue(DataGridColumn.CanUserSortProperty, True)
         If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
-        If columninfo.Width > 0 Then column.Width = columninfo.Width
+        column.Width = If(columninfo.Width > 0, columninfo.Width, 100)
         Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-        panel.SetValue(VirtualizingStackPanel.VerticalAlignmentProperty, VerticalAlignment.Center)
-        panel.SetValue(VirtualizingStackPanel.MarginProperty, New Thickness(5, 0, 5, 0))
+        panel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center)
+        panel.SetValue(MarginProperty, New Thickness(5, 0, 5, 0))
 
         Dim first As Boolean = True
         For Each attr As clsAttribute In columninfo.Attributes
-            Dim bind As System.Windows.Data.Binding
+            Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement}
 
-            bind = New System.Windows.Data.Binding(attr.Name)
-            bind.Mode = BindingMode.OneWay
-
-            If attr.Name <> "Image" Then
-
-                Dim text As New FrameworkElementFactory(GetType(CustomTextBlock))
-                If first Then
-                    text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
-                    first = False
-                    column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-                End If
-                bind.Converter = New ConverterToInlinesWithHyperlink
-                text.SetBinding(CustomTextBlock.InlineCollectionProperty, bind)
-                text.SetValue(TextBlock.ToolTipProperty, attr.Label)
-                panel.AppendChild(text)
-
-            Else
-
-                Dim ttbind As New System.Windows.Data.Binding("Status")
-                ttbind.Mode = BindingMode.OneWay
-                Dim img As New FrameworkElementFactory(GetType(Image))
-                column.SetValue(clsSorter.PropertyNameProperty, "Image")
-                img.SetBinding(Image.SourceProperty, bind)
-                img.SetValue(Image.WidthProperty, 32.0)
-                img.SetValue(Image.HeightProperty, 32.0)
-                img.SetBinding(Image.ToolTipProperty, ttbind)
-                panel.AppendChild(img)
-
+            Dim container As New FrameworkElementFactory(GetType(ItemsControl))
+            If first Then
+                first = False
+                container.SetValue(FontWeightProperty, FontWeights.Bold)
+                column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
             End If
+
+            container.SetBinding(ItemsControl.ItemsSourceProperty, bind)
+            container.SetValue(ToolTipProperty, attr.Label)
+            panel.AppendChild(container)
         Next
 
         Dim template As New DataTemplate()
         template.VisualTree = panel
-
         column.CellTemplate = template
 
         Return column

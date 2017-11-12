@@ -825,23 +825,22 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property thumbnailPhoto() As Byte()
+    Public Property thumbnailPhoto() As BitmapImage
         Get
-            If Entry Is Nothing Then
-                Dim ms As New IO.MemoryStream
-                Application.GetResourceStream(New Uri("pack://application:,,,/images/user_image.png")).Stream.CopyTo(ms)
-                Return ms.ToArray
-            End If
-
-            If LdapProperty("thumbnailPhoto") IsNot Nothing Then
-                Return LdapProperty("thumbnailPhoto")
+            If Entry IsNot Nothing AndAlso LdapProperty("thumbnailPhoto") IsNot Nothing Then
+                Using ms = New System.IO.MemoryStream(CType(LdapProperty("thumbnailPhoto"), Byte()))
+                    Dim bi = New BitmapImage()
+                    bi.BeginInit()
+                    bi.CacheOption = BitmapCacheOption.OnLoad
+                    bi.StreamSource = ms
+                    bi.EndInit()
+                    Return bi
+                End Using
             Else
-                Dim ms As New IO.MemoryStream
-                Application.GetResourceStream(New Uri("pack://application:,,,/images/user_image.png")).Stream.CopyTo(ms)
-                Return ms.ToArray
+                Return New BitmapImage(New Uri("pack://application:,,,/images/user_image.png"))
             End If
         End Get
-        Set(value As Byte())
+        Set(value As BitmapImage)
             If value Is Nothing Then
                 Try
                     _entry.Properties("thumbnailPhoto").Clear()
@@ -852,7 +851,9 @@ Public Class clsDirectoryObject
             Else
                 Try
                     _entry.Properties("thumbnailPhoto").Clear()
-                    _entry.Properties("thumbnailPhoto").Add(value)
+                    Dim bytes() As Byte = Nothing
+                    value.CopyPixels(bytes, 0, 0)
+                    _entry.Properties("thumbnailPhoto").Add(bytes)
                     _entry.CommitChanges()
                 Catch ex As Exception
                     ThrowException(ex, "Set thumbnailPhoto")
