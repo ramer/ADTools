@@ -938,7 +938,7 @@ Class wndMain
     End Sub
 
     Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
-        If root Is Nothing And (filter Is Nothing OrElse String.IsNullOrEmpty(filter.Pattern)) Then Exit Sub
+        If root Is Nothing And (filter Is Nothing OrElse String.IsNullOrEmpty(filter.Filter)) Then Exit Sub
 
         While searchhistory.Count > searchhistoryindex + 1
             searchhistory.RemoveAt(searchhistory.Count - 1)

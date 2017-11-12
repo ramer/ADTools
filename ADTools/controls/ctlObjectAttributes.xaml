@@ -63,7 +63,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_Value}" Width="*" SortMemberPath="Value" CanUserSort="True">
+                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_Value}" Width="*" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Value, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
@@ -71,7 +71,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_NewValue}" Width="*" SortMemberPath="NewValue" CanUserSort="True">
+                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_NewValue}" Width="*" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding NewValue, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />

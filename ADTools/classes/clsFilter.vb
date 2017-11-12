@@ -54,6 +54,8 @@ Public Class clsFilter
                     End Sub)
             End Sub)
 
+        If String.IsNullOrEmpty(attrfilter) Then Exit Sub
+
         Me.Filter = "(&" +
                      "(|" +
                          If(searchobjectclasses.User, "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))", "") +
@@ -65,7 +67,6 @@ Public Class clsFilter
                      If(Not String.IsNullOrEmpty(attrfilter), "(|" & attrfilter & ")", "") +
                   ")"
     End Sub
-
 
     Public Property Name As String
         Get
