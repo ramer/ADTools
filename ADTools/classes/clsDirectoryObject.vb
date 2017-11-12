@@ -256,7 +256,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property LdapProperty(propertyname As String) As Object
         Get
-            Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, propertyname)
+            'Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, propertyname)
             If _properties.ContainsKey(propertyname) Then Return _properties(propertyname)
 
             Dim value As Object = Nothing

@@ -14,7 +14,7 @@ Class wndMain
     Public Shared hkEsc As New RoutedCommand
 
     Public Property currentcontainer As clsDirectoryObject
-    Public Property currentobjects As New ObservableCollection(Of clsDirectoryObject)
+    Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
     Public Property currentfilter As clsFilter
 
     Private searchhistoryindex As Integer

@@ -6,7 +6,7 @@ Public Class wndMailboxShare
 
     Public WithEvents searcherusers As New clsSearcher
 
-    Public Property users As New ObservableCollection(Of clsDirectoryObject)
+    Public Property users As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     Private sourceobject As Object
     Private allowdrag As Boolean

@@ -21,7 +21,7 @@ Public Class ctlGroupMemberOf
 
     Private Property _currentobject As clsDirectoryObject
     Private Property _currentdomain As clsDomain
-    Private Property _currentdomaingroups As New ObservableCollection(Of clsDirectoryObject)
+    Private Property _currentdomaingroups As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     WithEvents searcher As New clsSearcher
 
