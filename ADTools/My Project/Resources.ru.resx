@@ -1341,4 +1341,7 @@
   <data name="hint_popF1Hint" xml:space="preserve">
     <value>Нажмите F1 в любом окне для получения подсказок</value>
   </data>
+  <data name="wndObject_lbl_Organization" xml:space="preserve">
+    <value>Организация</value>
+  </data>
 </root>

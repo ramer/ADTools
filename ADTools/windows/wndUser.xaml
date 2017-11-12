@@ -125,13 +125,13 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
-                                <TextBlock Height="23">
-                                    <Hyperlink 
-                                        NavigateUri="{Binding manager.displayName}"
-                                        RequestNavigate="Manager_hyperlink_click">
-                                        <TextBlock Text="{Binding manager.displayName}"/>
-                                    </Hyperlink>
-                                </TextBlock>
+                                <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                    <TextBlock Height="23" Margin="2,0,2,0">
+                                <Hyperlink x:Name="hlManager">
+                                    <Run Text="{Binding manager.displayName}"/>
+                                </Hyperlink>
+                                    </TextBlock>
+                                </Border>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="140"/>

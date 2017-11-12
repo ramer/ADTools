@@ -38,6 +38,7 @@ Public Class clsDirectoryObject
     Private _properties As New Dictionary(Of String, Object)
 
     Private _manager As clsDirectoryObject
+    Private _managedby As clsDirectoryObject
     Private _employees As ObservableCollection(Of clsDirectoryObject)
     Private _memberOf As ObservableCollection(Of clsDirectoryObject)
     Private _member As ObservableCollection(Of clsDirectoryObject)
@@ -631,7 +632,12 @@ Public Class clsDirectoryObject
                     If managerDN Is Nothing Then
                         _manager = Nothing
                     Else
-                        _manager = New clsDirectoryObject(New DirectoryEntry("LDAP://" & Domain.Name & "/" & managerDN, Domain.Username, Domain.Password), Domain)
+                        Dim lastslash = InStrRev(Entry.Path, "/")
+                        If lastslash > 0 Then
+                            _manager = New clsDirectoryObject(New DirectoryEntry(Entry.Path.Substring(0, lastslash) & managerDN, Domain.Username, Domain.Password), Domain)
+                        Else
+                            Return Nothing
+                        End If
                     End If
                     Return _manager
                 Catch ex As Exception
@@ -904,6 +910,39 @@ Public Class clsDirectoryObject
         Get
             Return If(LdapProperty("operatingSystemVersion"), "")
         End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property managedBy() As clsDirectoryObject
+        Get
+            If _managedby Is Nothing Then
+                Try
+                    Dim managerDN As String = LdapProperty("managedBy")
+                    If managerDN Is Nothing Then
+                        _managedby = Nothing
+                    Else
+                        Dim lastslash = InStrRev(Entry.Path, "/")
+                        If lastslash > 0 Then
+                            _managedby = New clsDirectoryObject(New DirectoryEntry(Entry.Path.Substring(0, lastslash) & managerDN, Domain.Username, Domain.Password), Domain)
+                        Else
+                            Return Nothing
+                        End If
+                    End If
+                    Return _managedby
+                Catch ex As Exception
+                    Return Nothing
+                End Try
+            Else
+                Return _managedby
+            End If
+        End Get
+        Set(value As clsDirectoryObject)
+            Dim path() As String = value.Entry.Path.Split({"/"}, StringSplitOptions.RemoveEmptyEntries)
+            LdapProperty("managedBy") = path(UBound(path))
+            _managedby = value
+
+            NotifyPropertyChanged("managedBy")
+        End Set
     End Property
 
 #End Region

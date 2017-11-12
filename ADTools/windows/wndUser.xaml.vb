@@ -32,7 +32,7 @@ Public Class wndUser
         tbDepartment.Text = Replace(currentobject.Entry.Parent.Name, "OU=", "")
     End Sub
 
-    Private Sub Manager_hyperlink_click(sender As Object, e As RequestNavigateEventArgs)
+    Private Sub hlManager_Click(sender As Object, e As RoutedEventArgs) Handles hlManager.Click
         ShowDirectoryObjectProperties(currentobject.manager, Me)
     End Sub
 

@@ -3096,6 +3096,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Organization.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Organization() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Organization", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Operating system.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_OS() As String

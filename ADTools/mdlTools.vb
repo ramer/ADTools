@@ -92,6 +92,7 @@ Module mdlTools
         {New clsAttribute("logonCount", "Входов")},
         {New clsAttribute("mail", "Основной адрес")},
         {New clsAttribute("manager", "Руководитель")},
+        {New clsAttribute("managedBy", "Управляется")},
         {New clsAttribute("name", "Имя объекта")},
         {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
         {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},

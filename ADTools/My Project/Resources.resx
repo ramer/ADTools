@@ -1433,4 +1433,7 @@ To obtain the API key:
   <data name="hint_popF1Hint" xml:space="preserve">
     <value>Press F1 in any window to view hints</value>
   </data>
+  <data name="wndObject_lbl_Organization" xml:space="preserve">
+    <value>Organization</value>
+  </data>
 </root>
