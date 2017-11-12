@@ -45,7 +45,7 @@
                     GridLinesVisibility="None"
                     IsSynchronizedWithCurrentItem="True"
                     CanUserAddRows="False"
-                    ScrollViewer.CanContentScroll ="False"
+                    ScrollViewer.CanContentScroll ="True"
                     >
                 <DataGrid.ContextMenu>
                     <ContextMenu>
@@ -71,7 +71,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_NewValue}" Width="*" SortMemberPath="Value" CanUserSort="True">
+                    <DataGridTemplateColumn Header="{x:Static r:Resources.ctlObjectAttributes_lbl_NewValue}" Width="*" SortMemberPath="NewValue" CanUserSort="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding NewValue, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />

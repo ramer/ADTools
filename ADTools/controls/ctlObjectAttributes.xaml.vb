@@ -136,24 +136,45 @@ Public Class ctlObjectAttributes
 
     Private Sub ApplyFilter()
         cvAttributes.Filter = New Predicate(Of Object)(
-    Function(a As clsAttribute)
-        Dim filter As String = tbAttributesFilter.Text
+            Function(a As clsAttribute)
+                Dim filter As String = tbAttributesFilter.Text
 
-        If filter.Length = 0 Then
-            If rbAttributesWithValue.IsChecked Then
-                Return a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString)
-            ElseIf rbAttributesChanged.IsChecked Then
-                Return (a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
-                       (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
-                       (Not a.Value.Equals(a.NewValue))
-            Else
-                Return True
-            End If
-        Else
-            Return a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0 Or (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0)
-        End If
+                If rbAttributesWithValue.IsChecked Then ' with values
+                    If filter.Length = 0 Then
+                        Return (a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString))
+                    Else
+                        Return (a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString)) _
+                               AndAlso
+                               ((a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0))
+                    End If
+                ElseIf rbAttributesChanged.IsChecked Then 'changed
+                    If filter.Length = 0 Then
+                        Return (a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
+                               (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
+                               (Not a.Value.Equals(a.NewValue))
+                    Else
+                        Return ((a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
+                               (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
+                               (Not a.Value.Equals(a.NewValue))) _
+                               AndAlso
+                               ((a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0))
+                    End If
+                Else ' all
+                    If filter.Length = 0 Then
+                        Return True
+                    Else
+                        Return (a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
+                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0)
+                    End If
 
-    End Function)
+                End If
+
+            End Function)
     End Sub
 
 End Class
