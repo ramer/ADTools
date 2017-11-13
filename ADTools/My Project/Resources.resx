@@ -1436,4 +1436,10 @@ To obtain the API key:
   <data name="wndObject_lbl_Organization" xml:space="preserve">
     <value>Organization</value>
   </data>
+  <data name="wndObject_lbl_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="wndObject_lbl_ManagedBy" xml:space="preserve">
+    <value>Managed By</value>
+  </data>
 </root>

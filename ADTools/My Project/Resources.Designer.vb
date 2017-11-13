@@ -3024,6 +3024,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Managed By.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ManagedBy() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ManagedBy", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Manager.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Manager() As String
@@ -3065,6 +3074,15 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_MustChangePasswordNextLogon() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_MustChangePasswordNextLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Name.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Name() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Name", resourceCulture)
             End Get
         End Property
         

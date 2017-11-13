@@ -8,7 +8,7 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         Title="{Binding name}"
-        Height="340"
+        Height="365"
         Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
@@ -45,6 +45,17 @@
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Location}" Width="200"/>
                                 <TextBox Name="tbLocation" Height="23" Text="{Binding location}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[location]}"/>
                             </DockPanel>
+                            <DockPanel LastChildFill="True" Margin="5,5,5,0">
+                                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedBy}" Width="200"/>
+                                <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                    <TextBlock Height="23" Margin="2,0,2,0">
+                                        <Hyperlink x:Name="hlManagedBy">
+                                            <Run Text="{Binding managedBy.name}"/>
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </Border>
+                            </DockPanel>
+
                             <DockPanel LastChildFill="True" Margin="5,50,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OS}" Width="200"/>
                                 <TextBox Name="tbOperatingSystem" Height="23" Text="{Binding operatingSystem, Mode=OneWay}" IsReadOnly="True"/>

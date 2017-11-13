@@ -1344,4 +1344,10 @@
   <data name="wndObject_lbl_Organization" xml:space="preserve">
     <value>Организация</value>
   </data>
+  <data name="wndObject_lbl_Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="wndObject_lbl_ManagedBy" xml:space="preserve">
+    <value>Управляется</value>
+  </data>
 </root>

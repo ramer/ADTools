@@ -127,9 +127,9 @@
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
                                 <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
                                     <TextBlock Height="23" Margin="2,0,2,0">
-                                <Hyperlink x:Name="hlManager">
-                                    <Run Text="{Binding manager.displayName}"/>
-                                </Hyperlink>
+                                        <Hyperlink x:Name="hlManager">
+                                            <Run Text="{Binding manager.name}"/>
+                                        </Hyperlink>
                                     </TextBlock>
                                 </Border>
                             </DockPanel>

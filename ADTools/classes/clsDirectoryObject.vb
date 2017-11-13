@@ -391,28 +391,30 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property StatusImage As Grid
         Get
-            Dim grd As New Grid With {.Width = 48, .Height = 48, .ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
-            Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(128, 201, 38)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(254, 205, 32)), New SolidColorBrush(Color.FromRgb(227, 70, 70))))}
-            Dim imggrd As New Grid With {.Width = 46, .Height = 46}
+            Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
+            Dim imggrd As New Grid
+            grd.Children.Add(imggrd)
+
             Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both, .HorizontalAlignment = HorizontalAlignment.Center, .VerticalAlignment = VerticalAlignment.Center}
-
             RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality)
-            el.Effect = New Effects.BlurEffect With {.Radius = 1}
-            imggrd.Clip = New EllipseGeometry(New Point(23, 23), 23, 23)
 
-            If thumbnailPhoto IsNot Nothing Then
+            If SchemaClass = enmSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
                 img.Width = 48
                 img.Height = 48
                 img.Source = thumbnailPhoto
+                imggrd.Clip = New EllipseGeometry(New Point(23, 23), 23, 23)
+                imggrd.Children.Add(img)
+
+                Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(128, 201, 38)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(254, 205, 32)), New SolidColorBrush(Color.FromRgb(227, 70, 70))))}
+                el.Effect = New Effects.BlurEffect With {.Radius = 1}
+                grd.Children.Add(el)
             Else
                 img.Width = 32
                 img.Height = 32
                 img.Source = Image
+                imggrd.Children.Add(img)
             End If
 
-            imggrd.Children.Add(img)
-            grd.Children.Add(imggrd)
-            grd.Children.Add(el)
             Return grd
         End Get
     End Property
