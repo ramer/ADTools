@@ -30,7 +30,7 @@
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
                             <Border BorderThickness="1" Margin="0,0,0,5" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150"/>
+                                <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150" RenderOptions.BitmapScalingMode="HighQuality"/>
                             </Border>
                             <Button x:Name="btnClearPhoto" Content="{x:Static r:Resources.wndObject_lbl_ClearPhoto}" Height="20" IsEnabled="{Binding CanWrite[thumbnailPhoto]}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibility}}"/>
                         </StackPanel>

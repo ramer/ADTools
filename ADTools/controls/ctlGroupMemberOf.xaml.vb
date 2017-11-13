@@ -58,8 +58,6 @@ Public Class ctlGroupMemberOf
             .Mode = enmMode.ObjectMemberOf
 
             ._currentdomaingroups.Clear()
-            .lvSelectedGroups.Items.Clear()
-            ._currentobject.memberOf.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -73,8 +71,6 @@ Public Class ctlGroupMemberOf
             .Mode = enmMode.DomainDefaultGroups
 
             ._currentdomaingroups.Clear()
-            .lvSelectedGroups.Items.Clear()
-            ._currentdomain.DefaultGroups.ToList.ForEach(Sub(x As clsDirectoryObject) .lvSelectedGroups.Items.Add(x))
             .lvDomainGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomaingroups, Nothing)
         End With
     End Sub
@@ -90,9 +86,9 @@ Public Class ctlGroupMemberOf
 
             Dim groups As New ObservableCollection(Of clsDirectoryObject)
 
-            If _currentobject IsNot Nothing Then
+            If Mode = enmMode.ObjectMemberOf Then
                 groups = Await Task.Run(Function() _currentobject.memberOf)
-            Else
+            ElseIf Mode = enmMode.DomainDefaultGroups Then
                 groups = Await Task.Run(Function() _currentdomain.DefaultGroups)
             End If
 

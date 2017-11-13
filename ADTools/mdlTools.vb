@@ -62,7 +62,7 @@ Module mdlTools
 
 
     Public columnsDefault As New ObservableCollection(Of clsDataGridColumnInfo) From {
-        New clsDataGridColumnInfo("⬕", New List(Of clsAttribute) From {New clsAttribute("StatusImage", "⬕")}, 0, 51),
+        New clsDataGridColumnInfo("Статус", New List(Of clsAttribute) From {New clsAttribute("StatusImage", "Статус ⬕")}, 0, 51),
         New clsDataGridColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
         New clsDataGridColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")}, 2, 450),
         New clsDataGridColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
@@ -84,8 +84,7 @@ Module mdlTools
         {New clsAttribute("distinguishedName", "LDAP-путь")},
         {New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")},
         {New clsAttribute("givenName", "Имя")},
-        {New clsAttribute("Image", "⬕")},
-        {New clsAttribute("StatusImage", "⬕")},
+        {New clsAttribute("Image", "Картинка ⬕")},
         {New clsAttribute("initials", "Инициалы")},
         {New clsAttribute("lastLogonDate", "Последний вход")},
         {New clsAttribute("lastLogonFormated", "Последний вход (формат)")},
@@ -105,10 +104,10 @@ Module mdlTools
         {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")},
         {New clsAttribute("SchemaClassName", "Класс")},
         {New clsAttribute("sn", "Фамилия")},
-        {New clsAttribute("Status", "Статус")},
-        {New clsAttribute("StatusFormated", "Статус (формат)")},
+        {New clsAttribute("StatusImage", "Статус ⬕")},
+        {New clsAttribute("StatusFormatted", "Статус (формат)")},
         {New clsAttribute("telephoneNumber", "Телефон")},
-        {New clsAttribute("thumbnailPhoto", "Фото")},
+        {New clsAttribute("thumbnailPhoto", "Фото ⬕")},
         {New clsAttribute("title", "Должность")},
         {New clsAttribute("userPrincipalName", "Имя входа")},
         {New clsAttribute("whenCreated", "Создан")},

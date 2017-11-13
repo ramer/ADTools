@@ -13,8 +13,9 @@ Public Class ConverterDataToUIElement
                 items.Add(value)
             Case GetType(BitmapImage)
                 Dim img As New Image
-                img.Width = 48
-                img.Height = 48
+                RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality)
+                img.Width = 32
+                img.Height = 32
                 img.Source = value
                 items.Add(img)
             Case GetType(clsDirectoryObject)

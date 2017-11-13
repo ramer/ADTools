@@ -392,22 +392,27 @@ Public Class clsDirectoryObject
     Public ReadOnly Property StatusImage As Grid
         Get
             Dim grd As New Grid With {.Width = 48, .Height = 48, .ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
-            Dim el As New Ellipse With {.StrokeThickness = 2, .Stroke = If(Status = enmStatus.Normal, Brushes.LightGreen, If(Status = enmStatus.Expired, Brushes.Yellow, Brushes.Red))}
-            grd.Children.Add(el)
+            Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(128, 201, 38)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(254, 205, 32)), New SolidColorBrush(Color.FromRgb(227, 70, 70))))}
+            Dim imggrd As New Grid With {.Width = 46, .Height = 46}
+            Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both, .HorizontalAlignment = HorizontalAlignment.Center, .VerticalAlignment = VerticalAlignment.Center}
 
-            Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both}
+            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality)
+            el.Effect = New Effects.BlurEffect With {.Radius = 1}
+            imggrd.Clip = New EllipseGeometry(New Point(23, 23), 23, 23)
+
             If thumbnailPhoto IsNot Nothing Then
                 img.Width = 48
                 img.Height = 48
-                img.Clip = New EllipseGeometry(New Point(24, 24), 21, 21)
                 img.Source = thumbnailPhoto
             Else
                 img.Width = 32
                 img.Height = 32
                 img.Source = Image
             End If
-            grd.Children.Add(img)
 
+            imggrd.Children.Add(img)
+            grd.Children.Add(imggrd)
+            grd.Children.Add(el)
             Return grd
         End Get
     End Property

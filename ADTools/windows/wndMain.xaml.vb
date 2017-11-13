@@ -778,7 +778,6 @@ Class wndMain
 
 #Region "Subs"
 
-
     Public Sub RefreshDomainTree()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d) If(d IsNot Nothing, New clsDirectoryObject(d.DefaultNamingContext, d), Nothing))
     End Sub
