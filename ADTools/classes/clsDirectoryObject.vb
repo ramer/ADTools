@@ -20,6 +20,12 @@ Public Class clsDirectoryObject
         Unknown
     End Enum
 
+    Enum enmStatus
+        Normal
+        Expired
+        Blocked
+    End Enum
+
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
     Private _entry As DirectoryEntry
@@ -383,9 +389,70 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property Status() As String
+    Public ReadOnly Property StatusImage As Grid
+        Get
+            Dim grd As New Grid With {.Width = 48, .Height = 48, .ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
+            Dim el As New Ellipse With {.StrokeThickness = 2, .Stroke = If(Status = enmStatus.Normal, Brushes.LightGreen, If(Status = enmStatus.Expired, Brushes.Yellow, Brushes.Red))}
+            grd.Children.Add(el)
+
+            Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both}
+            If thumbnailPhoto IsNot Nothing Then
+                img.Width = 48
+                img.Height = 48
+                img.Clip = New EllipseGeometry(New Point(24, 24), 21, 21)
+                img.Source = thumbnailPhoto
+            Else
+                img.Width = 32
+                img.Height = 32
+                img.Source = Image
+            End If
+            grd.Children.Add(img)
+
+            Return grd
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property Status() As enmStatus
         Get
             If _properties.ContainsKey("Status") Then Return _properties("Status")
+
+            Dim _status As enmStatus = enmStatus.Normal
+
+            If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
+                If passwordNeverExpires Is Nothing Then
+                    _status = enmStatus.Expired
+                ElseIf passwordNeverExpires = False Then
+                    If passwordExpiresDate() = Nothing Then
+                        _status = enmStatus.Expired
+                    ElseIf passwordExpiresDate() <= Now Then
+                        _status = enmStatus.Expired
+                    End If
+                End If
+
+                If accountNeverExpires Is Nothing Then
+                    _status = enmStatus.Expired
+                ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
+                    _status = enmStatus.Expired
+                End If
+
+                If disabled Is Nothing Then
+                    _status = enmStatus.Expired
+                ElseIf disabled Then
+                    _status = enmStatus.Blocked
+                End If
+            End If
+
+            _properties.Add("Status", _status)
+
+            Return _status
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property StatusFormatted() As String
+        Get
+            If _properties.ContainsKey("StatusFormatted") Then Return _properties("StatusFormatted")
 
             Dim _status As String = ""
 
@@ -414,46 +481,9 @@ Public Class clsDirectoryObject
                 If _status.Length > 1 Then _status = _status.Remove(_status.Length - 1)
             End If
 
-            _properties.Add("Status", _status)
+            _properties.Add("StatusFormatted", _status)
 
             Return _status
-        End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property ClassImage() As BitmapImage
-        Get
-            If _properties.ContainsKey("ClassImage") Then Return _properties("ClassImage")
-
-            Dim _image As String = ""
-
-            Select Case SchemaClass
-                Case enmSchemaClass.User
-                    _image = "user.ico"
-                Case enmSchemaClass.Contact
-                    _image = "contact.ico"
-                Case enmSchemaClass.Computer
-                    _image = "computer.ico"
-                Case enmSchemaClass.Group
-                    _image = "group.ico"
-                Case enmSchemaClass.OrganizationalUnit
-                    _image = "organizationalunit.ico"
-                Case enmSchemaClass.Container
-                    _image = "container.ico"
-                Case enmSchemaClass.DomainDNS
-                    _image = "domain.ico"
-                Case enmSchemaClass.UnknownContainer
-                    _image = "container_unknown.ico"
-                Case enmSchemaClass.Unknown
-                    _image = "object_unknown.ico"
-                Case Else
-                    _image = "object_unknown.ico"
-            End Select
-
-            Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
-            _properties.Add("ClassImage", bi)
-
-            Return bi
         End Get
     End Property
 
@@ -525,6 +555,43 @@ Public Class clsDirectoryObject
 
             Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
             _properties.Add("Image", bi)
+
+            Return bi
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property ClassImage() As BitmapImage
+        Get
+            If _properties.ContainsKey("ClassImage") Then Return _properties("ClassImage")
+
+            Dim _image As String = ""
+
+            Select Case SchemaClass
+                Case enmSchemaClass.User
+                    _image = "user.ico"
+                Case enmSchemaClass.Contact
+                    _image = "contact.ico"
+                Case enmSchemaClass.Computer
+                    _image = "computer.ico"
+                Case enmSchemaClass.Group
+                    _image = "group.ico"
+                Case enmSchemaClass.OrganizationalUnit
+                    _image = "organizationalunit.ico"
+                Case enmSchemaClass.Container
+                    _image = "container.ico"
+                Case enmSchemaClass.DomainDNS
+                    _image = "domain.ico"
+                Case enmSchemaClass.UnknownContainer
+                    _image = "container_unknown.ico"
+                Case enmSchemaClass.Unknown
+                    _image = "object_unknown.ico"
+                Case Else
+                    _image = "object_unknown.ico"
+            End Select
+
+            Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
+            _properties.Add("ClassImage", bi)
 
             Return bi
         End Get
@@ -837,7 +904,7 @@ Public Class clsDirectoryObject
                     Return bi
                 End Using
             Else
-                Return New BitmapImage(New Uri("pack://application:,,,/images/user_image.png"))
+                Return Nothing
             End If
         End Get
         Set(value As BitmapImage)

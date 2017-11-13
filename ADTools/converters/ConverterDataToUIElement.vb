@@ -9,16 +9,14 @@ Public Class ConverterDataToUIElement
         Dim items As New ObservableCollection(Of Object)
 
         Select Case value.GetType()
+            Case GetType(Grid)
+                items.Add(value)
             Case GetType(BitmapImage)
-
-                Dim ttbind As New Binding("Status") With {.Mode = BindingMode.OneWay}
                 Dim img As New Image
-                img.Width = 32.0
-                img.Height = 32.0
+                img.Width = 48
+                img.Height = 48
                 img.Source = value
-                img.SetBinding(Image.ToolTipProperty, ttbind)
                 items.Add(img)
-
             Case GetType(clsDirectoryObject)
 
                 Dim obj As clsDirectoryObject = CType(value, clsDirectoryObject)

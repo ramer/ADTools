@@ -992,14 +992,16 @@ Class wndMain
         column.Header = columninfo.Header
         column.SetValue(DataGridColumn.CanUserSortProperty, True)
         If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
-        column.Width = If(columninfo.Width > 0, columninfo.Width, 100)
+        column.Width = If(columninfo.Width > 0, columninfo.Width, 0)
+        column.MinWidth = 58
         Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
         panel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center)
         panel.SetValue(MarginProperty, New Thickness(5, 0, 5, 0))
 
         Dim first As Boolean = True
         For Each attr As clsAttribute In columninfo.Attributes
-            Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement}
+            Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr.Name}
+
 
             Dim container As New FrameworkElementFactory(GetType(ItemsControl))
             If first Then
