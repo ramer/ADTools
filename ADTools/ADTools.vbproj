@@ -125,6 +125,9 @@
     <Compile Include="controls\ctlContactMailbox.xaml.vb">
       <DependentUpon>ctlContactMailbox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="controls\ctlManagedObjects.xaml.vb">
+      <DependentUpon>ctlManagedObjects.xaml</DependentUpon>
+    </Compile>
     <Compile Include="controls\ctlNetwork.xaml.vb">
       <DependentUpon>ctlNetwork.xaml</DependentUpon>
     </Compile>
@@ -222,6 +225,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlGroupMemberOf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="controls\ctlManagedObjects.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

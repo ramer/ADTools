@@ -44,9 +44,12 @@ Public Class clsDirectoryObject
     Private _properties As New Dictionary(Of String, Object)
 
     Private _manager As clsDirectoryObject
+    Private _directreports As ObservableCollection(Of clsDirectoryObject)
+
     Private _managedby As clsDirectoryObject
-    Private _employees As ObservableCollection(Of clsDirectoryObject)
-    Private _memberOf As ObservableCollection(Of clsDirectoryObject)
+    Private _managedobjects As ObservableCollection(Of clsDirectoryObject)
+
+    Private _memberof As ObservableCollection(Of clsDirectoryObject)
     Private _member As ObservableCollection(Of clsDirectoryObject)
 
     Private Sub NotifyPropertyChanged(propertyName As String)
@@ -698,39 +701,6 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property manager() As clsDirectoryObject
-        Get
-            If _manager Is Nothing Then
-                Try
-                    Dim managerDN As String = LdapProperty("manager")
-                    If managerDN Is Nothing Then
-                        _manager = Nothing
-                    Else
-                        Dim lastslash = InStrRev(Entry.Path, "/")
-                        If lastslash > 0 Then
-                            _manager = New clsDirectoryObject(New DirectoryEntry(Entry.Path.Substring(0, lastslash) & managerDN, Domain.Username, Domain.Password), Domain)
-                        Else
-                            Return Nothing
-                        End If
-                    End If
-                    Return _manager
-                Catch ex As Exception
-                    Return Nothing
-                End Try
-            Else
-                Return _manager
-            End If
-        End Get
-        Set(value As clsDirectoryObject)
-            Dim path() As String = value.Entry.Path.Split({"/"}, StringSplitOptions.RemoveEmptyEntries)
-            LdapProperty("manager") = path(UBound(path))
-            _manager = value
-
-            NotifyPropertyChanged("manager")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
     Public Property telephoneNumber() As String
         Get
             Return If(LdapProperty("telephoneNumber"), "")
@@ -877,28 +847,6 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
-        Get
-            If _memberOf Is Nothing Then
-                Dim g As Object = LdapProperty("memberOf")
-                If IsArray(g) Then          ' few groups
-                    _memberOf = New ObservableCollection(Of clsDirectoryObject)(CType(g, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                ElseIf g Is Nothing Then    ' groups is null
-                    _memberOf = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one group
-                    _memberOf = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + g.ToString, Domain.Username, Domain.Password), Domain)})
-                End If
-            End If
-            Return _memberOf
-        End Get
-        Set(value As ObservableCollection(Of clsDirectoryObject))
-            _memberOf = value
-
-            NotifyPropertyChanged("memberOf")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As BitmapImage
         Get
             If Entry IsNot Nothing AndAlso LdapProperty("thumbnailPhoto") IsNot Nothing Then
@@ -985,39 +933,6 @@ Public Class clsDirectoryObject
         Get
             Return If(LdapProperty("operatingSystemVersion"), "")
         End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property managedBy() As clsDirectoryObject
-        Get
-            If _managedby Is Nothing Then
-                Try
-                    Dim managerDN As String = LdapProperty("managedBy")
-                    If managerDN Is Nothing Then
-                        _managedby = Nothing
-                    Else
-                        Dim lastslash = InStrRev(Entry.Path, "/")
-                        If lastslash > 0 Then
-                            _managedby = New clsDirectoryObject(New DirectoryEntry(Entry.Path.Substring(0, lastslash) & managerDN, Domain.Username, Domain.Password), Domain)
-                        Else
-                            Return Nothing
-                        End If
-                    End If
-                    Return _managedby
-                Catch ex As Exception
-                    Return Nothing
-                End Try
-            Else
-                Return _managedby
-            End If
-        End Get
-        Set(value As clsDirectoryObject)
-            Dim path() As String = value.Entry.Path.Split({"/"}, StringSplitOptions.RemoveEmptyEntries)
-            LdapProperty("managedBy") = path(UBound(path))
-            _managedby = value
-
-            NotifyPropertyChanged("managedBy")
-        End Set
     End Property
 
 #End Region
@@ -1146,28 +1061,6 @@ Public Class clsDirectoryObject
             LdapProperty("info") = value
 
             NotifyPropertyChanged("info")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property member() As ObservableCollection(Of clsDirectoryObject)
-        Get
-            If _member Is Nothing Then
-                Dim o As Object = LdapProperty("member")
-                If IsArray(o) Then          ' few members
-                    _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                ElseIf o Is Nothing Then    ' membres is null
-                    _member = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one member
-                    _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry("LDAP://" + Domain.Name + "/" + o.ToString, Domain.Username, Domain.Password), Domain)})
-                End If
-            End If
-            Return _member
-        End Get
-        Set(value As ObservableCollection(Of clsDirectoryObject))
-            _member = value
-
-            NotifyPropertyChanged("member")
         End Set
     End Property
 
@@ -1321,6 +1214,19 @@ Public Class clsDirectoryObject
             Catch
                 Return ""
             End Try
+        End Get
+    End Property
+
+    Public ReadOnly Property distingushedNamePrefix() As String
+        Get
+            If Entry Is Nothing Then Return Nothing
+
+            Dim lastslash = InStrRev(Entry.Path, "/")
+            If lastslash > 0 Then
+                Return Entry.Path.Substring(0, lastslash)
+            Else
+                Return Nothing
+            End If
         End Get
     End Property
 
@@ -1590,6 +1496,191 @@ Public Class clsDirectoryObject
         Get
             Return LdapProperty("whenChanged")
         End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property manager() As clsDirectoryObject
+        Get
+            If _manager Is Nothing Then
+                Try
+                    Dim managerDN As String = LdapProperty("manager")
+                    If managerDN Is Nothing Then
+                        _manager = Nothing
+                    Else
+                        If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                            _manager = New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
+                        Else
+                            _manager = Nothing
+                        End If
+                    End If
+                    Return _manager
+                Catch ex As Exception
+                    Return Nothing
+                End Try
+            Else
+                Return _manager
+            End If
+        End Get
+        Set(value As clsDirectoryObject)
+            LdapProperty("manager") = value.distinguishedName
+            _manager = value
+
+            NotifyPropertyChanged("manager")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property directReports() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If _directreports Is Nothing Then
+                Dim o As Object = LdapProperty("directReports")
+
+                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                    Else
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                ElseIf o Is Nothing Then    ' objects is null
+                    _directreports = New ObservableCollection(Of clsDirectoryObject)
+                Else                        ' one objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    Else
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                End If
+            End If
+            Return _directreports
+        End Get
+        Set(value As ObservableCollection(Of clsDirectoryObject))
+            _directreports = value
+
+            NotifyPropertyChanged("directReports")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property managedBy() As clsDirectoryObject
+        Get
+            If _managedby Is Nothing Then
+                Try
+                    Dim managerDN As String = LdapProperty("managedBy")
+                    If managerDN Is Nothing Then
+                        _managedby = Nothing
+                    Else
+                        If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                            _managedby = New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
+                        Else
+                            _managedby = Nothing
+                        End If
+                    End If
+                    Return _managedby
+                Catch ex As Exception
+                    Return Nothing
+                End Try
+            Else
+                Return _managedby
+            End If
+        End Get
+        Set(value As clsDirectoryObject)
+            LdapProperty("managedBy") = value.distinguishedName
+            _managedby = value
+
+            NotifyPropertyChanged("managedBy")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property managedObjects As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If _managedobjects Is Nothing Then
+                Dim o As Object = LdapProperty("managedObjects")
+
+                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                    Else
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                ElseIf o Is Nothing Then    ' objects is null
+                    _managedobjects = New ObservableCollection(Of clsDirectoryObject)
+                Else                        ' one objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    Else
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                End If
+            End If
+            Return _managedobjects
+        End Get
+        Set(value As ObservableCollection(Of clsDirectoryObject))
+            _managedobjects = value
+
+            NotifyPropertyChanged("managedObjects")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If _memberof Is Nothing Then
+                Dim g As Object = LdapProperty("memberOf")
+
+                If IsArray(g) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)(CType(g, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                    Else
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                ElseIf g Is Nothing Then    ' objects is null
+                    _memberof = New ObservableCollection(Of clsDirectoryObject)
+                Else                        ' one objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + g.ToString, Domain.Username, Domain.Password), Domain)})
+                    Else
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                End If
+            End If
+            Return _memberof
+        End Get
+        Set(value As ObservableCollection(Of clsDirectoryObject))
+            _memberof = value
+
+            NotifyPropertyChanged("memberOf")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property member() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If _member Is Nothing Then
+                Dim o As Object = LdapProperty("member")
+                If IsArray(o) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                    Else
+                        _member = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                ElseIf o Is Nothing Then    ' objects is null
+                    _member = New ObservableCollection(Of clsDirectoryObject)
+                Else                        ' one objects
+                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
+                        _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    Else
+                        _member = New ObservableCollection(Of clsDirectoryObject)
+                    End If
+                End If
+            End If
+            Return _member
+        End Get
+        Set(value As ObservableCollection(Of clsDirectoryObject))
+            _member = value
+
+            NotifyPropertyChanged("member")
+        End Set
     End Property
 
 #End Region

@@ -777,6 +777,51 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects.
+        '''</summary>
+        Public ReadOnly Property ctlManagedObjects_lbl_Objects() As String
+            Get
+                Return ResourceManager.GetString("ctlManagedObjects_lbl_Objects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects.
+        '''</summary>
+        Public ReadOnly Property ctlManagedObjects_lbl_ObjectsList() As String
+            Get
+                Return ResourceManager.GetString("ctlManagedObjects_lbl_ObjectsList", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Selected objects.
+        '''</summary>
+        Public ReadOnly Property ctlManagedObjects_lbl_SelectedObjects() As String
+            Get
+                Return ResourceManager.GetString("ctlManagedObjects_lbl_SelectedObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на From another domain you can not!.
+        '''</summary>
+        Public ReadOnly Property ctlManagedObjects_msg_AnotherDomain() As String
+            Get
+                Return ResourceManager.GetString("ctlManagedObjects_msg_AnotherDomain", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Whatareyoudoing :(.
+        '''</summary>
+        Public ReadOnly Property ctlManagedObjects_msg_AnotherDomainTitle() As String
+            Get
+                Return ResourceManager.GetString("ctlManagedObjects_msg_AnotherDomainTitle", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Availability (ICMP):.
         '''</summary>
         Public ReadOnly Property ctlNetwork_lbl_NetworkAvailabilityICMP() As String
@@ -1976,7 +2021,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Objects list.
+        '''  Ищет локализованную строку, похожую на Objects.
         '''</summary>
         Public ReadOnly Property wndMailboxShare_lbl_ObjectsList() As String
             Get
@@ -3024,7 +3069,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Managed By.
+        '''  Ищет локализованную строку, похожую на Managed by.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_ManagedBy() As String
             Get
@@ -3038,6 +3083,15 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_Manager() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Manager", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Manages.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_Manages() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_Manages", resourceCulture)
             End Get
         End Property
         

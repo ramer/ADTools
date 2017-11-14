@@ -1347,7 +1347,25 @@
   <data name="wndObject_lbl_Name" xml:space="preserve">
     <value>Имя</value>
   </data>
+  <data name="wndObject_lbl_Manages" xml:space="preserve">
+    <value>Управляет</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
+    <value>Выбранные объекты</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_Objects" xml:space="preserve">
+    <value>Объекты</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_ObjectsList" xml:space="preserve">
+    <value>Список объектов</value>
+  </data>
   <data name="wndObject_lbl_ManagedBy" xml:space="preserve">
     <value>Управляется</value>
+  </data>
+  <data name="ctlManagedObjects_msg_AnotherDomain" xml:space="preserve">
+    <value>Из другого домена нельзя же!</value>
+  </data>
+  <data name="ctlManagedObjects_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Ну тычоваще :(</value>
   </data>
 </root>

@@ -1,12 +1,12 @@
 ﻿Imports System.Collections.ObjectModel
 Imports IPrompt.VisualBasic
 
-Public Class ctlGroupMember
+Public Class ctlManagedObjects
 
 
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
-                                                            GetType(ctlGroupMember),
+                                                            GetType(ctlManagedObjects),
                                                             New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
     Private Property _currentobject As clsDirectoryObject
@@ -28,7 +28,7 @@ Public Class ctlGroupMember
     End Sub
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As ctlGroupMember = CType(d, ctlGroupMember)
+        Dim instance As ctlManagedObjects = CType(d, ctlManagedObjects)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
@@ -36,7 +36,7 @@ Public Class ctlGroupMember
         End With
     End Sub
 
-    Private Sub ctlGroupMember_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Private Sub ctlManagedObjects_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbDomainObjectsFilter.Focus()
     End Sub
 
@@ -46,12 +46,12 @@ Public Class ctlGroupMember
         If lvSelectedObjects.Items.Count = 0 Then
             cap.Visibility = Visibility.Visible
 
-            Dim objects As New ObservableCollection(Of clsDirectoryObject)
+            Dim groups As New ObservableCollection(Of clsDirectoryObject)
 
-            objects = Await Task.Run(Function() _currentobject.member)
+            groups = Await Task.Run(Function() _currentobject.member)
 
             lvSelectedObjects.Items.Clear()
-            For Each g In objects
+            For Each g In groups
                 lvSelectedObjects.Items.Add(g)
             Next
 
@@ -137,7 +137,7 @@ Public Class ctlGroupMember
 
             For Each obj In dropped
                 If sender Is lvSelectedObjects Then ' adding member
-                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
+                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlManagedObjects_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlManagedObjects_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
                 ElseIf sender Is trashSelectedObjects Then
                     RemoveMember(obj)
@@ -179,3 +179,5 @@ Public Class ctlGroupMember
     End Sub
 
 End Class
+
+

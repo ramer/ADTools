@@ -984,7 +984,7 @@ Are you sure?</value>
     <value>Send on behalf</value>
   </data>
   <data name="wndMailboxShare_lbl_ObjectsList" xml:space="preserve">
-    <value>Objects list</value>
+    <value>Objects</value>
   </data>
   <data name="wndMailboxShare_lbl_SendAsCopyToSent" xml:space="preserve">
     <value>Copy messages to the Sent folder</value>
@@ -1439,7 +1439,25 @@ To obtain the API key:
   <data name="wndObject_lbl_Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="wndObject_lbl_Manages" xml:space="preserve">
+    <value>Manages</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
+    <value>Selected objects</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="ctlManagedObjects_lbl_ObjectsList" xml:space="preserve">
+    <value>Objects</value>
+  </data>
   <data name="wndObject_lbl_ManagedBy" xml:space="preserve">
-    <value>Managed By</value>
+    <value>Managed by</value>
+  </data>
+  <data name="ctlManagedObjects_msg_AnotherDomain" xml:space="preserve">
+    <value>From another domain you can not!</value>
+  </data>
+  <data name="ctlManagedObjects_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Whatareyoudoing :(</value>
   </data>
 </root>
