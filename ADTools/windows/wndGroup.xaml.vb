@@ -6,9 +6,10 @@ Public Class wndGroup
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         Me.DataContext = currentobject
-        ctlAttributes.CurrentObject = currentobject
         ctlMember.CurrentObject = currentobject
         ctlMemberOf.CurrentObject = currentobject
+        ctlManagedObj.CurrentObject = currentobject
+        ctlAttributes.CurrentObject = currentobject
     End Sub
 
     Private Sub wndComputer_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -21,8 +22,14 @@ Public Class wndGroup
         ElseIf tabctlGroup.SelectedIndex = 2 Then
             ctlMemberOf.InitializeAsync()
         ElseIf tabctlGroup.SelectedIndex = 3 Then
+            ctlManagedObj.InitializeAsync()
+        ElseIf tabctlGroup.SelectedIndex = 4 Then
             ctlAttributes.InitializeAsync()
         End If
+    End Sub
+
+    Private Sub hlManagedBy_Click(sender As Object, e As RoutedEventArgs) Handles hlManagedBy.Click
+        ShowDirectoryObjectProperties(currentobject.managedBy, Me)
     End Sub
 End Class
 

@@ -197,6 +197,9 @@
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_ManagedObjects}">
+                <local:ctlManagedObjects x:Name="ctlManagedObj"/>
+            </TabItem>
             <TabItem x:Name="tabctlUserExchange" Header="{x:Static r:Resources.wndObject_lbl_Exchange}">
                 <local:ctlUserMailbox x:Name="ctlMailbox" Margin="5"/>
             </TabItem>

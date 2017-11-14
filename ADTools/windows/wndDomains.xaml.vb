@@ -79,4 +79,10 @@ Public Class wndDomains
     Private Sub hlTemplateHelp_Click(sender As Object, e As RoutedEventArgs) Handles hlTemplateHelp.Click
         IMsgBox(My.Resources.wndDomains_lbl_PatternsExampleDefinition, vbOKOnly + vbInformation, My.Resources.wndDomains_lbl_PatternsExampleDefinitionHandlebars)
     End Sub
+
+    Private Sub tabctlDomain_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlDomain.SelectionChanged
+        If tabctlDomain.SelectedIndex = 3 Then
+            ctlMemberOf.InitializeAsync()
+        End If
+    End Sub
 End Class

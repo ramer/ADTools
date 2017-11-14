@@ -3078,6 +3078,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Manages.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_ManagedObjects() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_ManagedObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Manager.
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Manager() As String
@@ -3087,7 +3096,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Manages.
+        '''  Ищет локализованную строку, похожую на .
         '''</summary>
         Public ReadOnly Property wndObject_lbl_Manages() As String
             Get

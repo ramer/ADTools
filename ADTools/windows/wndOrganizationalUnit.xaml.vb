@@ -19,4 +19,7 @@ Public Class wndOrganizationalUnit
         End If
     End Sub
 
+    Private Sub hlManagedBy_Click(sender As Object, e As RoutedEventArgs) Handles hlManagedBy.Click
+        ShowDirectoryObjectProperties(currentobject.managedBy, Me)
+    End Sub
 End Class

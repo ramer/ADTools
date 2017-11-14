@@ -9,6 +9,7 @@ Public Class wndUser
         Me.DataContext = currentobject
         ctlUserWorkstations.CurrentObject = currentobject
         ctlMemberOf.CurrentObject = currentobject
+        ctlManagedObj.CurrentObject = currentobject
         ctlMailbox.CurrentObject = currentobject
         ctlAttributes.CurrentObject = currentobject
 
@@ -69,8 +70,10 @@ Public Class wndUser
         If tabctlUser.SelectedIndex = 2 Then
             ctlMemberOf.InitializeAsync()
         ElseIf tabctlUser.SelectedIndex = 3 Then
-            ctlMailbox.InitializeAsync()
+            ctlManagedObj.InitializeAsync()
         ElseIf tabctlUser.SelectedIndex = 4 Then
+            ctlMailbox.InitializeAsync()
+        ElseIf tabctlUser.SelectedIndex = 5 Then
             ctlAttributes.InitializeAsync()
         End If
     End Sub

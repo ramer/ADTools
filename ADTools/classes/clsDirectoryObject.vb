@@ -1217,7 +1217,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    Public ReadOnly Property distingushedNamePrefix() As String
+    Public ReadOnly Property distinguishedNamePrefix() As String
         Get
             If Entry Is Nothing Then Return Nothing
 
@@ -1507,8 +1507,8 @@ Public Class clsDirectoryObject
                     If managerDN Is Nothing Then
                         _manager = Nothing
                     Else
-                        If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                            _manager = New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
+                        If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                            _manager = New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
                         Else
                             _manager = Nothing
                         End If
@@ -1522,8 +1522,17 @@ Public Class clsDirectoryObject
             End If
         End Get
         Set(value As clsDirectoryObject)
-            LdapProperty("manager") = value.distinguishedName
-            _manager = value
+            If value Is Nothing Then
+                Try
+                    _entry.Properties("manager").Clear()
+                    _entry.CommitChanges()
+                Catch ex As Exception
+                    ThrowException(ex, "Clear manager")
+                End Try
+            Else
+                LdapProperty("manager") = value.distinguishedName
+                _manager = value
+            End If
 
             NotifyPropertyChanged("manager")
         End Set
@@ -1535,17 +1544,17 @@ Public Class clsDirectoryObject
             If _directreports Is Nothing Then
                 Dim o As Object = LdapProperty("directReports")
 
-                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                     Else
                         _directreports = New ObservableCollection(Of clsDirectoryObject)
                     End If
                 ElseIf o Is Nothing Then    ' objects is null
                     _directreports = New ObservableCollection(Of clsDirectoryObject)
                 Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _directreports = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
                     Else
                         _directreports = New ObservableCollection(Of clsDirectoryObject)
                     End If
@@ -1569,8 +1578,8 @@ Public Class clsDirectoryObject
                     If managerDN Is Nothing Then
                         _managedby = Nothing
                     Else
-                        If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                            _managedby = New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
+                        If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                            _managedby = New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
                         Else
                             _managedby = Nothing
                         End If
@@ -1584,8 +1593,17 @@ Public Class clsDirectoryObject
             End If
         End Get
         Set(value As clsDirectoryObject)
-            LdapProperty("managedBy") = value.distinguishedName
-            _managedby = value
+            If value Is Nothing Then
+                Try
+                    _entry.Properties("managedBy").Clear()
+                    _entry.CommitChanges()
+                Catch ex As Exception
+                    ThrowException(ex, "Clear managedBy")
+                End Try
+            Else
+                LdapProperty("managedBy") = value.distinguishedName
+                _managedby = value
+            End If
 
             NotifyPropertyChanged("managedBy")
         End Set
@@ -1597,17 +1615,17 @@ Public Class clsDirectoryObject
             If _managedobjects Is Nothing Then
                 Dim o As Object = LdapProperty("managedObjects")
 
-                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                     Else
                         _managedobjects = New ObservableCollection(Of clsDirectoryObject)
                     End If
                 ElseIf o Is Nothing Then    ' objects is null
                     _managedobjects = New ObservableCollection(Of clsDirectoryObject)
                 Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
                     Else
                         _managedobjects = New ObservableCollection(Of clsDirectoryObject)
                     End If
@@ -1626,19 +1644,19 @@ Public Class clsDirectoryObject
     Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberof Is Nothing Then
-                Dim g As Object = LdapProperty("memberOf")
+                Dim o As Object = LdapProperty("memberOf")
 
-                If IsArray(g) AndAlso Not String.IsNullOrEmpty(distingushedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)(CType(g, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                     Else
                         _memberof = New ObservableCollection(Of clsDirectoryObject)
                     End If
-                ElseIf g Is Nothing Then    ' objects is null
+                ElseIf o Is Nothing Then    ' objects is null
                     _memberof = New ObservableCollection(Of clsDirectoryObject)
                 Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + g.ToString, Domain.Username, Domain.Password), Domain)})
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _memberof = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
                     Else
                         _memberof = New ObservableCollection(Of clsDirectoryObject)
                     End If
@@ -1659,16 +1677,16 @@ Public Class clsDirectoryObject
             If _member Is Nothing Then
                 Dim o As Object = LdapProperty("member")
                 If IsArray(o) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
                     Else
                         _member = New ObservableCollection(Of clsDirectoryObject)
                     End If
                 ElseIf o Is Nothing Then    ' objects is null
                     _member = New ObservableCollection(Of clsDirectoryObject)
                 Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distingushedNamePrefix) Then
-                        _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distingushedNamePrefix + o.ToString, Domain.Username, Domain.Password), Domain)})
+                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
+                        _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
                     Else
                         _member = New ObservableCollection(Of clsDirectoryObject)
                     End If

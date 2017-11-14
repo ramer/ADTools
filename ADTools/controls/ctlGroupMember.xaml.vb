@@ -51,8 +51,8 @@ Public Class ctlGroupMember
             objects = Await Task.Run(Function() _currentobject.member)
 
             lvSelectedObjects.Items.Clear()
-            For Each g In objects
-                lvSelectedObjects.Items.Add(g)
+            For Each o In objects
+                lvSelectedObjects.Items.Add(o)
             Next
 
             cap.Visibility = Visibility.Hidden
@@ -153,7 +153,7 @@ Public Class ctlGroupMember
                 If obj.name = [object].name Then Exit Sub
             Next
 
-            _currentobject.Entry.Invoke("Add", [object].Entry.Path)
+            _currentobject.Entry.Invoke("Add", [object].distinguishedNamePrefix & [object].distinguishedName)
             _currentobject.Entry.CommitChanges()
             _currentobject.member.Add([object])
             lvSelectedObjects.Items.Add([object])
@@ -168,7 +168,7 @@ Public Class ctlGroupMember
         Try
 
             If Not _currentobject.member.Contains([object]) Then Exit Sub
-            _currentobject.Entry.Invoke("Remove", [object].Entry.Path)
+            _currentobject.Entry.Invoke("Remove", [object].distinguishedNamePrefix & [object].distinguishedName)
             _currentobject.Entry.CommitChanges()
             _currentobject.member.Remove([object])
             lvSelectedObjects.Items.Remove([object])

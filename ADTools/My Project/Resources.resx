@@ -1440,7 +1440,7 @@ To obtain the API key:
     <value>Name</value>
   </data>
   <data name="wndObject_lbl_Manages" xml:space="preserve">
-    <value>Manages</value>
+    <value></value>
   </data>
   <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
     <value>Selected objects</value>
@@ -1459,5 +1459,8 @@ To obtain the API key:
   </data>
   <data name="ctlManagedObjects_msg_AnotherDomainTitle" xml:space="preserve">
     <value>Whatareyoudoing :(</value>
+  </data>
+  <data name="wndObject_lbl_ManagedObjects" xml:space="preserve">
+    <value>Manages</value>
   </data>
 </root>

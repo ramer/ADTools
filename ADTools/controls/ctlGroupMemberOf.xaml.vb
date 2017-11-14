@@ -192,7 +192,7 @@ Public Class ctlGroupMemberOf
                     If group.name = [object].name Then Exit Sub
                 Next
 
-                [object].Entry.Invoke("Add", _currentobject.Entry.Path)
+                [object].Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
                 [object].Entry.CommitChanges()
                 _currentobject.memberOf.Add([object])
                 lvSelectedGroups.Items.Add([object])
@@ -220,7 +220,7 @@ Public Class ctlGroupMemberOf
             If Mode = enmMode.ObjectMemberOf Then
 
                 If Not _currentobject.memberOf.Contains([object]) Then Exit Sub
-                [object].Entry.Invoke("Remove", _currentobject.Entry.Path)
+                [object].Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
                 [object].Entry.CommitChanges()
                 _currentobject.memberOf.Remove([object])
                 lvSelectedGroups.Items.Remove([object])
@@ -243,13 +243,13 @@ Public Class ctlGroupMemberOf
         If Mode = enmMode.DomainDefaultGroups Then Exit Sub
 
         For Each group In _currentobject.memberOf
-            group.Entry.Invoke("Remove", _currentobject.Entry.Path)
+            group.Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
             group.Entry.CommitChanges()
         Next
         _currentobject.memberOf.Clear()
         lvSelectedGroups.Items.Clear()
         For Each group In _currentobject.Domain.DefaultGroups
-            group.Entry.Invoke("Add", _currentobject.Entry.Path)
+            group.Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
             group.Entry.CommitChanges()
             _currentobject.memberOf.Add(group)
             lvSelectedGroups.Items.Add(group)

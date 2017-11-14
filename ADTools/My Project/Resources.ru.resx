@@ -1347,9 +1347,6 @@
   <data name="wndObject_lbl_Name" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="wndObject_lbl_Manages" xml:space="preserve">
-    <value>Управляет</value>
-  </data>
   <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
     <value>Выбранные объекты</value>
   </data>
@@ -1367,5 +1364,8 @@
   </data>
   <data name="ctlManagedObjects_msg_AnotherDomainTitle" xml:space="preserve">
     <value>Ну тычоваще :(</value>
+  </data>
+  <data name="wndObject_lbl_ManagedObjects" xml:space="preserve">
+    <value>Управляет</value>
   </data>
 </root>

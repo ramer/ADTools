@@ -46,13 +46,13 @@ Public Class ctlManagedObjects
         If lvSelectedObjects.Items.Count = 0 Then
             cap.Visibility = Visibility.Visible
 
-            Dim groups As New ObservableCollection(Of clsDirectoryObject)
+            Dim objects As New ObservableCollection(Of clsDirectoryObject)
 
-            groups = Await Task.Run(Function() _currentobject.member)
+            objects = Await Task.Run(Function() _currentobject.managedObjects)
 
             lvSelectedObjects.Items.Clear()
-            For Each g In groups
-                lvSelectedObjects.Items.Add(g)
+            For Each o In objects
+                lvSelectedObjects.Items.Add(o)
             Next
 
             cap.Visibility = Visibility.Hidden
@@ -65,7 +65,7 @@ Public Class ctlManagedObjects
             Await searcher.BasicSearchAsync(
                 _currentdomainobjects,
                 Nothing,
-                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(True, False, True, True, False)),
+                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, True, True)),
                 New ObservableCollection(Of clsDomain)({_currentobject.Domain}))
         End If
     End Sub
@@ -103,7 +103,7 @@ Public Class ctlManagedObjects
             For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
                 If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
                     obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then e.Effects = DragDropEffects.None : Exit For
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
             Next
         Else
             e.Effects = DragDropEffects.None
@@ -132,7 +132,7 @@ Public Class ctlManagedObjects
             For Each obj As clsDirectoryObject In dropped
                 If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
                     obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then Exit Sub
+                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then Exit Sub
             Next
 
             For Each obj In dropped
@@ -149,13 +149,12 @@ Public Class ctlManagedObjects
     Private Sub AddMember([object] As clsDirectoryObject)
         Try
 
-            For Each obj As clsDirectoryObject In _currentobject.member
+            For Each obj As clsDirectoryObject In _currentobject.managedObjects
                 If obj.name = [object].name Then Exit Sub
             Next
 
-            _currentobject.Entry.Invoke("Add", [object].Entry.Path)
-            _currentobject.Entry.CommitChanges()
-            _currentobject.member.Add([object])
+            [object].managedBy = _currentobject
+            _currentobject.managedObjects.Add([object])
             lvSelectedObjects.Items.Add([object])
 
         Catch ex As Exception
@@ -167,10 +166,9 @@ Public Class ctlManagedObjects
     Private Sub RemoveMember([object] As clsDirectoryObject)
         Try
 
-            If Not _currentobject.member.Contains([object]) Then Exit Sub
-            _currentobject.Entry.Invoke("Remove", [object].Entry.Path)
-            _currentobject.Entry.CommitChanges()
-            _currentobject.member.Remove([object])
+            If Not _currentobject.managedObjects.Contains([object]) Then Exit Sub
+            [object].managedBy = Nothing
+            _currentobject.managedObjects.Remove([object])
             lvSelectedObjects.Items.Remove([object])
 
         Catch ex As Exception
