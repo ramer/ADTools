@@ -1,12 +1,12 @@
 ﻿Imports System.Collections.ObjectModel
 Imports IPrompt.VisualBasic
 
-Public Class ctlManagedObjects
+Public Class ctlDirectReports
 
 
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
-                                                            GetType(ctlManagedObjects),
+                                                            GetType(ctlDirectReports),
                                                             New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
     Private Property _currentobject As clsDirectoryObject
@@ -28,7 +28,7 @@ Public Class ctlManagedObjects
     End Sub
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As ctlManagedObjects = CType(d, ctlManagedObjects)
+        Dim instance As ctlDirectReports = CType(d, ctlDirectReports)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
@@ -36,7 +36,7 @@ Public Class ctlManagedObjects
         End With
     End Sub
 
-    Private Sub ctlManagedObjects_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Private Sub ctlDirectReports_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbDomainObjectsFilter.Focus()
 
         InitializeAsync()
@@ -50,7 +50,7 @@ Public Class ctlManagedObjects
 
             Dim objects As New ObservableCollection(Of clsDirectoryObject)
 
-            objects = Await Task.Run(Function() _currentobject.managedObjects)
+            objects = Await Task.Run(Function() _currentobject.directReports)
 
             lvSelectedObjects.Items.Clear()
             For Each o In objects
@@ -67,7 +67,7 @@ Public Class ctlManagedObjects
             Await searcher.BasicSearchAsync(
                 _currentdomainobjects,
                 Nothing,
-                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, True, True)),
+                New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(True, False, False, False, False)),
                 New ObservableCollection(Of clsDomain)({_currentobject.Domain}))
         End If
     End Sub
@@ -103,9 +103,7 @@ Public Class ctlManagedObjects
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             e.Effects = DragDropEffects.Copy
             For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then e.Effects = DragDropEffects.None : Exit For
             Next
         Else
             e.Effects = DragDropEffects.None
@@ -132,14 +130,12 @@ Public Class ctlManagedObjects
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
             For Each obj As clsDirectoryObject In dropped
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                    obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then Exit Sub
+                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User) Then Exit Sub
             Next
 
             For Each obj In dropped
                 If sender Is lvSelectedObjects Then ' adding member
-                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlManagedObjects_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlManagedObjects_msg_AnotherDomainTitle) : Exit Sub
+                    If obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlDirectReports_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlDirectReports_msg_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
                 ElseIf sender Is trashSelectedObjects Then
                     RemoveMember(obj)
@@ -151,12 +147,12 @@ Public Class ctlManagedObjects
     Private Sub AddMember([object] As clsDirectoryObject)
         Try
 
-            For Each obj As clsDirectoryObject In _currentobject.managedObjects
+            For Each obj As clsDirectoryObject In _currentobject.directReports
                 If obj.name = [object].name Then Exit Sub
             Next
 
-            [object].managedBy = _currentobject
-            _currentobject.managedObjects.Add([object])
+            [object].manager = _currentobject
+            _currentobject.directReports.Add([object])
             lvSelectedObjects.Items.Add([object])
 
         Catch ex As Exception
@@ -167,9 +163,9 @@ Public Class ctlManagedObjects
     Private Sub RemoveMember([object] As clsDirectoryObject)
         Try
 
-            If Not _currentobject.managedObjects.Contains([object]) Then Exit Sub
-            [object].managedBy = Nothing
-            _currentobject.managedObjects.Remove([object])
+            If Not _currentobject.directReports.Contains([object]) Then Exit Sub
+            [object].manager = Nothing
+            _currentobject.directReports.Remove([object])
             lvSelectedObjects.Items.Remove([object])
 
         Catch ex As Exception
@@ -178,5 +174,6 @@ Public Class ctlManagedObjects
     End Sub
 
 End Class
+
 
 

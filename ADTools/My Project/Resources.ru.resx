@@ -1368,4 +1368,31 @@
   <data name="wndObject_lbl_ManagedObjects" xml:space="preserve">
     <value>Управляет</value>
   </data>
+  <data name="ctlDirectReports_lbl_Objects" xml:space="preserve">
+    <value>Объекты</value>
+  </data>
+  <data name="ctlDirectReports_lbl_ObjectsList" xml:space="preserve">
+    <value>Список объектов</value>
+  </data>
+  <data name="ctlDirectReports_lbl_SelectedObjects" xml:space="preserve">
+    <value>Выбранные объекты</value>
+  </data>
+  <data name="ctlDirectReports_msg_AnotherDomain" xml:space="preserve">
+    <value>Из другого домена нельзя же!</value>
+  </data>
+  <data name="ctlDirectReports_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Ну тычоваще :(</value>
+  </data>
+  <data name="wndObject_lbl_DirectReports" xml:space="preserve">
+    <value>Непосредственные подчиненные</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyDataBasicAttributes" xml:space="preserve">
+    <value>Основные атрибуты</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyDataDisplayName" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyData" xml:space="preserve">
+    <value>Копировать данные</value>
+  </data>
 </root>

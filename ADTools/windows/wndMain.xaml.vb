@@ -253,17 +253,6 @@ Class wndMain
         End If
 
         ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
-        If objects.Count = 1 Then
-            ctxmnuObjectsExternalSoftware.Items.Clear()
-            For Each es As clsExternalSoftware In preferences.ExternalSoftware
-                Dim esmnu As New MenuItem
-                esmnu.Header = es.Label
-                esmnu.Icon = New Image With {.Source = es.Image}
-                esmnu.Tag = es
-                AddHandler esmnu.Click, AddressOf ctxmnuObjectsExternalSoftwareItem_Click
-                ctxmnuObjectsExternalSoftware.Items.Add(esmnu)
-            Next
-        End If
 
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
         ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
@@ -277,10 +266,11 @@ Class wndMain
         ctxmnuObjectsPaste.IsEnabled = ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0
         ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
+        ctxmnuObjectsCopyData.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
         ctxmnuObjectsOpenObjectTree.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
-        ctxmnuObjectsAddToFavoritesSeparator.Visibility = ctxmnuObjectsAddToFavorites.Visibility
+        ctxmnuObjectsCopyDataSeparator.Visibility = ctxmnuObjectsCopyData.Visibility
 
         ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
         ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
@@ -288,6 +278,46 @@ Class wndMain
 
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsPropertiesSeparator.Visibility = ctxmnuObjectsProperties.Visibility
+
+        If objects.Count = 1 Then
+            ctxmnuObjectsExternalSoftware.Items.Clear()
+            For Each es As clsExternalSoftware In preferences.ExternalSoftware
+                Dim esmnu As New MenuItem
+                esmnu.Header = es.Label
+                esmnu.Icon = New Image With {.Source = es.Image}
+                esmnu.Tag = es
+                AddHandler esmnu.Click, AddressOf ctxmnuObjectsExternalSoftwareItem_Click
+                ctxmnuObjectsExternalSoftware.Items.Add(esmnu)
+            Next
+        End If
+
+        If objects.Count > 0 Then
+            ctxmnuObjectsCopyData.Items.Clear()
+
+            Dim cdmnudn As New MenuItem
+            cdmnudn.Header = My.Resources.wndMain_ctxmnuObjectsCopyDataDisplayName
+            cdmnudn.Tag = "displayName"
+            AddHandler cdmnudn.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
+            ctxmnuObjectsCopyData.Items.Add(cdmnudn)
+
+            Dim cdmnuba As New MenuItem
+            cdmnuba.Header = My.Resources.wndMain_ctxmnuObjectsCopyDataBasicAttributes
+            cdmnuba.Tag = "basicAttributes"
+            AddHandler cdmnuba.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
+            ctxmnuObjectsCopyData.Items.Add(cdmnuba)
+
+            ctxmnuObjectsCopyData.Items.Add(New Separator)
+
+            For Each col As clsDataGridColumnInfo In preferences.Columns
+                For Each attr In col.Attributes
+                    Dim cdmnu As New MenuItem
+                    cdmnu.Header = attr.Label
+                    cdmnu.Tag = attr.Name
+                    AddHandler cdmnu.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
+                    ctxmnuObjectsCopyData.Items.Add(cdmnu)
+                Next
+            Next
+        End If
 
         dgObjects.ContextMenu.Tag = objects.ToArray
     End Sub
@@ -332,6 +362,23 @@ Class wndMain
         End If
     End Sub
 
+    Private Sub ctxmnuObjectsCopyDataItem_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag
+
+        Dim cdmnu As MenuItem = CType(sender, MenuItem)
+        If cdmnu Is Nothing Then Exit Sub
+        Try
+            If Not String.IsNullOrEmpty(cdmnu.Tag) AndAlso cdmnu.Tag = "basicAttributes" Then
+                Clipboard.SetDataObject(Join(objects.Select(Function(o) o.displayName & vbTab & o.userPrincipalName & vbTab & o.mail & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
+            Else
+                Clipboard.SetDataObject(Join(objects.Select(Function(o) o.GetType().GetProperty(cdmnu.Tag).GetValue(o).ToString).ToArray, vbCrLf), True)
+            End If
+        Catch ex As Exception
+            IMsgBox(ex.Message, vbExclamation)
+        End Try
+    End Sub
+
     Private Sub ctxmnuObjectsSelectAll_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsSelectAll.Click
         dgObjects.SelectAll()
     End Sub
@@ -361,7 +408,12 @@ Class wndMain
     Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
+
+        Try
+            Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name).ToArray, vbCrLf), True)
+        Catch ex As Exception
+            IMsgBox(ex.Message, vbExclamation)
+        End Try
 
         ClipboardBuffer = objects.Where(
             Function(obj)
@@ -375,10 +427,23 @@ Class wndMain
         ClipboardAction = enmClipboardAction.Copy
     End Sub
 
+    Private Sub ctxmnuSharedCopyDataDisplayName_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
+    Private Sub ctxmnuSharedCopyDataBasicAttributes_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
     Private Sub ctxmnuSharedCut_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.userPrincipalName & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
+
+        Try
+            Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name).ToArray, vbCrLf), True)
+        Catch ex As Exception
+            IMsgBox(ex.Message, vbExclamation)
+        End Try
 
         ClipboardBuffer = objects.Where(
             Function(obj)

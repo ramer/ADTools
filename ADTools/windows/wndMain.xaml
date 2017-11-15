@@ -327,7 +327,8 @@
                                     <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsAddToFavoritesSeparator"/>
+                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>

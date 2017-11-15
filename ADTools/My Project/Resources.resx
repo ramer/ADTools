@@ -1463,4 +1463,31 @@ To obtain the API key:
   <data name="wndObject_lbl_ManagedObjects" xml:space="preserve">
     <value>Manages</value>
   </data>
+  <data name="ctlDirectReports_lbl_Objects" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="ctlDirectReports_lbl_ObjectsList" xml:space="preserve">
+    <value>Objects</value>
+  </data>
+  <data name="ctlDirectReports_lbl_SelectedObjects" xml:space="preserve">
+    <value>Selected objects</value>
+  </data>
+  <data name="ctlDirectReports_msg_AnotherDomain" xml:space="preserve">
+    <value>From another domain you can not!</value>
+  </data>
+  <data name="ctlDirectReports_msg_AnotherDomainTitle" xml:space="preserve">
+    <value>Whatareyoudoing :(</value>
+  </data>
+  <data name="wndObject_lbl_DirectReports" xml:space="preserve">
+    <value>Direct reports</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyDataBasicAttributes" xml:space="preserve">
+    <value>Basic attributes</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyDataDisplayName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsCopyData" xml:space="preserve">
+    <value>Copy data</value>
+  </data>
 </root>

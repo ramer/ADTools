@@ -525,6 +525,51 @@ Namespace My.Resources
         '''<summary>
         '''  Ищет локализованную строку, похожую на Objects.
         '''</summary>
+        Public ReadOnly Property ctlDirectReports_lbl_Objects() As String
+            Get
+                Return ResourceManager.GetString("ctlDirectReports_lbl_Objects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects.
+        '''</summary>
+        Public ReadOnly Property ctlDirectReports_lbl_ObjectsList() As String
+            Get
+                Return ResourceManager.GetString("ctlDirectReports_lbl_ObjectsList", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Selected objects.
+        '''</summary>
+        Public ReadOnly Property ctlDirectReports_lbl_SelectedObjects() As String
+            Get
+                Return ResourceManager.GetString("ctlDirectReports_lbl_SelectedObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на From another domain you can not!.
+        '''</summary>
+        Public ReadOnly Property ctlDirectReports_msg_AnotherDomain() As String
+            Get
+                Return ResourceManager.GetString("ctlDirectReports_msg_AnotherDomain", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Whatareyoudoing :(.
+        '''</summary>
+        Public ReadOnly Property ctlDirectReports_msg_AnotherDomainTitle() As String
+            Get
+                Return ResourceManager.GetString("ctlDirectReports_msg_AnotherDomainTitle", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Objects.
+        '''</summary>
         Public ReadOnly Property ctlGroupMember_lbl_Objects() As String
             Get
                 Return ResourceManager.GetString("ctlGroupMember_lbl_Objects", resourceCulture)
@@ -2138,6 +2183,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Copy data.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsCopyData() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCopyData", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Basic attributes.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsCopyDataBasicAttributes() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCopyDataBasicAttributes", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Display name.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsCopyDataDisplayName() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsCopyDataDisplayName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Create object....
         '''</summary>
         Public ReadOnly Property wndMain_ctxmnuObjectsCreateObject() As String
@@ -2831,6 +2903,15 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_Description() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Description", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Direct reports.
+        '''</summary>
+        Public ReadOnly Property wndObject_lbl_DirectReports() As String
+            Get
+                Return ResourceManager.GetString("wndObject_lbl_DirectReports", resourceCulture)
             End Get
         End Property
         

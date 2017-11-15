@@ -46,16 +46,6 @@
                                     <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                                 </DockPanel>
                                 <DockPanel LastChildFill="True" Margin="5,5,5,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedBy}" Width="200"/>
-                                    <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                        <TextBlock Height="23" Margin="2,0,2,0">
-                                            <Hyperlink x:Name="hlManagedBy">
-                                                <Run Text="{Binding managedBy.name}"/>
-                                            </Hyperlink>
-                                        </TextBlock>
-                                    </Border>
-                                </DockPanel>
-                                <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                     <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="200"/>
                                     <StackPanel Orientation="Horizontal" Height="23">
                                         <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0,0,10,0"/>
@@ -93,9 +83,25 @@
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
-            <TabItem Header="{x:Static r:Resources.wndObject_lbl_ManagedObjects}">
-                <local:ctlManagedObjects x:Name="ctlManagedObj" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
+            <TabItem Header="{x:Static r:Resources.wndObject_lbl_Organization}">
+                <Grid>
+                    <DockPanel>
+                        <DockPanel LastChildFill="True" Margin="5,5,0,0" DockPanel.Dock="Top">
+                            <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedBy}" Width="140"/>
+                            <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                <TextBlock Height="23" Margin="2,0,2,0">
+                                        <Hyperlink x:Name="hlManagedBy">
+                                            <Run Text="{Binding managedMy.name}"/>
+                                        </Hyperlink>
+                                </TextBlock>
+                            </Border>
+                        </DockPanel>
+                        <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedObjects}" Margin="5,5,5,0" DockPanel.Dock="Top" Height="24"/>
+                        <local:ctlManagedObjects CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+                    </DockPanel>
+                </Grid>
             </TabItem>
+
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
                 <local:ctlObjectAttributes x:Name="ctlAttributes" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
