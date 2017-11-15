@@ -4,18 +4,34 @@ Imports System.Windows.Threading
 Imports IPrompt.VisualBasic
 
 Public Class wndComputer
+    Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
+                                                            GetType(clsDirectoryObject),
+                                                            GetType(wndComputer),
+                                                            New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
-    Public Property currentobject As clsDirectoryObject
+    Private Property _currentobject As clsDirectoryObject
+    Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+
+    Public Property CurrentObject() As clsDirectoryObject
+        Get
+            Return GetValue(CurrentObjectProperty)
+        End Get
+        Set(ByVal value As clsDirectoryObject)
+            SetValue(CurrentObjectProperty, value)
+        End Set
+    End Property
+
+    Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
+        Dim instance As wndComputer = CType(d, wndComputer)
+        With instance
+            ._currentobject = CType(e.NewValue, clsDirectoryObject)
+        End With
+    End Sub
 
     Public Property events As New clsThreadSafeObservableCollection(Of clsEvent)
     Public WithEvents wmisearcher As New clsWmi
 
     Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        Me.DataContext = currentobject
-        ctlMemberOf.CurrentObject = currentobject
-        ctlNet.CurrentObject = currentobject
-        ctlAttributes.CurrentObject = currentobject
-
         dgEvents.ItemsSource = events
 
         dtpPeriodTo.Value = Now
@@ -24,16 +40,6 @@ Public Class wndComputer
 
     Private Sub wndComputer_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         If Me.Owner IsNot Nothing Then Me.Owner.Activate() 'magic - if we don't do that and wndUser(this) had children, wndMain becomes not focused and even under VisualStudio window, so we bring it back
-    End Sub
-
-    Private Sub tabctlComputer_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlComputer.SelectionChanged
-        If tabctlComputer.SelectedIndex = 1 Then
-            ctlMemberOf.InitializeAsync()
-        ElseIf tabctlComputer.SelectedIndex = 2 Then
-            ctlNet.InitializeAsync()
-        ElseIf tabctlComputer.SelectedIndex = 4 Then
-            ctlAttributes.InitializeAsync()
-        End If
     End Sub
 
     Private Sub dtpPeriodFrom_ValueChanged(sender As Object, e As RoutedPropertyChangedEventArgs(Of Object)) Handles dtpPeriodFrom.ValueChanged

@@ -2,18 +2,38 @@
 Imports IPrompt.VisualBasic
 
 Public Class wndUser
+    Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
+                                                            GetType(clsDirectoryObject),
+                                                            GetType(wndUser),
+                                                            New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
-    Public Property currentobject As clsDirectoryObject
+    Private Property _currentobject As clsDirectoryObject
+    Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+
+    Public Property CurrentObject() As clsDirectoryObject
+        Get
+            Return GetValue(CurrentObjectProperty)
+        End Get
+        Set(ByVal value As clsDirectoryObject)
+            SetValue(CurrentObjectProperty, value)
+        End Set
+    End Property
+
+    Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
+        Dim instance As wndUser = CType(d, wndUser)
+        With instance
+            ._currentobject = CType(e.NewValue, clsDirectoryObject)
+        End With
+    End Sub
+
+    WithEvents searcher As New clsSearcher
+
+    Sub New()
+        InitializeComponent()
+    End Sub
 
     Private Sub wndUser_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        Me.DataContext = currentobject
-        ctlUserWorkstations.CurrentObject = currentobject
-        ctlMemberOf.CurrentObject = currentobject
-        ctlManagedObj.CurrentObject = currentobject
-        ctlMailbox.CurrentObject = currentobject
-        ctlAttributes.CurrentObject = currentobject
 
-        tabctlUserExchange.IsEnabled = currentobject.Domain.UseExchange
     End Sub
 
     Private Sub wnd_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
@@ -66,18 +86,6 @@ Public Class wndUser
         w.Show()
     End Sub
 
-    Private Sub tabctlUser_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlUser.SelectionChanged
-        If tabctlUser.SelectedIndex = 2 Then
-            ctlMemberOf.InitializeAsync()
-        ElseIf tabctlUser.SelectedIndex = 3 Then
-            ctlManagedObj.InitializeAsync()
-        ElseIf tabctlUser.SelectedIndex = 4 Then
-            ctlMailbox.InitializeAsync()
-        ElseIf tabctlUser.SelectedIndex = 5 Then
-            ctlAttributes.InitializeAsync()
-        End If
-    End Sub
-
     Private Sub btnResetPassword_Click(sender As Object, e As RoutedEventArgs) Handles btnResetPassword.Click
         Try
             If currentobject Is Nothing Then Exit Sub
@@ -103,6 +111,5 @@ Public Class wndUser
             ThrowException(ex, "btnSetPassword_Click")
         End Try
     End Sub
-
 
 End Class

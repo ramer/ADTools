@@ -12,11 +12,9 @@
         Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="{Binding ClassImage}">
-
-    <Window.DataContext>
-        <local:clsDirectoryObject/>
-    </Window.DataContext>
+        Icon="{Binding ClassImage}"
+        DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+        >
     
     <Grid>
         <TabControl x:Name="tabctlUnknownObject" Margin="5">
@@ -44,7 +42,7 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
-                <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
+                <local:ctlObjectAttributes x:Name="ctlAttributes" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
         </TabControl>
 

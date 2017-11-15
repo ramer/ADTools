@@ -17,26 +17,30 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
         <DockPanel LastChildFill="True" Grid.Column="0">
             <Label Margin="0,0,3,0" Content="{x:Static r:Resources.ctlUserWorkstations_lbl_SelectedWorkstations}" DockPanel.Dock="Top"/>
-            <ListView x:Name="lvSelectedObjects" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
-                <ListView.View>
-                    <GridView AllowsColumnReorder="False">
-                        <GridView.Columns>
-                            <GridViewColumn Header="{x:Static r:Resources.ctlUserWorkstations_lbl_Workstations}" Width="230" local:clsSorter.PropertyName="name">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <DockPanel>
-                                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{Binding name}"/>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView.Columns>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <Grid>
+                <local:ctlTrash x:Name="trashSelectedObjects" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
+                <ListView x:Name="lvSelectedObjects" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="{x:Static r:Resources.ctlUserWorkstations_lbl_Workstations}" Width="230" local:clsSorter.PropertyName="name">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding name}"/>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Column="1">
             <Label Margin="3,0,0,0" Content="{x:Static r:Resources.ctlUserWorkstations_lbl_WorkstationsList}" DockPanel.Dock="Top"/>
@@ -55,7 +59,7 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <ListView x:Name="lvDomainObjects" AlternationCount="2" DockPanel.Dock="Bottom" Margin="3,0,0,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
+            <ListView x:Name="lvDomainObjects" AlternationCount="2" DockPanel.Dock="Bottom" Margin="3,0,0,0" Foreground="Black" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
                 <ListView.View>
                     <GridView AllowsColumnReorder="False">
                         <GridView.Columns>

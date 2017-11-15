@@ -33,10 +33,12 @@ Public Class ctlUserMailbox
 
     Private Sub ctlMailbox_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbMailbox.Focus()
+
+        InitializeAsync()
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing Then Exit Sub
+        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
 
         If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso _currentobject.Domain.ExchangeServer IsNot Nothing Then
             capexchange.Visibility = Visibility.Visible

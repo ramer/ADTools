@@ -12,11 +12,9 @@
         Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="{Binding ClassImage}">
-
-    <Window.DataContext>
-        <local:clsDirectoryObject/>
-    </Window.DataContext>
+        Icon="{Binding ClassImage}"
+        DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+        >
     
     <Grid>
         <TabControl x:Name="tabctlComputer" Margin="5">
@@ -78,10 +76,10 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
-                <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
+                <local:ctlGroupMemberOf x:Name="ctlMemberOf" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_Network}">
-                <local:ctlNetwork x:Name="ctlNet"/>
+                <local:ctlNetwork x:Name="ctlNet" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_LoginEventLog}">
                 <DockPanel LastChildFill="True" Margin="5">
@@ -194,7 +192,7 @@
                 </DockPanel>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
-                <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
+                <local:ctlObjectAttributes x:Name="ctlAttributes" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
         </TabControl>
 

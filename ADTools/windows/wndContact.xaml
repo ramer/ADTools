@@ -12,15 +12,13 @@
         Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="{Binding ClassImage}">
+        Icon="{Binding ClassImage}"
+        DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+        >
 
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
     </Window.Resources>
-
-    <Window.DataContext>
-        <local:clsDirectoryObject/>
-    </Window.DataContext>
     
     <Grid>
         <TabControl x:Name="tabctlContact" Margin="5">
@@ -148,10 +146,10 @@
                 <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
             </TabItem>
             <TabItem x:Name="tabctlContactExchange" Header="{x:Static r:Resources.wndObject_lbl_Exchange}" IsEnabled="{Binding Domain.UseExchange}">
-                <local:ctlContactMailbox x:Name="ctlContact" Margin="5"/>
+                <local:ctlContactMailbox x:Name="ctlContact" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
-                <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
+                <local:ctlObjectAttributes x:Name="ctlAttributes" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
         </TabControl>
 

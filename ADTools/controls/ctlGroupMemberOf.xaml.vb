@@ -77,9 +77,12 @@ Public Class ctlGroupMemberOf
     Private Sub ctlGroupMemberOf_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbDomainGroupsFilter.Focus()
         btnDefaultGroups.Visibility = If(Mode = enmMode.ObjectMemberOf, Visibility.Visible, Visibility.Hidden)
+
+        InitializeAsync()
     End Sub
 
     Public Async Sub InitializeAsync()
+        If (_currentobject Is Nothing OrElse _currentobject.Entry Is Nothing) And (_currentdomain Is Nothing) Then Exit Sub
         If lvSelectedGroups.Items.Count = 0 Then
             cap.Visibility = Visibility.Visible
 

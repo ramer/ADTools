@@ -31,12 +31,12 @@ Public Class ctlNetwork
         End With
     End Sub
 
-    Private Sub ctlAttributes_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-
+    Private Sub ctlNetwork_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        InitializeAsync()
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing Then Exit Sub
+        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
         Dim hostname As String = CurrentObject.dNSHostName
 
         cap.Visibility = Visibility.Visible

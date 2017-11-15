@@ -41,10 +41,12 @@ Public Class ctlObjectAttributes
 
     Private Sub ctlAttributes_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         tbAttributesFilter.Focus()
+
+        InitializeAsync()
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing Then Exit Sub
+        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
 
         If attributes.Count = 0 Then
             cap.Visibility = Visibility.Visible

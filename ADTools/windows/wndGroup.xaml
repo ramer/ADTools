@@ -12,16 +12,14 @@
         Width="675"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="{Binding ClassImage}">
+        Icon="{Binding ClassImage}"
+        DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+        >
 
     <Window.Resources>
         <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
         <local:ConverterBooleanInverted x:Key="ConverterBooleanInverted" />
     </Window.Resources>
-
-    <Window.DataContext>
-        <local:clsDirectoryObject/>
-    </Window.DataContext>
     
     <Grid>
         <TabControl x:Name="tabctlGroup" Margin="5">
@@ -88,16 +86,16 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_Members}">
-                <local:ctlGroupMember x:Name="ctlMember"/>
+                <local:ctlGroupMember x:Name="ctlMember" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_MemberOf}">
-                <local:ctlGroupMemberOf x:Name="ctlMemberOf"/>
+                <local:ctlGroupMemberOf x:Name="ctlMemberOf" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_ManagedObjects}">
-                <local:ctlManagedObjects x:Name="ctlManagedObj"/>
+                <local:ctlManagedObjects x:Name="ctlManagedObj" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
             <TabItem Header="{x:Static r:Resources.wndObject_lbl_AllAttributes}">
-                <local:ctlObjectAttributes x:Name="ctlAttributes" Margin="5"/>
+                <local:ctlObjectAttributes x:Name="ctlAttributes" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Margin="5"/>
             </TabItem>
         </TabControl>
 

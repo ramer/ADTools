@@ -678,7 +678,7 @@ Class wndMain
     Private Sub dgObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDown
         If e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right Then
             Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
-            If TypeOf r.VisualHit Is ScrollViewer Then
+            If r IsNot Nothing AndAlso TypeOf r.VisualHit Is ScrollViewer Then
                 dgObjects.UnselectAll()
             End If
         End If
