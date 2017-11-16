@@ -1204,7 +1204,7 @@ A universal group can not be a member of a global group.</value>
   <data name="hint_poptvObjects_3" xml:space="preserve">
     <value>that we will work with</value>
   </data>
-  <data name="hint_popcmboSearchPattern" xml:space="preserve">
+  <data name="hint_poptbSearchPattern" xml:space="preserve">
     <value>Use the search field to search the objects</value>
   </data>
   <data name="wndPreferences_lbl_Basic" xml:space="preserve">

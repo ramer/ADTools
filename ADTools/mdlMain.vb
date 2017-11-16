@@ -58,7 +58,6 @@ Public Class ADToolsApplication
 
     Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
-    Public Shared ocGlobalSearchHistory As New ObservableCollection(Of String)
 
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)

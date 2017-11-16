@@ -36,9 +36,8 @@ Class wndMain
         RefreshDomainTree()
         RebuildColumns()
 
-        DataObject.AddPastingHandler(cmboSearchPattern, AddressOf cmboSearchPattern_OnPaste)
-        cmboSearchPattern.ItemsSource = ADToolsApplication.ocGlobalSearchHistory
-        cmboSearchPattern.Focus()
+        DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
+        tbSearchPattern.Focus()
 
         mnuSearchDomains.ItemsSource = domains
         tviFavorites.ItemsSource = preferences.Favorites
@@ -64,23 +63,23 @@ Class wndMain
 
     Private Sub ShowPopups()
         poptvObjects.IsOpen = True
-        popcmboSearchPattern.IsOpen = True
+        poptbSearchPattern.IsOpen = True
         popF1Hint.IsOpen = True
     End Sub
 
-    Private Sub MovePopups() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, cmboSearchPattern.SizeChanged
+    Private Sub MovePopups() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, tbSearchPattern.SizeChanged
         poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
-        popcmboSearchPattern.HorizontalOffset += 1 : popcmboSearchPattern.HorizontalOffset -= 1
+        poptbSearchPattern.HorizontalOffset += 1 : poptbSearchPattern.HorizontalOffset -= 1
         popF1Hint.HorizontalOffset += 1 : popF1Hint.HorizontalOffset -= 1
     End Sub
 
     Private Sub ClosePopups()
         poptvObjects.IsOpen = False
-        popcmboSearchPattern.IsOpen = False
+        poptbSearchPattern.IsOpen = False
         popF1Hint.IsOpen = False
     End Sub
 
-    Private Sub ClosePopup(sender As Object, e As MouseButtonEventArgs) Handles poptvObjects.MouseLeftButtonDown, popcmboSearchPattern.MouseLeftButtonDown, popF1Hint.MouseLeftButtonDown
+    Private Sub ClosePopup(sender As Object, e As MouseButtonEventArgs) Handles poptvObjects.MouseLeftButtonDown, poptbSearchPattern.MouseLeftButtonDown, popF1Hint.MouseLeftButtonDown
         CType(sender, Popup).IsOpen = False
     End Sub
 
@@ -787,47 +786,44 @@ Class wndMain
         OpenObject(current)
     End Sub
 
-    Private Sub cmboSearchPattern_OnPaste(sender As Object, e As DataObjectPastingEventArgs)
+    Private Sub tbSearchPattern_OnPaste(sender As Object, e As DataObjectPastingEventArgs)
         Dim istext = e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText, True)
         If Not istext Then Exit Sub
 
-        Dim texttopase As String = e.SourceDataObject.GetData(DataFormats.UnicodeText).ToString.Replace(vbNewLine, " / ")
-        Dim cmboTextBoxChild As TextBox = cmboSearchPattern.Template.FindName("PART_EditableTextBox", cmboSearchPattern)
+        Dim texttopaste As String = e.SourceDataObject.GetData(DataFormats.UnicodeText).ToString.Replace(vbNewLine, " / ")
 
-        Dim start As Integer = cmboTextBoxChild.SelectionStart
-        Dim length As Integer = cmboTextBoxChild.SelectionLength
-        Dim caret As Integer = cmboTextBoxChild.CaretIndex
+        Dim start As Integer = tbSearchPattern.SelectionStart
+        Dim length As Integer = tbSearchPattern.SelectionLength
+        Dim caret As Integer = tbSearchPattern.CaretIndex
 
-        Dim text As String = cmboTextBoxChild.Text.Substring(0, start)
-        text += cmboTextBoxChild.Text.Substring(start + length)
+        Dim text As String = tbSearchPattern.Text.Substring(0, start)
+        text += tbSearchPattern.Text.Substring(start + length)
 
-        Dim newText As String = text.Substring(0, cmboTextBoxChild.CaretIndex) + texttopase
+        Dim newText As String = text.Substring(0, tbSearchPattern.CaretIndex) + texttopaste
         newText += text.Substring(caret)
-        cmboTextBoxChild.Text = newText
-        cmboTextBoxChild.CaretIndex = caret + texttopase.Length
+        tbSearchPattern.Text = newText
+        tbSearchPattern.CaretIndex = caret + texttopaste.Length
 
         e.CancelCommand()
     End Sub
 
-    Private Sub cmboSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles cmboSearchPattern.KeyDown
+    Private Sub tbSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles tbSearchPattern.KeyDown
         If e.Key = Key.Enter Then
             If mnuSearchModeDefault.IsChecked = True Then
-                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
             ElseIf mnuSearchModeAdvanced.IsChecked = True Then
-                StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
             End If
-        Else
-            If cmboSearchPattern.IsDropDownOpen Then cmboSearchPattern.IsDropDownOpen = False
         End If
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If mnuSearchModeDefault.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
+            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
         ElseIf mnuSearchModeAdvanced.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(cmboSearchPattern.Text))
+            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
         End If
-        cmboSearchPattern.Focus()
+        tbSearchPattern.Focus()
     End Sub
 
     Private Async Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
@@ -1012,7 +1008,6 @@ Class wndMain
         End While
 
         searchhistory.Add(New clsSearchHistory(root, filter))
-        If Not ADToolsApplication.ocGlobalSearchHistory.Contains(cmboSearchPattern.Text) Then ADToolsApplication.ocGlobalSearchHistory.Insert(0, cmboSearchPattern.Text)
         searchhistoryindex = searchhistory.Count - 1
 
         Search(root, filter)
@@ -1024,8 +1019,7 @@ Class wndMain
         Catch
         End Try
 
-        Dim cmboTextBoxChild As TextBox = cmboSearchPattern.Template.FindName("PART_EditableTextBox", cmboSearchPattern)
-        If cmboTextBoxChild IsNot Nothing Then cmboTextBoxChild.SelectAll()
+        tbSearchPattern.SelectAll()
 
         cap.Visibility = Visibility.Visible
         pbSearch.Visibility = Visibility.Visible

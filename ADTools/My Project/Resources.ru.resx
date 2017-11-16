@@ -1121,7 +1121,7 @@
   <data name="hint_poptvObjects_3" xml:space="preserve">
     <value>, с которыми мы будет работать</value>
   </data>
-  <data name="hint_popcmboSearchPattern" xml:space="preserve">
+  <data name="hint_poptbSearchPattern" xml:space="preserve">
     <value>Воспользуйтесь поисковой строкой для поиска объектов</value>
   </data>
   <data name="wndPreferences_lbl_Basic" xml:space="preserve">

@@ -1118,20 +1118,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Use the search field to search the objects.
-        '''</summary>
-        Public ReadOnly Property hint_popcmboSearchPattern() As String
-            Get
-                Return ResourceManager.GetString("hint_popcmboSearchPattern", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Ищет локализованную строку, похожую на Press F1 in any window to view hints.
         '''</summary>
         Public ReadOnly Property hint_popF1Hint() As String
             Get
                 Return ResourceManager.GetString("hint_popF1Hint", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use the search field to search the objects.
+        '''</summary>
+        Public ReadOnly Property hint_poptbSearchPattern() As String
+            Get
+                Return ResourceManager.GetString("hint_poptbSearchPattern", resourceCulture)
             End Get
         End Property
         

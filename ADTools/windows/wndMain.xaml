@@ -26,12 +26,12 @@
                 </TextBlock>
             </Grid>
         </Popup>
-        <Popup x:Name="popcmboSearchPattern" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=cmboSearchPattern}" Placement="Top" HorizontalOffset="80" VerticalOffset="12">
+        <Popup x:Name="poptbSearchPattern" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tbSearchPattern}" Placement="Top" HorizontalOffset="80" VerticalOffset="12">
             <Grid Width="200" Height="55">
                 <Border CornerRadius="10,10,10,0" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
 
                 <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
-                    <Run Text="{x:Static r:Resources.hint_popcmboSearchPattern}"/>
+                    <Run Text="{x:Static r:Resources.hint_poptbSearchPattern}"/>
                 </TextBlock>
             </Grid>
         </Popup>
@@ -254,13 +254,13 @@
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
                         <Grid>
-                            <ComboBox x:Name="cmboSearchPattern" Text="" IsEditable="True" Margin="0,0,5,0"/>
+                            <TextBox x:Name="tbSearchPattern" Text="" Margin="0,0,5,0"/>
                             <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Text, ElementName=cmboSearchPattern}" Value="">
+                                            <DataTrigger Binding="{Binding Text, ElementName=tbSearchPattern}" Value="">
                                                 <Setter Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
                                         </Style.Triggers>
