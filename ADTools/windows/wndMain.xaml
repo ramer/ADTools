@@ -129,7 +129,7 @@
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0">
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
-                    <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>/<Run Text="{Binding Path=currentobjects.Count, Mode=OneWay, FallbackValue=0}"/>
                 </TextBlock>
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.lbl_ObjectsSelected}"/>
@@ -254,8 +254,8 @@
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
                         <Grid>
-                            <TextBox x:Name="tbSearchPattern" Text="" Margin="0,0,5,0"/>
-                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
+                            <TextBox x:Name="tbSearchPattern" Text="" Margin="0,0,5,0" VerticalContentAlignment="Center"/>
+                            <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="3,0,5,0" Opacity="0.5">
                                 <TextBlock.Style>
                                     <Style TargetType="{x:Type TextBlock}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -275,7 +275,6 @@
                         <DataGrid 
                             x:Name="dgObjects"
                             Foreground="Black"
-                            ItemsSource="{Binding currentobjects, IsAsync=True}"
                             AlternationCount="2"
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
@@ -319,23 +318,24 @@
                                 <ContextMenu x:Name="ctxmnuObjects">
                                     <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
                                     <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
-                                    <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
+                                    <Separator x:Name="ctxmnuObjectsSelectAllSeparator" Visibility="{Binding ElementName=ctxmnuObjectsSelectAll, Path=Visibility}"/>
                                     <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsCopySeparator"/>
+                                    <Separator x:Name="ctxmnuObjectsCopySeparator" Visibility="{Binding ElementName=ctxmnuObjectsCopy, Path=Visibility}"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
+                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator" Visibility="{Binding ElementName=ctxmnuObjectsCopyData, Path=Visibility}"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsFilterData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsFilterData}"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
+                                    <Separator x:Name="ctxmnuObjectsPropertiesSeparator" Visibility="{Binding ElementName=ctxmnuObjectsProperties, Path=Visibility}"/>
                                     <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>

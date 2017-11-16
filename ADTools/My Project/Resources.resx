@@ -301,10 +301,10 @@ However, you can also specify the root of the domain as the root of the search.<
     <value>Clone window</value>
   </data>
   <data name="lbl_ObjectsSelected" xml:space="preserve">
-    <value>Selected: </value>
+    <value>Selected:</value>
   </data>
   <data name="lbl_ObjectsTotal" xml:space="preserve">
-    <value>Objects: </value>
+    <value>Objects:</value>
   </data>
   <data name="wndMain_lbl_SearchPattern" xml:space="preserve">
     <value>Search</value>
@@ -1489,5 +1489,14 @@ To obtain the API key:
   </data>
   <data name="wndMain_ctxmnuObjectsCopyData" xml:space="preserve">
     <value>Copy data</value>
+  </data>
+  <data name="wndMain_lbl_tbSearchFilter" xml:space="preserve">
+    <value>Filter in the found</value>
+  </data>
+  <data name="lbl_ObjectsFilter" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsFilterData" xml:space="preserve">
+    <value>Postfilter by value</value>
   </data>
 </root>

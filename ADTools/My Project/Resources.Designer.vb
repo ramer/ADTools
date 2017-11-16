@@ -1172,7 +1172,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Selected: .
+        '''  Ищет локализованную строку, похожую на Filter:.
+        '''</summary>
+        Public ReadOnly Property lbl_ObjectsFilter() As String
+            Get
+                Return ResourceManager.GetString("lbl_ObjectsFilter", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Selected:.
         '''</summary>
         Public ReadOnly Property lbl_ObjectsSelected() As String
             Get
@@ -1181,7 +1190,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Objects: .
+        '''  Ищет локализованную строку, похожую на Objects:.
         '''</summary>
         Public ReadOnly Property lbl_ObjectsTotal() As String
             Get
@@ -2255,6 +2264,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Postfilter by value.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsFilterData() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsFilterData", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Object location.
         '''</summary>
         Public ReadOnly Property wndMain_ctxmnuObjectsOpenObjectLocation() As String
@@ -2440,6 +2458,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_lbl_SearchResults() As String
             Get
                 Return ResourceManager.GetString("wndMain_lbl_SearchResults", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Filter in the found.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_tbSearchFilter() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_tbSearchFilter", resourceCulture)
             End Get
         End Property
         

@@ -5,6 +5,7 @@ Imports IPrompt.VisualBasic
 Imports IPrint
 Imports System.Text.RegularExpressions
 Imports System.IO
+Imports System.ComponentModel
 
 Class wndMain
     Public WithEvents searcher As New clsSearcher
@@ -14,8 +15,11 @@ Class wndMain
     Public Shared hkEsc As New RoutedCommand
 
     Public Property currentcontainer As clsDirectoryObject
-    Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
     Public Property currentfilter As clsFilter
+    Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+
+    Public Property cvscurrentobjects As New CollectionViewSource
+    Public Property cvcurrentobjects As ICollectionView
 
     Private searchhistoryindex As Integer
     Private searchhistory As New List(Of clsSearchHistory)
@@ -43,6 +47,9 @@ Class wndMain
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
 
+        cvscurrentobjects = New CollectionViewSource() With {.Source = currentobjects}
+        cvcurrentobjects = cvscurrentobjects.View
+        dgObjects.SetBinding(DataGrid.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         If preferences.FirstRun Then ShowPopups()
 
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
@@ -254,29 +261,26 @@ Class wndMain
         ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
 
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
-        ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
 
         ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(True)
 
         ctxmnuObjectsCopy.Visibility = BooleanToVisibility(objects.Count > 0)
-        ctxmnuObjectsCopySeparator.Visibility = ctxmnuObjectsCopy.Visibility
         ctxmnuObjectsCut.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsPaste.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
         ctxmnuObjectsPaste.IsEnabled = ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0
         ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsCopyData.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsFilterData.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
         ctxmnuObjectsOpenObjectTree.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
-        ctxmnuObjectsCopyDataSeparator.Visibility = ctxmnuObjectsCopyData.Visibility
 
         ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
         ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
         ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
 
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
-        ctxmnuObjectsPropertiesSeparator.Visibility = ctxmnuObjectsProperties.Visibility
 
         If objects.Count = 1 Then
             ctxmnuObjectsExternalSoftware.Items.Clear()
@@ -287,6 +291,22 @@ Class wndMain
                 esmnu.Tag = es
                 AddHandler esmnu.Click, AddressOf ctxmnuObjectsExternalSoftwareItem_Click
                 ctxmnuObjectsExternalSoftware.Items.Add(esmnu)
+            Next
+
+            ctxmnuObjectsFilterData.Items.Clear()
+            For Each columninfo In preferences.Columns
+                For Each attr In columninfo.Attributes
+                    If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
+                        Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
+                        If Not String.IsNullOrEmpty(value) Then
+                            Dim fdmnu As New MenuItem
+                            fdmnu.Header = value
+                            fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
+                            AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+                            ctxmnuObjectsFilterData.Items.Add(fdmnu)
+                        End If
+                    End If
+                Next
             Next
         End If
 
@@ -373,6 +393,22 @@ Class wndMain
             Else
                 Clipboard.SetDataObject(Join(objects.Select(Function(o) o.GetType().GetProperty(cdmnu.Tag).GetValue(o).ToString).ToArray, vbCrLf), True)
             End If
+        Catch ex As Exception
+            IMsgBox(ex.Message, vbExclamation)
+        End Try
+    End Sub
+
+    Private Sub ctxmnuObjectsFilterDataItem_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+        Dim objects() As clsDirectoryObject = CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag
+        Dim cdmnu As MenuItem = CType(sender, MenuItem)
+        If cdmnu Is Nothing Then Exit Sub
+        If cdmnu.Tag Is Nothing Then Exit Sub
+        If TypeOf cdmnu.Tag IsNot clsAttribute Then Exit Sub
+
+        Dim attr As clsAttribute = cdmnu.Tag
+        Try
+            ApplyFilter(attr.Name, attr.Value)
         Catch ex As Exception
             IMsgBox(ex.Message, vbExclamation)
         End Try
@@ -979,6 +1015,13 @@ Class wndMain
         Next
     End Sub
 
+    Private Sub ApplyFilter(prop As String, value As String)
+        cvcurrentobjects.Filter = New Predicate(Of Object)(
+            Function(obj As clsDirectoryObject)
+                Return GetType(clsDirectoryObject).GetProperty(prop).GetValue(obj) = value
+            End Function)
+    End Sub
+
     Public Sub RefreshDataGrid()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
         Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Filter)
@@ -1020,6 +1063,7 @@ Class wndMain
         End Try
 
         tbSearchPattern.SelectAll()
+        'tbSearchFilter.Text = ""
 
         cap.Visibility = Visibility.Visible
         pbSearch.Visibility = Visibility.Visible
@@ -1165,6 +1209,7 @@ Class wndMain
         RefreshDataGrid()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
+
 
 
 #End Region

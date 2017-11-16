@@ -215,10 +215,10 @@
     <value>Клонировать окно</value>
   </data>
   <data name="lbl_ObjectsSelected" xml:space="preserve">
-    <value>Выделено: </value>
+    <value>Выделено:</value>
   </data>
   <data name="lbl_ObjectsTotal" xml:space="preserve">
-    <value>Объектов: </value>
+    <value>Объектов:</value>
   </data>
   <data name="wndMain_lbl_SearchPattern" xml:space="preserve">
     <value>Поиск</value>
@@ -1394,5 +1394,14 @@
   </data>
   <data name="wndMain_ctxmnuObjectsCopyData" xml:space="preserve">
     <value>Копировать данные</value>
+  </data>
+  <data name="wndMain_lbl_tbSearchFilter" xml:space="preserve">
+    <value>Фильтр в найденном</value>
+  </data>
+  <data name="lbl_ObjectsFilter" xml:space="preserve">
+    <value>Фильтр:</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsFilterData" xml:space="preserve">
+    <value>Постфильтр по значению</value>
   </data>
 </root>

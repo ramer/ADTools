@@ -1,13 +1,18 @@
 ﻿Imports System.Collections.Specialized
+Imports System.ComponentModel
 Imports System.Threading
 Imports System.Windows.Threading
 
 Public Class clsThreadSafeObservableCollection(Of T)
     Implements IList(Of T)
     Implements INotifyCollectionChanged
+    Implements INotifyPropertyChanged
+
     Private collection As IList(Of T) = New List(Of T)()
     Private dispatcher As Dispatcher
     Public Event CollectionChanged As NotifyCollectionChangedEventHandler Implements INotifyCollectionChanged.CollectionChanged
+    Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+
     Private sync As New ReaderWriterLock()
 
     Public Sub New()
@@ -34,6 +39,7 @@ Public Class clsThreadSafeObservableCollection(Of T)
         sync.AcquireWriterLock(Timeout.Infinite)
         collection.Add(item)
         RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item))
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
         sync.ReleaseWriterLock()
     End Sub
 
@@ -49,6 +55,7 @@ Public Class clsThreadSafeObservableCollection(Of T)
         sync.AcquireWriterLock(Timeout.Infinite)
         collection.Clear()
         RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
         sync.ReleaseWriterLock()
     End Sub
 
@@ -102,6 +109,7 @@ Public Class clsThreadSafeObservableCollection(Of T)
         Dim result = collection.Remove(item)
         If result Then 'AndAlso CollectionChanged IsNot Nothing Then
             RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))
+            RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
         End If
         sync.ReleaseWriterLock()
         Return result
@@ -134,6 +142,7 @@ Public Class clsThreadSafeObservableCollection(Of T)
         sync.AcquireWriterLock(Timeout.Infinite)
         collection.Insert(index, item)
         RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index))
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
         sync.ReleaseWriterLock()
     End Sub
 
@@ -153,6 +162,7 @@ Public Class clsThreadSafeObservableCollection(Of T)
         End If
         collection.RemoveAt(index)
         RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset))
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
         sync.ReleaseWriterLock()
 
     End Sub
