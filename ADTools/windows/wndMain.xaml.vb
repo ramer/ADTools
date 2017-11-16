@@ -740,6 +740,10 @@ Class wndMain
         OpenObject(current)
     End Sub
 
+    Private Sub dgObjects_ColumnReordered_LayoutUpdated() Handles dgObjects.ColumnReordered, dgObjects.LayoutUpdated
+        UpdateColumns()
+    End Sub
+
     Private Sub dgObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDown
         If e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right Then
             Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
@@ -962,8 +966,6 @@ Class wndMain
     End Sub
 
     Public Sub RebuildColumns()
-        If currentobjects.Count > 10 Then currentobjects.Clear()
-
         dgObjects.Columns.Clear()
         For Each columninfo As clsDataGridColumnInfo In preferences.Columns
             dgObjects.Columns.Add(CreateColumn(columninfo))
