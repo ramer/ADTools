@@ -2273,6 +2273,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Clear.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsFilterDataClear() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsFilterDataClear", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Object location.
         '''</summary>
         Public ReadOnly Property wndMain_ctxmnuObjectsOpenObjectLocation() As String
@@ -3200,15 +3209,6 @@ Namespace My.Resources
         Public ReadOnly Property wndObject_lbl_Manager() As String
             Get
                 Return ResourceManager.GetString("wndObject_lbl_Manager", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Ищет локализованную строку, похожую на .
-        '''</summary>
-        Public ReadOnly Property wndObject_lbl_Manages() As String
-            Get
-                Return ResourceManager.GetString("wndObject_lbl_Manages", resourceCulture)
             End Get
         End Property
         

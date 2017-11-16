@@ -130,11 +130,11 @@
 
                             <DockPanel LastChildFill="True" Margin="0,5,0,0" Grid.Column="0">
                                 <TextBlock TextWrapping="Wrap" Width="100" Text="{x:Static r:Resources.wndDomains_lbl_Patterns_Username}"/>
-                                <TextBox x:Name="tbPatternUsername" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.UsernamePattern, Mode=TwoWay}"/>
+                                <TextBox x:Name="tbPatternUsername" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.UsernamePattern, Mode=TwoWay}" VerticalContentAlignment="Top"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="0,5,0,0" Grid.Column="1">
                                 <TextBlock TextWrapping="Wrap" Width="100" Text="{x:Static r:Resources.wndDomains_lbl_Patterns_Computer}"/>
-                                <TextBox x:Name="tbPatternComputer" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.ComputerPattern, Mode=TwoWay}"/>
+                                <TextBox x:Name="tbPatternComputer" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.ComputerPattern, Mode=TwoWay}" VerticalContentAlignment="Top"/>
                             </DockPanel>
 
                             <DockPanel LastChildFill="True" Margin="0,5,0,0">

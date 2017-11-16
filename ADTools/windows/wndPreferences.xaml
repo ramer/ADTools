@@ -220,7 +220,7 @@
                     <DockPanel Margin="5">
                         <StackPanel DockPanel.Dock="Bottom">
                             <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_ArgumentPatterns}" Margin="0,5,0,0"/>
-                            <TextBox  TextWrapping="Wrap" AcceptsReturn="True" 
+                            <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"
                                  VerticalScrollBarVisibility="Auto" Height="60" IsReadOnly="True" 
                                  Text="{}{{myusername}} {{mypassword}} {{mydomain}}&#x0d;&#x0a;{{name}} {{description}} {{displayName}} {{sAMAccountName}} {{userPrincipalName}} {{distinguishedName}} {{telephoneNumber}} {{physicalDeliveryOfficeName}} {{title}} {{department}} {{company}} {{mail}} ..."/>
                         </StackPanel>

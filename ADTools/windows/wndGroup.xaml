@@ -71,7 +71,7 @@
                             </StackPanel>
                             <DockPanel Margin="5,10,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Info}" DockPanel.Dock="Top"/>
-                                <TextBox Name="tbInfo" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}"/>
+                                <TextBox Name="tbInfo" Text="{Binding info}" AcceptsReturn="True" IsReadOnly="{Binding IsReadOnly[info]}" VerticalContentAlignment="Top"/>
                             </DockPanel>
                         </DockPanel>
                     </DockPanel>

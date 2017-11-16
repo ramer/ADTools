@@ -294,6 +294,13 @@ Class wndMain
             Next
 
             ctxmnuObjectsFilterData.Items.Clear()
+            Dim fdmnuclear As New MenuItem
+            fdmnuclear.Header = My.Resources.wndMain_ctxmnuObjectsFilterDataClear
+            fdmnuclear.Tag = New clsAttribute("", "", "")
+            AddHandler fdmnuclear.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+            ctxmnuObjectsFilterData.Items.Add(fdmnuclear)
+            ctxmnuObjectsFilterData.Items.Add(New Separator)
+
             For Each columninfo In preferences.Columns
                 For Each attr In columninfo.Attributes
                     If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
@@ -404,6 +411,7 @@ Class wndMain
         Dim cdmnu As MenuItem = CType(sender, MenuItem)
         If cdmnu Is Nothing Then Exit Sub
         If cdmnu.Tag Is Nothing Then Exit Sub
+
         If TypeOf cdmnu.Tag IsNot clsAttribute Then Exit Sub
 
         Dim attr As clsAttribute = cdmnu.Tag
@@ -460,14 +468,6 @@ Class wndMain
             End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Copy
-    End Sub
-
-    Private Sub ctxmnuSharedCopyDataDisplayName_Click(sender As Object, e As RoutedEventArgs)
-
-    End Sub
-
-    Private Sub ctxmnuSharedCopyDataBasicAttributes_Click(sender As Object, e As RoutedEventArgs)
-
     End Sub
 
     Private Sub ctxmnuSharedCut_Click(sender As Object, e As RoutedEventArgs)
@@ -862,8 +862,12 @@ Class wndMain
         tbSearchPattern.Focus()
     End Sub
 
-    Private Async Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
-        Await searcher.BasicSearchStopAsync()
+    Private Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
+        StopSearch()
+    End Sub
+
+    Private Sub imgFilterStatus_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles imgFilterStatus.MouseLeftButtonDown
+        ApplyFilter()
     End Sub
 
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
@@ -1015,11 +1019,17 @@ Class wndMain
         Next
     End Sub
 
-    Private Sub ApplyFilter(prop As String, value As String)
-        cvcurrentobjects.Filter = New Predicate(Of Object)(
-            Function(obj As clsDirectoryObject)
-                Return GetType(clsDirectoryObject).GetProperty(prop).GetValue(obj) = value
-            End Function)
+    Private Sub ApplyFilter(Optional prop As String = Nothing, Optional value As String = Nothing)
+        If String.IsNullOrEmpty(prop) Then
+            imgFilterStatus.Visibility = Visibility.Collapsed
+            cvcurrentobjects.Filter = Nothing
+        Else
+            imgFilterStatus.Visibility = Visibility.Visible
+            cvcurrentobjects.Filter = New Predicate(Of Object)(
+                Function(obj As clsDirectoryObject)
+                    Return GetType(clsDirectoryObject).GetProperty(prop).GetValue(obj) = value
+                End Function)
+        End If
     End Sub
 
     Public Sub RefreshDataGrid()
@@ -1209,6 +1219,7 @@ Class wndMain
         RefreshDataGrid()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
+
 
 
 

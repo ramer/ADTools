@@ -1439,8 +1439,8 @@ To obtain the API key:
   <data name="wndObject_lbl_Name" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="wndObject_lbl_Manages" xml:space="preserve">
-    <value></value>
+  <data name="wndMain_ctxmnuObjectsFilterDataClear" xml:space="preserve">
+    <value>Clear</value>
   </data>
   <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
     <value>Selected objects</value>

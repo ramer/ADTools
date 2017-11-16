@@ -45,11 +45,13 @@
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
         </Style>
         <Style TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
         </Style>
         <Style TargetType="{x:Type PasswordBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />

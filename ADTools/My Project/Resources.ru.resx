@@ -1404,4 +1404,7 @@
   <data name="wndMain_ctxmnuObjectsFilterData" xml:space="preserve">
     <value>Постфильтр по значению</value>
   </data>
+  <data name="wndMain_ctxmnuObjectsFilterDataClear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
 </root>
