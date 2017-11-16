@@ -402,6 +402,8 @@ Public Class clsDirectoryObject
             RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality)
 
             If SchemaClass = enmSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
+                grd.Width = 48
+                grd.Height = 48
                 img.Width = 48
                 img.Height = 48
                 img.Source = thumbnailPhoto
@@ -412,6 +414,8 @@ Public Class clsDirectoryObject
                 el.Effect = New Effects.BlurEffect With {.Radius = 1}
                 grd.Children.Add(el)
             Else
+                grd.Width = 32
+                grd.Height = 32
                 img.Width = 32
                 img.Height = 32
                 img.Source = Image
