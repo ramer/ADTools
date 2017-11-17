@@ -294,30 +294,39 @@ Class wndMain
             Next
 
             ctxmnuObjectsFilterData.Items.Clear()
-            Dim fdmnuclear As New MenuItem
-            fdmnuclear.Header = My.Resources.wndMain_ctxmnuObjectsFilterDataClear
-            fdmnuclear.Tag = New clsAttribute("", "", "")
-            AddHandler fdmnuclear.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
-            ctxmnuObjectsFilterData.Items.Add(fdmnuclear)
-            ctxmnuObjectsFilterData.Items.Add(New Separator)
+            If cvcurrentobjects.Filter IsNot Nothing Then
+                Dim fdmnuclear As New MenuItem
+                fdmnuclear.Header = My.Resources.wndMain_ctxmnuObjectsFilterDataClear
+                fdmnuclear.Tag = New clsAttribute("", "", "")
+                AddHandler fdmnuclear.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+                ctxmnuObjectsFilterData.Items.Add(fdmnuclear)
+                ctxmnuObjectsFilterData.Items.Add(New Separator)
+            End If
+
+            Dim statusvalue As clsDirectoryObject.enmStatus = GetType(clsDirectoryObject).GetProperty("Status").GetValue(objects(0))
+            Dim fdmnustatus As New MenuItem
+            fdmnustatus.Header = statusvalue.ToString
+            fdmnustatus.Tag = New clsAttribute("Status", "Status", statusvalue)
+            AddHandler fdmnustatus.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+            ctxmnuObjectsFilterData.Items.Add(fdmnustatus)
 
             For Each columninfo In preferences.Columns
-                For Each attr In columninfo.Attributes
-                    If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
-                        Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
-                        If Not String.IsNullOrEmpty(value) Then
-                            Dim fdmnu As New MenuItem
-                            fdmnu.Header = value
-                            fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
-                            AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
-                            ctxmnuObjectsFilterData.Items.Add(fdmnu)
+                    For Each attr In columninfo.Attributes
+                        If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
+                            Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
+                            If Not String.IsNullOrEmpty(value) Then
+                                Dim fdmnu As New MenuItem
+                                fdmnu.Header = value
+                                fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
+                                AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+                                ctxmnuObjectsFilterData.Items.Add(fdmnu)
+                            End If
                         End If
-                    End If
+                    Next
                 Next
-            Next
-        End If
+            End If
 
-        If objects.Count > 0 Then
+            If objects.Count > 0 Then
             ctxmnuObjectsCopyData.Items.Clear()
 
             Dim cdmnudn As New MenuItem
@@ -416,7 +425,7 @@ Class wndMain
 
         Dim attr As clsAttribute = cdmnu.Tag
         Try
-            ApplyFilter(attr.Name, attr.Value)
+            ApplyPostfilter(attr.Name, attr.Value)
         Catch ex As Exception
             IMsgBox(ex.Message, vbExclamation)
         End Try
@@ -867,7 +876,7 @@ Class wndMain
     End Sub
 
     Private Sub imgFilterStatus_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles imgFilterStatus.MouseLeftButtonDown
-        ApplyFilter()
+        ApplyPostfilter()
     End Sub
 
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
@@ -1019,7 +1028,7 @@ Class wndMain
         Next
     End Sub
 
-    Private Sub ApplyFilter(Optional prop As String = Nothing, Optional value As String = Nothing)
+    Private Sub ApplyPostfilter(Optional prop As String = Nothing, Optional value As String = Nothing)
         If String.IsNullOrEmpty(prop) Then
             imgFilterStatus.Visibility = Visibility.Collapsed
             cvcurrentobjects.Filter = Nothing
