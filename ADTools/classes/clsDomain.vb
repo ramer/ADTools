@@ -1,6 +1,8 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.DirectoryServices
+Imports System.DirectoryServices.Protocols
+Imports System.Net
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports CredentialManagement
@@ -12,24 +14,21 @@ Public Class clsDomain
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-    Private _rootdse As DirectoryEntry
-    Private _rootdsepath As String
-    Private _defaultnamingcontext As DirectoryEntry
-    Private _defaultnamingcontextpath As String
-    Private _configurationnamingcontext As DirectoryEntry
-    Private _configurationnamingcontextpath As String
-    'Private _schemanamingcontext As DirectoryEntry
-    'Private _schemanamingcontextpath As String
-    Private _searchroot As DirectoryEntry
-    Private _searchrootpath As String
+    Private _name As String
+    Private _username As String
+    Private _password As String
+    Private _server As String
+
+    Private _connection As LdapConnection
+
+    Private _defaultnamingcontext As String
+    Private _configurationnamingcontext As String
+    Private _schemanamingcontext As String
+    Private _searchroot As String
 
     Private _properties As New ObservableCollection(Of clsDomainProperty)
     Private _maxpwdage As Integer
     Private _suffixes As New ObservableCollection(Of String)
-
-    Private _name As String
-    Private _username As String
-    Private _password As String
 
     Private _usernamepattern As String = ""
     Private _usernamepatterntemplates As Func(Of Object, String)() = Nothing
@@ -42,7 +41,7 @@ Public Class clsDomain
     Private _defaultpassword As String = ""
 
     Private _defaultgroups As New ObservableCollection(Of clsDirectoryObject)
-    Private _defaultgrouppaths As New ObservableCollection(Of String)
+    Private _defaultgroupsdn As ObservableCollection(Of String)
 
     Private _exchangeservers As New ObservableCollection(Of String)
     Private _useexchange As Boolean
@@ -82,120 +81,111 @@ Public Class clsDomain
         Username = cred.Username
         Password = cred.Password
 
-        Dim connecttester As Object = Nothing
-        If Not String.IsNullOrEmpty(Username) And Not String.IsNullOrEmpty(Password) Then
-            Try
-                RootDSE = New DirectoryEntry(RootDSEPath, Username, Password)
-                connecttester = RootDSE.NativeObject
-                DefaultNamingContext = New DirectoryEntry(DefaultNamingContextPath, Username, Password)
-                connecttester = DefaultNamingContext.NativeObject
-                ConfigurationNamingContext = New DirectoryEntry(ConfigurationNamingContextPath, Username, Password)
-                connecttester = ConfigurationNamingContext.NativeObject
-                'SchemaNamingContext = New DirectoryEntry(SchemaNamingContextPath, Username, Password)
-                'connecttester = SchemaNamingContext.NativeObject
-                SearchRoot = New DirectoryEntry(SearchRootPath, Username, Password)
-                connecttester = SearchRoot.NativeObject
-                If DefaultGroupPaths.Count > 0 Then DefaultGroups = New ObservableCollection(Of clsDirectoryObject)(DefaultGroupPaths.Select(Function(x) New clsDirectoryObject(New DirectoryEntry(x, Username, Password), Me)).ToList)
+        Validated = False
+        If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Exit Sub
 
-                Validated = True
-            Catch ex As Exception
+        Dim endpoint As String = If(String.IsNullOrEmpty(Server), Name, Server)
 
-            End Try
-        End If
+        If Connection IsNot Nothing Then Connection.Dispose()
+
+        Dim ldapdi As New LdapDirectoryIdentifier(endpoint)
+        Dim ldapnc As New NetworkCredential(Username, Password)
+        Dim ldapconnection As New LdapConnection(ldapdi, ldapnc)
+        ldapconnection.SessionOptions.TcpKeepAlive = True
+        ldapconnection.SessionOptions.AutoReconnect = True
+        ldapconnection.AutoBind = True
+        Try
+            ldapconnection.Bind()
+            Connection = ldapconnection
+            Validated = True
+        Catch ex As Exception
+            Connection = Nothing
+            Exit Sub
+        End Try
+
+        If String.IsNullOrEmpty(DefaultNamingContext) Then Exit Sub
+        If String.IsNullOrEmpty(ConfigurationNamingContext) Then Exit Sub
+        If String.IsNullOrEmpty(SearchRoot) Then Exit Sub
+        If String.IsNullOrEmpty(SchemaNamingContext) Then Exit Sub
+
+        Try
+            If DefaultGroupsDN.Count > 0 Then DefaultGroups = New ObservableCollection(Of clsDirectoryObject)(DefaultGroupsDN.Select(Function(x As String) New clsDirectoryObject(x, Me)).ToList)
+        Catch ex As Exception
+
+        End Try
+
+        Validated = True
     End Sub
 
     Public Async Function ConnectAsync() As Task(Of Boolean)
         Validated = False
-        If Len(Name) = 0 Or Len(Username) = 0 Or Len(Password) = 0 Then Return False
+        If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
-        Dim connectionstring As String = "LDAP://" & Name & "/"
-        Dim newDefaultNamingContext As String = ""
+        Dim endpoint As String = If(String.IsNullOrEmpty(Server), Name, Server)
+
+        If Connection IsNot Nothing Then Connection.Dispose()
+
+        Dim ldapdi As New LdapDirectoryIdentifier(endpoint)
+        Dim ldapnc As New NetworkCredential(Username, Password)
+        Dim ldapconnection As New LdapConnection(ldapdi, ldapnc)
+        ldapconnection.SessionOptions.TcpKeepAlive = True
+        ldapconnection.SessionOptions.AutoReconnect = True
+        ldapconnection.AutoBind = True
+        Try
+            ldapconnection.Bind()
+            Connection = ldapconnection
+        Catch ex As Exception
+            Connection = Nothing
+            Return False
+        End Try
+
         Dim success As Boolean = False
 
-        'RootDSE
-        success = Await Task.Run(
-            Function()
-                Try
-                    RootDSE = New DirectoryEntry(connectionstring & "RootDSE", Username, Password)
-                    If RootDSE.Properties.Count = 0 Then Return False
-                Catch
-                    RootDSE = Nothing
-                    Return False
-                End Try
-                Return True
-            End Function)
-        If Not success Then Return False
-
         'defaultNamingContext
+        'configurationNamingContext
+        'schemaNamingContext
         success = Await Task.Run(
             Function()
                 Try
-                    DefaultNamingContext = New DirectoryEntry(connectionstring & GetLDAPProperty(_rootdse.Properties, "defaultNamingContext"), Username, Password)
-                    If DefaultNamingContext.Properties.Count = 0 Then Return False
+                    Dim searchRequest = New SearchRequest(Nothing, "(objectClass=*)", Protocols.SearchScope.Base, {"defaultNamingContext", "configurationNamingContext", "schemaNamingContext"})
+                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+                    DefaultNamingContext = response.Entries(0).Attributes("defaultNamingContext")(0)
+                    ConfigurationNamingContext = response.Entries(0).Attributes("configurationNamingContext")(0)
+                    SchemaNamingContext = response.Entries(0).Attributes("schemaNamingContext")(0)
                 Catch
                     DefaultNamingContext = Nothing
-                    Return False
-                End Try
-                Return True
-            End Function)
-        If Not success Then Return False
-
-        'configurationNamingContext
-        success = Await Task.Run(
-            Function()
-                Try
-                    ConfigurationNamingContext = New DirectoryEntry(connectionstring & GetLDAPProperty(_rootdse.Properties, "configurationNamingContext"), Username, Password)
-                    If ConfigurationNamingContext.Properties.Count = 0 Then Return False
-                Catch
                     ConfigurationNamingContext = Nothing
+                    SchemaNamingContext = Nothing
                     Return False
                 End Try
                 Return True
             End Function)
         If Not success Then Return False
 
-        'schemaNamingContext
-        'success = Await Task.Run(
-        '    Function()
-        '        Try
-        '            SchemaNamingContext = New DirectoryEntry(connectionstring & GetLDAPProperty(_rootdse.Properties, "schemaNamingContext"), Username, Password)
-        '            If SchemaNamingContext.Properties.Count = 0 Then Return False
-        '        Catch ex As Exception
-        '            SchemaNamingContext = Nothing
-        '            Return False
-        '        End Try
-        '        Return True
-        '    End Function)
-        'If Not success Then Return False
 
         'properties
         Properties = Await Task.Run(
             Function()
                 Dim p As New ObservableCollection(Of clsDomainProperty)
                 Try
+                    Dim searchRequest = New SearchRequest(DefaultNamingContext, "(objectClass=*)", Protocols.SearchScope.Base, {"lockoutThreshold", "lockoutDuration", "lockOutObservationWindow", "maxPwdAge", "minPwdAge", "minPwdLength", "pwdProperties", "pwdHistoryLength"})
+                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                    MaxPwdAge = -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days
+
                     p.Clear()
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutThreshold, String.Format(My.Resources.clsDomain_msg_PropLockoutThresholdFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "lockoutThreshold"))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutDuration, String.Format(My.Resources.clsDomain_msg_PropLockoutDurationFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockoutDuration")(0))).Minutes)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutObservationWindow, String.Format(My.Resources.clsDomain_msg_PropLockoutObservationWindowFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("lockOutObservationWindow")(0))).Minutes)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMaximumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMaximumPasswordAgeFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("maxPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordAgeFormat, -TimeSpan.FromTicks(LongFromLargeInteger(_defaultnamingcontext.Properties("minPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordLenght, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordLenghtFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "minPwdLength"))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordComplexityRequirements, String.Format(My.Resources.clsDomain_msg_PropPasswordComplexityRequirementsFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "pwdProperties"))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordHistory, String.Format(My.Resources.clsDomain_msg_PropPasswordHistoryFormat, GetLDAPProperty(_defaultnamingcontext.Properties, "pwdHistoryLength"))))
-                Catch
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutThreshold, String.Format(My.Resources.clsDomain_msg_PropLockoutThresholdFormat, response.Entries(0).Attributes("lockoutThreshold")(0))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutDuration, String.Format(My.Resources.clsDomain_msg_PropLockoutDurationFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockoutDuration")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutObservationWindow, String.Format(My.Resources.clsDomain_msg_PropLockoutObservationWindowFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockOutObservationWindow")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMaximumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMaximumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("minPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordLenght, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordLenghtFormat, response.Entries(0).Attributes("minPwdLength")(0))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordComplexityRequirements, String.Format(My.Resources.clsDomain_msg_PropPasswordComplexityRequirementsFormat, CBool(response.Entries(0).Attributes("pwdProperties")(0)))))
+                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordHistory, String.Format(My.Resources.clsDomain_msg_PropPasswordHistoryFormat, response.Entries(0).Attributes("pwdHistoryLength")(0))))
+                Catch ex As Exception
                     p.Clear()
                 End Try
                 Return p
-            End Function)
-
-        'maximum password age
-        MaxPwdAge = Await Task.Run(
-            Function()
-                Try
-                    Return -TimeSpan.FromTicks(LongFromLargeInteger(GetLDAPProperty(_defaultnamingcontext.Properties, "maxPwdAge"))).Days
-                Catch ex As Exception
-                    Return 0
-                End Try
             End Function)
 
         'domain suffixes
@@ -203,14 +193,12 @@ Public Class clsDomain
             Function()
                 Dim s As New ObservableCollection(Of String)
                 Try
-                    Dim LDAPsearcher As New DirectorySearcher(ConfigurationNamingContext)
-                    Dim LDAPresults As SearchResultCollection = Nothing
+                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(&(objectClass=crossRef)(systemFlags=3))", Protocols.SearchScope.Subtree, {"dnsRoot"})
+                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
-                    LDAPsearcher.Filter = "(&(objectClass=crossRef)(systemFlags=3))"
-                    LDAPresults = LDAPsearcher.FindAll()
-                    For Each LDAPresult As SearchResult In LDAPresults
-                        s.Add(LCase(GetLDAPProperty(LDAPresult.Properties, "dnsRoot")))
-                    Next LDAPresult
+                    For Each suffix As SearchResultEntry In response.Entries
+                        s.Add(LCase(suffix.Attributes("dnsRoot")(0)))
+                    Next suffix
                 Catch ex As Exception
                     s.Clear()
                 End Try
@@ -219,23 +207,19 @@ Public Class clsDomain
 
 
         'search root
-        If SearchRoot Is Nothing AndAlso DefaultNamingContext IsNot Nothing Then SearchRoot = DefaultNamingContext
-
+        If String.IsNullOrEmpty(SearchRoot) AndAlso Not String.IsNullOrEmpty(DefaultNamingContext) Then SearchRoot = DefaultNamingContext
 
         'exchange servers
         ExchangeServers = Await Task.Run(
             Function()
                 Dim e As New ObservableCollection(Of String)
                 Try
-                    Dim LDAPsearcher As New DirectorySearcher(_configurationnamingcontext)
-                    Dim LDAPresults As SearchResultCollection = Nothing
-                    Dim LDAPresult As SearchResult
+                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(objectClass=msExchExchangeServer)", Protocols.SearchScope.Subtree, {"name"})
+                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
-                    LDAPsearcher.Filter = "(objectClass=msExchExchangeServer)"
-                    LDAPresults = LDAPsearcher.FindAll()
-                    For Each LDAPresult In LDAPresults
-                        e.Add(LCase(GetLDAPProperty(LDAPresult.Properties, "name")))
-                    Next LDAPresult
+                    For Each exch As SearchResultEntry In response.Entries
+                        e.Add(LCase(exch.Attributes("name")(0)))
+                    Next exch
                 Catch ex As Exception
                     e.Clear()
                 End Try
@@ -252,151 +236,6 @@ Public Class clsDomain
         Return True
     End Function
 
-    <RegistrySerializerIgnorable(True)>
-    Public Property RootDSE() As DirectoryEntry
-        Get
-            Return _rootdse
-        End Get
-        Set(value As DirectoryEntry)
-            _rootdse = value
-            If value IsNot Nothing Then RootDSEPath = value.Path
-            NotifyPropertyChanged("RootDSE")
-        End Set
-    End Property
-
-    <RegistrySerializerAlias("RootDSE")>
-    Public Property RootDSEPath() As String
-        Get
-            Return _rootdsepath
-        End Get
-        Set(value As String)
-            _rootdsepath = value
-            NotifyPropertyChanged("RootDSEPath")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property DefaultNamingContext() As DirectoryEntry
-        Get
-            Return _defaultnamingcontext
-        End Get
-        Set(value As DirectoryEntry)
-            _defaultnamingcontext = value
-            If value IsNot Nothing Then DefaultNamingContextPath = value.Path
-            NotifyPropertyChanged("DefaultNamingContext")
-        End Set
-    End Property
-
-    <RegistrySerializerAlias("DefaultNamingContext")>
-    Public Property DefaultNamingContextPath() As String
-        Get
-            Return _defaultnamingcontextpath
-        End Get
-        Set(value As String)
-            _defaultnamingcontextpath = value
-            NotifyPropertyChanged("DefaultNamingContextPath")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property ConfigurationNamingContext() As DirectoryEntry
-        Get
-            Return _configurationnamingcontext
-        End Get
-        Set(value As DirectoryEntry)
-            _configurationnamingcontext = value
-            If value IsNot Nothing Then ConfigurationNamingContextPath = value.Path
-            NotifyPropertyChanged("ConfigurationNamingContext")
-        End Set
-    End Property
-
-    <RegistrySerializerAlias("ConfigurationNamingContext")>
-    Public Property ConfigurationNamingContextPath() As String
-        Get
-            Return _configurationnamingcontextpath
-        End Get
-        Set(value As String)
-            _configurationnamingcontextpath = value
-            NotifyPropertyChanged("ConfigurationNamingContextPath")
-        End Set
-    End Property
-
-    '<RegistrySerializerIgnorable(True)>
-    'Public Property SchemaNamingContext() As DirectoryEntry
-    '    Get
-    '        Return _schemanamingcontext
-    '    End Get
-    '    Set(value As DirectoryEntry)
-    '        _schemanamingcontext = value
-    '        If value IsNot Nothing Then SchemaNamingContextPath = value.Path
-    '        NotifyPropertyChanged("SchemaNamingContext")
-    '    End Set
-    'End Property
-
-    '<RegistrySerializerAlias("SchemaNamingContext")>
-    'Public Property SchemaNamingContextPath() As String
-    '    Get
-    '        Return _schemanamingcontextpath
-    '    End Get
-    '    Set(value As String)
-    '        _schemanamingcontextpath = value
-    '        NotifyPropertyChanged("SchemaNamingContextPath")
-    '    End Set
-    'End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property SearchRoot() As DirectoryEntry
-        Get
-            Return _searchroot
-        End Get
-        Set(value As DirectoryEntry)
-            _searchroot = value
-            If value IsNot Nothing Then SearchRootPath = value.Path
-            NotifyPropertyChanged("SearchRoot")
-        End Set
-    End Property
-
-    <RegistrySerializerAlias("SearchRoot")>
-    Public Property SearchRootPath() As String
-        Get
-            Return _searchrootpath
-        End Get
-        Set(value As String)
-            _searchrootpath = value
-            NotifyPropertyChanged("SearchRootPath")
-        End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property Properties() As ObservableCollection(Of clsDomainProperty)
-        Get
-            Return _properties
-        End Get
-        Set(value As ObservableCollection(Of clsDomainProperty))
-            _properties = value
-            NotifyPropertyChanged("Properties")
-        End Set
-    End Property
-
-    Public Property MaxPwdAge() As Integer
-        Get
-            Return _maxpwdage
-        End Get
-        Set(value As Integer)
-            _maxpwdage = value
-            NotifyPropertyChanged("MaxPwdAge")
-        End Set
-    End Property
-
-    Public Property Suffixes As ObservableCollection(Of String)
-        Get
-            Return _suffixes
-        End Get
-        Set(value As ObservableCollection(Of String))
-            _suffixes = value
-            NotifyPropertyChanged("Suffixes")
-        End Set
-    End Property
 
     Public Property Name() As String
         Get
@@ -427,6 +266,109 @@ Public Class clsDomain
         Set(value As String)
             _password = value
             NotifyPropertyChanged("Password")
+        End Set
+    End Property
+
+    <RegistrySerializerAlias("Server")>
+    Public Property Server() As String
+        Get
+            Return _server
+        End Get
+        Set(value As String)
+            _server = value
+            NotifyPropertyChanged("Server")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property Connection() As LdapConnection
+        Get
+            Return _connection
+        End Get
+        Set(value As LdapConnection)
+            _connection = value
+            NotifyPropertyChanged("Connection")
+        End Set
+    End Property
+
+
+
+
+    <RegistrySerializerAlias("DefaultNamingContext")>
+    Public Property DefaultNamingContext() As String
+        Get
+            Return _defaultnamingcontext
+        End Get
+        Set(value As String)
+            _defaultnamingcontext = value
+            NotifyPropertyChanged("DefaultNamingContextDN")
+        End Set
+    End Property
+
+    <RegistrySerializerAlias("ConfigurationNamingContext")>
+    Public Property ConfigurationNamingContext() As String
+        Get
+            Return _configurationnamingcontext
+        End Get
+        Set(value As String)
+            _configurationnamingcontext = value
+            NotifyPropertyChanged("ConfigurationNamingContextDN")
+        End Set
+    End Property
+
+    <RegistrySerializerAlias("ConfigurationNamingContext")>
+    Public Property SchemaNamingContext() As String
+        Get
+            Return _schemanamingcontext
+        End Get
+        Set(value As String)
+            _schemanamingcontext = value
+            NotifyPropertyChanged("SchemaNamingContextDN")
+        End Set
+    End Property
+
+    <RegistrySerializerAlias("SearchRoot")>
+    Public Property SearchRoot() As String
+        Get
+            Return _searchroot
+        End Get
+        Set(value As String)
+            _searchroot = value
+            NotifyPropertyChanged("SearchRootDN")
+        End Set
+    End Property
+
+
+
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property Properties() As ObservableCollection(Of clsDomainProperty)
+        Get
+            Return _properties
+        End Get
+        Set(value As ObservableCollection(Of clsDomainProperty))
+            _properties = value
+            NotifyPropertyChanged("Properties")
+        End Set
+    End Property
+
+    Public Property MaxPwdAge() As Integer
+        Get
+            Return _maxpwdage
+        End Get
+        Set(value As Integer)
+            _maxpwdage = value
+            NotifyPropertyChanged("MaxPwdAge")
+        End Set
+    End Property
+
+    Public Property Suffixes As ObservableCollection(Of String)
+        Get
+            Return _suffixes
+        End Get
+        Set(value As ObservableCollection(Of String))
+            _suffixes = value
+            NotifyPropertyChanged("Suffixes")
         End Set
     End Property
 
@@ -513,18 +455,17 @@ Public Class clsDomain
         End Get
         Set(value As ObservableCollection(Of clsDirectoryObject))
             _defaultgroups = value
-            If value IsNot Nothing Then _defaultgrouppaths = New ObservableCollection(Of String)(value.Select(Function(x) x.Entry.Path))
             NotifyPropertyChanged("DefaultGroups")
         End Set
     End Property
 
-    Public Property DefaultGroupPaths() As ObservableCollection(Of String)
+    Public Property DefaultGroupsDN() As ObservableCollection(Of String)
         Get
-            Return _defaultgrouppaths
+            Return _defaultgroupsdn
         End Get
         Set(value As ObservableCollection(Of String))
-            _defaultgrouppaths = value
-            NotifyPropertyChanged("DefaultGroupPaths")
+            _defaultgroupsdn = value
+            NotifyPropertyChanged("DefaultGroupsDN")
         End Set
     End Property
 

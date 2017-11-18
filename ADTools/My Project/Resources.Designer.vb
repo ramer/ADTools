@@ -1788,6 +1788,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Server (optional).
+        '''</summary>
+        Public ReadOnly Property wndDomains_lbl_Server() As String
+            Get
+                Return ResourceManager.GetString("wndDomains_lbl_Server", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Username.
         '''</summary>
         Public ReadOnly Property wndDomains_lbl_Username() As String

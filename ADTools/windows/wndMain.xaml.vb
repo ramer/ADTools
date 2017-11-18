@@ -373,7 +373,7 @@ Class wndMain
         Dim patterns As MatchCollection = Regex.Matches(args, "{{(.*?)}}")
 
         For Each pattern As Match In patterns
-            Dim val As String = If(objects(0).LdapProperty(pattern.Value.Replace("{{", "").Replace("}}", "")), pattern.Value).ToString
+            Dim val As String = If(objects(0).GetAttribute(pattern.Value.Replace("{{", "").Replace("}}", "")), pattern.Value).ToString
             args = Replace(args, pattern.Value, val)
         Next
 
@@ -541,20 +541,20 @@ Class wndMain
 
             Dim obj As clsDirectoryObject = objects(0)
             Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion, Me)
-            If Len(name) > 0 Then
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-                    obj.Entry.Rename("OU=" & name)
-                    organizationalunitaffected = True
-                Else
-                    obj.Entry.Rename("CN=" & name)
-                End If
-                obj.Entry.CommitChanges()
-                obj.NotifyRenamed()
-                obj.NotifyMoved()
+            'If Len(name) > 0 Then
+            '    If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+            '        obj.Entry.Rename("OU=" & name)
+            '        organizationalunitaffected = True
+            '    Else
+            '        obj.Entry.Rename("CN=" & name)
+            '    End If
+            '    obj.Entry.CommitChanges()
+            '    obj.NotifyRenamed()
+            '    obj.NotifyMoved()
 
-                RefreshDataGrid()
-                If organizationalunitaffected Then RefreshDomainTree()
-            End If
+            '    RefreshDataGrid()
+            '    If organizationalunitaffected Then RefreshDomainTree()
+            'End If
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedRename_Click")
         End Try
@@ -573,20 +573,20 @@ Class wndMain
         Try
             Dim currentcontaineraffected As Boolean = False
 
-            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
-            If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
-                If currentcontainer IsNot Nothing AndAlso objects(0).Entry.Path = currentcontainer.Entry.Path Then currentcontaineraffected = True
-            End If
+            'If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+            'If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+            '    If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+            '    If currentcontainer IsNot Nothing AndAlso objects(0).Entry.Path = currentcontainer.Entry.Path Then currentcontaineraffected = True
+            'End If
 
-            objects(0).Entry.DeleteTree()
+            'objects(0).Entry.DeleteTree()
 
-            If currentcontaineraffected Then
-                OpenObjectParent()
-                RefreshDomainTree()
-            Else
-                RefreshDataGrid()
-            End If
+            'If currentcontaineraffected Then
+            '    OpenObjectParent()
+            '    RefreshDomainTree()
+            'Else
+            '    RefreshDataGrid()
+            'End If
 
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedRemove_Click")
@@ -602,13 +602,13 @@ Class wndMain
     Private Sub ctxmnuSharedOpenObjectLocation_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then OpenObject(New clsDirectoryObject(objects(0).Entry.Parent, objects(0).Domain))
+        If objects.Count = 1 Then OpenObject(objects(0).Parent)
     End Sub
 
     Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then ShowTree(New clsDirectoryObject(objects(0).Entry.Parent, objects(0).Domain))
+        If objects.Count = 1 Then ShowTree(objects(0).Parent)
     End Sub
 
     Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
@@ -893,7 +893,7 @@ Class wndMain
 #Region "Subs"
 
     Public Sub RefreshDomainTree()
-        tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d) If(d IsNot Nothing, New clsDirectoryObject(d.DefaultNamingContext, d), Nothing))
+        tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
@@ -909,9 +909,8 @@ Class wndMain
     End Sub
 
     Public Sub OpenObjectParent()
-        If currentcontainer Is Nothing OrElse (currentcontainer.Entry.Parent Is Nothing OrElse currentcontainer.Entry.Path = currentcontainer.Domain.DefaultNamingContext.Path) Then Exit Sub
-        Dim parent As New clsDirectoryObject(currentcontainer.Entry.Parent, currentcontainer.Domain)
-        StartSearch(parent, Nothing)
+        If currentcontainer Is Nothing OrElse (currentcontainer.Parent Is Nothing OrElse currentcontainer.distinguishedName = currentcontainer.Domain.DefaultNamingContext) Then Exit Sub
+        StartSearch(currentcontainer.Parent, Nothing)
     End Sub
 
     Private Sub ShowPath(Optional container As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
@@ -936,10 +935,10 @@ Class wndMain
                 btn.Tag = container
                 buttons.Add(btn)
 
-                If container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path Then
+                If container.Parent Is Nothing OrElse container.distinguishedName = container.Domain.DefaultNamingContext Then
                     Exit Do
                 Else
-                    container = New clsDirectoryObject(container.Entry.Parent, container.Domain)
+                    container = container.Parent
                 End If
             Loop
 
@@ -971,10 +970,10 @@ Class wndMain
         Do ' find all parents to the root
             treepath.Add(container)
 
-            If container.Entry.Parent Is Nothing OrElse container.Entry.Path = container.Domain.DefaultNamingContext.Path Then
+            If container.Parent Is Nothing OrElse container.distinguishedName = container.Domain.DefaultNamingContext Then
                 Exit Do
             Else
-                container = New clsDirectoryObject(container.Entry.Parent, container.Domain)
+                container = container.Parent
             End If
         Loop
 
@@ -983,7 +982,7 @@ Class wndMain
         Dim currentparentnode = tviDomains
         For I = 0 To treepath.Count - 1
             For j = 0 To currentparentnode.Items.Count - 1
-                If CType(currentparentnode.Items(j), clsDirectoryObject).Entry.Path <> treepath(I).Entry.Path Then Continue For
+                If CType(currentparentnode.Items(j), clsDirectoryObject).distinguishedName <> treepath(I).distinguishedName Then Continue For
 
                 If currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated Then
                     Await Task.Run(
@@ -1082,7 +1081,6 @@ Class wndMain
         End Try
 
         tbSearchPattern.SelectAll()
-        'tbSearchFilter.Text = ""
 
         cap.Visibility = Visibility.Visible
         pbSearch.Visibility = Visibility.Visible
@@ -1093,7 +1091,7 @@ Class wndMain
         currentfilter = filter
         ShowPath(currentcontainer, filter)
 
-        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist)
+        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist, propertiesToLoadDefault)
 
         If preferences.SearchResultGrouping AndAlso root Is Nothing Then
             Try
@@ -1218,8 +1216,8 @@ Class wndMain
             For Each obj In sourceobjects
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
 
-                obj.Entry.MoveTo(destination.Entry)
-                obj.NotifyMoved()
+                'obj.Entry.MoveTo(destination.Entry)
+                'obj.NotifyMoved()
             Next
         Catch ex As Exception
             ThrowException(ex, "cmdMove")

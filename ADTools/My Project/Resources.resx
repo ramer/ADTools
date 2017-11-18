@@ -1499,4 +1499,7 @@ To obtain the API key:
   <data name="wndMain_ctxmnuObjectsFilterData" xml:space="preserve">
     <value>Postfilter by value</value>
   </data>
+  <data name="wndDomains_lbl_Server" xml:space="preserve">
+    <value>Server (optional)</value>
+  </data>
 </root>

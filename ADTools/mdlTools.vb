@@ -135,35 +135,37 @@ Module mdlTools
     }
 
     Public propertiesToLoadDefault As String() =
-        {"objectGUID",
-        "userAccountControl",
-        "accountExpires",
-        "name",
-        "description",
-        "userPrincipalName",
-        "distinguishedName",
-        "telephoneNumber",
-        "physicalDeliveryOfficeName",
-        "title",
-        "department",
+        {"accountExpires",
         "company",
-        "mail",
-        "whenCreated",
-        "lastLogon",
-        "pwdLastSet",
-        "thumbnailPhoto",
-        "memberOf",
-        "givenName",
-        "sn",
-        "initials",
+        "department",
+        "description",
         "displayName",
-        "manager",
-        "sAMAccountName",
-        "groupType",
+        "distinguishedName",
         "dNSHostName",
+        "givenName",
+        "groupType",
+        "initials",
+        "lastLogon",
         "location",
+        "mail",
+        "manager",
+        "memberOf",
+        "name",
+        "objectCategory",
+        "objectClass",
+        "objectGUID",
         "operatingSystem",
-        "operatingSystemVersion"}
+        "operatingSystemVersion",
+        "physicalDeliveryOfficeName",
+        "pwdLastSet",
+        "sAMAccountName",
+        "sn",
+        "telephoneNumber",
+        "thumbnailPhoto",
+        "title",
+        "userAccountControl",
+        "userPrincipalName",
+        "whenCreated"}
 
     Public portlistDefault As New Dictionary(Of Integer, String) From
         {{135, "RPC"},
@@ -434,7 +436,7 @@ Module mdlTools
 
         For Each domain In domains
             Try
-                Dim _domaincontrollers As DirectoryEntry = domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
+                Dim _domaincontrollers As DirectoryEntry = Nothing 'domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
                 Dim _directorycontext As New DirectoryContext(DirectoryContextType.DirectoryServer, GetLDAPProperty(_domaincontrollers.Children(0).Properties, "dNSHostName"), domain.Username, domain.Password)
                 Dim _schema As ActiveDirectorySchema = ActiveDirectorySchema.GetSchema(_directorycontext)
                 Dim _userClass As ActiveDirectorySchemaClass = _schema.FindClass("user")
@@ -498,173 +500,173 @@ Module mdlTools
     End Sub
 
     Public Function GetNextDomainUsers(domain As clsDomain, Optional displayname As String = "") As List(Of String)
-        If domain Is Nothing Then Return Nothing
-        Dim patterns() As String = domain.UsernamePattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
-        If patterns.Count = 0 Then Return Nothing
-        Dim de As DirectoryEntry = domain.DefaultNamingContext
-        If de Is Nothing Then Return Nothing
+        'If domain Is Nothing Then Return Nothing
+        'Dim patterns() As String = domain.UsernamePattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+        'If patterns.Count = 0 Then Return Nothing
+        'Dim de As DirectoryEntry = domain.DefaultNamingContext
+        'If de Is Nothing Then Return Nothing
 
-        Dim result As New List(Of String)
+        'Dim result As New List(Of String)
 
-        Dim LDAPsearcher As New DirectorySearcher(de)
-        Dim LDAPresults As SearchResultCollection = Nothing
-        Dim LDAPresult As SearchResult
+        'Dim LDAPsearcher As New DirectorySearcher(de)
+        'Dim LDAPresults As SearchResultCollection = Nothing
+        'Dim LDAPresult As SearchResult
 
-        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
-        LDAPsearcher.PropertiesToLoad.Add("objectClass")
-        LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
+        'LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        'LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        'LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
 
-        For Each pattern As String In patterns
-            Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
-            Dim starredData = New With {.displayname = displayname, .n = "*"}
+        'For Each pattern As String In patterns
+        '    Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+        '    Dim starredData = New With {.displayname = displayname, .n = "*"}
 
-            LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
-            LDAPsearcher.PageSize = 1000
-            LDAPresults = LDAPsearcher.FindAll()
+        '    LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
+        '    LDAPsearcher.PageSize = 1000
+        '    LDAPresults = LDAPsearcher.FindAll()
 
-            Dim dummy As New List(Of String)
-            For Each LDAPresult In LDAPresults
-                dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
-            Next LDAPresult
+        '    Dim dummy As New List(Of String)
+        '    For Each LDAPresult In LDAPresults
+        '        dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
+        '    Next LDAPresult
 
-            For I As Integer = 1 To dummy.Count + 1
-                Dim integerData = New With {.displayname = displayname, .n = I}
-                Dim u As String = hbTemplate(integerData)
-                If Not dummy.Contains(u) Then
-                    result.Add(u)
-                    Exit For
-                End If
-            Next
-        Next
+        '    For I As Integer = 1 To dummy.Count + 1
+        '        Dim integerData = New With {.displayname = displayname, .n = I}
+        '        Dim u As String = hbTemplate(integerData)
+        '        If Not dummy.Contains(u) Then
+        '            result.Add(u)
+        '            Exit For
+        '        End If
+        '    Next
+        'Next
 
-        Return result
+        'Return result
     End Function
 
     Public Function GetNextDomainUser(pattern As String, domain As clsDomain, Optional displayname As String = "") As String
-        If domain Is Nothing Then Return Nothing
-        Dim de As DirectoryEntry = domain.DefaultNamingContext
-        If de Is Nothing Then Return Nothing
+        'If domain Is Nothing Then Return Nothing
+        'Dim de As DirectoryEntry = domain.DefaultNamingContext
+        'If de Is Nothing Then Return Nothing
 
-        Dim LDAPsearcher As New DirectorySearcher(de)
-        Dim LDAPresults As SearchResultCollection = Nothing
-        Dim LDAPresult As SearchResult
+        'Dim LDAPsearcher As New DirectorySearcher(de)
+        'Dim LDAPresults As SearchResultCollection = Nothing
+        'Dim LDAPresult As SearchResult
 
-        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
-        LDAPsearcher.PropertiesToLoad.Add("objectClass")
-        LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
+        'LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        'LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        'LDAPsearcher.PropertiesToLoad.Add("userPrincipalName")
 
-        Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
-        Dim starredData = New With {.displayname = displayname, .n = "*"}
+        'Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+        'Dim starredData = New With {.displayname = displayname, .n = "*"}
 
-        LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
-        LDAPsearcher.PageSize = 1000
-        LDAPresults = LDAPsearcher.FindAll()
+        'LDAPsearcher.Filter = "(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson))((userPrincipalName=" & hbTemplate(starredData) & "@*)))" 'user@domain
+        'LDAPsearcher.PageSize = 1000
+        'LDAPresults = LDAPsearcher.FindAll()
 
-        Dim dummy As New List(Of String)
-        For Each LDAPresult In LDAPresults
-            dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
-        Next LDAPresult
+        'Dim dummy As New List(Of String)
+        'For Each LDAPresult In LDAPresults
+        '    dummy.Add(LCase(Split(GetLDAPProperty(LDAPresult.Properties, "userPrincipalName"), "@")(0)))
+        'Next LDAPresult
 
-        For I As Integer = 1 To dummy.Count + 1
-            Dim integerData = New With {.displayname = displayname, .n = I}
-            Dim u As String = hbTemplate(integerData)
-            If Not dummy.Contains(u) Then
-                Return u
-                Exit For
-            End If
-        Next
+        'For I As Integer = 1 To dummy.Count + 1
+        '    Dim integerData = New With {.displayname = displayname, .n = I}
+        '    Dim u As String = hbTemplate(integerData)
+        '    If Not dummy.Contains(u) Then
+        '        Return u
+        '        Exit For
+        '    End If
+        'Next
 
-        Return Nothing
+        'Return Nothing
     End Function
 
     Public Function GetNextDomainComputers(domain As clsDomain) As List(Of String)
-        If domain Is Nothing Then Return Nothing
-        Dim patterns() As String = domain.ComputerPattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
-        If patterns.Count = 0 Then Return Nothing
-        Dim de As DirectoryEntry = domain.DefaultNamingContext
-        If de Is Nothing Then Return Nothing
+        'If domain Is Nothing Then Return Nothing
+        'Dim patterns() As String = domain.ComputerPattern.Split({",", vbCr, vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries).Select(Function(x) Trim(x)).ToArray
+        'If patterns.Count = 0 Then Return Nothing
+        'Dim de As DirectoryEntry = domain.DefaultNamingContext
+        'If de Is Nothing Then Return Nothing
 
-        Dim result As New List(Of String)
+        'Dim result As New List(Of String)
 
-        Dim LDAPsearcher As New DirectorySearcher(de)
-        Dim LDAPresults As SearchResultCollection = Nothing
-        Dim LDAPresult As SearchResult
+        'Dim LDAPsearcher As New DirectorySearcher(de)
+        'Dim LDAPresults As SearchResultCollection = Nothing
+        'Dim LDAPresult As SearchResult
 
-        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
-        LDAPsearcher.PropertiesToLoad.Add("name")
+        'LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        'LDAPsearcher.PropertiesToLoad.Add("name")
 
-        For Each pattern As String In patterns
-            Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
-            Dim starredData = New With {.n = "*"}
+        'For Each pattern As String In patterns
+        '    Dim hbTemplate As Func(Of Object, String) = Handlebars.Compile(pattern)
+        '    Dim starredData = New With {.n = "*"}
 
-            LDAPsearcher.Filter = "(&(objectCategory=computer)(name=" & hbTemplate(starredData) & "))"
-            LDAPsearcher.PageSize = 1000
-            LDAPresults = LDAPsearcher.FindAll()
+        '    LDAPsearcher.Filter = "(&(objectCategory=computer)(name=" & hbTemplate(starredData) & "))"
+        '    LDAPsearcher.PageSize = 1000
+        '    LDAPresults = LDAPsearcher.FindAll()
 
-            Dim dummy As New List(Of String)
-            For Each LDAPresult In LDAPresults
-                dummy.Add(LCase(GetLDAPProperty(LDAPresult.Properties, "name")))
-            Next LDAPresult
+        '    Dim dummy As New List(Of String)
+        '    For Each LDAPresult In LDAPresults
+        '        dummy.Add(LCase(GetLDAPProperty(LDAPresult.Properties, "name")))
+        '    Next LDAPresult
 
-            Dim count = 0
-            For I As Integer = 1 To dummy.Count + 10
-                Dim integerData = New With {.n = I}
-                Dim c As String = hbTemplate(integerData)
-                If Not dummy.Contains(c) Then
-                    result.Add(c)
-                    count += 1
-                    If count = 10 Then Exit For
-                End If
-            Next
-        Next
+        '    Dim count = 0
+        '    For I As Integer = 1 To dummy.Count + 10
+        '        Dim integerData = New With {.n = I}
+        '        Dim c As String = hbTemplate(integerData)
+        '        If Not dummy.Contains(c) Then
+        '            result.Add(c)
+        '            count += 1
+        '            If count = 10 Then Exit For
+        '        End If
+        '    Next
+        'Next
 
-        Return result
+        'Return result
     End Function
 
     Public Function GetNextDomainTelephoneNumbers(domain As clsDomain) As ObservableCollection(Of clsTelephoneNumber)
-        If domain Is Nothing Then Return Nothing
-        Dim patterns As ObservableCollection(Of clsTelephoneNumberPattern) = domain.TelephoneNumberPattern
-        If patterns.Count = 0 Then Return Nothing
-        Dim de As DirectoryEntry = domain.DefaultNamingContext
-        If de Is Nothing Then Return Nothing
+        'If domain Is Nothing Then Return Nothing
+        'Dim patterns As ObservableCollection(Of clsTelephoneNumberPattern) = domain.TelephoneNumberPattern
+        'If patterns.Count = 0 Then Return Nothing
+        'Dim de As DirectoryEntry = domain.DefaultNamingContext
+        'If de Is Nothing Then Return Nothing
 
-        Dim result As New ObservableCollection(Of clsTelephoneNumber)
+        'Dim result As New ObservableCollection(Of clsTelephoneNumber)
 
-        Dim LDAPsearcher As New DirectorySearcher(de)
-        Dim LDAPresults As SearchResultCollection = Nothing
-        Dim LDAPresult As SearchResult
+        'Dim LDAPsearcher As New DirectorySearcher(de)
+        'Dim LDAPresults As SearchResultCollection = Nothing
+        'Dim LDAPresult As SearchResult
 
-        LDAPsearcher.PropertiesToLoad.Add("objectCategory")
-        LDAPsearcher.PropertiesToLoad.Add("objectClass")
-        LDAPsearcher.PropertiesToLoad.Add("userAccountControl")
-        LDAPsearcher.PropertiesToLoad.Add("telephoneNumber")
+        'LDAPsearcher.PropertiesToLoad.Add("objectCategory")
+        'LDAPsearcher.PropertiesToLoad.Add("objectClass")
+        'LDAPsearcher.PropertiesToLoad.Add("userAccountControl")
+        'LDAPsearcher.PropertiesToLoad.Add("telephoneNumber")
 
-        For Each pattern As clsTelephoneNumberPattern In patterns
-            If Not pattern.Range.Contains("-") Then Continue For
-            Dim numstart As Long = 0
-            Dim numend As Long = 0
-            If Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(0), numstart) Or
-               Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(1), numend) Then Continue For
+        'For Each pattern As clsTelephoneNumberPattern In patterns
+        '    If Not pattern.Range.Contains("-") Then Continue For
+        '    Dim numstart As Long = 0
+        '    Dim numend As Long = 0
+        '    If Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(0), numstart) Or
+        '       Not Long.TryParse(pattern.Range.Split({"-"}, 2, StringSplitOptions.RemoveEmptyEntries)(1), numend) Then Continue For
 
-            LDAPsearcher.Filter = "(&(objectCategory=person)(!(objectClass=inetOrgPerson))(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(telephoneNumber=*))"
-            LDAPsearcher.PageSize = 1000
-            LDAPresults = LDAPsearcher.FindAll()
+        '    LDAPsearcher.Filter = "(&(objectCategory=person)(!(objectClass=inetOrgPerson))(!(UserAccountControl:1.2.840.113556.1.4.803:=2))(telephoneNumber=*))"
+        '    LDAPsearcher.PageSize = 1000
+        '    LDAPresults = LDAPsearcher.FindAll()
 
-            Dim dummy As New List(Of String)
-            For Each LDAPresult In LDAPresults
-                dummy.Add(GetLDAPProperty(LDAPresult.Properties, "telephoneNumber"))
-            Next LDAPresult
+        '    Dim dummy As New List(Of String)
+        '    For Each LDAPresult In LDAPresults
+        '        dummy.Add(GetLDAPProperty(LDAPresult.Properties, "telephoneNumber"))
+        '    Next LDAPresult
 
-            For I As Long = numstart To numend
-                Dim u As String = LCase(Format(I, pattern.Pattern))
-                If Not dummy.Contains(u) Then
-                    result.Add(New clsTelephoneNumber(pattern.Label, u))
-                    Exit For
-                End If
-            Next
-        Next
+        '    For I As Long = numstart To numend
+        '        Dim u As String = LCase(Format(I, pattern.Pattern))
+        '        If Not dummy.Contains(u) Then
+        '            result.Add(New clsTelephoneNumber(pattern.Label, u))
+        '            Exit For
+        '        End If
+        '    Next
+        'Next
 
-        Return result
+        'Return result
     End Function
 
     Public Function GetApplicationIcon(fileName As String) As ImageSource

@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.DirectoryServices
+Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
 Imports IRegisty
 
@@ -28,13 +29,15 @@ Public Class clsDirectoryObject
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-    Private _entry As DirectoryEntry
+    Private _entry As SearchResultEntry
     Private _entrypath As String
-    Private _searchresult As SearchResult
+
     Private _domain As clsDomain
     Private _domainname As String
+
     Private _name As String
 
+    Private _missedattributes As New List(Of String) ' to store attributes, witch is not cosidered to this objectclass
     Private _allowedattributes As List(Of String)
     Private _allowedattributeseffective As List(Of String)
 
@@ -73,47 +76,60 @@ Public Class clsDirectoryObject
 
     End Sub
 
-    Sub New(Entry As DirectoryEntry, ByRef Domain As clsDomain)
-        Me.Entry = Entry
+    Sub New(DistinguishedName As String, ByRef Domain As clsDomain, Optional attributenames As String() = Nothing)
         _domain = Domain
-        'Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
+
+        If attributenames Is Nothing Then attributenames = {"name", "allowedAttributes", "allowedAttributesEffective", "objectClass", "objectCategory"}
+        Dim searchRequest = New SearchRequest(DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
+        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+        If response.Entries.Count = 1 Then
+            Me.Entry = response.Entries(0)
+        Else
+            Me.Entry = Nothing
+        End If
     End Sub
 
-    Sub New(SearchResult As SearchResult, ByRef Domain As clsDomain)
-        Me.SearchResult = SearchResult
+    Sub New(Entry As SearchResultEntry, ByRef Domain As clsDomain)
         _domain = Domain
-        'Debug.Print("{0} LDAP connected: {1}", Now, EntryPath)
+        Me.Entry = Entry
     End Sub
 
     <RegistrySerializerIgnorable(True)>
-    Public Property Entry() As DirectoryEntry
+    Public ReadOnly Property Connection() As LdapConnection
+        Get
+            Return If(Domain IsNot Nothing, Domain.Connection, Nothing)
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property Entry() As SearchResultEntry
         Get
             Return _entry
         End Get
-        Set(ByVal value As DirectoryEntry)
-            Try
-                If value.Properties.Count > 0 Then
-                    _entry = value
-                End If
-            Catch
-                _entry = Nothing
-            End Try
+        Set(ByVal value As SearchResultEntry)
+            _entry = value
 
             NotifyPropertyChanged("Entry")
         End Set
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public Property SearchResult() As SearchResult
+    Public Property EntryPath() As String
         Get
-            Return _searchresult
+            Return If(_entry IsNot Nothing, _entry.DistinguishedName, _entrypath)
         End Get
-        Set(ByVal value As SearchResult)
-            _searchresult = value
-            Entry = _searchresult.GetDirectoryEntry
+        Set(ByVal value As String)
+            _entrypath = value
 
-            NotifyPropertyChanged("SearchResult")
+            NotifyPropertyChanged("EntryPath")
         End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property Exist() As Boolean
+        Get
+            Return Entry IsNot Nothing
+        End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -121,17 +137,6 @@ Public Class clsDirectoryObject
         Get
             Return _domain
         End Get
-    End Property
-
-    Public Property EntryPath() As String
-        Get
-            Return If(_entry IsNot Nothing, _entry.Path, _entrypath)
-        End Get
-        Set(ByVal value As String)
-            _entrypath = value
-
-            NotifyPropertyChanged("EntryPath")
-        End Set
     End Property
 
     Public Property DomainName() As String
@@ -149,36 +154,150 @@ Public Class clsDirectoryObject
     Public Sub AfterDeserialize()
         For Each d In domains
             If d.Name = _domainname Then
-                If String.IsNullOrEmpty(_entrypath) Or String.IsNullOrEmpty(d.Username) Or String.IsNullOrEmpty(d.Password) Then Exit Sub
-                Entry = New DirectoryEntry(_entrypath, d.Username, d.Password)
                 _domain = d
+
+                Dim searchRequest = New SearchRequest(_entrypath, "(objectClass=*)", Protocols.SearchScope.Base)
+                Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+                If response.Entries.Count = 1 Then
+                    Entry = response.Entries(0)
+                Else
+                    Entry = Nothing
+                End If
             End If
         Next
     End Sub
 
     Public Sub Refresh()
-        _properties.Clear()
+        If Entry Is Nothing Then Exit Sub
+
+        Dim attrs As New List(Of String)
+
+        For Each pn As String In Entry.Attributes.AttributeNames
+            attrs.Add(pn)
+        Next
+
+        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
+        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+        If Not response.Entries.Count = 1 Then Exit Sub
+
+        Entry = response.Entries(0)
     End Sub
 
-    Public Sub Refresh(propertynames As String())
-        For Each propertyname In propertynames
-            Dim obj = LdapProperty(propertyname)
+    Public Sub Refresh(attributenames As String())
+        If Entry Is Nothing OrElse attributenames Is Nothing Then Exit Sub
+
+        For Each a In attributenames
+            Debug.Print("Attribure load requested: {0}", a)
         Next
+
+        Dim attrs As List(Of String) = attributenames.ToList
+
+        For Each pn As String In Entry.Attributes.AttributeNames
+            If Not attrs.Contains(pn, StringComparer.OrdinalIgnoreCase) Then attrs.Add(pn)
+        Next
+
+        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
+        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+        If Not response.Entries.Count = 1 Then Exit Sub
+
+        Entry = response.Entries(0)
     End Sub
+
+    Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
+        If Entry Is Nothing Then Return Nothing
+        If returnType Is Nothing Then returnType = GetType(String) 'set default return type to String
+
+        If Not Entry.Attributes.Contains(attributename) AndAlso Not _missedattributes.Contains(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
+        If Not Entry.Attributes.Contains(attributename) Then _missedattributes.Add(attributename) : Return Nothing
+
+        Select Case returnType
+            Case GetType(String)
+                Return If(Entry.Attributes(attributename).Count = 1, Entry.Attributes(attributename)(0), Nothing)
+            Case GetType(String())
+                Dim values As New List(Of String)
+                For Each value As String In Entry.Attributes(attributename).GetValues(GetType(String))
+                    values.Add(value)
+                Next
+                Return values.ToArray
+            Case GetType(Byte())
+                Return If(Entry.Attributes(attributename).Count = 1, Entry.Attributes(attributename).GetValues(GetType(Byte()))(0), Nothing)
+            Case GetType(Long)
+                Return If(Entry.Attributes(attributename).Count = 1, Long.Parse(Entry.Attributes(attributename)(0)), Nothing)
+            Case GetType(Integer)
+                Return If(Entry.Attributes(attributename).Count = 1, Integer.Parse(Entry.Attributes(attributename)(0)), Nothing)
+            Case GetType(Date)
+                Return If(Entry.Attributes(attributename).Count = 1, Date.ParseExact(Entry.Attributes(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
+            Case Else
+
+                Throw New OverflowException
+        End Select
+
+        Return Entry.Attributes(attributename)
+    End Function
+
+    Public Sub SetAttribute(attributename As String, value As Object)
+        'Try
+        '    If Entry Is Nothing Then Exit Property
+        '    If IsNumeric(value) Or IsDate(value) Or Len(value) > 0 Then
+        '        Entry.Properties(propertyname).Value = Trim(value)
+        '    Else
+        '        Entry.Properties(propertyname).Clear()
+        '    End If
+
+        '    Entry.CommitChanges()
+
+        '    If _properties.ContainsKey(propertyname) Then _properties.Remove(propertyname)
+
+        '    NotifyPropertyChanged(propertyname)
+        'Catch ex As Exception
+        '    ThrowException(ex, "Set LdapProperty")
+        'End Try
+    End Sub
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property Parent As clsDirectoryObject
+        Get
+            If Entry Is Nothing Then Return Nothing
+            Dim eDN As List(Of String) = Entry.DistinguishedName.Split({","}, StringSplitOptions.RemoveEmptyEntries).ToList
+            If eDN.Count <= 1 Then Return Nothing
+            eDN.RemoveAt(0)
+            Return New clsDirectoryObject(Join(eDN.ToArray, ","), Domain)
+        End Get
+    End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
             _childcontainers.Clear()
+
             If Entry Is Nothing Then Return _childcontainers
 
-            Dim ds As New DirectorySearcher(Entry)
-            ds.PropertiesToLoad.AddRange({"name", "objectClass"})
-            ds.SearchScope = SearchScope.OneLevel
-            ds.Filter = "(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"
-            For Each sr As SearchResult In ds.FindAll()
-                _childcontainers.Add(New clsDirectoryObject(sr, Domain))
-            Next
+            Dim searchRequest As New SearchRequest()
+            searchRequest.DistinguishedName = Entry.DistinguishedName
+            searchRequest.Filter = "(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"
+            searchRequest.Scope = Protocols.SearchScope.OneLevel
+            searchRequest.Attributes.AddRange({"name", "objectClass", "objectCategory"})
+
+            Dim pageRequestControl As New PageResultRequestControl(1000)
+            searchRequest.Controls.Add(pageRequestControl)
+            Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
+            searchRequest.Controls.Add(searchOptionsControl)
+
+            Dim searchResponse As SearchResponse
+            Dim pageResponseControl As PageResultResponseControl
+            Do
+                searchResponse = Connection.SendRequest(searchRequest)
+                pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
+
+                For Each result As SearchResultEntry In searchResponse.Entries
+                    _childcontainers.Add(New clsDirectoryObject(result, Domain))
+                Next
+
+                pageRequestControl.Cookie = pageResponseControl.Cookie
+            Loop While pageResponseControl IsNot Nothing AndAlso pageResponseControl.Cookie.Length > 0
+
+            If _childcontainers.Count > 0 Then _childcontainers.RemoveAt(0) ' remove self
+
             Return _childcontainers
         End Get
     End Property
@@ -200,7 +319,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property HasValue(name As String) As Boolean
         Get
-            Return LdapProperty(name) IsNot Nothing
+            Return GetAttribute(name) IsNot Nothing
         End Get
     End Property
 
@@ -209,23 +328,26 @@ Public Class clsDirectoryObject
         Get
             If _allowedattributes IsNot Nothing Then Return _allowedattributes
 
-            If Entry IsNot Nothing Then
-                Entry.RefreshCache({"allowedAttributes"})
+            Dim a As Object = GetAttribute("allowedAttributes", GetType(String()))
 
-                Dim a As Object = LdapProperty("allowedAttributes")
-
-                If IsArray(a) Then
-                    _allowedattributes = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-                ElseIf a Is Nothing Then
-                    _allowedattributes = New List(Of String)
-                Else
-                    _allowedattributes = New List(Of String)({a.ToString})
-                End If
-                Return _allowedattributes
+            If a Is Nothing Then
+                _allowedattributes = New List(Of String)
             Else
-                Return New List(Of String)
+                _allowedattributes = New List(Of String)(CType(a, String()))
             End If
+
+            Return _allowedattributes
         End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property MissedAttributes() As List(Of String)
+        Get
+            Return _missedattributes
+        End Get
+        Set(value As List(Of String))
+            _missedattributes = value
+        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -233,22 +355,15 @@ Public Class clsDirectoryObject
         Get
             If _allowedattributeseffective IsNot Nothing Then Return _allowedattributeseffective
 
-            If Entry IsNot Nothing Then
-                Entry.RefreshCache({"allowedAttributesEffective"})
+            Dim a As Object = GetAttribute("allowedAttributesEffective", GetType(String()))
 
-                Dim a As Object = LdapProperty("allowedAttributesEffective")
-
-                If IsArray(a) Then
-                    _allowedattributeseffective = New List(Of String)(CType(a, Object()).Select(Function(x As Object) x.ToString).ToArray)
-                ElseIf a Is Nothing Then
-                    _allowedattributeseffective = New List(Of String)
-                Else
-                    _allowedattributeseffective = New List(Of String)({a.ToString})
-                End If
-                Return _allowedattributeseffective
+            If a Is Nothing Then
+                _allowedattributeseffective = New List(Of String)
             Else
-                Return New List(Of String)
+                _allowedattributeseffective = New List(Of String)(CType(a, String()))
             End If
+
+            Return _allowedattributeseffective
         End Get
     End Property
 
@@ -257,86 +372,19 @@ Public Class clsDirectoryObject
         Get
             Dim aa As New ObservableCollection(Of clsAttribute)
             For Each attr As String In AllowedAttributes
-                aa.Add(New clsAttribute(attr, "", Me.LdapProperty(attr)))
+                aa.Add(New clsAttribute(attr, "", GetAttribute(attr)))
             Next
             Return aa
         End Get
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public Property LdapProperty(propertyname As String) As Object
-        Get
-            'Debug.Print("{0} LDAP property read start: {1}", Now.Second & "." & Now.Millisecond, propertyname)
-            If _properties.ContainsKey(propertyname) Then Return _properties(propertyname)
-
-            Dim value As Object = Nothing
-            Dim valuetyped As Object = Nothing
-
-            If Entry IsNot Nothing Then
-                'Entry.RefreshCache({name})
-                Dim pvc As PropertyValueCollection = Entry.Properties(propertyname)
-                If pvc.Value IsNot Nothing Then value = pvc.Value
-            ElseIf SearchResult IsNot Nothing Then
-                Dim rpvc As ResultPropertyValueCollection = SearchResult.Properties(propertyname)
-                If rpvc.Count > 0 AndAlso rpvc.Item(0) IsNot Nothing Then value = rpvc.Item(0)
-            End If
-
-            If value Is Nothing Then Return Nothing
-
-            Select Case value.GetType()
-                Case GetType(String)
-                    valuetyped = value
-                Case GetType(Integer)
-                    valuetyped = value
-                Case GetType(Byte())
-                    valuetyped = value
-                Case GetType(Object())
-                    valuetyped = value
-                Case GetType(DateTime)
-                    valuetyped = value
-                Case GetType(Boolean)
-                    valuetyped = value
-                Case Else 'System.__ComObject
-                    Try
-                        valuetyped = LongFromLargeInteger(value)
-                    Catch
-                        valuetyped = value
-                    End Try
-            End Select
-
-            _properties.Add(propertyname, valuetyped)
-
-            'Debug.Print("{0} LDAP property read end: {1}", Now.Second & "." & Now.Millisecond, name)
-
-            Return valuetyped
-        End Get
-        Set(value As Object)
-            Try
-                If Entry Is Nothing Then Exit Property
-                If IsNumeric(value) Or IsDate(value) Or Len(value) > 0 Then
-                    Entry.Properties(propertyname).Value = Trim(value)
-                Else
-                    Entry.Properties(propertyname).Clear()
-                End If
-
-                Entry.CommitChanges()
-
-                If _properties.ContainsKey(propertyname) Then _properties.Remove(propertyname)
-
-                NotifyPropertyChanged(propertyname)
-            Catch ex As Exception
-                ThrowException(ex, "Set LdapProperty")
-            End Try
-        End Set
-    End Property
-
     Public Overrides Function TryGetMember(ByVal binder As Dynamic.GetMemberBinder, ByRef result As Object) As Boolean
-        result = LdapProperty(binder.Name)
+        result = GetAttribute(binder.Name)
         Return True
     End Function
 
     Public Overrides Function TrySetMember(ByVal binder As Dynamic.SetMemberBinder, ByVal value As Object) As Boolean
-        LdapProperty(binder.Name) = value
+        SetAttribute(binder.Name, value)
         NotifyPropertyChanged(binder.Name)
         Return True
     End Function
@@ -346,19 +394,19 @@ Public Class clsDirectoryObject
         Get
             If objectCategory = "person" And objectClass.Contains("user") Then
                 Return enmSchemaClass.User
-            ElseIf objectCategory = "person" And objectClass.Contains("contact") Then
+            ElseIf objectCategory = "person" And objectClass.Contains("contact", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.Contact
-            ElseIf objectClass.Contains("computer") Then
+            ElseIf objectClass.Contains("computer", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.Computer
-            ElseIf objectClass.Contains("group") Then
+            ElseIf objectClass.Contains("group", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.Group
-            ElseIf objectClass.Contains("organizationalunit") Then
+            ElseIf objectClass.Contains("organizationalunit", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.OrganizationalUnit
-            ElseIf objectClass.Contains("container") Or objectClass.Contains("builtindomain") Then
+            ElseIf objectClass.Contains("container", StringComparer.OrdinalIgnoreCase) Or objectClass.Contains("builtindomain", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.Container
-            ElseIf objectClass.Contains("domaindns") Then
+            ElseIf objectClass.Contains("domaindns", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.DomainDNS
-            ElseIf objectClass.Contains("lostandfound") Then
+            ElseIf objectClass.Contains("lostandfound", StringComparer.OrdinalIgnoreCase) Then
                 Return enmSchemaClass.UnknownContainer
             Else
                 Return enmSchemaClass.Unknown
@@ -614,16 +662,16 @@ Public Class clsDirectoryObject
     Public Sub ResetPassword()
         If Domain.DefaultPassword = "" Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
 
-        _entry.Invoke("SetPassword", Domain.DefaultPassword)
+        '_entry.Invoke("SetPassword", Domain.DefaultPassword)
         pwdLastSet = 0
-        _entry.CommitChanges()
+        '_entry.CommitChanges()
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
     Public Sub SetPassword(password As String)
-        _entry.Invoke("SetPassword", password)
+        '_entry.Invoke("SetPassword", password)
         pwdLastSet = -1
-        _entry.CommitChanges()
+        '_entry.CommitChanges()
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
@@ -635,10 +683,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property sn() As String
         Get
-            Return If(LdapProperty("sn"), "")
+            Return GetAttribute("sn")
         End Get
         Set(ByVal value As String)
-            LdapProperty("sn") = value
+            SetAttribute("sn", value)
 
             NotifyPropertyChanged("sn")
         End Set
@@ -647,10 +695,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property initials() As String
         Get
-            Return If(LdapProperty("initials"), "")
+            Return GetAttribute("initials")
         End Get
         Set(ByVal value As String)
-            LdapProperty("initials") = value
+            SetAttribute("initials", value)
 
             NotifyPropertyChanged("initials")
         End Set
@@ -659,10 +707,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property givenName() As String
         Get
-            Return If(LdapProperty("givenName"), "")
+            Return GetAttribute("givenName")
         End Get
         Set(ByVal value As String)
-            LdapProperty("givenName") = value
+            SetAttribute("givenName", value)
 
             NotifyPropertyChanged("givenName")
         End Set
@@ -671,10 +719,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property displayName() As String
         Get
-            Return If(LdapProperty("displayName"), "")
+            Return GetAttribute("displayName")
         End Get
         Set(ByVal value As String)
-            LdapProperty("displayName") = value
+            SetAttribute("displayName", value)
 
             NotifyPropertyChanged("displayName")
         End Set
@@ -683,10 +731,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property physicalDeliveryOfficeName() As String
         Get
-            Return If(LdapProperty("physicalDeliveryOfficeName"), "")
+            Return GetAttribute("physicalDeliveryOfficeName")
         End Get
         Set(ByVal value As String)
-            LdapProperty("physicalDeliveryOfficeName") = value
+            SetAttribute("physicalDeliveryOfficeName", value)
 
             NotifyPropertyChanged("physicalDeliveryOfficeName")
         End Set
@@ -695,10 +743,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property company() As String
         Get
-            Return If(LdapProperty("company"), "")
+            Return GetAttribute("company")
         End Get
         Set(ByVal value As String)
-            LdapProperty("company") = value
+            SetAttribute("company", value)
 
             NotifyPropertyChanged("company")
         End Set
@@ -707,10 +755,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property telephoneNumber() As String
         Get
-            Return If(LdapProperty("telephoneNumber"), "")
+            Return GetAttribute("telephoneNumber")
         End Get
         Set(ByVal value As String)
-            LdapProperty("telephoneNumber") = value
+            SetAttribute("telephoneNumber", value)
 
             NotifyPropertyChanged("telephoneNumber")
         End Set
@@ -719,10 +767,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property homePhone() As String
         Get
-            Return If(LdapProperty("homePhone"), "")
+            Return GetAttribute("homePhone")
         End Get
         Set(ByVal value As String)
-            LdapProperty("homePhone") = value
+            SetAttribute("homePhone", value)
 
             NotifyPropertyChanged("homePhone")
         End Set
@@ -731,10 +779,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property ipPhone() As String
         Get
-            Return If(LdapProperty("ipPhone"), "")
+            Return GetAttribute("ipPhone")
         End Get
         Set(ByVal value As String)
-            LdapProperty("ipPhone") = value
+            SetAttribute("ipPhone", value)
 
             NotifyPropertyChanged("ipPhone")
         End Set
@@ -743,10 +791,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property mobile() As String
         Get
-            Return If(LdapProperty("mobile"), "")
+            Return GetAttribute("mobile")
         End Get
         Set(ByVal value As String)
-            LdapProperty("mobile") = value
+            SetAttribute("mobile", value)
 
             NotifyPropertyChanged("mobile")
         End Set
@@ -755,10 +803,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property streetAddress() As String
         Get
-            Return If(LdapProperty("streetAddress"), "")
+            Return GetAttribute("streetAddress")
         End Get
         Set(ByVal value As String)
-            LdapProperty("streetAddress") = value
+            SetAttribute("streetAddress", value)
 
             NotifyPropertyChanged("streetAddress")
         End Set
@@ -767,10 +815,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property mail() As String
         Get
-            Return If(LdapProperty("mail"), "")
+            Return GetAttribute("mail")
         End Get
         Set(ByVal value As String)
-            LdapProperty("mail") = value
+            SetAttribute("mail", value)
 
             NotifyPropertyChanged("mail")
         End Set
@@ -779,10 +827,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property title() As String
         Get
-            Return If(LdapProperty("title"), "")
+            Return GetAttribute("title")
         End Get
         Set(ByVal value As String)
-            LdapProperty("title") = value
+            SetAttribute("title", value)
 
             NotifyPropertyChanged("title")
         End Set
@@ -791,10 +839,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property department() As String
         Get
-            Return If(LdapProperty("department"), "")
+            Return GetAttribute("department")
         End Get
         Set(ByVal value As String)
-            LdapProperty("department") = value
+            SetAttribute("department", value)
 
             NotifyPropertyChanged("department")
         End Set
@@ -803,10 +851,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalName() As String
         Get
-            Return If(LdapProperty("userPrincipalName"), "")
+            Return GetAttribute("userPrincipalName")
         End Get
         Set(ByVal value As String)
-            LdapProperty("userPrincipalName") = value
+            SetAttribute("userPrincipalName", value)
 
             NotifyPropertyChanged("userPrincipalName")
         End Set
@@ -853,8 +901,8 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As BitmapImage
         Get
-            If Entry IsNot Nothing AndAlso LdapProperty("thumbnailPhoto") IsNot Nothing Then
-                Using ms = New System.IO.MemoryStream(CType(LdapProperty("thumbnailPhoto"), Byte()))
+            If Entry IsNot Nothing AndAlso GetAttribute("thumbnailPhoto") IsNot Nothing Then
+                Using ms = New System.IO.MemoryStream(CType(GetAttribute("thumbnailPhoto", GetType(Byte())), Byte()))
                     Dim bi = New BitmapImage()
                     bi.BeginInit()
                     bi.CacheOption = BitmapCacheOption.OnLoad
@@ -869,18 +917,15 @@ Public Class clsDirectoryObject
         Set(value As BitmapImage)
             If value Is Nothing Then
                 Try
-                    _entry.Properties("thumbnailPhoto").Clear()
-                    _entry.CommitChanges()
+                    SetAttribute("thumbnailPhoto", Nothing)
                 Catch ex As Exception
                     ThrowException(ex, "Clear thumbnailPhoto")
                 End Try
             Else
                 Try
-                    _entry.Properties("thumbnailPhoto").Clear()
                     Dim bytes() As Byte = Nothing
                     value.CopyPixels(bytes, 0, 0)
-                    _entry.Properties("thumbnailPhoto").Add(bytes)
-                    _entry.CommitChanges()
+                    SetAttribute("thumbnailPhoto", bytes)
                 Catch ex As Exception
                     ThrowException(ex, "Set thumbnailPhoto")
                 End Try
@@ -893,10 +938,11 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userWorkstations() As String()
         Get
-            Return If(LdapProperty("userWorkstations") IsNot Nothing, LdapProperty("userWorkstations").Split({","}, StringSplitOptions.RemoveEmptyEntries), New String() {})
+            Dim w As String = GetAttribute("userWorkstations")
+            Return If(Not String.IsNullOrEmpty(w), w.Split({","}, StringSplitOptions.RemoveEmptyEntries), New String() {})
         End Get
         Set(value As String())
-            LdapProperty("userWorkstations") = Join(value, ",")
+            SetAttribute("userWorkstations", Join(value, ","))
 
             NotifyPropertyChanged("userWorkstations")
         End Set
@@ -909,17 +955,17 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property dNSHostName As String
         Get
-            Return If(LdapProperty("dNSHostName"), "")
+            Return GetAttribute("dNSHostName")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public Property location() As String
         Get
-            Return If(LdapProperty("location"), "")
+            Return GetAttribute("location")
         End Get
         Set(ByVal value As String)
-            LdapProperty("location") = value
+            SetAttribute("location", value)
 
             NotifyPropertyChanged("location")
         End Set
@@ -928,14 +974,14 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystem() As String
         Get
-            Return If(LdapProperty("operatingSystem"), "")
+            Return GetAttribute("operatingSystem")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystemVersion() As String
         Get
-            Return If(LdapProperty("operatingSystemVersion"), "")
+            Return GetAttribute("operatingSystemVersion")
         End Get
     End Property
 
@@ -946,11 +992,11 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupType() As Long
         Get
-            Return LdapProperty("groupType")
+            Return GetAttribute("groupType", GetType(Long))
         End Get
         Set(ByVal value As Long)
             Try
-                LdapProperty("groupType") = value
+                SetAttribute("groupType", value)
             Catch ex As Exception
                 ShowWrongMemberMessage()
             End Try
@@ -1059,10 +1105,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property info() As String
         Get
-            Return If(LdapProperty("info"), "")
+            Return GetAttribute("info")
         End Get
         Set(ByVal value As String)
-            LdapProperty("info") = value
+            SetAttribute("info", value)
 
             NotifyPropertyChanged("info")
         End Set
@@ -1076,12 +1122,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectClass() As String()
         Get
             Try
-                Dim oc = LdapProperty("objectclass")
-                If IsArray(oc) Then
-                    Return CType(oc, Object()).Select(Function(x) LCase(x.ToString)).ToArray
-                Else
-                    Return New String() {oc}
-                End If
+                Return GetAttribute("objectClass", GetType(String()))
             Catch ex As Exception
                 Return Nothing
             End Try
@@ -1092,7 +1133,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectCategory() As String
         Get
             Try
-                Dim oc = LdapProperty("objectcategory")
+                Dim oc = GetAttribute("objectCategory")
                 If oc IsNot Nothing Then
                     Dim ocarr = LCase(oc.ToString).Split(New String() {"=", ","}, StringSplitOptions.RemoveEmptyEntries)
                     Return If(ocarr.Length >= 2, ocarr(1), Nothing)
@@ -1108,10 +1149,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property accountExpires() As Long?
         Get
-            Return LdapProperty("accountExpires")
+            Return GetAttribute("accountExpires", GetType(Long))
         End Get
         Set(ByVal value As Long?)
-            If value IsNot Nothing Then LdapProperty("accountExpires") = value
+            If value IsNot Nothing Then SetAttribute("accountExpires", value)
 
             NotifyPropertyChanged("accountExpires")
             NotifyPropertyChanged("accountExpiresDate")
@@ -1187,17 +1228,17 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property badPwdCount() As Integer?
         Get
-            Return LdapProperty("badPwdCount")
+            Return GetAttribute("badPwdCount", GetType(Integer))
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public Property description() As String
         Get
-            Return If(LdapProperty("description"), "")
+            Return GetAttribute("description")
         End Get
         Set(ByVal value As String)
-            LdapProperty("description") = value
+            SetAttribute("description", value)
 
             NotifyPropertyChanged("description")
         End Set
@@ -1206,7 +1247,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property distinguishedName() As String
         Get
-            Return If(LdapProperty("distinguishedName"), "")
+            Return If(Entry IsNot Nothing, Entry.DistinguishedName, Nothing)
         End Get
     End Property
 
@@ -1223,11 +1264,12 @@ Public Class clsDirectoryObject
 
     Public ReadOnly Property distinguishedNamePrefix() As String
         Get
+            Throw New Exception
             If Entry Is Nothing Then Return Nothing
 
-            Dim lastslash = InStrRev(Entry.Path, "/")
+            Dim lastslash = InStrRev(Entry.DistinguishedName, "/")
             If lastslash > 0 Then
-                Return Entry.Path.Substring(0, lastslash)
+                Return Entry.DistinguishedName.Substring(0, lastslash)
             Else
                 Return Nothing
             End If
@@ -1237,7 +1279,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogon() As Long?
         Get
-            Return LdapProperty("lastLogon")
+            Return GetAttribute("lastLogon", GetType(Long))
         End Get
     End Property
 
@@ -1266,28 +1308,21 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property logonCount() As Integer
         Get
-            Return LdapProperty("logonCount")
+            Return GetAttribute("logonCount", GetType(Integer))
         End Get
     End Property
 
     <RegistrySerializerAlias("Name")>
-    Public Property name() As String
+    Public ReadOnly Property name() As String
         Get
-            If Entry Is Nothing Then Return "Directory Object"
-
-            Return If(LdapProperty("name"), _name)
+            Return If(GetAttribute("name"), "Null object")
         End Get
-        Set(value As String)
-            _name = value
-
-            NotifyPropertyChanged("name")
-        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectGUID() As String
         Get
-            Return New Guid(TryCast(LdapProperty("objectGUID"), Byte())).ToString
+            Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte())).ToString
         End Get
     End Property
 
@@ -1295,7 +1330,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectSID() As String
         Get
             Try
-                Dim sid As New SecurityIdentifier(TryCast(LdapProperty("objectSid"), Byte()), 0)
+                Dim sid As New SecurityIdentifier(TryCast(GetAttribute("objectSid", GetType(Byte())), Byte()), 0)
                 If sid.IsAccountSid Then Return sid.ToString
                 Return Nothing
             Catch
@@ -1307,10 +1342,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property pwdLastSet() As Long?
         Get
-            Return LdapProperty("pwdLastSet")
+            Return GetAttribute("pwdLastSet", GetType(Long))
         End Get
         Set(ByVal value As Long?)
-            If value IsNot Nothing Then LdapProperty("pwdLastSet") = value.ToString
+            If value IsNot Nothing Then SetAttribute("pwdLastSet", value)
 
             NotifyPropertyChanged("pwdLastSet")
             NotifyPropertyChanged("pwdLastSetDate")
@@ -1380,10 +1415,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property sAMAccountName() As String
         Get
-            Return If(LdapProperty("sAMAccountName"), "")
+            Return GetAttribute("sAMAccountName")
         End Get
         Set(ByVal value As String)
-            LdapProperty("sAMAccountName") = value
+            SetAttribute("sAMAccountName", value)
 
             NotifyPropertyChanged("sAMAccountName")
         End Set
@@ -1392,10 +1427,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userAccountControl() As Integer?
         Get
-            Return LdapProperty("userAccountControl")
+            Return GetAttribute("userAccountControl", GetType(Integer))
         End Get
         Set(ByVal value As Integer?)
-            If value IsNot Nothing Then LdapProperty("userAccountControl") = value
+            If value IsNot Nothing Then SetAttribute("userAccountControl", value)
 
             NotifyPropertyChanged("userAccountControl")
             NotifyPropertyChanged("normalAccount")
@@ -1484,7 +1519,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreated() As Date
         Get
-            Return LdapProperty("whenCreated")
+            Return GetAttribute("whenCreated", GetType(Date))
         End Get
     End Property
 
@@ -1498,7 +1533,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenChanged() As Date
         Get
-            Return LdapProperty("whenChanged")
+            Return GetAttribute("whenChanged", GetType(Date))
         End Get
     End Property
 
@@ -1506,35 +1541,25 @@ Public Class clsDirectoryObject
     Public Property manager() As clsDirectoryObject
         Get
             If _manager Is Nothing Then
-                Try
-                    Dim managerDN As String = LdapProperty("manager")
-                    If managerDN Is Nothing Then
-                        _manager = Nothing
-                    Else
-                        If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                            _manager = New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
-                        Else
-                            _manager = Nothing
-                        End If
-                    End If
-                    Return _manager
-                Catch ex As Exception
-                    Return Nothing
-                End Try
-            Else
-                Return _manager
+                Dim managerDN As String = GetAttribute("manager")
+
+                If managerDN Is Nothing Then
+                    _manager = Nothing
+                Else
+                    _manager = New clsDirectoryObject(managerDN, Domain)
+                End If
             End If
+            Return _manager
         End Get
         Set(value As clsDirectoryObject)
             If value Is Nothing Then
                 Try
-                    _entry.Properties("manager").Clear()
-                    _entry.CommitChanges()
+                    SetAttribute("manager", Nothing)
                 Catch ex As Exception
                     ThrowException(ex, "Clear manager")
                 End Try
             Else
-                LdapProperty("manager") = value.distinguishedName
+                SetAttribute("manager", value.distinguishedName)
                 _manager = value
             End If
 
@@ -1546,22 +1571,12 @@ Public Class clsDirectoryObject
     Public Property directReports() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _directreports Is Nothing Then
-                Dim o As Object = LdapProperty("directReports")
+                Dim o As String() = GetAttribute("directReports", GetType(String()))
 
-                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                    Else
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)
-                    End If
-                ElseIf o Is Nothing Then    ' objects is null
+                If o Is Nothing Then
                     _directreports = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
-                    Else
-                        _directreports = New ObservableCollection(Of clsDirectoryObject)
-                    End If
+                Else
+                    _directreports = New ObservableCollection(Of clsDirectoryObject)(o.Select(Function(x) New clsDirectoryObject(x, Domain)).ToArray)
                 End If
             End If
             Return _directreports
@@ -1577,35 +1592,25 @@ Public Class clsDirectoryObject
     Public Property managedBy() As clsDirectoryObject
         Get
             If _managedby Is Nothing Then
-                Try
-                    Dim managerDN As String = LdapProperty("managedBy")
-                    If managerDN Is Nothing Then
-                        _managedby = Nothing
-                    Else
-                        If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                            _managedby = New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & managerDN, Domain.Username, Domain.Password), Domain)
-                        Else
-                            _managedby = Nothing
-                        End If
-                    End If
-                    Return _managedby
-                Catch ex As Exception
-                    Return Nothing
-                End Try
-            Else
-                Return _managedby
+                Dim managerDN As String = GetAttribute("managedBy")
+
+                If managerDN Is Nothing Then
+                    _managedby = Nothing
+                Else
+                    _managedby = New clsDirectoryObject(managerDN, Domain)
+                End If
             End If
+            Return _managedby
         End Get
         Set(value As clsDirectoryObject)
             If value Is Nothing Then
                 Try
-                    _entry.Properties("managedBy").Clear()
-                    _entry.CommitChanges()
+                    SetAttribute("managedBy", Nothing)
                 Catch ex As Exception
                     ThrowException(ex, "Clear managedBy")
                 End Try
             Else
-                LdapProperty("managedBy") = value.distinguishedName
+                SetAttribute("managedBy", value.distinguishedName)
                 _managedby = value
             End If
 
@@ -1617,22 +1622,12 @@ Public Class clsDirectoryObject
     Public Property managedObjects As ObservableCollection(Of clsDirectoryObject)
         Get
             If _managedobjects Is Nothing Then
-                Dim o As Object = LdapProperty("managedObjects")
+                Dim o As String() = GetAttribute("managedObjects", GetType(String()))
 
-                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                    Else
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)
-                    End If
-                ElseIf o Is Nothing Then    ' objects is null
+                If o Is Nothing Then
                     _managedobjects = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
-                    Else
-                        _managedobjects = New ObservableCollection(Of clsDirectoryObject)
-                    End If
+                Else
+                    _managedobjects = New ObservableCollection(Of clsDirectoryObject)(o.Select(Function(x) New clsDirectoryObject(x, Domain)).ToArray)
                 End If
             End If
             Return _managedobjects
@@ -1648,22 +1643,12 @@ Public Class clsDirectoryObject
     Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberof Is Nothing Then
-                Dim o As Object = LdapProperty("memberOf")
+                Dim o As String() = GetAttribute("memberOf", GetType(String()))
 
-                If IsArray(o) AndAlso Not String.IsNullOrEmpty(distinguishedNamePrefix) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                    Else
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)
-                    End If
-                ElseIf o Is Nothing Then    ' objects is null
+                If o Is Nothing Then
                     _memberof = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
-                    Else
-                        _memberof = New ObservableCollection(Of clsDirectoryObject)
-                    End If
+                Else
+                    _memberof = New ObservableCollection(Of clsDirectoryObject)(o.Select(Function(x) New clsDirectoryObject(x, Domain)).ToArray)
                 End If
             End If
             Return _memberof
@@ -1679,21 +1664,12 @@ Public Class clsDirectoryObject
     Public Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _member Is Nothing Then
-                Dim o As Object = LdapProperty("member")
-                If IsArray(o) Then          ' few objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _member = New ObservableCollection(Of clsDirectoryObject)(CType(o, Object()).Select(Function(x As Object) New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & x.ToString, Domain.Username, Domain.Password), Domain)).ToArray)
-                    Else
-                        _member = New ObservableCollection(Of clsDirectoryObject)
-                    End If
-                ElseIf o Is Nothing Then    ' objects is null
+                Dim o As String() = GetAttribute("member", GetType(String()))
+
+                If o Is Nothing Then
                     _member = New ObservableCollection(Of clsDirectoryObject)
-                Else                        ' one objects
-                    If Not String.IsNullOrEmpty(distinguishedNamePrefix) Then
-                        _member = New ObservableCollection(Of clsDirectoryObject)({New clsDirectoryObject(New DirectoryEntry(distinguishedNamePrefix & o.ToString, Domain.Username, Domain.Password), Domain)})
-                    Else
-                        _member = New ObservableCollection(Of clsDirectoryObject)
-                    End If
+                Else
+                    _member = New ObservableCollection(Of clsDirectoryObject)(o.Select(Function(x) New clsDirectoryObject(x, Domain)).ToArray)
                 End If
             End If
             Return _member

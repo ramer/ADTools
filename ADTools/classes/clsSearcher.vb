@@ -1,5 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.DirectoryServices
+Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
 Imports System.Threading
 
@@ -31,8 +31,8 @@ Public Class clsSearcher
     Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
                                            Optional parentobject As clsDirectoryObject = Nothing,
                                            Optional filter As clsFilter = Nothing,
-                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing
-                                           ) As Task
+                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
+                                           Optional attributenames As String() = Nothing) As Task
         Await BasicSearchStopAsync()
 
         returncollection.Clear()
@@ -53,10 +53,10 @@ Public Class clsSearcher
         For Each root In roots
             Dim mt = Task.Factory.StartNew(
                 Function()
-                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
+                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token, attributenames)
                 End Function, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
-            Log(String.Format("Task created: domain {0} search", root.name))
+            Log(String.Format("Task created: domain search ""{0}""", root.name))
 
             Dim lt = mt.ContinueWith(
                 Function(parenttask As Task(Of ObservableCollection(Of clsDirectoryObject)))
@@ -71,7 +71,7 @@ Public Class clsSearcher
                     Return True
                 End Function)
             basicsearchtasks.Add(lt)
-            Log(String.Format("Task created: display domain {0} search results", root.name))
+            Log(String.Format("Task created: display domain ""{0}"" search results", root.name))
 
             Dim ft = lt.ContinueWith(
                 Function(parenttask As Task(Of Boolean))
@@ -93,147 +93,62 @@ Public Class clsSearcher
     Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,
                                     Optional filter As clsFilter = Nothing,
                                     Optional searchscope As SearchScope = SearchScope.Subtree,
-                                    Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
+                                    Optional ct As CancellationToken = Nothing,
+                                    Optional attributenames As String() = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
         Dim results As New ObservableCollection(Of clsDirectoryObject)
 
         Try
-            Dim ldapsearcher As New DirectorySearcher(root.Entry)
-            ldapsearcher.SearchScope = searchscope
-            ldapsearcher.PropertiesToLoad.Add("objectGuid")
-            ldapsearcher.PageSize = 1000
+            Dim searchRequest As New SearchRequest()
+            searchRequest.DistinguishedName = root.distinguishedName
 
             If searchscope = SearchScope.Subtree Then
-                If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then ldapsearcher.Filter = filter.Filter
+                If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
             End If
 
-            Dim ldapresults As SearchResultCollection = ldapsearcher.FindAll()
+            searchRequest.Scope = searchscope
+            If attributenames IsNot Nothing Then searchRequest.Attributes.AddRange(attributenames)
 
-            For Each ldapresult As SearchResult In ldapresults
-                If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
-                results.Add(New clsDirectoryObject(ldapresult, root.Domain))
-            Next
-            ldapresults.Dispose()
+            Dim pageRequestControl As New PageResultRequestControl(1000)
+            searchRequest.Controls.Add(pageRequestControl)
+            Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
+            searchRequest.Controls.Add(searchOptionsControl)
+
+            Dim searchResponse As SearchResponse
+            Dim pageResponseControl As PageResultResponseControl
+            Do
+                searchResponse = root.Connection.SendRequest(searchRequest)
+                pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
+
+                For Each entry As SearchResultEntry In searchResponse.Entries
+                    If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
+
+                    Dim obj As New clsDirectoryObject(entry, root.Domain)
+                    Dim ma As New List(Of String)
+                    If attributenames IsNot Nothing Then
+                        For Each attr As String In attributenames
+                            If entry.Attributes(attr) Is Nothing Then ma.Add(attr)
+                        Next
+                        obj.MissedAttributes = ma
+                    End If
+
+                    results.Add(obj)
+                Next
+
+                pageRequestControl.Cookie = pageResponseControl.Cookie
+            Loop While pageResponseControl IsNot Nothing AndAlso pageResponseControl.Cookie.Length > 0
+
+            If results.Count > 0 AndAlso results(0).distinguishedName = root.distinguishedName Then results.RemoveAt(0)
 
         Catch ex As Exception
             ThrowException(ex, "BasicSearchSync")
         End Try
 
         Return results
+
     End Function
 
-    'Public Async Function TombstoneSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDeletedDirectoryObject), pattern As String,
-    '                                  Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
-    '                                  Optional freesearch As Boolean = False) As Task
-
-    '    tombstonesearchtaskscts.Cancel()
-    '    If tombstonesearchtasks.Count > 0 Then Exit Function
-    '    returncollection.Clear()
-    '    tombstonesearchtaskscts = New CancellationTokenSource
-
-    '    Dim domainlist As ObservableCollection(Of clsDomain) = If(specificdomains Is Nothing, domains, specificdomains)
-
-    '    For Each dmn In domainlist
-
-    '        Dim mt = Task.Factory.StartNew(
-    '            Function()
-    '                Return TombstoneSearchSync(pattern, dmn, freesearch, tombstonesearchtaskscts.Token)
-    '            End Function, tombstonesearchtaskscts.Token)
-    '        tombstonesearchtasks.Add(mt)
-
-    '        Dim lt = mt.ContinueWith(
-    '            Function(parenttask As Task(Of ObservableCollection(Of clsDeletedDirectoryObject)))
-    '                tombstonesearchtasks.Remove(mt)
-    '                For Each result In parenttask.Result
-    '                    If tombstonesearchtaskscts.Token.IsCancellationRequested Then Return False
-    '                    returncollection.Add(result)
-    '                    Thread.Sleep(30)
-    '                Next
-    '                Return True
-    '            End Function)
-    '        tombstonesearchtasks.Add(lt)
-
-    '        Dim ft = lt.ContinueWith(
-    '            Function(parenttask As Task(Of Boolean))
-    '                tombstonesearchtasks.Remove(lt)
-    '                Return True
-    '            End Function)
-
-    '    Next
-
-    '    Await Task.WhenAny(tombstonesearchtasks.ToArray)
-    'End Function
-
-    'Public Function TombstoneSearchSync(pattern As String,
-    '                                  domain As clsDomain,
-    '                                  Optional freesearch As Boolean = False,
-    '                                  Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDeletedDirectoryObject)
-
-    '    Dim properties As String() = {"cn",
-    '                                  "distinguishedName",
-    '                                  "lastKnownParent",
-    '                                  "name",
-    '                                  "objectClass",
-    '                                  "objectGUID",
-    '                                  "objectSID",
-    '                                  "sAMAccountName",
-    '                                  "userAccountControl",
-    '                                  "whenChanged",
-    '                                  "whenCreated"}
-
-    '    If domain.Validated = False Then Return New ObservableCollection(Of clsDeletedDirectoryObject)
-
-    '    Dim results As New ObservableCollection(Of clsDeletedDirectoryObject)
-
-    '    Try
-    '        Dim patterns() As String = pattern.Split({"/", vbCrLf, vbCr, vbLf}, StringSplitOptions.RemoveEmptyEntries)
-
-    '        For Each singlepattern As String In patterns
-    '            If ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDeletedDirectoryObject)
-
-    '            singlepattern = Trim(singlepattern)
-    '            If String.IsNullOrEmpty(singlepattern) Then Continue For
-
-    '            If singlepattern.StartsWith("""") And singlepattern.EndsWith("""") And Len(singlepattern) > 2 Then
-    '                singlepattern = Mid(singlepattern, 2, Len(singlepattern) - 2)
-    '            Else
-    '                singlepattern = If(freesearch, "*" & singlepattern & "*", singlepattern & "*")
-    '            End If
-
-    '            Dim filter As String = "(&" +
-    '                                        "(|" +
-    '                                            "(&(objectClass=person)(!(objectClass=inetOrgPerson)))" +
-    '                                            "(objectClass=computer)" +
-    '                                            "(objectClass=group)" +
-    '                                            "(objectClass=organizationalUnit)" +
-    '                                        ")" +
-    '                                        "(|" +
-    '                                            "(name=" & singlepattern & ")" +
-    '                                        ")" +
-    '                                        "(isDeleted=TRUE)" +
-    '                                     ")"
-
-    '            Dim ldapsearcher As New DirectorySearcher(domain.SearchRoot)
-    '            ldapsearcher.PropertiesToLoad.AddRange(properties)
-    '            ldapsearcher.Filter = filter
-    '            ldapsearcher.PageSize = 1000
-    '            ldapsearcher.Tombstone = True
-
-    '            Dim ldapresults As SearchResultCollection = ldapsearcher.FindAll()
-    '            For Each ldapresult As SearchResult In ldapresults
-    '                If ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDeletedDirectoryObject)
-    '                results.Add(New clsDeletedDirectoryObject(ldapresult, domain))
-    '            Next
-    '            ldapresults.Dispose()
-    '        Next
-
-    '    Catch ex As Exception
-    '        ThrowException(ex, domain.Name)
-    '    End Try
-
-    '    Return results
-    'End Function
 
 End Class

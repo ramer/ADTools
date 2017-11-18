@@ -65,6 +65,8 @@
                             <TextBlock Text="{x:Static r:Resources.wndDomains_tabctlDomain1}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                             <TextBlock Text="{x:Static r:Resources.wndDomains_lbl_DomainName}" Margin="0,0,0,5"/>
                             <TextBox x:Name="tbDomainName" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Name, Mode=TwoWay}" CharacterCasing="Upper" Margin="0,0,0,5"/>
+                            <TextBlock Text="{x:Static r:Resources.wndDomains_lbl_Server}" Margin="0,0,0,5"/>
+                            <TextBox x:Name="tbServer" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Server, Mode=TwoWay}" Margin="0,0,0,5"/>
                             <DockPanel LastChildFill="True" Margin="0,0,0,5">
                                 <TextBlock Text="{x:Static r:Resources.wndDomains_lbl_Username}" Width="100" VerticalAlignment="Center"/>
                                 <TextBox x:Name="tbLogin" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Username, Mode=TwoWay}"/>

@@ -1407,4 +1407,7 @@
   <data name="wndMain_ctxmnuObjectsFilterDataClear" xml:space="preserve">
     <value>Очистить</value>
   </data>
+  <data name="wndDomains_lbl_Server" xml:space="preserve">
+    <value>Сервер (опционально)</value>
+  </data>
 </root>

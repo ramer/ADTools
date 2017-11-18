@@ -187,76 +187,76 @@ Public Class ctlGroupMemberOf
     End Sub
 
     Private Sub AddMember([object] As clsDirectoryObject)
-        Try
+        'Try
 
-            If Mode = enmMode.ObjectMemberOf Then
+        '    If Mode = enmMode.ObjectMemberOf Then
 
-                For Each group As clsDirectoryObject In _currentobject.memberOf
-                    If group.name = [object].name Then Exit Sub
-                Next
+        '        For Each group As clsDirectoryObject In _currentobject.memberOf
+        '            If group.name = [object].name Then Exit Sub
+        '        Next
 
-                [object].Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
-                [object].Entry.CommitChanges()
-                _currentobject.memberOf.Add([object])
-                lvSelectedGroups.Items.Add([object])
+        '        [object].Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
+        '        [object].Entry.CommitChanges()
+        '        _currentobject.memberOf.Add([object])
+        '        lvSelectedGroups.Items.Add([object])
 
-            ElseIf Mode = enmMode.DomainDefaultGroups Then
+        '    ElseIf Mode = enmMode.DomainDefaultGroups Then
 
-                For Each group As clsDirectoryObject In _currentdomain.DefaultGroups
-                    If group.name = [object].name Then Exit Sub
-                Next
+        '        For Each group As clsDirectoryObject In _currentdomain.DefaultGroups
+        '            If group.name = [object].name Then Exit Sub
+        '        Next
 
-                _currentdomain.DefaultGroups.Add([object])
-                _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
-                lvSelectedGroups.Items.Add([object])
+        '        _currentdomain.DefaultGroups.Add([object])
+        '        _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
+        '        lvSelectedGroups.Items.Add([object])
 
-            End If
+        '    End If
 
-        Catch ex As Exception
-            ThrowException(ex, "AddMember")
-            If _currentobject IsNot Nothing And [object] IsNot Nothing AndAlso _currentobject.objectClass.Contains("group") And [object].objectClass.Contains("group") Then ShowWrongMemberMessage()
-        End Try
+        'Catch ex As Exception
+        '    ThrowException(ex, "AddMember")
+        '    If _currentobject IsNot Nothing And [object] IsNot Nothing AndAlso _currentobject.objectClass.Contains("group") And [object].objectClass.Contains("group") Then ShowWrongMemberMessage()
+        'End Try
     End Sub
 
     Private Sub RemoveMember([object] As clsDirectoryObject)
-        Try
-            If Mode = enmMode.ObjectMemberOf Then
+        'Try
+        '    If Mode = enmMode.ObjectMemberOf Then
 
-                If Not _currentobject.memberOf.Contains([object]) Then Exit Sub
-                [object].Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
-                [object].Entry.CommitChanges()
-                _currentobject.memberOf.Remove([object])
-                lvSelectedGroups.Items.Remove([object])
+        '        If Not _currentobject.memberOf.Contains([object]) Then Exit Sub
+        '        [object].Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
+        '        [object].Entry.CommitChanges()
+        '        _currentobject.memberOf.Remove([object])
+        '        lvSelectedGroups.Items.Remove([object])
 
-            ElseIf Mode = enmMode.DomainDefaultGroups Then
+        '    ElseIf Mode = enmMode.DomainDefaultGroups Then
 
-                If Not _currentdomain.DefaultGroups.Contains([object]) Then Exit Sub
-                _currentdomain.DefaultGroups.Remove([object])
-                _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
-                lvSelectedGroups.Items.Remove([object])
+        '        If Not _currentdomain.DefaultGroups.Contains([object]) Then Exit Sub
+        '        _currentdomain.DefaultGroups.Remove([object])
+        '        _currentdomain.DefaultGroups = _currentdomain.DefaultGroups ' update setter
+        '        lvSelectedGroups.Items.Remove([object])
 
-            End If
+        '    End If
 
-        Catch ex As Exception
-            ThrowException(ex, "RemoveMember")
-        End Try
+        'Catch ex As Exception
+        '    ThrowException(ex, "RemoveMember")
+        'End Try
     End Sub
 
     Private Sub btnDefaultGroups_Click(sender As Object, e As RoutedEventArgs) Handles btnDefaultGroups.Click
-        If Mode = enmMode.DomainDefaultGroups Then Exit Sub
+        'If Mode = enmMode.DomainDefaultGroups Then Exit Sub
 
-        For Each group In _currentobject.memberOf
-            group.Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
-            group.Entry.CommitChanges()
-        Next
-        _currentobject.memberOf.Clear()
-        lvSelectedGroups.Items.Clear()
-        For Each group In _currentobject.Domain.DefaultGroups
-            group.Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
-            group.Entry.CommitChanges()
-            _currentobject.memberOf.Add(group)
-            lvSelectedGroups.Items.Add(group)
-        Next
+        'For Each group In _currentobject.memberOf
+        '    group.Entry.Invoke("Remove", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
+        '    group.Entry.CommitChanges()
+        'Next
+        '_currentobject.memberOf.Clear()
+        'lvSelectedGroups.Items.Clear()
+        'For Each group In _currentobject.Domain.DefaultGroups
+        '    group.Entry.Invoke("Add", _currentobject.distinguishedNamePrefix & _currentobject.distinguishedName)
+        '    group.Entry.CommitChanges()
+        '    _currentobject.memberOf.Add(group)
+        '    lvSelectedGroups.Items.Add(group)
+        'Next
     End Sub
 
 End Class

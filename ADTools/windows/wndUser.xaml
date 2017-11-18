@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="{Binding name}"
+        Title="{Binding name, Mode=OneWay}"
         Height="540"
         Width="675"
         WindowStartupLocation="CenterOwner" 
@@ -44,15 +44,15 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" Width="140"/>
-                                <TextBox Name="tbDisplayName" Height="24" Text="{Binding displayName}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[displayName]}"/>
+                                <TextBox x:Name="tbDisplayName" Height="24" Text="{Binding displayName}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[displayName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Description}" Width="140"/>
-                                <TextBox Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
+                                <TextBox x:Name="tbDescription" Height="23" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_OfficeName}" Width="140"/>
-                                <TextBox Name="tbPhysicalDeliveryOfficeName" Height="23" Text="{Binding physicalDeliveryOfficeName}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[physicalDeliveryOfficeName]}"/>
+                                <TextBox x:Name="tbPhysicalDeliveryOfficeName" Height="23" Text="{Binding physicalDeliveryOfficeName}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[physicalDeliveryOfficeName]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="140"/>
@@ -64,7 +64,7 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                                                        <Border Name="templateBorder" Padding="2" SnapsToDevicePixels="true">
+                                                        <Border x:Name="templateBorder" Padding="2" SnapsToDevicePixels="true">
                                                             <ContentPresenter>
                                                                 <ContentPresenter.Content>
                                                                     <Grid>
@@ -93,32 +93,32 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_HomePhone}" Width="140"/>
-                                <TextBox Name="tbHomePhone" Height="23" Text="{Binding homePhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[homePhone]}"/>
+                                <TextBox x:Name="tbHomePhone" Height="23" Text="{Binding homePhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[homePhone]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_IpPhone}" Width="140"/>
-                                <TextBox Name="tbIpPhone" Height="23" Text="{Binding ipPhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[ipPhone]}"/>
+                                <TextBox x:Name="tbIpPhone" Height="23" Text="{Binding ipPhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[ipPhone]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mobile}" Width="140"/>
-                                <TextBox Name="tbMobile" Height="23" Text="{Binding mobile}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[mobile]}"/>
+                                <TextBox x:Name="tbMobile" Height="23" Text="{Binding mobile}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[mobile]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Mail}" Width="140"/>
-                                <TextBox Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[mail]}"/>
+                                <TextBox x:Name="tbMail" Height="23" Text="{Binding mail}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Title}" Width="140"/>
-                                <TextBox Name="tbTitle" Height="23" Text="{Binding title}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[title]}"/>
+                                <TextBox x:Name="tbTitle" Height="23" Text="{Binding title}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[title]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Department}" Width="140"/>
                                 <Button x:Name="btnResolveDepartment" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right" ToolTip="{x:Static r:Resources.wndObject_lbl_DepartmentResolve}" IsEnabled="{Binding CanWrite[department]}"/>
-                                <TextBox Name="tbDepartment" Height="23" Text="{Binding department}" Margin="0,0,5,0" MaxLength="64" IsReadOnly="{Binding IsReadOnly[department]}"/>
+                                <TextBox x:Name="tbDepartment" Height="23" Text="{Binding department}" Margin="0,0,5,0" MaxLength="64" IsReadOnly="{Binding IsReadOnly[department]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Company}" Width="140"/>
-                                <TextBox Name="tbCompany" Height="23" Text="{Binding company}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[company]}"/>
+                                <TextBox x:Name="tbCompany" Height="23" Text="{Binding company}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[company]}"/>
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Width="140"/>
@@ -197,7 +197,7 @@
                             <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
                                 <TextBlock Height="23" Margin="2,0,2,0">
                                         <Hyperlink x:Name="hlManager">
-                                            <Run Text="{Binding manager.name}"/>
+                                            <Run Text="{Binding manager.name, Mode=OneWay}"/>
                                         </Hyperlink>
                                 </TextBlock>
                             </Border>

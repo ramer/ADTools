@@ -50,7 +50,7 @@ Public Class wndUser
 
     Private Sub btnResolveDepartment_Click(sender As Object, e As RoutedEventArgs) Handles btnResolveDepartment.Click
         If currentobject Is Nothing Then Exit Sub
-        tbDepartment.Text = Replace(currentobject.Entry.Parent.Name, "OU=", "")
+        'tbDepartment.Text = Replace(currentobject.Entry.Parent.Name, "OU=", "")
     End Sub
 
     Private Sub hlManager_Click(sender As Object, e As RoutedEventArgs) Handles hlManager.Click

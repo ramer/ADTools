@@ -55,8 +55,7 @@ Public Class ctlUserWorkstations
 
             objects = Await Task.Run(
                 Function()
-                    Return searcher.BasicSearchSync(
-                    New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
+                    Return searcher.BasicSearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
                     New clsFilter("""" & Join(_currentobject.userWorkstations, """/""") & """", Nothing, New clsSearchObjectClasses(False, False, True, False, False)))
                 End Function)
 

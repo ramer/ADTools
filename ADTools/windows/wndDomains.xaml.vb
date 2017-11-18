@@ -72,7 +72,7 @@ Public Class wndDomains
         ShowWindow(domainbrowser, True, Me, True)
 
         If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
-            domain.SearchRoot = domainbrowser.currentobject.Entry
+            domain.SearchRoot = domainbrowser.currentobject.distinguishedName
         End If
     End Sub
 
