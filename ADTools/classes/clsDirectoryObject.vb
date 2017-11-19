@@ -214,6 +214,31 @@ Public Class clsDirectoryObject
         End If
     End Sub
 
+    Public Sub RefreshAllAllowedAttributes()
+        If Entry Is Nothing OrElse AllowedAttributes Is Nothing Then Exit Sub
+
+        Debug.Print("All allowed attributes load requested")
+
+        Dim attrs As List(Of String) = AllowedAttributes
+
+        For Each pn As String In Entry.Attributes.AttributeNames
+            If Not attrs.Contains(pn, StringComparer.OrdinalIgnoreCase) Then attrs.Add(pn)
+        Next
+
+        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
+        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+        If Not response.Entries.Count = 1 Then Exit Sub
+
+        Entry = response.Entries(0)
+
+        Dim ma As New List(Of String)
+        If AllowedAttributes IsNot Nothing Then
+            For Each attr As String In AllowedAttributes
+                If Entry.Attributes(attr) Is Nothing Then MissedAttributes.Add(attr)
+            Next
+        End If
+    End Sub
+
     Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
         If Entry Is Nothing Then Return Nothing
         If returnType Is Nothing Then returnType = GetType(String) 'set default return type to String

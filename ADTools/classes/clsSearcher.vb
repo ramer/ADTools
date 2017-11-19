@@ -109,6 +109,8 @@ Public Class clsSearcher
             searchRequest.Attributes.AddRange({"objectguid"})
             searchRequest.Scope = searchscope
 
+            Dim sortRequestControl As New SortRequestControl("name", False)
+            searchRequest.Controls.Add(sortRequestControl)
             Dim pageRequestControl As New PageResultRequestControl(1000)
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
