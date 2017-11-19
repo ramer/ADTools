@@ -18,7 +18,7 @@ Public Class wndDomainBrowser
 
         If TypeOf sp.Tag Is clsDirectoryObject Then
             currentobject = (CType(sp.Tag, clsDirectoryObject))
-            tbCurrentObject.Text = currentobject.distinguishedNameFormated
+            tbCurrentObject.Text = currentobject.distinguishedName
         End If
     End Sub
 

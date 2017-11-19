@@ -52,7 +52,10 @@ Public Class ctlObjectAttributes
             cap.Visibility = Visibility.Visible
 
             Dim ldapattributes As New ObservableCollection(Of clsAttribute)
-            ldapattributes = Await Task.Run(Function() _currentobject.AllAttributes)
+            ldapattributes = Await Task.Run(Function()
+                                                _currentobject.RefreshAllAllowedAttributes()
+                                                Return _currentobject.AllAttributes
+                                            End Function)
 
             attributes.Clear()
             For Each a In ldapattributes

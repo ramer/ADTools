@@ -55,7 +55,7 @@ Public Class ctlUserWorkstations
 
             objects = Await Task.Run(
                 Function()
-                    Return searcher.BasicSearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
+                    Return searcher.SearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
                     New clsFilter("""" & Join(_currentobject.userWorkstations, """/""") & """", Nothing, New clsSearchObjectClasses(False, False, True, False, False)))
                 End Function)
 
@@ -67,10 +67,10 @@ Public Class ctlUserWorkstations
         End If
     End Sub
 
-    Private Async Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
+    Private Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
         If e.Key = Key.Enter Then
             tbDomainObjectsFilter.SelectAll()
-            Await searcher.BasicSearchAsync(
+            searcher.SearchAsync(
                 _currentdomainobjects,
                 Nothing,
                 New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, False, False)),

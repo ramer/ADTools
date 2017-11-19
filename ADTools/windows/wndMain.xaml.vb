@@ -1057,8 +1057,8 @@ Class wndMain
         searchhistoryindex += 1
     End Sub
 
-    Public Async Sub StopSearch()
-        Await searcher.BasicSearchStopAsync()
+    Public Sub StopSearch()
+        searcher.StopAllSearchAsync()
     End Sub
 
     Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
@@ -1074,7 +1074,7 @@ Class wndMain
         Search(root, filter)
     End Sub
 
-    Public Async Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
+    Public Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         Try
             CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Clear()
         Catch
@@ -1091,7 +1091,7 @@ Class wndMain
         currentfilter = filter
         ShowPath(currentcontainer, filter)
 
-        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist)
+        searcher.SearchAsync(currentobjects, root, filter, domainlist)
 
         If preferences.SearchResultGrouping AndAlso root Is Nothing Then
             Try
@@ -1100,12 +1100,15 @@ Class wndMain
             End Try
         End If
 
-        cap.Visibility = Visibility.Hidden
-        pbSearch.Visibility = Visibility.Hidden
     End Sub
 
-    Private Sub Searcher_BasicSearchAsyncDataRecieved() Handles searcher.BasicSearchAsyncDataRecieved
+    Private Sub Searcher_SearchAsyncDataRecieved() Handles searcher.SearchAsyncDataRecieved
         cap.Visibility = Visibility.Hidden
+    End Sub
+
+    Private Sub Searcher_SearchAsyncCompleted() Handles searcher.SearchAsyncCompleted
+        cap.Visibility = Visibility.Hidden
+        pbSearch.Visibility = Visibility.Hidden
     End Sub
 
     Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn

@@ -23,7 +23,6 @@ Public Class wndUser
         Dim instance As wndUser = CType(d, wndUser)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
-            ._currentobject.RefreshAllAllowedAttributes()
         End With
     End Sub
 

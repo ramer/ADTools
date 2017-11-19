@@ -103,10 +103,10 @@ Public Class ctlGroupMemberOf
         End If
     End Sub
 
-    Private Async Sub tbDomainGroupsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainGroupsFilter.KeyDown
+    Private Sub tbDomainGroupsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainGroupsFilter.KeyDown
         If e.Key = Key.Enter Then
             tbDomainGroupsFilter.SelectAll()
-            Await searcher.BasicSearchAsync(
+            searcher.SearchAsync(
                 _currentdomaingroups,
                 Nothing,
                 New clsFilter("*" & tbDomainGroupsFilter.Text & "*", Nothing, New clsSearchObjectClasses(False, False, False, True, False)),

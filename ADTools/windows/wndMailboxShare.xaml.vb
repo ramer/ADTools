@@ -23,9 +23,13 @@ Public Class wndMailboxShare
         tbSearchPattern.Focus()
     End Sub
 
-    Private Async Sub tbSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles tbSearchPattern.KeyDown
+    Private Sub tbSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles tbSearchPattern.KeyDown
         If e.Key = Key.Enter Then
-            Await searcherusers.BasicSearchAsync(users, Nothing, New clsFilter(CType(sender, TextBox).Text, attributesForSearchExchangePermissionTarget, New clsSearchObjectClasses(True, False, False, False, False)), New ObservableCollection(Of clsDomain)({currentuser.Domain}))
+            searcherusers.SearchAsync(
+                users,
+                Nothing,
+                New clsFilter(CType(sender, TextBox).Text, attributesForSearchExchangePermissionTarget, New clsSearchObjectClasses(True, False, False, False, False)),
+                New ObservableCollection(Of clsDomain)({currentuser.Domain}))
         End If
     End Sub
 

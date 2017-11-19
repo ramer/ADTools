@@ -61,10 +61,10 @@ Public Class ctlManagedObjects
         End If
     End Sub
 
-    Private Async Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
+    Private Sub tbDomainObjectsFilter_KeyDown(sender As Object, e As KeyEventArgs) Handles tbDomainObjectsFilter.KeyDown
         If e.Key = Key.Enter Then
             tbDomainObjectsFilter.SelectAll()
-            Await searcher.BasicSearchAsync(
+            searcher.SearchAsync(
                 _currentdomainobjects,
                 Nothing,
                 New clsFilter(tbDomainObjectsFilter.Text, Nothing, New clsSearchObjectClasses(False, False, True, True, True)),

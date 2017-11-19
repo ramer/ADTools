@@ -43,6 +43,25 @@ Public Class clsThreadSafeObservableCollection(Of T)
         sync.ReleaseWriterLock()
     End Sub
 
+    Public Sub AddRange(range As IEnumerable(Of T))
+        If Thread.CurrentThread Is dispatcher.Thread Then
+            DoAddRange(range)
+        Else
+            dispatcher.BeginInvoke(DirectCast(Sub() DoAddRange(range), Action))
+        End If
+    End Sub
+
+    Private Sub DoAddRange(range As IEnumerable(Of T))
+        sync.AcquireWriterLock(Timeout.Infinite)
+        For Each i In range
+            collection.Add(i)
+            RaiseEvent CollectionChanged(Me, New NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, i))
+        Next
+
+        RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs("Count"))
+        sync.ReleaseWriterLock()
+    End Sub
+
     Public Sub Clear() Implements IList(Of T).Clear
         If Thread.CurrentThread Is dispatcher.Thread Then
             DoClear()

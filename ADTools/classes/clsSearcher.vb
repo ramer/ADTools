@@ -2,94 +2,37 @@
 Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
 Imports System.Threading
+Imports System.Windows.Threading
 
 Public Class clsSearcher
-    Private basicsearchtasks As New List(Of Task)
-    Private basicsearchtaskscts As New CancellationTokenSource
-    Public Event BasicSearchAsyncDataRecieved()
+    Private dispatcher As Dispatcher
 
-    Private tombstonesearchtasks As New List(Of Task)
-    Private tombstonesearchtaskscts As New CancellationTokenSource
+    Public Event SearchAsyncDataRecieved()
+    Public Event SearchAsyncCompleted()
+
+    Private asyncResultCollection As New List(Of IAsyncResult)
 
     Sub New()
-
+        dispatcher = Dispatcher.CurrentDispatcher
     End Sub
 
-    Public Async Function BasicSearchStopAsync() As Task
-        basicsearchtaskscts.Cancel()
-        If basicsearchtasks.Count > 0 Then
-            Try
-                Await Task.WhenAll(basicsearchtasks.ToArray) 'magic
-            Catch
-            End Try
-
-            basicsearchtasks.Clear()
-            Log("Task list cleared")
-        End If
-    End Function
-
-    Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
-                                           Optional parentobject As clsDirectoryObject = Nothing,
-                                           Optional filter As clsFilter = Nothing,
-                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing) As Task
-        Await BasicSearchStopAsync()
-
-        returncollection.Clear()
-
-        basicsearchtaskscts = New CancellationTokenSource
-
-        Dim roots As List(Of clsDirectoryObject)
-        Dim searchscope As SearchScope
-
-        If parentobject IsNot Nothing Then
-            roots = New List(Of clsDirectoryObject) From {parentobject}
-            searchscope = SearchScope.OneLevel
+    Private Sub NotifySearchAsyncDataRecieved()
+        If Thread.CurrentThread Is dispatcher.Thread Then
+            RaiseEvent SearchAsyncDataRecieved()
         Else
-            roots = If(specificdomains Is Nothing, domains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList, specificdomains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
-            searchscope = SearchScope.Subtree
+            dispatcher.BeginInvoke(DirectCast(Sub() RaiseEvent SearchAsyncDataRecieved(), Action))
         End If
+    End Sub
 
-        For Each root In roots
-            Dim mt = Task.Factory.StartNew(
-                Function()
-                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
-                End Function, basicsearchtaskscts.Token)
-            basicsearchtasks.Add(mt)
-            Log(String.Format("Task created: domain search ""{0}""", root.name))
+    Private Sub NotifySearchAsyncCompleted()
+        If Thread.CurrentThread Is dispatcher.Thread Then
+            RaiseEvent SearchAsyncCompleted()
+        Else
+            dispatcher.BeginInvoke(DirectCast(Sub() RaiseEvent SearchAsyncCompleted(), Action))
+        End If
+    End Sub
 
-            Dim lt = mt.ContinueWith(
-                Function(parenttask As Task(Of ObservableCollection(Of clsDirectoryObject)))
-                    basicsearchtasks.Remove(mt)
-                    Log(String.Format("Task created: collect domain {1} search results ({0})", parenttask.Result.Count, If(parenttask.Result.Count > 0, parenttask.Result(0).Domain.Name, "(unknown)")))
-                    For Each result In parenttask.Result
-                        If basicsearchtaskscts.Token.IsCancellationRequested Then Return False
-                        returncollection.Add(result)
-                        'If parenttask.Result.Count > 50 Then Thread.Sleep(50)
-                    Next
-                    Log("Task completed: domain search")
-                    Return True
-                End Function)
-            basicsearchtasks.Add(lt)
-            Log(String.Format("Task created: display domain ""{0}"" search results", root.name))
-
-            Dim ft = lt.ContinueWith(
-                Function(parenttask As Task(Of Boolean))
-                    Try
-                        basicsearchtasks.Remove(lt)
-                    Catch
-                        basicsearchtasks.Clear()
-                    End Try
-                    Log("Task completed: display search results")
-                    Return True
-                End Function)
-        Next
-
-        If basicsearchtasks.Count > 0 Then Await Task.WhenAny(basicsearchtasks.ToArray)
-        RaiseEvent BasicSearchAsyncDataRecieved()
-        If basicsearchtasks.Count > 0 Then Await Task.WhenAll(basicsearchtasks.ToArray)
-    End Function
-
-    Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,
+    Public Function SearchSync(Optional root As clsDirectoryObject = Nothing,
                                     Optional filter As clsFilter = Nothing,
                                     Optional searchscope As SearchScope = SearchScope.Subtree,
                                     Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
@@ -140,5 +83,110 @@ Public Class clsSearcher
 
     End Function
 
+    Public Sub SearchAsync(returnCollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
+                            Optional parentObject As clsDirectoryObject = Nothing,
+                            Optional filter As clsFilter = Nothing,
+                            Optional specificDomains As ObservableCollection(Of clsDomain) = Nothing)
 
+        StopAllSearchAsync()
+
+        returnCollection.Clear()
+
+        Dim roots As List(Of clsDirectoryObject)
+        Dim searchscope As SearchScope
+
+        If parentObject IsNot Nothing Then
+            roots = New List(Of clsDirectoryObject) From {parentObject}
+            searchscope = SearchScope.OneLevel
+        Else
+            roots = If(specificDomains Is Nothing, domains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList, specificDomains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
+            searchscope = SearchScope.Subtree
+        End If
+
+        For Each root In roots
+            Try
+                Dim searchRequest As New SearchRequest()
+                searchRequest.DistinguishedName = root.distinguishedName
+
+                If searchscope = SearchScope.Subtree Then
+                    If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
+                End If
+
+                searchRequest.Attributes.AddRange(attributesToLoadDefault)
+                searchRequest.Scope = searchscope
+
+                Dim sortRequestControl As New SortRequestControl("name", False)
+                searchRequest.Controls.Add(sortRequestControl)
+                Dim pageRequestControl As New PageResultRequestControl(100)
+                searchRequest.Controls.Add(pageRequestControl)
+                Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
+                searchRequest.Controls.Add(searchOptionsControl)
+
+                Dim helper As New clsSearcherHelper
+                helper.root = root
+                helper.attributes = attributesToLoadDefault
+                helper.returnCollection = returnCollection
+                helper.pageRequestControl = pageRequestControl
+                helper.searchRequest = searchRequest
+
+                asyncResultCollection.Add(root.Connection.BeginSendRequest(searchRequest, PartialResultProcessing.NoPartialResultSupport, AddressOf SearchAsyncResult, helper))
+
+            Catch ex As Exception
+                ThrowException(ex, "SearchAsync")
+            End Try
+        Next
+
+    End Sub
+
+    Private Sub SearchAsyncResult(asyncResult As IAsyncResult)
+        asyncResultCollection.Remove(asyncResult)
+        If asyncResultCollection.Count = 0 Then NotifySearchAsyncCompleted()
+
+        Try
+            Dim helper As clsSearcherHelper = asyncResult.AsyncState
+            If helper.aborted Then Exit Sub
+
+            Dim searchResponse As SearchResponse = DirectCast(helper.root.Connection.EndSendRequest(asyncResult), SearchResponse)
+            Dim pageResponseControl As PageResultResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
+
+            Dim results As New List(Of clsDirectoryObject)
+            For Each entry As SearchResultEntry In searchResponse.Entries
+
+                Dim ma As New List(Of String)
+                If helper.attributes IsNot Nothing Then
+                    For Each attr As String In helper.attributes
+                        If entry.Attributes(attr) Is Nothing Then ma.Add(attr)
+                    Next
+                End If
+
+                results.Add(New clsDirectoryObject(entry, helper.root.Domain) With {.MissedAttributes = ma})
+            Next
+
+            If results.Count > 0 Then NotifySearchAsyncDataRecieved()
+
+            helper.returnCollection.AddRange(results)
+
+            helper.pageRequestControl.Cookie = pageResponseControl.Cookie
+            If pageResponseControl.Cookie.Length > 0 Then asyncResultCollection.Add(helper.root.Connection.BeginSendRequest(helper.searchRequest, PartialResultProcessing.NoPartialResultSupport, AddressOf SearchAsyncResult, helper))
+
+        Catch ex As Exception
+            ThrowException(ex, "SearchAsync Callback")
+        End Try
+    End Sub
+
+    Public Sub StopAllSearchAsync()
+        For Each asyncResult In asyncResultCollection
+            CType(asyncResult.AsyncState, clsSearcherHelper).aborted = True
+        Next
+    End Sub
+
+End Class
+
+Public Class clsSearcherHelper
+    Public Property aborted As Boolean
+    Public Property root As clsDirectoryObject
+    Public Property attributes As String()
+    Public Property returnCollection As clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Public Property pageRequestControl As PageResultRequestControl
+    Public Property searchRequest As New SearchRequest
 End Class

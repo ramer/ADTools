@@ -836,7 +836,7 @@ Public Class clsMailbox
 
             If rights.Count = 0 Then Return New ObservableCollection(Of clsDirectoryObject)
 
-            Return searcher.BasicSearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
+            Return searcher.SearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
                     New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionSendAs, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property
@@ -888,7 +888,7 @@ Public Class clsMailbox
 
             If rights.Count = 0 Then Return New ObservableCollection(Of clsDirectoryObject)
 
-            Return searcher.BasicSearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
+            Return searcher.SearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
                     New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionFullAccess, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property
@@ -936,7 +936,7 @@ Public Class clsMailbox
 
             If rights.Count = 0 Then Return New ObservableCollection(Of clsDirectoryObject)
 
-            Return searcher.BasicSearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
+            Return searcher.SearchSync(New clsDirectoryObject(_currentobject.Domain.DefaultNamingContext, _currentobject.Domain),
                     New clsFilter("""" & Join(rights, """/""") & """", attributesForSearchExchangePermissionSendOnBehalf, New clsSearchObjectClasses(True, True, True, True, False)))
         End Get
     End Property

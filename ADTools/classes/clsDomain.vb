@@ -301,7 +301,7 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _defaultnamingcontext = value
-            NotifyPropertyChanged("DefaultNamingContextDN")
+            NotifyPropertyChanged("DefaultNamingContext")
         End Set
     End Property
 
@@ -312,7 +312,7 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _configurationnamingcontext = value
-            NotifyPropertyChanged("ConfigurationNamingContextDN")
+            NotifyPropertyChanged("ConfigurationNamingContext")
         End Set
     End Property
 
@@ -323,7 +323,7 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _schemanamingcontext = value
-            NotifyPropertyChanged("SchemaNamingContextDN")
+            NotifyPropertyChanged("SchemaNamingContext")
         End Set
     End Property
 
@@ -334,7 +334,7 @@ Public Class clsDomain
         End Get
         Set(value As String)
             _searchroot = value
-            NotifyPropertyChanged("SearchRootDN")
+            NotifyPropertyChanged("SearchRoot")
         End Set
     End Property
 
