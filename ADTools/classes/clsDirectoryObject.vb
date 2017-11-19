@@ -186,9 +186,13 @@ Public Class clsDirectoryObject
     Public Sub Refresh(attributenames As String())
         If Entry Is Nothing OrElse attributenames Is Nothing Then Exit Sub
 
-        For Each a In attributenames
-            Debug.Print("Attribure load requested: {0}", a)
-        Next
+        'If attributenames.Count = 1 AndAlso attributesToLoadDefault.Contains(attributenames(0)) Then attributenames = attributesToLoadDefault ' if single value is default then load all of them
+
+        If attributenames.Count > 1 Then
+            Debug.Print("Bulk attribure load requested: {0}", attributenames.Count)
+        Else
+            Debug.Print("Attribure load requested: {0}", attributenames(0))
+        End If
 
         Dim attrs As List(Of String) = attributenames.ToList
 
@@ -201,6 +205,13 @@ Public Class clsDirectoryObject
         If Not response.Entries.Count = 1 Then Exit Sub
 
         Entry = response.Entries(0)
+
+        Dim ma As New List(Of String)
+        If attributenames IsNot Nothing Then
+            For Each attr As String In attributenames
+                If Entry.Attributes(attr) Is Nothing Then MissedAttributes.Add(attr)
+            Next
+        End If
     End Sub
 
     Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object

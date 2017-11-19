@@ -31,8 +31,7 @@ Public Class clsSearcher
     Public Async Function BasicSearchAsync(returncollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
                                            Optional parentobject As clsDirectoryObject = Nothing,
                                            Optional filter As clsFilter = Nothing,
-                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing,
-                                           Optional attributenames As String() = Nothing) As Task
+                                           Optional specificdomains As ObservableCollection(Of clsDomain) = Nothing) As Task
         Await BasicSearchStopAsync()
 
         returncollection.Clear()
@@ -53,7 +52,7 @@ Public Class clsSearcher
         For Each root In roots
             Dim mt = Task.Factory.StartNew(
                 Function()
-                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token, attributenames)
+                    Return BasicSearchSync(root, filter, searchscope, basicsearchtaskscts.Token)
                 End Function, basicsearchtaskscts.Token)
             basicsearchtasks.Add(mt)
             Log(String.Format("Task created: domain search ""{0}""", root.name))
@@ -93,8 +92,7 @@ Public Class clsSearcher
     Public Function BasicSearchSync(Optional root As clsDirectoryObject = Nothing,
                                     Optional filter As clsFilter = Nothing,
                                     Optional searchscope As SearchScope = SearchScope.Subtree,
-                                    Optional ct As CancellationToken = Nothing,
-                                    Optional attributenames As String() = Nothing) As ObservableCollection(Of clsDirectoryObject)
+                                    Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -108,8 +106,8 @@ Public Class clsSearcher
                 If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
             End If
 
+            searchRequest.Attributes.AddRange({"objectguid"})
             searchRequest.Scope = searchscope
-            If attributenames IsNot Nothing Then searchRequest.Attributes.AddRange(attributenames)
 
             Dim pageRequestControl As New PageResultRequestControl(1000)
             searchRequest.Controls.Add(pageRequestControl)
@@ -124,17 +122,7 @@ Public Class clsSearcher
 
                 For Each entry As SearchResultEntry In searchResponse.Entries
                     If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
-
-                    Dim obj As New clsDirectoryObject(entry, root.Domain)
-                    Dim ma As New List(Of String)
-                    If attributenames IsNot Nothing Then
-                        For Each attr As String In attributenames
-                            If entry.Attributes(attr) Is Nothing Then ma.Add(attr)
-                        Next
-                        obj.MissedAttributes = ma
-                    End If
-
-                    results.Add(obj)
+                    results.Add(New clsDirectoryObject(entry, root.Domain))
                 Next
 
                 pageRequestControl.Cookie = pageResponseControl.Cookie

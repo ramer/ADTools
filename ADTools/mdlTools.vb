@@ -134,7 +134,7 @@ Module mdlTools
         {New clsAttribute("name", "Имя объекта")}
     }
 
-    Public propertiesToLoadDefault As String() =
+    Public attributesToLoadDefault As String() =
         {"accountExpires",
         "company",
         "department",

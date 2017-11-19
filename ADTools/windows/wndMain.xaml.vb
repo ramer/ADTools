@@ -1091,7 +1091,7 @@ Class wndMain
         currentfilter = filter
         ShowPath(currentcontainer, filter)
 
-        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist, propertiesToLoadDefault)
+        Await searcher.BasicSearchAsync(currentobjects, root, filter, domainlist)
 
         If preferences.SearchResultGrouping AndAlso root Is Nothing Then
             Try
@@ -1226,6 +1226,8 @@ Class wndMain
         RefreshDataGrid()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
+
+
 
 
 
