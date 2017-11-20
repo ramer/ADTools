@@ -43,7 +43,7 @@ Public Class ctlGroupMember
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
+        If _currentobject Is Nothing Then Exit Sub
 
         If lvSelectedObjects.Items.Count = 0 Then
             cap.Visibility = Visibility.Visible
@@ -149,35 +149,34 @@ Public Class ctlGroupMember
     End Sub
 
     Private Sub AddMember([object] As clsDirectoryObject)
-        'Try
+        Try
 
-        '    For Each obj As clsDirectoryObject In _currentobject.member
-        '        If obj.name = [object].name Then Exit Sub
-        '    Next
+            For Each obj As clsDirectoryObject In _currentobject.member
+                If obj.name = [object].name Then Exit Sub
+            Next
 
-        '    _currentobject.Entry.Invoke("Add", [object].distinguishedNamePrefix & [object].distinguishedName)
-        '    _currentobject.Entry.CommitChanges()
-        '    _currentobject.member.Add([object])
-        '    lvSelectedObjects.Items.Add([object])
+            _currentobject.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Add, "member", [object].distinguishedName)
+            _currentobject.member.Add([object])
+            lvSelectedObjects.Items.Add([object])
 
-        'Catch ex As Exception
-        '    ThrowException(ex, "AddMember")
-        '    If _currentobject IsNot Nothing And [object] IsNot Nothing AndAlso _currentobject.objectClass.Contains("group") And [object].objectClass.Contains("group") Then ShowWrongMemberMessage()
-        'End Try
+        Catch ex As Exception
+            ThrowException(ex, "AddMember")
+            If _currentobject IsNot Nothing And [object] IsNot Nothing AndAlso _currentobject.objectClass.Contains("group") And [object].objectClass.Contains("group") Then ShowWrongMemberMessage()
+        End Try
     End Sub
 
     Private Sub RemoveMember([object] As clsDirectoryObject)
-        'Try
+        Try
 
-        '    If Not _currentobject.member.Contains([object]) Then Exit Sub
-        '    _currentobject.Entry.Invoke("Remove", [object].distinguishedNamePrefix & [object].distinguishedName)
-        '    _currentobject.Entry.CommitChanges()
-        '    _currentobject.member.Remove([object])
-        '    lvSelectedObjects.Items.Remove([object])
+            If Not _currentobject.member.Contains([object]) Then Exit Sub
 
-        'Catch ex As Exception
-        '    ThrowException(ex, "RemoveMember")
-        'End Try
+            _currentobject.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Replace, "member", [object].distinguishedName)
+            _currentobject.member.Remove([object])
+            lvSelectedObjects.Items.Remove([object])
+
+        Catch ex As Exception
+            ThrowException(ex, "RemoveMember")
+        End Try
     End Sub
 
 End Class

@@ -669,6 +669,17 @@ Module mdlTools
         'Return result
     End Function
 
+    Public Function GetNameFromDN(DN As String) As String
+        Return DN.Split({","}, StringSplitOptions.RemoveEmptyEntries).First.Split({"="}, StringSplitOptions.RemoveEmptyEntries).Last
+    End Function
+
+    Public Function GetParentDNFromDN(DN As String) As String
+        Dim eDN As List(Of String) = DN.Split({","}, StringSplitOptions.RemoveEmptyEntries).ToList
+        If eDN.Count <= 1 Then Return Nothing
+        eDN.RemoveAt(0)
+        Return Join(eDN.ToArray, ",")
+    End Function
+
     Public Function GetApplicationIcon(fileName As String) As ImageSource
         Dim ai As System.Drawing.Icon = System.Drawing.Icon.ExtractAssociatedIcon(fileName)
         Return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(ai.Handle, New Int32Rect(0, 0, ai.Width, ai.Height), BitmapSizeOptions.FromEmptyOptions())

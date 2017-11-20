@@ -38,7 +38,7 @@ Public Class ctlUserMailbox
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
+        If _currentobject Is Nothing Then Exit Sub
 
         If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso _currentobject.Domain.ExchangeServer IsNot Nothing Then
             capexchange.Visibility = Visibility.Visible

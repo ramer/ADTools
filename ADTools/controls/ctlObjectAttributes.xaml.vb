@@ -46,7 +46,7 @@ Public Class ctlObjectAttributes
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing Then Exit Sub
+        If _currentobject Is Nothing Then Exit Sub
 
         If attributes.Count = 0 Then
             cap.Visibility = Visibility.Visible

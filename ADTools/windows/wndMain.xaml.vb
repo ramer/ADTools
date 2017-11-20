@@ -608,7 +608,7 @@ Class wndMain
     Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then ShowTree(objects(0).Parent)
+        If objects.Count = 1 Then ShowInTree(objects(0).Parent)
     End Sub
 
     Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
@@ -827,7 +827,8 @@ Class wndMain
 
     Private Sub btnPath_Click(sender As Object, e As RoutedEventArgs)
         If sender.Tag Is Nothing Then Exit Sub
-        Dim current As clsDirectoryObject = CType(sender.Tag, clsDirectoryObject)
+        If currentcontainer Is Nothing Then Exit Sub
+        Dim current As clsDirectoryObject = New clsDirectoryObject(CType(sender.Tag, String), currentcontainer.Domain)
         OpenObject(current)
     End Sub
 
@@ -885,7 +886,7 @@ Class wndMain
     End Sub
 
     Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click
-        Throw New StackOverflowException("some bad data")
+        cap.Visibility = Visibility.Visible
     End Sub
 
 #End Region
@@ -914,6 +915,7 @@ Class wndMain
     End Sub
 
     Private Sub ShowPath(Optional container As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
+
         For Each child In spPath.Children
             If TypeOf child Is Button Then RemoveHandler CType(child, Button).Click, AddressOf btnPath_Click
         Next
@@ -924,21 +926,23 @@ Class wndMain
 
             Dim buttons As New List(Of Button)
 
+            Dim containerDN As String = container.distinguishedName
+
             Do
                 Dim btn As New Button
                 Dim st As Style = Application.Current.TryFindResource("ToolbarButton")
                 btn.Style = st
-                btn.Content = If(container.objectClass.Contains("domaindns"), container.Domain.Name, container.name)
+                btn.Content = GetNameFromDN(containerDN)
                 btn.Margin = New Thickness(2, 0, 2, 0)
                 btn.Padding = New Thickness(5, 0, 5, 0)
                 btn.VerticalAlignment = VerticalAlignment.Stretch
-                btn.Tag = container
+                btn.Tag = containerDN
                 buttons.Add(btn)
 
-                If container.Parent Is Nothing OrElse container.distinguishedName = container.Domain.DefaultNamingContext Then
+                If containerDN.StartsWith("DC=", StringComparison.OrdinalIgnoreCase) Then
                     Exit Do
                 Else
-                    container = container.Parent
+                    containerDN = GetParentDNFromDN(containerDN)
                 End If
             Loop
 
@@ -962,18 +966,20 @@ Class wndMain
         End If
     End Sub
 
-    Private Async Sub ShowTree(container As clsDirectoryObject)
+    Private Async Sub ShowInTree(container As clsDirectoryObject)
         If container Is Nothing Then Exit Sub
 
-        Dim treepath As New List(Of clsDirectoryObject)
+        Dim containerDN As String = container.distinguishedName
+
+        Dim treepath As New List(Of String)
 
         Do ' find all parents to the root
-            treepath.Add(container)
+            treepath.Add(containerDN)
 
-            If container.Parent Is Nothing OrElse container.distinguishedName = container.Domain.DefaultNamingContext Then
+            If containerDN.StartsWith("DC=", StringComparison.OrdinalIgnoreCase) Then
                 Exit Do
             Else
-                container = container.Parent
+                containerDN = GetParentDNFromDN(containerDN)
             End If
         Loop
 
@@ -982,7 +988,7 @@ Class wndMain
         Dim currentparentnode = tviDomains
         For I = 0 To treepath.Count - 1
             For j = 0 To currentparentnode.Items.Count - 1
-                If CType(currentparentnode.Items(j), clsDirectoryObject).distinguishedName <> treepath(I).distinguishedName Then Continue For
+                If CType(currentparentnode.Items(j), clsDirectoryObject).distinguishedName <> treepath(I) Then Continue For
 
                 If currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated Then
                     Await Task.Run(
@@ -1081,6 +1087,8 @@ Class wndMain
         End Try
 
         tbSearchPattern.SelectAll()
+
+        ApplyPostfilter(Nothing, Nothing)
 
         cap.Visibility = Visibility.Visible
         pbSearch.Visibility = Visibility.Visible

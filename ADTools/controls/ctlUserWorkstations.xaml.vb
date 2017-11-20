@@ -46,7 +46,7 @@ Public Class ctlUserWorkstations
     End Sub
 
     Public Async Sub InitializeAsync()
-        If _currentobject Is Nothing OrElse _currentobject.Entry Is Nothing OrElse _currentobject.userWorkstations.Count = 0 Then Exit Sub
+        If _currentobject Is Nothing OrElse _currentobject.userWorkstations.Count = 0 Then Exit Sub
 
         If _currentselectedobjects.Count = 0 Then
             cap.Visibility = Visibility.Visible

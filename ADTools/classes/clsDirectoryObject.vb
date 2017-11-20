@@ -29,15 +29,16 @@ Public Class clsDirectoryObject
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-    Private _entry As SearchResultEntry
-    Private _entrypath As String
+    Private _distinguishedName As String
+
+    Private _cache As New Dictionary(Of String, DirectoryAttribute)
 
     Private _domain As clsDomain
     Private _domainname As String
 
     Private _name As String
 
-    Private _missedattributes As New List(Of String) ' to store attributes, witch is not cosidered to this objectclass
+    'Private _missedattributes As New HashSet(Of String) ' to store attributes, witch is not cosidered to this objectclass
     Private _allowedattributes As List(Of String)
     Private _allowedattributeseffective As List(Of String)
 
@@ -76,23 +77,38 @@ Public Class clsDirectoryObject
 
     End Sub
 
-    Sub New(DistinguishedName As String, ByRef Domain As clsDomain, Optional attributenames As String() = Nothing)
+    Sub New(DistinguishedName As String, ByRef Domain As clsDomain, Optional AttributeNames As String() = Nothing)
+        _distinguishedName = DistinguishedName
         _domain = Domain
 
-        If attributenames Is Nothing Then attributenames = {"name", "allowedAttributes", "allowedAttributesEffective", "objectClass", "objectCategory"}
-        Dim searchRequest = New SearchRequest(DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
+        If AttributeNames Is Nothing Then AttributeNames = attributesToLoadDefault
+        Dim searchRequest = New SearchRequest(DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AttributeNames)
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
+        _cache.Clear()
+
         If response.Entries.Count = 1 Then
-            Me.Entry = response.Entries(0)
-        Else
-            Me.Entry = Nothing
+            For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                _cache.Add(a.Name, a)
+            Next
         End If
     End Sub
 
-    Sub New(Entry As SearchResultEntry, ByRef Domain As clsDomain)
+    Sub New(Entry As SearchResultEntry, ByRef Domain As clsDomain, Optional InitialCache As Dictionary(Of String, DirectoryAttribute) = Nothing)
+        _distinguishedName = Entry.DistinguishedName
         _domain = Domain
-        Me.Entry = Entry
+
+        _cache.Clear()
+
+        For Each a As DirectoryAttribute In Entry.Attributes.Values
+            _cache.Add(a.Name, a)
+        Next
+
+        If InitialCache IsNot Nothing Then
+            For Each a As String In InitialCache.Keys
+                If Not _cache.ContainsKey(a) Then _cache.Add(a, InitialCache(a))
+            Next
+        End If
     End Sub
 
     <RegistrySerializerIgnorable(True)>
@@ -103,33 +119,44 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property Entry() As SearchResultEntry
+    Public ReadOnly Property Exist() As Boolean
         Get
-            Return _entry
+            Try
+                Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, {"Objectclass"})
+                Connection.SendRequest(searchRequest)
+                Return True
+            Catch ex As Exception
+                Return False
+            End Try
         End Get
-        Set(ByVal value As SearchResultEntry)
-            _entry = value
-
-            NotifyPropertyChanged("Entry")
-        End Set
-    End Property
-
-    Public Property EntryPath() As String
-        Get
-            Return If(_entry IsNot Nothing, _entry.DistinguishedName, _entrypath)
-        End Get
-        Set(ByVal value As String)
-            _entrypath = value
-
-            NotifyPropertyChanged("EntryPath")
-        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property Exist() As Boolean
+    Public ReadOnly Property distinguishedName() As String
         Get
-            Return Entry IsNot Nothing
+            Return _distinguishedName
         End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property distinguishedNameFormated() As String
+        Get
+            Try
+                Return Join(distinguishedName.Split({",", "CN=", "OU="}, StringSplitOptions.RemoveEmptyEntries).Reverse.Where(Function(x) Not x.StartsWith("DC=")).ToArray, " \ ")
+            Catch
+                Return ""
+            End Try
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property Cache() As Dictionary(Of String, DirectoryAttribute)
+        Get
+            Return _cache
+        End Get
+        Set(value As Dictionary(Of String, DirectoryAttribute))
+            _cache = value
+        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -156,148 +183,153 @@ Public Class clsDirectoryObject
             If d.Name = _domainname Then
                 _domain = d
 
-                Dim searchRequest = New SearchRequest(_entrypath, "(objectClass=*)", Protocols.SearchScope.Base)
+                Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributesToLoadDefault)
                 Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                _cache.Clear()
+
                 If response.Entries.Count = 1 Then
-                    Entry = response.Entries(0)
-                Else
-                    Entry = Nothing
+                    For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                        _cache.Add(a.Name, a)
+                    Next
                 End If
             End If
         Next
     End Sub
 
-    Public Sub Refresh()
-        If Entry Is Nothing Then Exit Sub
+    Public Sub Refresh(Optional attributenames As String() = Nothing)
 
-        Dim attrs As New List(Of String)
-
-        For Each pn As String In Entry.Attributes.AttributeNames
-            attrs.Add(pn)
-        Next
-
-        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
-        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
-        If Not response.Entries.Count = 1 Then Exit Sub
-
-        Entry = response.Entries(0)
-    End Sub
-
-    Public Sub Refresh(attributenames As String())
-        If Entry Is Nothing OrElse attributenames Is Nothing Then Exit Sub
-
-        'If attributenames.Count = 1 AndAlso attributesToLoadDefault.Contains(attributenames(0)) Then attributenames = attributesToLoadDefault ' if single value is default then load all of them
-
-        If attributenames.Count > 1 Then
-            Debug.Print("Bulk attribure load requested: {0}", attributenames.Count)
-        Else
-            Debug.Print("Attribure load requested: {0}", attributenames(0))
+        If attributenames Is Nothing Then
+            Debug.Print("Attributes refresh requested")
+        ElseIf attributenames.Count = 1 Then
+            Debug.Print("Attribute ""{0}"" refresh requested", attributenames(0))
+        ElseIf attributenames.Count > 1 Then
+            Debug.Print("Bulk attributes refresh requested")
         End If
 
-        Dim attrs As List(Of String) = attributenames.ToList
-
-        For Each pn As String In Entry.Attributes.AttributeNames
-            If Not attrs.Contains(pn, StringComparer.OrdinalIgnoreCase) Then attrs.Add(pn)
-        Next
-
-        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
+        Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
-        If Not response.Entries.Count = 1 Then Exit Sub
 
-        Entry = response.Entries(0)
-
-        Dim ma As New List(Of String)
-        If attributenames IsNot Nothing Then
-            For Each attr As String In attributenames
-                If Entry.Attributes(attr) Is Nothing Then MissedAttributes.Add(attr)
+        If response.Entries.Count = 1 Then
+            For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                If _cache.ContainsKey(a.Name) Then
+                    _cache(a.Name) = a
+                Else
+                    _cache.Add(a.Name, a)
+                End If
             Next
         End If
     End Sub
 
     Public Sub RefreshAllAllowedAttributes()
-        If Entry Is Nothing OrElse AllowedAttributes Is Nothing Then Exit Sub
+        If AllowedAttributes Is Nothing Then Exit Sub
 
-        Debug.Print("All allowed attributes load requested")
+        Debug.Print("Bulk allowed attributes refresh requested")
 
-        Dim attrs As List(Of String) = AllowedAttributes
-
-        For Each pn As String In Entry.Attributes.AttributeNames
-            If Not attrs.Contains(pn, StringComparer.OrdinalIgnoreCase) Then attrs.Add(pn)
-        Next
-
-        Dim searchRequest = New SearchRequest(Entry.DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attrs.ToArray)
+        Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AllowedAttributes.ToArray)
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
-        If Not response.Entries.Count = 1 Then Exit Sub
 
-        Entry = response.Entries(0)
-
-        Dim ma As New List(Of String)
-        If AllowedAttributes IsNot Nothing Then
-            For Each attr As String In AllowedAttributes
-                If Entry.Attributes(attr) Is Nothing Then MissedAttributes.Add(attr)
+        If response.Entries.Count = 1 Then
+            For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                If _cache.ContainsKey(a.Name) Then
+                    _cache(a.Name) = a
+                Else
+                    _cache.Add(a.Name, a)
+                End If
             Next
         End If
     End Sub
 
     Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
-        If Entry Is Nothing Then Return Nothing
         If returnType Is Nothing Then returnType = GetType(String) 'set default return type to String
 
-        If Not Entry.Attributes.Contains(attributename) AndAlso Not _missedattributes.Contains(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
-        If Not Entry.Attributes.Contains(attributename) Then _missedattributes.Add(attributename) : Return Nothing
+        If Not _cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
+        If Not _cache.ContainsKey(attributename) Then _cache.Add(attributename, Nothing) : Return Nothing
+
+        If _cache(attributename) Is Nothing Then Return Nothing
 
         Select Case returnType
             Case GetType(String)
-                Return If(Entry.Attributes(attributename).Count = 1, Entry.Attributes(attributename)(0), Nothing)
+                Return If(_cache(attributename).Count = 1, _cache(attributename)(0), Nothing)
             Case GetType(String())
                 Dim values As New List(Of String)
-                For Each value As String In Entry.Attributes(attributename).GetValues(GetType(String))
+                For Each value As String In _cache(attributename).GetValues(GetType(String))
                     values.Add(value)
                 Next
                 Return values.ToArray
             Case GetType(Byte())
-                Return If(Entry.Attributes(attributename).Count = 1, Entry.Attributes(attributename).GetValues(GetType(Byte()))(0), Nothing)
+                Return If(_cache(attributename).Count = 1, _cache(attributename).GetValues(GetType(Byte()))(0), Nothing)
             Case GetType(Long)
-                Return If(Entry.Attributes(attributename).Count = 1, Long.Parse(Entry.Attributes(attributename)(0)), Nothing)
+                Return If(_cache(attributename).Count = 1, Long.Parse(_cache(attributename)(0)), Nothing)
             Case GetType(Integer)
-                Return If(Entry.Attributes(attributename).Count = 1, Integer.Parse(Entry.Attributes(attributename)(0)), Nothing)
+                Return If(_cache(attributename).Count = 1, Integer.Parse(_cache(attributename)(0)), Nothing)
             Case GetType(Date)
-                Return If(Entry.Attributes(attributename).Count = 1, Date.ParseExact(Entry.Attributes(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
+                Return If(_cache(attributename).Count = 1, Date.ParseExact(_cache(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
             Case Else
-
-                Throw New OverflowException
+                Throw New TypeLoadException("Unknown attribute return type")
+                Return Nothing
         End Select
-
-        Return Entry.Attributes(attributename)
     End Function
 
     Public Sub SetAttribute(attributename As String, value As Object)
-        'Try
-        '    If Entry Is Nothing Then Exit Property
-        '    If IsNumeric(value) Or IsDate(value) Or Len(value) > 0 Then
-        '        Entry.Properties(propertyname).Value = Trim(value)
-        '    Else
-        '        Entry.Properties(propertyname).Clear()
-        '    End If
+        If value Is Nothing OrElse String.IsNullOrEmpty(value.ToString) Then
 
-        '    Entry.CommitChanges()
+            Try
 
-        '    If _properties.ContainsKey(propertyname) Then _properties.Remove(propertyname)
+                Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Delete, attributename, Nothing)
+                Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+                Refresh({attributename})
 
-        '    NotifyPropertyChanged(propertyname)
-        'Catch ex As Exception
-        '    ThrowException(ex, "Set LdapProperty")
-        'End Try
+            Catch e As DirectoryOperationException
+                Throw e
+            End Try
+
+        Else
+
+            Try
+
+                Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Replace, attributename, value)
+                Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+                Refresh({attributename})
+
+            Catch generatedExceptionName As DirectoryOperationException
+
+                Try
+
+                    Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Add, attributename, value)
+                    Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+                    Refresh({attributename})
+
+                Catch e As DirectoryOperationException
+                    Throw e
+                End Try
+
+            Catch e As Exception
+                Throw e
+            End Try
+
+        End If
+    End Sub
+
+    Public Sub UpdateAttribute(operation As DirectoryAttributeOperation, attributename As String, value As Object)
+        Try
+
+            Dim modifyRequest As New ModifyRequest(distinguishedName, operation, attributename, value)
+            Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+            Refresh({attributename})
+
+        Catch e As Exception
+            Throw e
+        End Try
     End Sub
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Parent As clsDirectoryObject
         Get
-            If Entry Is Nothing Then Return Nothing
-            Dim eDN As List(Of String) = Entry.DistinguishedName.Split({","}, StringSplitOptions.RemoveEmptyEntries).ToList
+            Dim eDN As List(Of String) = distinguishedName.Split({","}, StringSplitOptions.RemoveEmptyEntries).ToList
             If eDN.Count <= 1 Then Return Nothing
             eDN.RemoveAt(0)
-            Return New clsDirectoryObject(Join(eDN.ToArray, ","), Domain)
+            Return New clsDirectoryObject(Join(eDN.ToArray, ","), Domain, {"name", "objectClass", "objectCategory"})
         End Get
     End Property
 
@@ -306,10 +338,8 @@ Public Class clsDirectoryObject
         Get
             _childcontainers.Clear()
 
-            If Entry Is Nothing Then Return _childcontainers
-
             Dim searchRequest As New SearchRequest()
-            searchRequest.DistinguishedName = Entry.DistinguishedName
+            searchRequest.DistinguishedName = distinguishedName
             searchRequest.Filter = "(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"
             searchRequest.Scope = Protocols.SearchScope.OneLevel
             searchRequest.Attributes.AddRange({"name", "objectClass", "objectCategory"})
@@ -374,16 +404,6 @@ Public Class clsDirectoryObject
 
             Return _allowedattributes
         End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public Property MissedAttributes() As List(Of String)
-        Get
-            Return _missedattributes
-        End Get
-        Set(value As List(Of String))
-            _missedattributes = value
-        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -937,8 +957,10 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As BitmapImage
         Get
-            If Entry IsNot Nothing AndAlso GetAttribute("thumbnailPhoto") IsNot Nothing Then
-                Using ms = New System.IO.MemoryStream(CType(GetAttribute("thumbnailPhoto", GetType(Byte())), Byte()))
+            Dim photo = GetAttribute("thumbnailPhoto", GetType(Byte()))
+
+            If photo IsNot Nothing Then
+                Using ms = New System.IO.MemoryStream(CType(photo, Byte()))
                     Dim bi = New BitmapImage()
                     bi.BeginInit()
                     bi.CacheOption = BitmapCacheOption.OnLoad
@@ -949,8 +971,10 @@ Public Class clsDirectoryObject
             Else
                 Return Nothing
             End If
+
         End Get
         Set(value As BitmapImage)
+
             If value Is Nothing Then
                 Try
                     SetAttribute("thumbnailPhoto", Nothing)
@@ -1281,38 +1305,6 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property distinguishedName() As String
-        Get
-            Return If(Entry IsNot Nothing, Entry.DistinguishedName, Nothing)
-        End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property distinguishedNameFormated() As String
-        Get
-            Try
-                Return Join(distinguishedName.Split({",", "CN=", "OU="}, StringSplitOptions.RemoveEmptyEntries).Reverse.Where(Function(x) Not x.StartsWith("DC=")).ToArray, " \ ")
-            Catch
-                Return ""
-            End Try
-        End Get
-    End Property
-
-    Public ReadOnly Property distinguishedNamePrefix() As String
-        Get
-            Throw New Exception
-            If Entry Is Nothing Then Return Nothing
-
-            Dim lastslash = InStrRev(Entry.DistinguishedName, "/")
-            If lastslash > 0 Then
-                Return Entry.DistinguishedName.Substring(0, lastslash)
-            Else
-                Return Nothing
-            End If
-        End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogon() As Long?
         Get
             Return GetAttribute("lastLogon", GetType(Long))
@@ -1604,7 +1596,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property directReports() As ObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property directReports() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _directreports Is Nothing Then
                 Dim o As String() = GetAttribute("directReports", GetType(String()))
@@ -1617,11 +1609,6 @@ Public Class clsDirectoryObject
             End If
             Return _directreports
         End Get
-        Set(value As ObservableCollection(Of clsDirectoryObject))
-            _directreports = value
-
-            NotifyPropertyChanged("directReports")
-        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -1676,7 +1663,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property memberOf() As ObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberof Is Nothing Then
                 Dim o As String() = GetAttribute("memberOf", GetType(String()))
@@ -1689,15 +1676,10 @@ Public Class clsDirectoryObject
             End If
             Return _memberof
         End Get
-        Set(value As ObservableCollection(Of clsDirectoryObject))
-            _memberof = value
-
-            NotifyPropertyChanged("memberOf")
-        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property member() As ObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _member Is Nothing Then
                 Dim o As String() = GetAttribute("member", GetType(String()))
@@ -1710,11 +1692,6 @@ Public Class clsDirectoryObject
             End If
             Return _member
         End Get
-        Set(value As ObservableCollection(Of clsDirectoryObject))
-            _member = value
-
-            NotifyPropertyChanged("member")
-        End Set
     End Property
 
 #End Region

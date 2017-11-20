@@ -34,8 +34,7 @@ Public Class clsSearcher
 
     Public Function SearchSync(Optional root As clsDirectoryObject = Nothing,
                                     Optional filter As clsFilter = Nothing,
-                                    Optional searchscope As SearchScope = SearchScope.Subtree,
-                                    Optional ct As CancellationToken = Nothing) As ObservableCollection(Of clsDirectoryObject)
+                                    Optional searchscope As SearchScope = SearchScope.Subtree) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -66,7 +65,6 @@ Public Class clsSearcher
                 pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
 
                 For Each entry As SearchResultEntry In searchResponse.Entries
-                    If Not ct = Nothing AndAlso ct.IsCancellationRequested Then Return New ObservableCollection(Of clsDirectoryObject)
                     results.Add(New clsDirectoryObject(entry, root.Domain))
                 Next
 
@@ -139,7 +137,12 @@ Public Class clsSearcher
     End Sub
 
     Private Sub SearchAsyncResult(asyncResult As IAsyncResult)
-        asyncResultCollection.Remove(asyncResult)
+        Try
+            asyncResultCollection.Remove(asyncResult)
+        Catch
+            asyncResultCollection.Clear()
+        End Try
+
         If asyncResultCollection.Count = 0 Then NotifySearchAsyncCompleted()
 
         Try
@@ -151,15 +154,9 @@ Public Class clsSearcher
 
             Dim results As New List(Of clsDirectoryObject)
             For Each entry As SearchResultEntry In searchResponse.Entries
-
-                Dim ma As New List(Of String)
-                If helper.attributes IsNot Nothing Then
-                    For Each attr As String In helper.attributes
-                        If entry.Attributes(attr) Is Nothing Then ma.Add(attr)
-                    Next
-                End If
-
-                results.Add(New clsDirectoryObject(entry, helper.root.Domain) With {.MissedAttributes = ma})
+                Dim cache As New Dictionary(Of String, DirectoryAttribute)
+                helper.attributes.Where(Function(x) entry.Attributes(x) Is Nothing).ToList.ForEach(Sub(x) cache.Add(x, Nothing))
+                results.Add(New clsDirectoryObject(entry, helper.root.Domain, cache))
             Next
 
             If results.Count > 0 Then NotifySearchAsyncDataRecieved()
@@ -176,8 +173,10 @@ Public Class clsSearcher
 
     Public Sub StopAllSearchAsync()
         For Each asyncResult In asyncResultCollection
-            CType(asyncResult.AsyncState, clsSearcherHelper).aborted = True
+            If asyncResult IsNot Nothing Then CType(asyncResult.AsyncState, clsSearcherHelper).aborted = True
         Next
+
+        If asyncResultCollection.Count > 0 Then NotifySearchAsyncCompleted()
     End Sub
 
 End Class
