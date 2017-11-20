@@ -16,6 +16,7 @@ Public Class clsPreferences
     Private _clipboardsource As Boolean = False
     Private _clipboardsourcelimit As Boolean = True
     Private _searchresultgrouping As Boolean = False
+    Private _showdeletedobjects As Boolean = False
 
     ' layout
     Private _columns As New ObservableCollection(Of clsDataGridColumnInfo)
@@ -112,6 +113,16 @@ Public Class clsPreferences
         Set(value As Boolean)
             _searchresultgrouping = value
             NotifyPropertyChanged("SearchResultGrouping")
+        End Set
+    End Property
+
+    Public Property ShowDeletedObjects As Boolean
+        Get
+            Return _showdeletedobjects
+        End Get
+        Set(value As Boolean)
+            _showdeletedobjects = value
+            NotifyPropertyChanged("ShowDeletedObjects")
         End Set
     End Property
 

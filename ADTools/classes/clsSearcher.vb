@@ -33,8 +33,8 @@ Public Class clsSearcher
     End Sub
 
     Public Function SearchSync(Optional root As clsDirectoryObject = Nothing,
-                                    Optional filter As clsFilter = Nothing,
-                                    Optional searchscope As SearchScope = SearchScope.Subtree) As ObservableCollection(Of clsDirectoryObject)
+                               Optional filter As clsFilter = Nothing,
+                               Optional searchscope As SearchScope = SearchScope.Subtree) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -48,7 +48,8 @@ Public Class clsSearcher
                 If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
             End If
 
-            searchRequest.Attributes.AddRange({"objectguid"})
+            Dim attributes As String() = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
+            searchRequest.Attributes.AddRange(attributes)
             searchRequest.Scope = searchscope
 
             Dim sortRequestControl As New SortRequestControl("name", False)
@@ -57,6 +58,7 @@ Public Class clsSearcher
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
             searchRequest.Controls.Add(searchOptionsControl)
+            If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
             Dim searchResponse As SearchResponse
             Dim pageResponseControl As PageResultResponseControl
@@ -65,7 +67,9 @@ Public Class clsSearcher
                 pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
 
                 For Each entry As SearchResultEntry In searchResponse.Entries
-                    results.Add(New clsDirectoryObject(entry, root.Domain))
+                    Dim cache As New Dictionary(Of String, DirectoryAttribute)
+                    attributes.Where(Function(x) entry.Attributes(x) Is Nothing).ToList.ForEach(Sub(x) cache.Add(x, Nothing))
+                    results.Add(New clsDirectoryObject(entry, root.Domain, cache))
                 Next
 
                 pageRequestControl.Cookie = pageResponseControl.Cookie
@@ -79,6 +83,55 @@ Public Class clsSearcher
 
         Return results
 
+    End Function
+
+    Public Function SearchChildContainersSync(Optional root As clsDirectoryObject = Nothing,
+                                              Optional filter As clsFilter = Nothing) As ObservableCollection(Of clsDirectoryObject)
+
+        If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
+
+        Dim results As New ObservableCollection(Of clsDirectoryObject)
+
+        Try
+            Dim searchRequest As New SearchRequest()
+            searchRequest.DistinguishedName = root.distinguishedName
+
+            If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
+
+            Dim attributes As String() = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
+            searchRequest.Attributes.AddRange(attributes)
+            searchRequest.Scope = SearchScope.OneLevel
+
+            Dim sortRequestControl As New SortRequestControl("name", False)
+            searchRequest.Controls.Add(sortRequestControl)
+            Dim pageRequestControl As New PageResultRequestControl(1000)
+            searchRequest.Controls.Add(pageRequestControl)
+            Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
+            searchRequest.Controls.Add(searchOptionsControl)
+            If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+
+            Dim searchResponse As SearchResponse
+            Dim pageResponseControl As PageResultResponseControl
+            Do
+                searchResponse = root.Connection.SendRequest(searchRequest)
+                pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
+
+                For Each entry As SearchResultEntry In searchResponse.Entries
+                    Dim cache As New Dictionary(Of String, DirectoryAttribute)
+                    attributes.Where(Function(x) entry.Attributes(x) Is Nothing).ToList.ForEach(Sub(x) cache.Add(x, Nothing))
+                    results.Add(New clsDirectoryObject(entry, root.Domain, cache))
+                Next
+
+                pageRequestControl.Cookie = pageResponseControl.Cookie
+            Loop While pageResponseControl IsNot Nothing AndAlso pageResponseControl.Cookie.Length > 0
+
+            If results.Count > 0 AndAlso results(0).distinguishedName = root.distinguishedName Then results.RemoveAt(0)
+
+        Catch ex As Exception
+            ThrowException(ex, "SearchChildContainersSync")
+        End Try
+
+        Return results
     End Function
 
     Public Sub SearchAsync(returnCollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
@@ -119,6 +172,7 @@ Public Class clsSearcher
                 searchRequest.Controls.Add(pageRequestControl)
                 Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
                 searchRequest.Controls.Add(searchOptionsControl)
+                If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
                 Dim helper As New clsSearcherHelper
                 helper.root = root
@@ -172,11 +226,10 @@ Public Class clsSearcher
     End Sub
 
     Public Sub StopAllSearchAsync()
+        If asyncResultCollection.Count > 0 Then NotifySearchAsyncCompleted()
         For Each asyncResult In asyncResultCollection
             If asyncResult IsNot Nothing Then CType(asyncResult.AsyncState, clsSearcherHelper).aborted = True
         Next
-
-        If asyncResultCollection.Count > 0 Then NotifySearchAsyncCompleted()
     End Sub
 
 End Class

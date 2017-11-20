@@ -26,6 +26,8 @@
                             <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition}"/>
                             <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGrouping}" IsChecked="{Binding SearchResultGrouping}"/>
                             <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGroupingDefinition}"/>
+                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjects}" IsChecked="{Binding ShowDeletedObjects}"/>
+                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition}"/>
                         </StackPanel>
                     </DockPanel>
                 </TabItem>

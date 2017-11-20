@@ -2354,6 +2354,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Restore.
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsRestore() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsRestore", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Restore to container....
+        '''</summary>
+        Public ReadOnly Property wndMain_ctxmnuObjectsRestoreToContainer() As String
+            Get
+                Return ResourceManager.GetString("wndMain_ctxmnuObjectsRestoreToContainer", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Select all.
         '''</summary>
         Public ReadOnly Property wndMain_ctxmnuObjectsSelectAll() As String
@@ -3821,6 +3839,24 @@ Namespace My.Resources
         Public ReadOnly Property wndPreferences_lbl_Basic_SearchResultGroupingDefinition() As String
             Get
                 Return ResourceManager.GetString("wndPreferences_lbl_Basic_SearchResultGroupingDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Show deleted objects.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ShowDeletedObjects() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ShowDeletedObjects", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на The search results will include deleted objects (if available).
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition", resourceCulture)
             End Get
         End Property
         

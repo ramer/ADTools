@@ -33,6 +33,8 @@ Public Class clsDirectoryObject
 
     Private _cache As New Dictionary(Of String, DirectoryAttribute)
 
+    Private searcher As New clsSearcher
+
     Private _domain As clsDomain
     Private _domainname As String
 
@@ -60,15 +62,6 @@ Public Class clsDirectoryObject
         Me.OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
     End Sub
 
-    Public Sub NotifyMoved()
-        NotifyPropertyChanged("distinguishedName")
-        NotifyPropertyChanged("distinguishedNameFormated")
-    End Sub
-
-    Public Sub NotifyRenamed()
-        NotifyPropertyChanged("name")
-    End Sub
-
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
     End Sub
@@ -83,6 +76,7 @@ Public Class clsDirectoryObject
 
         If AttributeNames Is Nothing Then AttributeNames = attributesToLoadDefault
         Dim searchRequest = New SearchRequest(DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AttributeNames)
+        searchRequest.Controls.Add(New ShowDeletedControl())
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
         _cache.Clear()
@@ -123,6 +117,7 @@ Public Class clsDirectoryObject
         Get
             Try
                 Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, {"Objectclass"})
+                searchRequest.Controls.Add(New ShowDeletedControl())
                 Connection.SendRequest(searchRequest)
                 Return True
             Catch ex As Exception
@@ -184,6 +179,7 @@ Public Class clsDirectoryObject
                 _domain = d
 
                 Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributesToLoadDefault)
+                searchRequest.Controls.Add(New ShowDeletedControl())
                 Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
                 _cache.Clear()
@@ -208,6 +204,7 @@ Public Class clsDirectoryObject
         End If
 
         Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
+        searchRequest.Controls.Add(New ShowDeletedControl())
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
         If response.Entries.Count = 1 Then
@@ -227,6 +224,7 @@ Public Class clsDirectoryObject
         Debug.Print("Bulk allowed attributes refresh requested")
 
         Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AllowedAttributes.ToArray)
+        searchRequest.Controls.Add(New ShowDeletedControl())
         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
         If response.Entries.Count = 1 Then
@@ -265,6 +263,8 @@ Public Class clsDirectoryObject
                 Return If(_cache(attributename).Count = 1, Integer.Parse(_cache(attributename)(0)), Nothing)
             Case GetType(Date)
                 Return If(_cache(attributename).Count = 1, Date.ParseExact(_cache(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
+            Case GetType(Boolean)
+                Return If(_cache(attributename).Count = 1, Boolean.Parse(_cache(attributename)(0)), Nothing)
             Case Else
                 Throw New TypeLoadException("Unknown attribute return type")
                 Return Nothing
@@ -288,6 +288,7 @@ Public Class clsDirectoryObject
 
             Try
 
+                If TypeOf value IsNot Byte() Then value = value.ToString
                 Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Replace, attributename, value)
                 Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
                 Refresh({attributename})
@@ -296,6 +297,7 @@ Public Class clsDirectoryObject
 
                 Try
 
+                    If TypeOf value IsNot Byte() Then value = value.ToString
                     Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Add, attributename, value)
                     Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
                     Refresh({attributename})
@@ -323,6 +325,57 @@ Public Class clsDirectoryObject
         End Try
     End Sub
 
+    Public Sub MoveTo(destinationDN As String)
+        Try
+            Dim newName As String = distinguishedName.Split({","}, StringSplitOptions.RemoveEmptyEntries).First
+            Dim modifyDnRequest As New ModifyDNRequest(distinguishedName, destinationDN, newName)
+            Dim modifyDnResponse As ModifyDNResponse = DirectCast(Connection.SendRequest(modifyDnRequest), ModifyDNResponse)
+            _distinguishedName = newName & "," & destinationDN
+            NotifyPropertyChanged("distinguishedName")
+            NotifyPropertyChanged("distinguishedNameFormated")
+        Catch e As Exception
+            Throw e
+        End Try
+    End Sub
+
+    Public Sub Rename(newName As String)
+        Try
+            Dim eDN As List(Of String) = distinguishedName.Split({","}, StringSplitOptions.RemoveEmptyEntries).ToList
+            If eDN.Count <= 1 Then Exit Sub
+            eDN.RemoveAt(0)
+            Dim newParent As String = Join(eDN.ToArray, ",")
+
+            Dim modifyDnRequest As New ModifyDNRequest(distinguishedName, newParent, newName)
+            Dim modifyDnResponse As ModifyDNResponse = DirectCast(Connection.SendRequest(modifyDnRequest), ModifyDNResponse)
+            _distinguishedName = newName & "," & newParent
+            NotifyPropertyChanged("distinguishedName")
+            NotifyPropertyChanged("distinguishedNameFormated")
+            NotifyPropertyChanged("name")
+        Catch e As Exception
+            Throw e
+        End Try
+    End Sub
+
+    Public Sub DeleteTree()
+        Try
+            Dim deleteRequest As New DeleteRequest(distinguishedName)
+            Dim treeDeleteControl As New TreeDeleteControl()
+            deleteRequest.Controls.Add(treeDeleteControl)
+            Dim deleteResponse As DeleteResponse = DirectCast(Connection.SendRequest(deleteRequest), DeleteResponse)
+        Catch e As Exception
+            Throw e
+        End Try
+    End Sub
+
+    Public Sub Delete()
+        Try
+            Dim deleteRequest As New DeleteRequest(distinguishedName)
+            Dim deleteResponse As DeleteResponse = DirectCast(Connection.SendRequest(deleteRequest), DeleteResponse)
+        Catch e As Exception
+            Throw e
+        End Try
+    End Sub
+
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Parent As clsDirectoryObject
         Get
@@ -336,33 +389,13 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
-            _childcontainers.Clear()
+            If IsDeleted Then Return New ObservableCollection(Of clsDirectoryObject)
 
-            Dim searchRequest As New SearchRequest()
-            searchRequest.DistinguishedName = distinguishedName
-            searchRequest.Filter = "(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"
-            searchRequest.Scope = Protocols.SearchScope.OneLevel
-            searchRequest.Attributes.AddRange({"name", "objectClass", "objectCategory"})
+            If _childcontainers.Count > 0 Then Return _childcontainers
 
-            Dim pageRequestControl As New PageResultRequestControl(1000)
-            searchRequest.Controls.Add(pageRequestControl)
-            Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
-            searchRequest.Controls.Add(searchOptionsControl)
-
-            Dim searchResponse As SearchResponse
-            Dim pageResponseControl As PageResultResponseControl
-            Do
-                searchResponse = Connection.SendRequest(searchRequest)
-                pageResponseControl = searchResponse.Controls.Where(Function(rc) TypeOf rc Is PageResultResponseControl).First
-
-                For Each result As SearchResultEntry In searchResponse.Entries
-                    _childcontainers.Add(New clsDirectoryObject(result, Domain))
-                Next
-
-                pageRequestControl.Cookie = pageResponseControl.Cookie
-            Loop While pageResponseControl IsNot Nothing AndAlso pageResponseControl.Cookie.Length > 0
-
-            If _childcontainers.Count > 0 Then _childcontainers.RemoveAt(0) ' remove self
+            _childcontainers = searcher.SearchChildContainersSync(
+                Me,
+                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"))
 
             Return _childcontainers
         End Get
@@ -492,6 +525,18 @@ Public Class clsDirectoryObject
     Public ReadOnly Property IsGroup
         Get
             Return SchemaClass = enmSchemaClass.Group
+        End Get
+    End Property
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsDeleted As Boolean?
+        Get
+            Return GetAttribute("isDeleted", GetType(Boolean))
+        End Get
+    End Property
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property IsRecycled As Boolean?
+        Get
+            Return GetAttribute("isRecycled", GetType(Boolean))
         End Get
     End Property
 
@@ -716,23 +761,32 @@ Public Class clsDirectoryObject
     End Property
 
     Public Sub ResetPassword()
-        If Domain.DefaultPassword = "" Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
+        If String.IsNullOrEmpty(Domain.DefaultPassword) Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
 
-        '_entry.Invoke("SetPassword", Domain.DefaultPassword)
+        Dim modifyUserPassword As New DirectoryAttributeModification()
+        modifyUserPassword.Operation = DirectoryAttributeOperation.Replace
+        modifyUserPassword.Name = "userPassword"
+        modifyUserPassword.Add(Domain.DefaultPassword)
+        Dim modifyRequest As New ModifyRequest(distinguishedName, modifyUserPassword)
+        Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+
         pwdLastSet = 0
-        '_entry.CommitChanges()
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
     Public Sub SetPassword(password As String)
-        '_entry.Invoke("SetPassword", password)
+        If String.IsNullOrEmpty(password) Then Exit Sub
+
+        Dim modifyUserPassword As New DirectoryAttributeModification()
+        modifyUserPassword.Operation = DirectoryAttributeOperation.Replace
+        modifyUserPassword.Name = "userPassword"
+        modifyUserPassword.Add(password)
+        Dim modifyRequest As New ModifyRequest(distinguishedName, modifyUserPassword)
+        Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+
         pwdLastSet = -1
-        '_entry.CommitChanges()
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
-
-
-    'cached ldap properties
 
 #Region "User attributes"
 

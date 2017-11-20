@@ -145,6 +145,8 @@ Module mdlTools
         "givenName",
         "groupType",
         "initials",
+        "isDeleted",
+        "isRecycled",
         "lastLogon",
         "location",
         "mail",
@@ -454,21 +456,6 @@ Module mdlTools
         Next
 
         Return attributes.Values.ToArray.OrderBy(Function(x As clsAttribute) x.Label).ToArray
-    End Function
-
-    Public Function LongFromLargeInteger(largeInteger As Object) As Long
-        Dim valBytes(7) As Byte
-        Dim result As Long
-        Dim type As System.Type = largeInteger.[GetType]()
-        Dim highPart As Integer = CInt(type.InvokeMember("HighPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
-        Dim lowPart As Integer = CInt(type.InvokeMember("LowPart", BindingFlags.GetProperty, Nothing, largeInteger, Nothing))
-        BitConverter.GetBytes(lowPart).CopyTo(valBytes, 0)
-        BitConverter.GetBytes(highPart).CopyTo(valBytes, 4)
-
-        result = BitConverter.ToInt64(valBytes, 0)
-        If result = 9223372036854775807 Then result = 0
-
-        Return result
     End Function
 
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)

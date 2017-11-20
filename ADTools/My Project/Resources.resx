@@ -1502,4 +1502,16 @@ To obtain the API key:
   <data name="wndDomains_lbl_Server" xml:space="preserve">
     <value>Server (optional)</value>
   </data>
+  <data name="wndPreferences_lbl_Basic_ShowDeletedObjects" xml:space="preserve">
+    <value>Show deleted objects</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition" xml:space="preserve">
+    <value>The search results will include deleted objects (if available)</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsRestore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsRestoreToContainer" xml:space="preserve">
+    <value>Restore to container...</value>
+  </data>
 </root>

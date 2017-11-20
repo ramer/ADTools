@@ -167,7 +167,7 @@
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening">
+                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFavorites">
                                             <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesRemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click"/>
@@ -202,8 +202,8 @@
                                             Height="23"
                                             Tag="{Binding}"
                                             AllowDrop="True"
-                                            MouseLeftButtonDown="tviDomains_TreeViewItem_MouseLeftButtonDown"
-                                            ContextMenuOpening="tviDomains_TreeViewItem_ContextMenuOpening"
+                                            MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown"
+                                            ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening"
                                             DragEnter="tviDomains_TreeViewItem_DragEnterDragOver"
                                             DragOver="tviDomains_TreeViewItem_DragEnterDragOver"
                                             Drop="tviDomains_TreeViewItem_Drop">
@@ -317,17 +317,20 @@
 
                             <DataGrid.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">
+                                    <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestore}" Click="ctxmnuObjectsRestore_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRestoreToContainer" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestoreToContainer}" Click="ctxmnuObjectsRestoreToContainer_Click"/>
+                                    <Separator x:Name="ctxmnuObjectsRestoreSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
                                     <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
-                                    <Separator x:Name="ctxmnuObjectsSelectAllSeparator" Visibility="{Binding ElementName=ctxmnuObjectsSelectAll, Path=Visibility, FallbackValue=Collapsed}"/>
+                                    <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsCopySeparator" Visibility="{Binding ElementName=ctxmnuObjectsCopy, Path=Visibility, FallbackValue=Collapsed}"/>
+                                    <Separator x:Name="ctxmnuObjectsCopySeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator" Visibility="{Binding ElementName=ctxmnuObjectsCopyData, Path=Visibility, FallbackValue=Collapsed}"/>
+                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
                                     <MenuItem x:Name="ctxmnuObjectsFilterData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsFilterData}"/>
                                     <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
@@ -336,7 +339,7 @@
                                     <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click"/>
-                                    <Separator x:Name="ctxmnuObjectsPropertiesSeparator" Visibility="{Binding ElementName=ctxmnuObjectsProperties, Path=Visibility, FallbackValue=Collapsed}"/>
+                                    <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>

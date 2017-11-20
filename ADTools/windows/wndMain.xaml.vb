@@ -187,6 +187,7 @@ Class wndMain
 
     Private Sub mnuServicePreferences_Click(sender As Object, e As RoutedEventArgs) Handles mnuServicePreferences.Click
         ShowWindow(New wndPreferences, True, Me, True)
+        RefreshDomainTree()
     End Sub
 
     Private Sub mnuServiceLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceLog.Click
@@ -219,11 +220,14 @@ Class wndMain
 
 #Region "Context Menu"
 
-    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        If TypeOf sp.Tag Is clsFilter Then
-            StartSearch(Nothing, CType(sp.Tag, clsFilter))
-        End If
+    Private Sub tviDomainstviFavorites_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
+        Dim obj As clsDirectoryObject = Nothing
+        If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
+        If obj Is Nothing Then Exit Sub
+
+        If obj.IsDeleted Then e.Handled = True : Exit Sub
+
+        CType(sender, StackPanel).ContextMenu.Tag = {obj}
     End Sub
 
     Private Sub tviFilters_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
@@ -231,14 +235,6 @@ Class wndMain
         If TypeOf CType(sender, StackPanel).DataContext Is clsFilter Then flt = CType(CType(sender, StackPanel).DataContext, clsFilter)
         If flt Is Nothing Then Exit Sub
         CType(sender, StackPanel).ContextMenu.Tag = flt
-    End Sub
-
-    Private Sub tviDomains_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
-        Dim obj As clsDirectoryObject = Nothing
-        If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
-        If obj Is Nothing Then Exit Sub
-
-        CType(sender, StackPanel).ContextMenu.Tag = {obj}
     End Sub
 
     Private Sub dgObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles dgObjects.ContextMenuOpening
@@ -258,19 +254,27 @@ Class wndMain
             If isobjectsflag Then objects = tmpobjs
         End If
 
+        Dim alldeleted As Boolean = objects.Count > 0 AndAlso objects.Where(Function(o) If(o.IsDeleted IsNot Nothing, o.IsDeleted = True, False)).Count = objects.Count
+        ctxmnuObjectsRestore.Visibility = BooleanToVisibility(alldeleted)
+        ctxmnuObjectsRestoreToContainer.Visibility = BooleanToVisibility(alldeleted)
+        ctxmnuObjectsRestoreSeparator.Visibility = ctxmnuObjectsRestore.Visibility
+
         ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
 
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
+        ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
 
         ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(True)
 
         ctxmnuObjectsCopy.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsCopySeparator.Visibility = ctxmnuObjectsCopy.Visibility
         ctxmnuObjectsCut.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsPaste.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
         ctxmnuObjectsPaste.IsEnabled = ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0
         ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
         ctxmnuObjectsCopyData.Visibility = BooleanToVisibility(objects.Count > 0)
+        ctxmnuObjectsCopyDataSeparator.Visibility = ctxmnuObjectsCopyData.Visibility
         ctxmnuObjectsFilterData.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsAddToFavorites.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
@@ -281,6 +285,7 @@ Class wndMain
         ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
 
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
+        ctxmnuObjectsPropertiesSeparator.Visibility = ctxmnuObjectsProperties.Visibility
 
         If objects.Count = 1 Then
             ctxmnuObjectsExternalSoftware.Items.Clear()
@@ -355,6 +360,14 @@ Class wndMain
         End If
 
         dgObjects.ContextMenu.Tag = objects.ToArray
+    End Sub
+
+    Private Sub ctxmnuObjectsRestore_Click(sender As Object, e As RoutedEventArgs)
+        'TODO
+    End Sub
+
+    Private Sub ctxmnuObjectsRestoreToContainer_Click(sender As Object, e As RoutedEventArgs)
+        'TODO
     End Sub
 
     Private Sub ctxmnuObjectsExternalSoftwareItem_Click(sender As Object, e As RoutedEventArgs)
@@ -541,20 +554,17 @@ Class wndMain
 
             Dim obj As clsDirectoryObject = objects(0)
             Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion, Me)
-            'If Len(name) > 0 Then
-            '    If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-            '        obj.Entry.Rename("OU=" & name)
-            '        organizationalunitaffected = True
-            '    Else
-            '        obj.Entry.Rename("CN=" & name)
-            '    End If
-            '    obj.Entry.CommitChanges()
-            '    obj.NotifyRenamed()
-            '    obj.NotifyMoved()
+            If Len(name) > 0 Then
+                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+                    obj.Rename("OU=" & name)
+                    organizationalunitaffected = True
+                Else
+                    obj.Rename("CN=" & name)
+                End If
 
-            '    RefreshDataGrid()
-            '    If organizationalunitaffected Then RefreshDomainTree()
-            'End If
+                RefreshDataGrid()
+                If organizationalunitaffected Then RefreshDomainTree()
+            End If
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedRename_Click")
         End Try
@@ -573,20 +583,20 @@ Class wndMain
         Try
             Dim currentcontaineraffected As Boolean = False
 
-            'If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
-            'If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-            '    If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
-            '    If currentcontainer IsNot Nothing AndAlso objects(0).Entry.Path = currentcontainer.Entry.Path Then currentcontaineraffected = True
-            'End If
+            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+            If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+                If currentcontainer IsNot Nothing AndAlso objects(0).distinguishedName = currentcontainer.distinguishedName Then currentcontaineraffected = True
+            End If
 
-            'objects(0).Entry.DeleteTree()
+            objects(0).DeleteTree()
 
-            'If currentcontaineraffected Then
-            '    OpenObjectParent()
-            '    RefreshDomainTree()
-            'Else
-            '    RefreshDataGrid()
-            'End If
+            If currentcontaineraffected Then
+                OpenObjectParent()
+                RefreshDomainTree()
+            Else
+                RefreshDataGrid()
+            End If
 
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedRemove_Click")
@@ -697,11 +707,18 @@ Class wndMain
         End If
     End Sub
 
-    Private Sub tviDomains_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+    Private Sub tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim sp As StackPanel = CType(sender, StackPanel)
 
         If TypeOf sp.Tag Is clsDirectoryObject Then
             OpenObject(CType(sp.Tag, clsDirectoryObject))
+        End If
+    End Sub
+
+    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        Dim sp As StackPanel = CType(sender, StackPanel)
+        If TypeOf sp.Tag Is clsFilter Then
+            StartSearch(Nothing, CType(sp.Tag, clsFilter))
         End If
     End Sub
 
@@ -898,12 +915,12 @@ Class wndMain
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
-        If current.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
+        If (current.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
            current.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
            current.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer Or
-           current.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Then
+           current.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS) AndAlso
+           (current.IsRecycled Is Nothing OrElse current.IsRecycled = False) Then
             StartSearch(current, Nothing)
-
         Else
             ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
         End If
@@ -1227,21 +1244,15 @@ Class wndMain
             For Each obj In sourceobjects
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
 
-                'obj.Entry.MoveTo(destination.Entry)
-                'obj.NotifyMoved()
+                obj.MoveTo(destination.distinguishedName)
             Next
         Catch ex As Exception
-            ThrowException(ex, "cmdMove")
+            ThrowException(ex, "ObjectsMove")
         End Try
 
         RefreshDataGrid()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
-
-
-
-
-
 
 #End Region
 

@@ -1410,4 +1410,16 @@
   <data name="wndDomains_lbl_Server" xml:space="preserve">
     <value>Сервер (опционально)</value>
   </data>
+  <data name="wndPreferences_lbl_Basic_ShowDeletedObjects" xml:space="preserve">
+    <value>Показывать удаленные объекты</value>
+  </data>
+  <data name="wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition" xml:space="preserve">
+    <value>Результаты поиска будут включать удаленные объекты (если доступно)</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsRestore" xml:space="preserve">
+    <value>Восстановить</value>
+  </data>
+  <data name="wndMain_ctxmnuObjectsRestoreToContainer" xml:space="preserve">
+    <value>Восстановить в контейнер...</value>
+  </data>
 </root>
