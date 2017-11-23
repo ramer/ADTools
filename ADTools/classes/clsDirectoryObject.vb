@@ -3,6 +3,7 @@ Imports System.ComponentModel
 Imports System.DirectoryServices
 Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
+Imports ADTools
 Imports IRegisty
 
 Public Class clsDirectoryObject
@@ -35,7 +36,7 @@ Public Class clsDirectoryObject
 
     Private searcher As New clsSearcher
 
-    Private _domain As clsDomain
+    Private WithEvents _domain As clsDomain
     Private _domainname As String
 
     Private _name As String
@@ -47,8 +48,6 @@ Public Class clsDirectoryObject
     Private _children As New ObservableCollection(Of clsDirectoryObject)
     Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
 
-    Private _properties As New Dictionary(Of String, Object)
-
     Private _manager As clsDirectoryObject
     Private _directreports As ObservableCollection(Of clsDirectoryObject)
 
@@ -57,10 +56,6 @@ Public Class clsDirectoryObject
 
     Private _memberof As ObservableCollection(Of clsDirectoryObject)
     Private _member As ObservableCollection(Of clsDirectoryObject)
-
-    Private Sub NotifyPropertyChanged(propertyName As String)
-        Me.OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
-    End Sub
 
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
@@ -105,6 +100,29 @@ Public Class clsDirectoryObject
         End If
     End Sub
 
+    <RegistrySerializerAfterDeserialize(True)>
+    Public Sub AfterDeserialize()
+        For Each d In domains
+            If d.Name = _domainname Then
+                _domain = d
+
+                Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributesToLoadDefault)
+                searchRequest.Controls.Add(New ShowDeletedControl())
+                Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                _cache.Clear()
+
+                If response.Entries.Count = 1 Then
+                    For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                        _cache.Add(a.Name, a)
+                    Next
+                End If
+            End If
+        Next
+    End Sub
+
+
+
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Connection() As LdapConnection
         Get
@@ -126,11 +144,16 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property distinguishedName() As String
+    <RegistrySerializerAlias("DistinguishedName")>
+    Public Property distinguishedName() As String
         Get
             Return _distinguishedName
         End Get
+        Set(value As String)
+            _distinguishedName = value
+
+            NotifyPropertyChanged("distinguishedName")
+        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -171,27 +194,6 @@ Public Class clsDirectoryObject
             NotifyPropertyChanged("DomainName")
         End Set
     End Property
-
-    <RegistrySerializerAfterDeserialize(True)>
-    Public Sub AfterDeserialize()
-        For Each d In domains
-            If d.Name = _domainname Then
-                _domain = d
-
-                Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributesToLoadDefault)
-                searchRequest.Controls.Add(New ShowDeletedControl())
-                Dim response As SearchResponse = Connection.SendRequest(searchRequest)
-
-                _cache.Clear()
-
-                If response.Entries.Count = 1 Then
-                    For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
-                        _cache.Add(a.Name, a)
-                    Next
-                End If
-            End If
-        Next
-    End Sub
 
     Public Sub Refresh(Optional attributenames As String() = Nothing)
 
@@ -332,7 +334,6 @@ Public Class clsDirectoryObject
             Dim modifyDnResponse As ModifyDNResponse = DirectCast(Connection.SendRequest(modifyDnRequest), ModifyDNResponse)
             _distinguishedName = newName & "," & destinationDN
             NotifyPropertyChanged("distinguishedName")
-            NotifyPropertyChanged("distinguishedNameFormated")
         Catch e As Exception
             Throw e
         End Try
@@ -349,8 +350,6 @@ Public Class clsDirectoryObject
             Dim modifyDnResponse As ModifyDNResponse = DirectCast(Connection.SendRequest(modifyDnRequest), ModifyDNResponse)
             _distinguishedName = newName & "," & newParent
             NotifyPropertyChanged("distinguishedName")
-            NotifyPropertyChanged("distinguishedNameFormated")
-            NotifyPropertyChanged("name")
         Catch e As Exception
             Throw e
         End Try
@@ -578,8 +577,6 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Status() As enmStatus
         Get
-            If _properties.ContainsKey("Status") Then Return _properties("Status")
-
             Dim _status As enmStatus = enmStatus.Normal
 
             If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
@@ -606,8 +603,6 @@ Public Class clsDirectoryObject
                 End If
             End If
 
-            _properties.Add("Status", _status)
-
             Return _status
         End Get
     End Property
@@ -615,8 +610,6 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property StatusFormatted() As String
         Get
-            If _properties.ContainsKey("StatusFormatted") Then Return _properties("StatusFormatted")
-
             Dim _status As String = ""
 
             If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
@@ -644,8 +637,6 @@ Public Class clsDirectoryObject
                 If _status.Length > 1 Then _status = _status.Remove(_status.Length - 1)
             End If
 
-            _properties.Add("StatusFormatted", _status)
-
             Return _status
         End Get
     End Property
@@ -653,8 +644,6 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Image() As BitmapImage
         Get
-            If _properties.ContainsKey("Image") Then Return _properties("Image")
-
             Dim _image As String = ""
 
             If SchemaClass = enmSchemaClass.User Then
@@ -717,7 +706,6 @@ Public Class clsDirectoryObject
             End If
 
             Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
-            _properties.Add("Image", bi)
 
             Return bi
         End Get
@@ -726,8 +714,6 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
-            If _properties.ContainsKey("ClassImage") Then Return _properties("ClassImage")
-
             Dim _image As String = ""
 
             Select Case SchemaClass
@@ -754,7 +740,6 @@ Public Class clsDirectoryObject
             End Select
 
             Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))
-            _properties.Add("ClassImage", bi)
 
             Return bi
         End Get
@@ -763,12 +748,11 @@ Public Class clsDirectoryObject
     Public Sub ResetPassword()
         If String.IsNullOrEmpty(Domain.DefaultPassword) Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
 
-        Dim modifyUserPassword As New DirectoryAttributeModification()
-        modifyUserPassword.Operation = DirectoryAttributeOperation.Replace
-        modifyUserPassword.Name = "userPassword"
-        modifyUserPassword.Add(Domain.DefaultPassword)
-        Dim modifyRequest As New ModifyRequest(distinguishedName, modifyUserPassword)
-        Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+        Dim path = "LDAP://" & If(String.IsNullOrEmpty(Domain.Server), Domain.Name, Domain.Server) & "/" & distinguishedName
+        Using de As New DirectoryEntry(path, Domain.Username, Domain.Password)
+            de.Invoke("SetPassword", Domain.DefaultPassword)
+            de.CommitChanges()
+        End Using
 
         pwdLastSet = 0
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
@@ -777,16 +761,16 @@ Public Class clsDirectoryObject
     Public Sub SetPassword(password As String)
         If String.IsNullOrEmpty(password) Then Exit Sub
 
-        Dim modifyUserPassword As New DirectoryAttributeModification()
-        modifyUserPassword.Operation = DirectoryAttributeOperation.Replace
-        modifyUserPassword.Name = "userPassword"
-        modifyUserPassword.Add(password)
-        Dim modifyRequest As New ModifyRequest(distinguishedName, modifyUserPassword)
-        Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
+        Dim path = "LDAP://" & If(String.IsNullOrEmpty(Domain.Server), Domain.Name, Domain.Server) & "/" & distinguishedName
+        Using de As New DirectoryEntry(path, Domain.Username, Domain.Password)
+            de.Invoke("SetPassword", password)
+            de.CommitChanges()
+        End Using
 
         pwdLastSet = -1
         description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
+
 
 #Region "User attributes"
 
@@ -985,8 +969,6 @@ Public Class clsDirectoryObject
         End Get
         Set(ByVal value As String)
             userPrincipalName = value & "@" & userPrincipalNameDomain
-
-            NotifyPropertyChanged("userPrincipalNameName")
         End Set
     End Property
 
@@ -1003,8 +985,6 @@ Public Class clsDirectoryObject
         End Get
         Set(ByVal value As String)
             userPrincipalName = userPrincipalNameName & "@" & value
-
-            NotifyPropertyChanged("userPrincipalNameDomain")
         End Set
     End Property
 
@@ -1116,12 +1096,6 @@ Public Class clsDirectoryObject
             End Try
 
             NotifyPropertyChanged("groupType")
-            NotifyPropertyChanged("groupTypeScopeDomainLocal")
-            NotifyPropertyChanged("groupTypeScopeDomainGlobal")
-            NotifyPropertyChanged("groupTypeScopeDomainUniversal")
-            NotifyPropertyChanged("groupTypeSecurity")
-            NotifyPropertyChanged("groupTypeDistribution")
-            NotifyPropertyChanged("Image")
         End Set
     End Property
 
@@ -1269,10 +1243,6 @@ Public Class clsDirectoryObject
             If value IsNot Nothing Then SetAttribute("accountExpires", value)
 
             NotifyPropertyChanged("accountExpires")
-            NotifyPropertyChanged("accountExpiresDate")
-            NotifyPropertyChanged("accountExpiresFormated")
-            NotifyPropertyChanged("accountExpiresFlag")
-            NotifyPropertyChanged("accountNeverExpires")
         End Set
     End Property
 
@@ -1291,8 +1261,6 @@ Public Class clsDirectoryObject
         End Get
         Set(ByVal value As Date)
             accountExpires = value.ToFileTime
-
-            NotifyPropertyChanged("accountExpiresDate")
         End Set
     End Property
 
@@ -1323,7 +1291,6 @@ Public Class clsDirectoryObject
         Set(ByVal value As Boolean?)
             If value IsNot Nothing Then
                 accountExpires = If(value, 0, Now.ToFileTime)
-                NotifyPropertyChanged("accountNeverExpires")
             End If
         End Set
     End Property
@@ -1394,7 +1361,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    <RegistrySerializerAlias("Name")>
+    <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property name() As String
         Get
             Return If(GetAttribute("name"), "Null object")
@@ -1430,11 +1397,6 @@ Public Class clsDirectoryObject
             If value IsNot Nothing Then SetAttribute("pwdLastSet", value)
 
             NotifyPropertyChanged("pwdLastSet")
-            NotifyPropertyChanged("pwdLastSetDate")
-            NotifyPropertyChanged("pwdLastSetFormated")
-            NotifyPropertyChanged("passwordExpiresDate")
-            NotifyPropertyChanged("passwordExpiresFormated")
-            NotifyPropertyChanged("userMustChangePasswordNextLogon")
         End Set
     End Property
 
@@ -1515,13 +1477,6 @@ Public Class clsDirectoryObject
             If value IsNot Nothing Then SetAttribute("userAccountControl", value)
 
             NotifyPropertyChanged("userAccountControl")
-            NotifyPropertyChanged("normalAccount")
-            NotifyPropertyChanged("disabled")
-            NotifyPropertyChanged("disabledFormated")
-            NotifyPropertyChanged("passwordNeverExpires")
-            NotifyPropertyChanged("passwordExpiresDate")
-            NotifyPropertyChanged("passwordExpiresFormated")
-            NotifyPropertyChanged("Image")
         End Set
     End Property
 
@@ -1750,5 +1705,121 @@ Public Class clsDirectoryObject
 
 #End Region
 
+#Region "Events"
+
+    Private Sub Domain_ObjectChanged(sender As Object, e As ObjectChangedEventArgs) Handles _domain.ObjectChanged
+        If e.Entry Is Nothing OrElse e.DistinguishedName <> distinguishedName Then Exit Sub
+
+        Dim newcache As New Dictionary(Of String, DirectoryAttribute)
+        For Each attribute As DirectoryAttribute In e.Entry.Attributes.Values
+            newcache.Add(attribute.Name, attribute)
+        Next
+
+        Try
+            For Each n In newcache.Keys
+                If _cache.ContainsKey(n) Then
+                    If Not AttributeEquals(_cache(n), newcache(n)) Then
+                        Debug.WriteLine(distinguishedName & " - " & n & " attribute changed:")
+                        Debug.Write("From:")
+                        For Each item In _cache(n).GetValues(GetType(String))
+                            Debug.WriteLine(vbTab & item)
+                        Next
+                        Debug.Write("To:")
+                        For Each item In newcache(n).GetValues(GetType(String))
+                            Debug.WriteLine(vbTab & item)
+                        Next
+                        _cache(n) = newcache(n)
+                        NotifyPropertyChanged(n)
+                    End If
+                Else
+                    Debug.WriteLine(distinguishedName & " - " & n & " attribute added:")
+                    Debug.Write("Value:")
+                    For Each item In newcache(n).GetValues(GetType(String))
+                        Debug.WriteLine(vbTab & item)
+                    Next
+                    _cache.Add(n, newcache(n))
+                    NotifyPropertyChanged(n)
+                End If
+
+            Next
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Function AttributeEquals(a As DirectoryAttribute, b As DirectoryAttribute) As Boolean
+        Dim aval() = a.GetValues(GetType(String))
+        Dim bval() = b.GetValues(GetType(String))
+        If aval.Count <> bval.Count Then Return False
+
+        For i = 0 To aval.Count - 1
+            If Not aval(i) = bval(i) Then Return False
+        Next
+
+        Return True
+    End Function
+
+    Private Sub NotifyPropertyChanged(propertyName As String)
+        OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
+
+        Select Case LCase(propertyName)
+            Case "distinguishedname"
+                NotifyPropertyChanged("distinguishedNameFormated")
+                NotifyPropertyChanged("name")
+            Case "distinguishedname"
+                NotifyPropertyChanged("distinguishedNameFormated")
+            Case "userprincipalname"
+                NotifyPropertyChanged("userPrincipalNameName")
+                NotifyPropertyChanged("userPrincipalNameDomain")
+            Case "thumbnailphoto"
+                NotifyPropertyChanged("StatusImage")
+            Case "grouptype"
+                NotifyPropertyChanged("groupTypeScopeDomainLocal")
+                NotifyPropertyChanged("groupTypeScopeDomainGlobal")
+                NotifyPropertyChanged("groupTypeScopeDomainUniversal")
+                NotifyPropertyChanged("groupTypeSecurity")
+                NotifyPropertyChanged("groupTypeDistribution")
+                NotifyPropertyChanged("Image")
+            Case "accountexpires"
+                NotifyPropertyChanged("accountExpiresDate")
+                NotifyPropertyChanged("accountExpiresFormated")
+                NotifyPropertyChanged("accountNeverExpires")
+                NotifyPropertyChanged("accountExpiresAt")
+
+                NotifyPropertyChanged("Image")
+                NotifyPropertyChanged("Status")
+                NotifyPropertyChanged("StatusFormatted")
+
+                NotifyPropertyChanged("StatusImage")
+            Case "pwdlastset"
+                NotifyPropertyChanged("pwdLastSetDate")
+                NotifyPropertyChanged("pwdLastSetFormated")
+                NotifyPropertyChanged("passwordExpiresDate")
+                NotifyPropertyChanged("passwordExpiresFormated")
+                NotifyPropertyChanged("userMustChangePasswordNextLogon")
+
+                NotifyPropertyChanged("Image")
+                NotifyPropertyChanged("Status")
+                NotifyPropertyChanged("StatusFormatted")
+
+                NotifyPropertyChanged("StatusImage")
+            Case "useraccountcontrol"
+                NotifyPropertyChanged("normalAccount")
+                NotifyPropertyChanged("disabled")
+                NotifyPropertyChanged("disabledFormated")
+                NotifyPropertyChanged("passwordNeverExpires")
+                NotifyPropertyChanged("passwordExpiresDate")
+                NotifyPropertyChanged("passwordExpiresFormated")
+                NotifyPropertyChanged("userMustChangePasswordNextLogon")
+
+                NotifyPropertyChanged("Image")
+                NotifyPropertyChanged("Status")
+                NotifyPropertyChanged("StatusFormatted")
+
+                NotifyPropertyChanged("StatusImage")
+        End Select
+    End Sub
+
+#End Region
 
 End Class

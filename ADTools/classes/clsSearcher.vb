@@ -34,7 +34,8 @@ Public Class clsSearcher
 
     Public Function SearchSync(Optional root As clsDirectoryObject = Nothing,
                                Optional filter As clsFilter = Nothing,
-                               Optional searchscope As SearchScope = SearchScope.Subtree) As ObservableCollection(Of clsDirectoryObject)
+                               Optional searchscope As SearchScope = SearchScope.Subtree,
+                               Optional attributes As String() = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -48,7 +49,7 @@ Public Class clsSearcher
                 If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
             End If
 
-            Dim attributes As String() = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
+            If attributes Is Nothing Then attributes = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
             searchRequest.Attributes.AddRange(attributes)
             searchRequest.Scope = searchscope
 
@@ -86,7 +87,8 @@ Public Class clsSearcher
     End Function
 
     Public Function SearchChildContainersSync(Optional root As clsDirectoryObject = Nothing,
-                                              Optional filter As clsFilter = Nothing) As ObservableCollection(Of clsDirectoryObject)
+                                              Optional filter As clsFilter = Nothing,
+                                              Optional attributes As String() = Nothing) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -98,7 +100,7 @@ Public Class clsSearcher
 
             If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
 
-            Dim attributes As String() = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
+            If attributes Is Nothing Then attributes = {"name", "objectClass", "objectCategory", "isRecycled", "isDeleted"}
             searchRequest.Attributes.AddRange(attributes)
             searchRequest.Scope = SearchScope.OneLevel
 
@@ -137,7 +139,8 @@ Public Class clsSearcher
     Public Sub SearchAsync(returnCollection As clsThreadSafeObservableCollection(Of clsDirectoryObject),
                             Optional parentObject As clsDirectoryObject = Nothing,
                             Optional filter As clsFilter = Nothing,
-                            Optional specificDomains As ObservableCollection(Of clsDomain) = Nothing)
+                            Optional specificDomains As ObservableCollection(Of clsDomain) = Nothing,
+                            Optional attributes As String() = Nothing)
 
         StopAllSearchAsync()
 
@@ -150,7 +153,9 @@ Public Class clsSearcher
             roots = New List(Of clsDirectoryObject) From {parentObject}
             searchscope = SearchScope.OneLevel
         Else
-            roots = If(specificDomains Is Nothing, domains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList, specificDomains.Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
+            roots = If(specificDomains Is Nothing,
+                domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList,
+                specificDomains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
             searchscope = SearchScope.Subtree
         End If
 
@@ -163,6 +168,7 @@ Public Class clsSearcher
                     If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Filter) Then searchRequest.Filter = filter.Filter
                 End If
 
+                If attributes Is Nothing Then attributes = attributesToLoadDefault
                 searchRequest.Attributes.AddRange(attributesToLoadDefault)
                 searchRequest.Scope = searchscope
 

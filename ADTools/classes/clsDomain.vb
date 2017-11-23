@@ -1,10 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports System.DirectoryServices
 Imports System.DirectoryServices.Protocols
 Imports System.Net
-Imports System.Threading
-Imports System.Threading.Tasks
 Imports CredentialManagement
 Imports HandlebarsDotNet
 Imports IRegisty
@@ -12,7 +9,8 @@ Imports IRegisty
 Public Class clsDomain
     Implements INotifyPropertyChanged
 
-    Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+    Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+    Public Event ObjectChanged(sender As Object, e As ObjectChangedEventArgs)
 
     Private _name As String
     Private _username As String
@@ -20,6 +18,7 @@ Public Class clsDomain
     Private _server As String
 
     Private _connection As LdapConnection
+    Private WithEvents _watcher As clsWatcher
 
     Private _defaultnamingcontext As String
     Private _configurationnamingcontext As String
@@ -50,130 +49,143 @@ Public Class clsDomain
     Private _mailboxpattern As String = ""
 
     Private _issearchable As Boolean = True
+
+    Private _enablewatcher As Boolean
+
     Private _validated As Boolean
 
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
     End Sub
 
+    Protected Overridable Sub OnObjectChanged(e As ObjectChangedEventArgs)
+        RaiseEvent ObjectChanged(Me, e)
+    End Sub
+
     Private Sub NotifyPropertyChanged(propertyName As String)
         OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
+    End Sub
+
+    Private Sub NotifyObjectChanged(ocea As ObjectChangedEventArgs)
+        OnObjectChanged(ocea)
     End Sub
 
     Sub New()
 
     End Sub
 
-    <RegistrySerializerAfterSerialize(True)>
-    Public Sub AfterSerialize()
-        Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
-        cred.PersistanceType = PersistanceType.Enterprise
-        cred.Username = _username
-        cred.Password = _password
-        cred.Save()
-    End Sub
-
-    <RegistrySerializerAfterDeserialize(True)>
-    Public Sub AfterDeserialize()
-        Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
-        cred.PersistanceType = PersistanceType.Enterprise
-        cred.Load()
-        Username = cred.Username
-        Password = cred.Password
-
-        Validated = False
-        If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Exit Sub
-
-        Dim endpoint As String = If(String.IsNullOrEmpty(Server), Name, Server)
-
-        If Connection IsNot Nothing Then Connection.Dispose()
-
-        Dim ldapdi As New LdapDirectoryIdentifier(endpoint)
-        Dim ldapnc As New NetworkCredential(Username, Password)
-        Dim ldapconnection As New LdapConnection(ldapdi, ldapnc)
-        ldapconnection.SessionOptions.TcpKeepAlive = True
-        ldapconnection.SessionOptions.AutoReconnect = True
-        ldapconnection.AutoBind = True
-        Try
-            ldapconnection.Bind()
-            Connection = ldapconnection
-            Validated = True
-        Catch ex As Exception
-            Connection = Nothing
-            Exit Sub
-        End Try
-
-        If String.IsNullOrEmpty(DefaultNamingContext) Then Exit Sub
-        If String.IsNullOrEmpty(ConfigurationNamingContext) Then Exit Sub
-        If String.IsNullOrEmpty(SearchRoot) Then Exit Sub
-        If String.IsNullOrEmpty(SchemaNamingContext) Then Exit Sub
+    Private Function LoadCredentials() As Boolean
+        If String.IsNullOrEmpty(Name) Then Return False
 
         Try
-            If DefaultGroupsDN.Count > 0 Then DefaultGroups = New ObservableCollection(Of clsDirectoryObject)(DefaultGroupsDN.Select(Function(x As String) New clsDirectoryObject(x, Me)).ToList)
+            Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
+            cred.PersistanceType = PersistanceType.Enterprise
+            cred.Load()
+            Username = cred.Username
+            Password = cred.Password
+            Return True
         Catch ex As Exception
-
+            Return False
         End Try
+    End Function
 
-        Validated = True
-    End Sub
+    Private Function SaveCredentials() As Boolean
+        If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
-    Public Async Function ConnectAsync() As Task(Of Boolean)
-        Validated = False
+        Try
+            Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
+            cred.PersistanceType = PersistanceType.Enterprise
+            cred.Username = _username
+            cred.Password = _password
+            cred.Save()
+
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Private Function SetupConnection() As Boolean
         If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
         Dim endpoint As String = If(String.IsNullOrEmpty(Server), Name, Server)
 
-        If Connection IsNot Nothing Then Connection.Dispose()
+        If Connection IsNot Nothing Then
+            If Watcher IsNot Nothing Then StopWatcher()
+            Connection.Dispose()
+        End If
 
         Dim ldapdi As New LdapDirectoryIdentifier(endpoint)
         Dim ldapnc As New NetworkCredential(Username, Password)
         Dim ldapconnection As New LdapConnection(ldapdi, ldapnc)
         ldapconnection.SessionOptions.TcpKeepAlive = True
         ldapconnection.SessionOptions.AutoReconnect = True
+        'ldapconnection.Timeout = TimeSpan.FromSeconds(5)
         ldapconnection.AutoBind = True
         Try
             ldapconnection.Bind()
             Connection = ldapconnection
+            Return True
         Catch ex As Exception
             Connection = Nothing
             Return False
         End Try
+    End Function
 
-        Dim success As Boolean = False
+    Private Function StartWatcher() As Boolean
+        If Connection Is Nothing Or String.IsNullOrEmpty(DefaultNamingContext) Then Return False
+        If Watcher IsNot Nothing Then Return False
+        Watcher = New clsWatcher(Connection)
+        Return Watcher.Register(DefaultNamingContext, SearchScope.Subtree)
+    End Function
 
+    Private Function StopWatcher() As Boolean
+        If Watcher Is Nothing Then Return False
+        Watcher.Dispose()
+        Watcher = Nothing
+        Return True
+    End Function
+
+    Private Async Function UpdateNamingContextsAsync() As Task(Of Boolean)
         'defaultNamingContext
         'configurationNamingContext
         'schemaNamingContext
-        success = Await Task.Run(
+        'search root
+
+        Return Await Task.Run(
             Function()
                 Try
-                    Dim searchRequest = New SearchRequest(Nothing, "(objectClass=*)", Protocols.SearchScope.Base, {"defaultNamingContext", "configurationNamingContext", "schemaNamingContext"})
+                    Dim searchRequest = New SearchRequest(Nothing, "(objectClass=*)", SearchScope.Base, {"defaultNamingContext", "configurationNamingContext", "schemaNamingContext"})
                     Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
                     DefaultNamingContext = response.Entries(0).Attributes("defaultNamingContext")(0)
                     ConfigurationNamingContext = response.Entries(0).Attributes("configurationNamingContext")(0)
                     SchemaNamingContext = response.Entries(0).Attributes("schemaNamingContext")(0)
+                    If String.IsNullOrEmpty(SearchRoot) AndAlso Not String.IsNullOrEmpty(DefaultNamingContext) Then SearchRoot = DefaultNamingContext
+
+                    Return True
                 Catch
                     DefaultNamingContext = Nothing
                     ConfigurationNamingContext = Nothing
                     SchemaNamingContext = Nothing
+                    SearchRoot = Nothing
                     Return False
                 End Try
-                Return True
             End Function)
-        If Not success Then Return False
+    End Function
 
-
+    Private Async Function UpdatePropertiesAsync() As Task(Of Boolean)
         'properties
-        Properties = Await Task.Run(
+
+        Return Await Task.Run(
             Function()
-                Dim p As New ObservableCollection(Of clsDomainProperty)
                 Try
-                    Dim searchRequest = New SearchRequest(DefaultNamingContext, "(objectClass=*)", Protocols.SearchScope.Base, {"lockoutThreshold", "lockoutDuration", "lockOutObservationWindow", "maxPwdAge", "minPwdAge", "minPwdLength", "pwdProperties", "pwdHistoryLength"})
+                    Dim searchRequest = New SearchRequest(DefaultNamingContext, "(objectClass=*)", SearchScope.Base, {"lockoutThreshold", "lockoutDuration", "lockOutObservationWindow", "maxPwdAge", "minPwdAge", "minPwdLength", "pwdProperties", "pwdHistoryLength"})
                     Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
                     MaxPwdAge = -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days
 
-                    p.Clear()
+                    Dim p As New ObservableCollection(Of clsDomainProperty)
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutThreshold, String.Format(My.Resources.clsDomain_msg_PropLockoutThresholdFormat, response.Entries(0).Attributes("lockoutThreshold")(0))))
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutDuration, String.Format(My.Resources.clsDomain_msg_PropLockoutDurationFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockoutDuration")(0))).Minutes)))
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutObservationWindow, String.Format(My.Resources.clsDomain_msg_PropLockoutObservationWindowFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockOutObservationWindow")(0))).Minutes)))
@@ -182,59 +194,119 @@ Public Class clsDomain
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordLenght, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordLenghtFormat, response.Entries(0).Attributes("minPwdLength")(0))))
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordComplexityRequirements, String.Format(My.Resources.clsDomain_msg_PropPasswordComplexityRequirementsFormat, CBool(response.Entries(0).Attributes("pwdProperties")(0)))))
                     p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordHistory, String.Format(My.Resources.clsDomain_msg_PropPasswordHistoryFormat, response.Entries(0).Attributes("pwdHistoryLength")(0))))
+
+                    Properties = p
+                    Return True
                 Catch ex As Exception
-                    p.Clear()
+                    Return False
                 End Try
-                Return p
             End Function)
+    End Function
 
-        'domain suffixes
-        Suffixes = Await Task.Run(
-            Function()
-                Dim s As New ObservableCollection(Of String)
-                Try
-                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(&(objectClass=crossRef)(systemFlags=3))", Protocols.SearchScope.Subtree, {"dnsRoot"})
-                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
-
-                    For Each suffix As SearchResultEntry In response.Entries
-                        s.Add(LCase(suffix.Attributes("dnsRoot")(0)))
-                    Next suffix
-                Catch ex As Exception
-                    s.Clear()
-                End Try
-                Return s
-            End Function)
-
-
-        'search root
-        If String.IsNullOrEmpty(SearchRoot) AndAlso Not String.IsNullOrEmpty(DefaultNamingContext) Then SearchRoot = DefaultNamingContext
-
+    Private Async Function UpdateExchangeServersAsync() As Task(Of Boolean)
         'exchange servers
-        ExchangeServers = Await Task.Run(
+
+        Return Await Task.Run(
             Function()
-                Dim e As New ObservableCollection(Of String)
                 Try
-                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(objectClass=msExchExchangeServer)", Protocols.SearchScope.Subtree, {"name"})
+                    Dim e As New ObservableCollection(Of String)
+                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(objectClass=msExchExchangeServer)", SearchScope.Subtree, {"name"})
                     Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
                     For Each exch As SearchResultEntry In response.Entries
                         e.Add(LCase(exch.Attributes("name")(0)))
                     Next exch
-                Catch ex As Exception
-                    e.Clear()
-                End Try
-                Return e
-            End Function)
 
-        If Not String.IsNullOrEmpty(ExchangeServer) AndAlso Not ExchangeServers.Contains(ExchangeServer) Then
-            UseExchange = False
-            ExchangeServer = Nothing
+                    ExchangeServers = e
+
+                    If Not String.IsNullOrEmpty(ExchangeServer) AndAlso Not ExchangeServers.Contains(ExchangeServer) Then
+                        UseExchange = False
+                        ExchangeServer = Nothing
+                    End If
+
+                    Return True
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function)
+    End Function
+
+    Private Async Function UpdateSuffixesAsync() As Task(Of Boolean)
+        'domain suffixes
+
+        Return Await Task.Run(
+            Function()
+                Try
+                    Dim s As New ObservableCollection(Of String)
+                    Dim searchRequest = New SearchRequest(ConfigurationNamingContext, "(&(objectClass=crossRef)(systemFlags=3))", SearchScope.Subtree, {"dnsRoot"})
+                    Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                    For Each suffix As SearchResultEntry In response.Entries
+                        s.Add(LCase(suffix.Attributes("dnsRoot")(0)))
+                    Next suffix
+
+                    Suffixes = s
+                    Return True
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function)
+    End Function
+
+    Private Async Function UpdateDefaultGroupsAsync() As Task(Of Boolean)
+        Return Await Task.Run(
+            Function()
+                Try
+                    If DefaultGroupsDN.Count > 0 Then DefaultGroups = New ObservableCollection(Of clsDirectoryObject)(DefaultGroupsDN.Select(Function(x As String) New clsDirectoryObject(x, Me)).ToList)
+                    Return True
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function)
+    End Function
+
+    <RegistrySerializerAfterSerialize(True)>
+    Public Sub AfterSerialize()
+        SaveCredentials()
+    End Sub
+
+    <RegistrySerializerAfterDeserialize(True)>
+    Public Async Sub AfterDeserialize()
+        Validated = False
+
+        If Not LoadCredentials() Then Exit Sub
+        If Not SetupConnection() Then Exit Sub
+
+        If String.IsNullOrEmpty(DefaultNamingContext) Or
+        String.IsNullOrEmpty(ConfigurationNamingContext) Or
+        String.IsNullOrEmpty(SchemaNamingContext) Then
+            If Not Await UpdateNamingContextsAsync() Then Exit Sub
         End If
 
-        Validated = True
+        If EnableWatcher Then StartWatcher()
 
-        Return True
+        If String.IsNullOrEmpty(SearchRoot) Then SearchRoot = DefaultNamingContext
+
+        Await UpdateDefaultGroupsAsync()
+
+        Validated = True
+    End Sub
+
+    Public Async Function ConnectAsync() As Task
+        Validated = False
+
+        If Not SetupConnection() Then Return
+        If Not Await UpdateNamingContextsAsync() Then Return
+
+        If EnableWatcher Then StartWatcher()
+
+        Await UpdatePropertiesAsync()
+        Await UpdateSuffixesAsync()
+        Await UpdateExchangeServersAsync()
+
+        Validated = True
     End Function
+
 
 
     Public Property Name() As String
@@ -291,6 +363,16 @@ Public Class clsDomain
         End Set
     End Property
 
+    <RegistrySerializerIgnorable(True)>
+    Public Property Watcher() As clsWatcher
+        Get
+            Return _watcher
+        End Get
+        Set(value As clsWatcher)
+            _watcher = value
+            NotifyPropertyChanged("Watcher")
+        End Set
+    End Property
 
 
 
@@ -455,6 +537,7 @@ Public Class clsDomain
         End Get
         Set(value As ObservableCollection(Of clsDirectoryObject))
             _defaultgroups = value
+            _defaultgroupsdn = New ObservableCollection(Of String)(_defaultgroups.Select(Function(x) x.distinguishedName).ToList)
             NotifyPropertyChanged("DefaultGroups")
         End Set
     End Property
@@ -520,5 +603,26 @@ Public Class clsDomain
             NotifyPropertyChanged("IsSearchable")
         End Set
     End Property
+
+    Public Property EnableWatcher As Boolean
+        Get
+            Return _enablewatcher
+        End Get
+        Set(value As Boolean)
+            _enablewatcher = value
+
+            If value Then
+                StartWatcher()
+            Else
+                StopWatcher()
+            End If
+
+            NotifyPropertyChanged("EnableWatcher")
+        End Set
+    End Property
+
+    Private Sub Watcher_ObjectChanged(sender As Object, e As ObjectChangedEventArgs) Handles _watcher.ObjectChanged
+        NotifyObjectChanged(e)
+    End Sub
 
 End Class

@@ -1514,4 +1514,10 @@ To obtain the API key:
   <data name="wndMain_ctxmnuObjectsRestoreToContainer" xml:space="preserve">
     <value>Restore to container...</value>
   </data>
+  <data name="wndDomains_lbl_EnableWatcher" xml:space="preserve">
+    <value>Track objects changes</value>
+  </data>
+  <data name="wndDomains_lbl_EnableWatcherDefinition" xml:space="preserve">
+    <value>Update objects attributes when they are changed on the server</value>
+  </data>
 </root>

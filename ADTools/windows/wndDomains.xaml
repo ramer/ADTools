@@ -79,6 +79,8 @@
                                 </Grid>
                             </DockPanel>
                             <Button x:Name="btnConnect" Content="{x:Static r:Resources.wndDomains_lbl_Connect}" Width="100" Height="23" HorizontalAlignment="Right"/>
+                            <TextBlock Text="{x:Static r:Resources.wndDomains_lbl_EnableWatcher}" Margin="0,0,0,5"/>
+                            <CheckBox x:Name="chbEnableWatcher" Height="23" Content="{x:Static r:Resources.wndDomains_lbl_EnableWatcherDefinition}" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.EnableWatcher, Mode=TwoWay}"/>
                         </StackPanel>
                         <ListView x:Name="lvDomainProperties" AlternationCount="2" DockPanel.Dock="Bottom" ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.Properties}" Foreground="Black">
                             <ListView.View>

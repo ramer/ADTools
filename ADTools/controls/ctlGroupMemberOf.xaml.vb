@@ -69,6 +69,9 @@ Public Class ctlGroupMemberOf
 
             .Mode = enmMode.DomainDefaultGroups
 
+            .lvSelectedGroups.Items.Clear()
+            .InitializeAsync()
+
             ._currentdomaingroups.Clear()
             .lvDomainGroups.ItemsSource = If(._currentdomain IsNot Nothing, ._currentdomaingroups, Nothing)
         End With

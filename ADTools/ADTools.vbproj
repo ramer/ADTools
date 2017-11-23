@@ -121,6 +121,7 @@
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
+    <Compile Include="classes\clsWatcher.vb" />
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
     <Compile Include="controls\ctlContactMailbox.xaml.vb">

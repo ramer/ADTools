@@ -1672,6 +1672,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Track objects changes.
+        '''</summary>
+        Public ReadOnly Property wndDomains_lbl_EnableWatcher() As String
+            Get
+                Return ResourceManager.GetString("wndDomains_lbl_EnableWatcher", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Update objects attributes when they are changed on the server.
+        '''</summary>
+        Public ReadOnly Property wndDomains_lbl_EnableWatcherDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndDomains_lbl_EnableWatcherDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Password.
         '''</summary>
         Public ReadOnly Property wndDomains_lbl_Password() As String

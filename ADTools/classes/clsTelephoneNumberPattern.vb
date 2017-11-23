@@ -1,4 +1,6 @@
 ﻿Imports System.ComponentModel
+Imports HandlebarsDotNet
+Imports IRegisty
 
 Public Class clsTelephoneNumberPattern
     Implements INotifyPropertyChanged
@@ -7,6 +9,7 @@ Public Class clsTelephoneNumberPattern
 
     Private _label As String
     Private _pattern As String
+    Private _template As Func(Of Object, String)
     Private _range As String
 
     Private Sub NotifyPropertyChanged(propertyName As String)
@@ -18,9 +21,9 @@ Public Class clsTelephoneNumberPattern
     End Sub
 
     Sub New(Label As String, Pattern As String, Range As String)
-        _label = Label
-        _pattern = Pattern
-        _range = Range
+        Me.Label = Label
+        Me.Pattern = Pattern
+        Me.Range = Range
     End Sub
 
     Sub New()
@@ -43,7 +46,19 @@ Public Class clsTelephoneNumberPattern
         End Get
         Set(ByVal value As String)
             _pattern = value
+            Template = Handlebars.Compile(_pattern)
             NotifyPropertyChanged("Pattern")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property Template() As Func(Of Object, String)
+        Get
+            Return _template
+        End Get
+        Set(ByVal value As Func(Of Object, String))
+            _template = value
+            NotifyPropertyChanged("Template")
         End Set
     End Property
 

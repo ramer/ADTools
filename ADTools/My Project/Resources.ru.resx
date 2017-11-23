@@ -1422,4 +1422,10 @@
   <data name="wndMain_ctxmnuObjectsRestoreToContainer" xml:space="preserve">
     <value>Восстановить в контейнер...</value>
   </data>
+  <data name="wndDomains_lbl_EnableWatcher" xml:space="preserve">
+    <value>Отслеживать изменения объектов</value>
+  </data>
+  <data name="wndDomains_lbl_EnableWatcherDefinition" xml:space="preserve">
+    <value>Обновлять атрибуты объектов при их изменении на сервере</value>
+  </data>
 </root>
