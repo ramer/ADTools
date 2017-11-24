@@ -11,7 +11,7 @@
         Width="762"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="/images/domain.ico">
+        Icon="/images/domain.png">
 
     <Window.Resources>
         <local:ConverterBooleanToVisibilityInverted x:Key="ConverterBooleanToVisibilityInverted" />
@@ -45,9 +45,9 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel>
-                                                <Image Height="16" Width="16" Source="/images/domain.ico" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <Image Height="16" Width="16" Source="/images/domain.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                 <TextBlock Text="{Binding Name}"/>
-                                                <Image Height="16" Width="16" Source="/images/warning.ico" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Validated, Converter={StaticResource ConverterBooleanToVisibilityInverted}}"/>
+                                                <Image Height="16" Width="16" Source="/images/warning.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Validated, Converter={StaticResource ConverterBooleanToVisibilityInverted}}"/>
                                             </DockPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -90,7 +90,7 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <DockPanel>
-                                                        <Image Height="16" Width="16" Source="/images/properties.ico" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <Image Height="16" Width="16" Source="/images/property.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         <TextBlock TextWrapping="Wrap" Text="{Binding Prop}"/>
                                                     </DockPanel>
                                                 </DataTemplate>

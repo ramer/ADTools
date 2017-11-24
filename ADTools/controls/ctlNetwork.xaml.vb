@@ -58,7 +58,7 @@ Public Class ctlNetwork
         Dim pingsp As New StackPanel
         pingsp.Orientation = Orientation.Horizontal
         Dim pingimg As New Image
-        pingimg.Source = New BitmapImage(If(pingresult IsNot Nothing, If(pingresult.Status = IPStatus.Success, New Uri("pack://application:,,,/images/ready.ico"), New Uri("pack://application:,,,/images/warning.ico")), New Uri("pack://application:,,,/images/warning.ico")))
+        pingimg.Source = New BitmapImage(If(pingresult IsNot Nothing, If(pingresult.Status = IPStatus.Success, New Uri("pack://application:,,,/images/ok.png"), New Uri("pack://application:,,,/images/warning.png")), New Uri("pack://application:,,,/images/warning.png")))
         pingimg.Width = 16.0
         pingimg.Height = 16.0
         pingsp.Children.Add(pingimg)
@@ -77,7 +77,7 @@ Public Class ctlNetwork
             Dim tracesp As New StackPanel
             tracesp.Orientation = Orientation.Horizontal
             Dim traceimg As New Image
-            traceimg.Source = New BitmapImage(New Uri("pack://application:,,,/images/ready.ico"))
+            traceimg.Source = New BitmapImage(New Uri("pack://application:,,,/images/ok.png"))
             traceimg.Width = 16.0
             traceimg.Height = 16.0
             tracesp.Children.Add(traceimg)
@@ -100,7 +100,7 @@ Public Class ctlNetwork
             Dim portscansp As New StackPanel
             portscansp.Orientation = Orientation.Horizontal
             Dim portscanimg As New Image
-            portscanimg.Source = New BitmapImage(If(available, New Uri("pack://application:,,,/images/ready.ico"), New Uri("pack://application:,,,/images/warning.ico")))
+            portscanimg.Source = New BitmapImage(If(available, New Uri("pack://application:,,,/images/ok.png"), New Uri("pack://application:,,,/images/warning.png")))
             portscanimg.Width = 16.0
             portscanimg.Height = 16.0
             portscansp.Children.Add(portscanimg)

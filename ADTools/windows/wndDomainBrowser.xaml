@@ -11,7 +11,7 @@
         Width="400"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Icon="/images/domain.ico">
+        Icon="/images/app.ico">
     
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>

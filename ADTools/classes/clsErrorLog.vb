@@ -20,7 +20,7 @@
 
     Public ReadOnly Property Image() As BitmapImage
         Get
-            Return New BitmapImage(New Uri("pack://application:,,,/" & "images/warning.ico"))
+            Return New BitmapImage(New Uri("pack://application:,,,/" & "images/warning.png"))
         End Get
     End Property
 

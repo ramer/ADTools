@@ -407,45 +407,50 @@
   <ItemGroup />
   <ItemGroup>
     <Resource Include="images\app.ico" />
-    <Resource Include="images\splash.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\properties.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\domain_folder.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\ready.ico" />
-    <Resource Include="images\log.ico" />
+    <Resource Include="images\contact.png" />
+    <Resource Include="images\domain.png" />
+    <Resource Include="images\domain_event.png" />
+    <Resource Include="images\domain_options.png" />
+    <Resource Include="images\filter.png" />
+    <Resource Include="images\filter_add.png" />
+    <Resource Include="images\filter_remove.png" />
+    <Resource Include="images\folder.png" />
+    <Resource Include="images\folder_domain.png" />
+    <Resource Include="images\folder_favorites.png" />
+    <Resource Include="images\folder_locked.png" />
+    <Resource Include="images\folder_unknown.png" />
+    <Resource Include="images\group.png" />
+    <Resource Include="images\group_distribution.png" />
+    <Resource Include="images\log.png" />
+    <Resource Include="images\magnifier.png" />
+    <Resource Include="images\ok.png" />
+    <Resource Include="images\property.png" />
+    <Resource Include="images\puzzle.png" />
+    <Resource Include="images\user.png" />
+    <Resource Include="images\user_blocked.png" />
+    <Resource Include="images\user_expired.png" />
+    <Resource Include="images\user_unknown.png" />
+    <Resource Include="images\warning.png" />
     <Resource Include="images\donate.png" />
+    <Resource Include="images\splash.png" />
     <Resource Include="images\trash.png" />
+    <Resource Include="images\computer.png" />
+    <Resource Include="images\computer_blocked.png" />
+    <Resource Include="images\computer_expired.png" />
+    <Resource Include="images\computer_unknown.png" />
+    <Resource Include="images\folder_add.png" />
+    <Resource Include="images\print_preview.png" />
+    <Resource Include="images\preferences.png" />
+    <Resource Include="images\favorites_remove.png" />
+    <Resource Include="images\sheduler.png" />
+    <Resource Include="images\password.png" />
+    <Resource Include="images\favorites_add.png" />
+    <Resource Include="images\location.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />
-    <Resource Include="images\container_unknown.ico" />
-    <Resource Include="images\computer.ico" />
-    <Resource Include="images\computer_blocked.ico" />
-    <Resource Include="images\computer_expired.ico" />
-    <Resource Include="images\contact.ico" />
-    <Resource Include="images\container.ico" />
-    <Resource Include="images\group.ico" />
-    <Resource Include="images\group_distribution.ico" />
-    <Resource Include="images\object_unknown.ico" />
-    <Resource Include="images\organizationalunit.ico" />
-    <Resource Include="images\user.ico" />
-    <Resource Include="images\user_blocked.ico" />
-    <Resource Include="images\user_expired.ico" />
-    <Resource Include="images\warning.ico" />
-    <Resource Include="images\computer_image.png" />
-    <Resource Include="images\group_image.png" />
-    <Resource Include="images\contact_image.png" />
-    <Resource Include="images\user_image.png" />
-    <Resource Include="images\favorite_folder.ico" />
-    <Resource Include="images\domain.ico" />
-    <Resource Include="images\filter_folder.ico" />
-    <Resource Include="images\network_folder.ico" />
-    <Resource Include="images\filter.ico" />
     <Content Include="libraries\CredentialManagement.dll" />
     <Content Include="libraries\IPrint.dll" />
     <Content Include="libraries\IPrompt.dll" />

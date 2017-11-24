@@ -806,10 +806,22 @@ Class wndMain
     End Sub
 
     Private Sub dgObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDown
-        If e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right Then
+        If (e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right) AndAlso Keyboard.Modifiers = 0 Then
             Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
-            If r IsNot Nothing AndAlso TypeOf r.VisualHit Is ScrollViewer Then
-                dgObjects.UnselectAll()
+            If r IsNot Nothing Then
+                If TypeOf r.VisualHit Is ScrollViewer Then
+                    dgObjects.UnselectAll()
+                Else
+                    Dim dp As DependencyObject = r.VisualHit
+                    While (dp IsNot Nothing) AndAlso Not (TypeOf dp Is DataGridRow)
+                        dp = VisualTreeHelper.GetParent(dp)
+                    End While
+                    If dp Is Nothing Then Return
+
+                    If TypeOf dp Is DataGridRow Then
+                        dgObjects.SelectedItem = CType(dp, DataGridRow).DataContext
+                    End If
+                End If
             End If
         End If
         If e.ChangedButton = MouseButton.XButton1 Then SearchPrevious()

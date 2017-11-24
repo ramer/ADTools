@@ -49,23 +49,36 @@
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
                 <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
-                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Visible"/>
-                <TextBlock x:Name="tblckDummy" DockPanel.Dock="Right"/>
+                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
                 <Menu>
                     <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
-                        <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}"/>
+                        <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/print_preview.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator/>
                         <MenuItem x:Name="mnuFileExit" Header="{x:Static r:Resources.wndMain_mnuFile_Exit}"/>
                     </MenuItem>
                     <MenuItem x:Name="mnuEdit" Header="{x:Static r:Resources.wndMain_mnuEdit}">
-                        <MenuItem x:Name="mnuEditCreateObject" Header="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}"/>
+                        <MenuItem x:Name="mnuEditCreateObject" Header="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/folder_add.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                     <MenuItem x:Name="mnuSearch" Header="{x:Static r:Resources.wndMain_mnuSearch}">
                         <MenuItem x:Name="mnuSearchMode" Header="{x:Static r:Resources.wndMain_mnuSearchMode}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/filter.png"/>
+                            </MenuItem.Icon>
                             <RadioButton x:Name="mnuSearchModeDefault" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Default}" IsChecked="True"/>
                             <RadioButton x:Name="mnuSearchModeAdvanced" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Advanced}"/>
                         </MenuItem>
                         <MenuItem x:Name="mnuSearchObjectClasses" Header="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DataContext="{Binding searchobjectclasses}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/puzzle.png"/>
+                            </MenuItem.Icon>
                             <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                             <CheckBox IsChecked="{Binding Contact}" Content="Contact" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                             <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
@@ -73,17 +86,32 @@
                             <CheckBox IsChecked="{Binding OrganizationalUnit}" Content="Organizational Unit" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                         </MenuItem>
                         <MenuItem x:Name="mnuSearchDomains" Header="{x:Static r:Resources.wndMain_mnuSearchDomains}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/domain.png"/>
+                            </MenuItem.Icon>
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
                                 </DataTemplate>
                             </MenuItem.ItemTemplate>
                         </MenuItem>
-                        <MenuItem x:Name="mnuSearchSaveCurrentFilter" Header="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}"/>
+                        <MenuItem x:Name="mnuSearchSaveCurrentFilter" Header="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/filter_add.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                     <MenuItem x:Name="mnuService" Header="{x:Static r:Resources.wndMain_mnuService}">
-                        <MenuItem x:Name="mnuServiceDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}"/>
-                        <MenuItem x:Name="mnuServicePreferences" Header="{x:Static r:Resources.wndMain_mnuService_Preferences}"/>
+                        <MenuItem x:Name="mnuServiceDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/domain_options.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem x:Name="mnuServicePreferences" Header="{x:Static r:Resources.wndMain_mnuService_Preferences}">
+                            <MenuItem.Icon>
+                                <Image Source="/images/preferences.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator/>
                         <MenuItem x:Name="mnuServiceLog" Header="{x:Static r:Resources.wndMain_mnuService_Log}"/>
                         <MenuItem x:Name="mnuServiceErrorLog" Header="{x:Static r:Resources.wndMain_mnuService_ErrorLog}"/>
@@ -131,7 +159,7 @@
                     <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
                     <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>/<Run Text="{Binding Path=currentobjects.Count, Mode=OneWay, FallbackValue=0}"/>
                 </TextBlock>
-                <Image x:Name="imgFilterStatus" Source="/images/filter.ico" Width="16" Height="16" Visibility="Collapsed"/>
+                <Image x:Name="imgFilterStatus" Source="/images/filter.png" Width="16" Height="16" Visibility="Collapsed"/>
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.lbl_ObjectsSelected}"/>
                     <Run Text="{Binding ElementName=dgObjects, Path=SelectedItems.Count, Mode=OneWay}"/>
@@ -161,7 +189,7 @@
                     <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
-                                <Image Source="/images/favorite_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <Image Source="/images/folder_favorites.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviFavorites}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
@@ -170,10 +198,22 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFavorites">
-                                            <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesRemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click"/>
+                                            <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesRemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/favorites_remove.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviFavoritesOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
-                                            <MenuItem x:Name="ctxmnutviFavoritesProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                            <MenuItem x:Name="ctxmnutviFavoritesOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/location.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <MenuItem x:Name="ctxmnutviFavoritesProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviFavoritesProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/property.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -186,12 +226,16 @@
                     <TreeViewItem x:Name="tviDomains" IsExpanded="True">
                         <TreeViewItem.ContextMenu>
                             <ContextMenu>
-                                <MenuItem x:Name="ctxmnutviDomainsDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}"/>
+                                <MenuItem x:Name="ctxmnutviDomainsDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/images/domain_options.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
                             </ContextMenu>
                         </TreeViewItem.ContextMenu>
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
-                                <Image Source="/images/domain_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <Image Source="/images/folder_domain.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviDomains}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
@@ -210,7 +254,11 @@
                                     
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviDomains">
-                                            <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCreateObject}" Click="ctxmnuSharedCreateObject_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/folder_add.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                             <Separator/>
                                             <MenuItem x:Name="ctxmnutviDomainsCopy" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCopy}" Click="ctxmnuSharedCopy_Click"/>
                                             <MenuItem x:Name="ctxmnutviDomainsCut" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsCut}" Click="ctxmnuSharedCut_Click"/>
@@ -218,9 +266,17 @@
                                             <MenuItem x:Name="ctxmnutviDomainsRename" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsRename}" Click="ctxmnuSharedRename_Click"/>
                                             <MenuItem x:Name="ctxmnutviDomainsRemove" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsRemove}" Click="ctxmnuSharedRemove_Click"/>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/favorites_add.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                             <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="{x:Static r:Resources.wndMain_ctxmnutviDomainsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/property.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
                                     <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
@@ -232,7 +288,7 @@
                     <TreeViewItem x:Name="tviFilters" IsExpanded="True">
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}">
-                                <Image Source="/images/filter_folder.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                <Image Source="/images/filter.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.wndMain_tviFilters}"/>
                             </StackPanel>
                         </TreeViewItem.Header>
@@ -241,10 +297,14 @@
                                 <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviFilters_TreeViewItem_ContextMenuOpening">
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFilters">
-                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="{x:Static r:Resources.wndMain_tviFiltersRemoveFromFilters}" Click="ctxmnutviFiltersRemoveFromFilters_Click"/>
+                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="{x:Static r:Resources.wndMain_tviFiltersRemoveFromFilters}" Click="ctxmnutviFiltersRemoveFromFilters_Click">
+                                                <MenuItem.Icon>
+                                                    <Image Source="/images/filter_remove.png"/>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
                                         </ContextMenu>
                                     </StackPanel.ContextMenu>
-                                    <Image Source="/images/filter.ico" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
+                                    <Image Source="/images/filter.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Name}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -323,7 +383,11 @@
                                     <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
                                     <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
                                     <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/folder_add.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                     <Separator x:Name="ctxmnuObjectsCopySeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
@@ -333,14 +397,34 @@
                                     <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
                                     <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
                                     <MenuItem x:Name="ctxmnuObjectsFilterData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsFilterData}"/>
-                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/favorites_add.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/location.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                     <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/password.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                     <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
-                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/sheduler.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                     <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
-                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/property.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             

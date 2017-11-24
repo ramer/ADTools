@@ -61,6 +61,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property _property() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("_property", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         '''</summary>
         Public ReadOnly Property app() As System.Drawing.Icon
@@ -443,82 +453,52 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property computer() As System.Drawing.Icon
+        Public ReadOnly Property computer() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("computer", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property computer_blocked() As System.Drawing.Icon
+        Public ReadOnly Property computer_blocked() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("computer_blocked", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property computer_expired() As System.Drawing.Icon
+        Public ReadOnly Property computer_expired() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("computer_expired", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property computer_image() As System.Drawing.Bitmap
+        Public ReadOnly Property computer_unknown() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("computer_image", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("computer_unknown", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property contact() As System.Drawing.Icon
+        Public ReadOnly Property contact() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("contact", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        '''</summary>
-        Public ReadOnly Property contact_image() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("contact_image", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property container() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("container", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property container_unknown() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("container_unknown", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
             End Get
         End Property
         
@@ -1038,22 +1018,32 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property domain() As System.Drawing.Icon
+        Public ReadOnly Property domain() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("domain", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property domain_folder() As System.Drawing.Icon
+        Public ReadOnly Property domain_event() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("domain_folder", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("domain_event", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property domain_options() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("domain_options", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -1068,51 +1058,131 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property favorite_folder() As System.Drawing.Icon
+        Public ReadOnly Property favorites_add() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("favorite_folder", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property filter_folder() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("filter_folder", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property group() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("group", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property group_distribution() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("group_distribution", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("favorites_add", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property group_image() As System.Drawing.Bitmap
+        Public ReadOnly Property favorites_remove() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("group_image", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("favorites_remove", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property filter() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("filter", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property filter_add() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("filter_add", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property filter_remove() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("filter_remove", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder_add() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder_add", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder_domain() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder_domain", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder_favorites() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder_favorites", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder_locked() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder_locked", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property folder_unknown() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("folder_unknown", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property group() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("group", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property group_distribution() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("group_distribution", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -1199,12 +1269,32 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property log() As System.Drawing.Icon
+        Public ReadOnly Property location() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("location", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property log() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("log", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property magnifier() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("magnifier", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -1218,52 +1308,62 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property network_folder() As System.Drawing.Icon
+        Public ReadOnly Property ok() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("network_folder", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("ok", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property object_unknown() As System.Drawing.Icon
+        Public ReadOnly Property password() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("object_unknown", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("password", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property organizationalunit() As System.Drawing.Icon
+        Public ReadOnly Property preferences() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("organizationalunit", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("preferences", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property properties() As System.Drawing.Icon
+        Public ReadOnly Property print_preview() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("properties", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("print_preview", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property ready() As System.Drawing.Icon
+        Public ReadOnly Property puzzle() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("ready", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Dim obj As Object = ResourceManager.GetObject("puzzle", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property sheduler() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("sheduler", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -1280,16 +1380,6 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property splash1() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("splash1", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        '''</summary>
         Public ReadOnly Property trash() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("trash", resourceCulture)
@@ -1298,52 +1388,52 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property user() As System.Drawing.Icon
+        Public ReadOnly Property user() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("user", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property user_blocked() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("user_blocked", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        '''</summary>
-        Public ReadOnly Property user_expired() As System.Drawing.Icon
-            Get
-                Dim obj As Object = ResourceManager.GetObject("user_expired", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property user_image() As System.Drawing.Bitmap
+        Public ReadOnly Property user_blocked() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("user_image", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("user_blocked", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
         '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property warning() As System.Drawing.Icon
+        Public ReadOnly Property user_expired() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("user_expired", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property user_unknown() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("user_unknown", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property warning() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("warning", resourceCulture)
-                Return CType(obj,System.Drawing.Icon)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         

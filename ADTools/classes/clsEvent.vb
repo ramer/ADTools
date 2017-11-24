@@ -64,19 +64,19 @@ Public Class clsEvent
 
             Select Case EventCode
                 Case 4624
-                    _image = "images/ready.ico"
+                    _image = "images/ok.png"
                 Case 4634
-                    _image = "images/ready.ico"
+                    _image = "images/ok.png"
                 Case 4625
-                    _image = "images/warning.ico"
+                    _image = "images/warning.png"
                 Case 4740
-                    _image = "images/warning.ico"
+                    _image = "images/warning.png"
                 Case 4771
-                    _image = "images/warning.ico"
+                    _image = "images/warning.png"
                 Case 4776
-                    _image = "images/warning.ico"
+                    _image = "images/warning.png"
                 Case Else
-                    _image = "images/object_unknown.ico"
+                    _image = "images/puzzle.png"
             End Select
 
             Return New BitmapImage(New Uri("pack://application:,,,/" & _image))

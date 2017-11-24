@@ -543,11 +543,10 @@ Public Class clsDirectoryObject
     Public ReadOnly Property StatusImage As Grid
         Get
             Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
-            Dim imggrd As New Grid
+            Dim imggrd As New Grid With {.Margin = New Thickness(1)}
             grd.Children.Add(imggrd)
 
             Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both, .HorizontalAlignment = HorizontalAlignment.Center, .VerticalAlignment = VerticalAlignment.Center}
-            RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.HighQuality)
 
             If SchemaClass = enmSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
                 grd.Width = 48
@@ -558,7 +557,7 @@ Public Class clsDirectoryObject
                 imggrd.Clip = New EllipseGeometry(New Point(23, 23), 23, 23)
                 imggrd.Children.Add(img)
 
-                Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(128, 201, 38)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(254, 205, 32)), New SolidColorBrush(Color.FromRgb(227, 70, 70))))}
+                Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(74, 217, 65)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(246, 204, 33)), New SolidColorBrush(Color.FromRgb(228, 71, 71))))}
                 el.Effect = New Effects.BlurEffect With {.Radius = 1}
                 grd.Children.Add(el)
             Else
@@ -647,59 +646,59 @@ Public Class clsDirectoryObject
             Dim _image As String = ""
 
             If SchemaClass = enmSchemaClass.User Then
-                _image = "user.ico"
+                _image = "user.png"
                 If passwordNeverExpires Is Nothing Then
-                    _image = "user_expired.ico"
+                    _image = "user_unknown.png"
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate = Nothing Then
-                        _image = "user_expired.ico"
+                        _image = "user_expired.png"
                     ElseIf passwordExpiresDate() <= Now Then
-                        _image = "user_expired.ico"
+                        _image = "user_expired.png"
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _image = "user_expired.ico"
+                    _image = "user_unknown.png"
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _image = "user_expired.ico"
+                    _image = "user_expired.png"
                 End If
 
                 If disabled Is Nothing Then
-                    _image = "user_expired.ico"
+                    _image = "user_unknown.png"
                 ElseIf disabled Then
-                    _image = "user_blocked.ico"
+                    _image = "user_blocked.png"
                 End If
             ElseIf SchemaClass = enmSchemaClass.Computer Then
-                _image = "computer.ico"
+                _image = "computer.png"
                 If passwordNeverExpires Is Nothing Then
-                    _image = "computer_expired.ico"
+                    _image = "computer_unknown.png"
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate = Nothing Then
-                        _image = "computer_expired.ico"
+                        _image = "computer_expired.png"
                     ElseIf passwordExpiresDate() <= Now Then
-                        _image = "computer_expired.ico"
+                        _image = "computer_expired.png"
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _image = "computer_expired.ico"
+                    _image = "computer_unknown.png"
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _image = "computer_expired.ico"
+                    _image = "computer_expired.png"
                 End If
 
                 If disabled Is Nothing Then
-                    _image = "computer_expired.ico"
+                    _image = "computer_unknown.png"
                 ElseIf disabled Then
-                    _image = "computer_blocked.ico"
+                    _image = "computer_blocked.png"
                 End If
             ElseIf SchemaClass = enmSchemaClass.Group Then
-                _image = "group.ico"
+                _image = "group.png"
                 If groupTypeSecurity Then
-                    _image = "group.ico"
+                    _image = "group.png"
                 ElseIf groupTypeDistribution Then
-                    _image = "group_distribution.ico"
+                    _image = "group_distribution.png"
                 Else
-                    _image = "object_unknown.ico"
+                    _image = "puzzle.png"
                 End If
             Else
                 Return ClassImage
@@ -718,25 +717,25 @@ Public Class clsDirectoryObject
 
             Select Case SchemaClass
                 Case enmSchemaClass.User
-                    _image = "user.ico"
+                    _image = "user_unknown.png"
                 Case enmSchemaClass.Contact
-                    _image = "contact.ico"
+                    _image = "contact.png"
                 Case enmSchemaClass.Computer
-                    _image = "computer.ico"
+                    _image = "computer_unknown.png"
                 Case enmSchemaClass.Group
-                    _image = "group.ico"
+                    _image = "group.png"
                 Case enmSchemaClass.OrganizationalUnit
-                    _image = "organizationalunit.ico"
+                    _image = "folder.png"
                 Case enmSchemaClass.Container
-                    _image = "container.ico"
+                    _image = "folder_locked.png"
                 Case enmSchemaClass.DomainDNS
-                    _image = "domain.ico"
+                    _image = "domain.png"
                 Case enmSchemaClass.UnknownContainer
-                    _image = "container_unknown.ico"
+                    _image = "folder_unknown.png"
                 Case enmSchemaClass.Unknown
-                    _image = "object_unknown.ico"
+                    _image = "puzzle.png"
                 Case Else
-                    _image = "object_unknown.ico"
+                    _image = "puzzle.png"
             End Select
 
             Dim bi As New BitmapImage(New Uri("pack://application:,,,/images/" & _image))

@@ -18,6 +18,7 @@
     
     <Window.Resources>
         <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility" />
+        <local:ConverterBooleanToVisibilityInverted x:Key="ConverterBooleanToVisibilityInverted" />
     </Window.Resources>
     
     <Grid>
@@ -27,7 +28,10 @@
                     <DockPanel>
                         <StackPanel Margin="5,5,0,0">
                             <Border BorderThickness="1" Margin="0,0,0,5" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150" RenderOptions.BitmapScalingMode="HighQuality"/>
+                                <Grid>
+                                    <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150"/>
+                                    <Image Width="120" Height="120" Source="{Binding ClassImage}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibilityInverted}}"/>
+                                </Grid>
                             </Border>
                             <Button x:Name="btnClearPhoto" Content="{x:Static r:Resources.wndObject_lbl_ClearPhoto}" Height="20" IsEnabled="{Binding CanWrite[thumbnailPhoto]}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibility}}"/>
                         </StackPanel>
