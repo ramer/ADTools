@@ -11,7 +11,9 @@
         WindowState="Maximized"
         WindowStyle="None" 
         Background="#7F000000" 
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+        >
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,6 +27,6 @@
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Image x:Name="imgPhoto" Source="/images/user.ico" Grid.Column="1" Grid.Row="1" RenderOptions.BitmapScalingMode="HighQuality"/>
+        <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Grid.Column="1" Grid.Row="1" RenderOptions.BitmapScalingMode="HighQuality"/>
     </Grid>
 </Window>

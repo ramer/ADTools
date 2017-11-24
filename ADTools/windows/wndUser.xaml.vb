@@ -50,7 +50,7 @@ Public Class wndUser
 
     Private Sub btnResolveDepartment_Click(sender As Object, e As RoutedEventArgs) Handles btnResolveDepartment.Click
         If currentobject Is Nothing Then Exit Sub
-        'tbDepartment.Text = Replace(currentobject.Entry.Parent.Name, "OU=", "")
+        tbDepartment.Text = Replace(CurrentObject.Parent.name, "OU=", "")
     End Sub
 
     Private Sub hlManager_Click(sender As Object, e As RoutedEventArgs) Handles hlManager.Click
@@ -62,28 +62,9 @@ Public Class wndUser
     End Sub
 
     Private Sub imgPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgPhoto.MouseDown
-        Dim w As wndUserPhoto
-
-        For Each wnd As Window In Me.OwnedWindows
-            If GetType(wndUserPhoto) Is wnd.GetType Then
-                w = wnd
-
-                w.Show()
-                w.Activate()
-
-                If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-
-                w.Topmost = True
-                w.Topmost = False
-
-                Exit Sub
-            End If
-        Next
-
-        w = New wndUserPhoto With {.Owner = Me}
-
-        w.imgPhoto.Source = imgPhoto.Source
-        w.Show()
+        Dim w As New wndUserPhoto
+        w.CurrentObject = CurrentObject
+        ShowWindow(w, True, Me, False)
     End Sub
 
     Private Sub btnResetPassword_Click(sender As Object, e As RoutedEventArgs) Handles btnResetPassword.Click
