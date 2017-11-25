@@ -259,7 +259,7 @@ Class wndMain
         ctxmnuObjectsRestoreToContainer.Visibility = BooleanToVisibility(alldeleted)
         ctxmnuObjectsRestoreSeparator.Visibility = ctxmnuObjectsRestore.Visibility
 
-        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
+        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(preferences.ExternalSoftware.Count > 0 AndAlso objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
 
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
         ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
