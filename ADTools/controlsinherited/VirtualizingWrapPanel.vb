@@ -116,6 +116,7 @@ Public Class VirtualizingWrapPanel
         For i As Integer = _children.Count - 1 To 0 Step -1
             Dim childGeneratorPos As New GeneratorPosition(i, 0)
             Dim itemIndex As Integer = _generator.IndexFromGeneratorPosition(childGeneratorPos)
+            If itemIndex < 0 Then Continue For
             If itemIndex < minDesiredGenerated OrElse itemIndex > maxDesiredGenerated Then
                 _generator.Remove(childGeneratorPos, 1)
                 RemoveInternalChildRange(i, 1)
@@ -138,7 +139,9 @@ Public Class VirtualizingWrapPanel
         Else
             _extent.Width = _abstractPanel.SectionCount + ViewportWidth - 1
         End If
-        _owner.InvalidateScrollInfo()
+        If _owner IsNot Nothing Then
+            _owner.InvalidateScrollInfo()
+        End If
     End Sub
 
     Private Sub ResetScrollInfo()

@@ -317,22 +317,22 @@ Class wndMain
             ctxmnuObjectsFilterData.Items.Add(fdmnustatus)
 
             For Each columninfo In preferences.Columns
-                    For Each attr In columninfo.Attributes
-                        If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
-                            Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
-                            If Not String.IsNullOrEmpty(value) Then
-                                Dim fdmnu As New MenuItem
-                                fdmnu.Header = value
-                                fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
-                                AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
-                                ctxmnuObjectsFilterData.Items.Add(fdmnu)
-                            End If
+                For Each attr In columninfo.Attributes
+                    If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
+                        Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
+                        If Not String.IsNullOrEmpty(value) Then
+                            Dim fdmnu As New MenuItem
+                            fdmnu.Header = value
+                            fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
+                            AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
+                            ctxmnuObjectsFilterData.Items.Add(fdmnu)
                         End If
-                    Next
+                    End If
                 Next
-            End If
+            Next
+        End If
 
-            If objects.Count > 0 Then
+        If objects.Count > 0 Then
             ctxmnuObjectsCopyData.Items.Clear()
 
             Dim cdmnudn As New MenuItem

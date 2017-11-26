@@ -63,8 +63,8 @@ Public Class ADToolsApplication
         MyBase.OnStartup(e)
         Try
             ' unhandled exception handler
-            AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
-            AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
+            'AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
+            'AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
             ' notify icon initialization
             nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
