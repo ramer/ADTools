@@ -118,12 +118,14 @@
     <Compile Include="classes\clsSearchHistory.vb" />
     <Compile Include="classes\clsSearchObjectClasses.vb" />
     <Compile Include="classes\clsSearchParameters.vb" />
+    <Compile Include="classes\clsSelector.vb" />
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
     <Compile Include="classes\clsWatcher.vb" />
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
+    <Compile Include="controlsinherited\VirtualizingWrapPanel.vb" />
     <Compile Include="controls\ctlContactMailbox.xaml.vb">
       <DependentUpon>ctlContactMailbox.xaml</DependentUpon>
     </Compile>

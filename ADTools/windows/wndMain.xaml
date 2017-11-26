@@ -13,7 +13,11 @@
         Icon="/images/app.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
-
+    
+    <Window.Resources>
+        <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
+    </Window.Resources>
+    
     <Grid>
         <Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
             <Grid Width="200" Height="70">
@@ -332,8 +336,55 @@
                     </DockPanel>
 
                     <Grid>
+                        <ListView x:Name="lvObjects"
+                            local:clsSelector.Enabled="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            Visibility="Visible"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            KeyboardNavigation.DirectionalNavigation="None"
+                            >
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="123"/>
+                                    <MenuItem Header="456"/>
+                                    <MenuItem Header="789"/>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                            <!--<ListView.View>
+                            </ListView.View>-->
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <local:VirtualizingWrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal">
+                                        <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                        <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
+                                            <ItemsControl FontWeight="Bold" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                            <ItemsControl ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                            <ItemsControl ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                        </VirtualizingStackPanel>
+                                    </VirtualizingStackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.Resources>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Margin" Value="5" />
+                                    <Setter Property="Width" Value="250" />
+                                </Style>
+                            </ListView.Resources>
+                        </ListView>
+
                         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
                         <DataGrid 
+                            Visibility="Collapsed"
                             x:Name="dgObjects"
                             Foreground="Black"
                             AlternationCount="2"

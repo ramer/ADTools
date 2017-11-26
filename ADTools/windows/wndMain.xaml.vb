@@ -49,7 +49,8 @@ Class wndMain
 
         cvscurrentobjects = New CollectionViewSource() With {.Source = currentobjects}
         cvcurrentobjects = cvscurrentobjects.View
-        dgObjects.SetBinding(DataGrid.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
+        dgObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
+        lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         If preferences.FirstRun Then ShowPopups()
 
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
