@@ -13,8 +13,6 @@ Public Class ConverterDataToUIElement
                 items.Add(value)
             Case GetType(BitmapImage)
                 Dim img As New Image
-                img.Width = 32
-                img.Height = 32
                 img.Source = value
                 items.Add(img)
             Case GetType(clsDirectoryObject)
@@ -56,19 +54,20 @@ Public Class ConverterDataToUIElement
                     Dim rn = New Run(match.Value)
                     rn.Background = Brushes.Transparent
                     rn.TextDecorations = TextDecorations.Underline
-                    AddHandler rn.MouseLeftButtonDown,
-                        Sub()
-                            Dim w As Window = Window.GetWindow(rn)
-                            If w Is Nothing Then Exit Sub
-                            If TypeOf w Is wndMain Then
-                                Dim wm = CType(w, wndMain)
-                                wm.StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, wm.searchobjectclasses))
-                            End If
-                        End Sub
-                    tblck.Inlines.Add(rn)
+                    Dim hl As New Hyperlink(rn)
+                    AddHandler hl.Click,
+                    Sub()
+                        Dim w As Window = Window.GetWindow(hl)
+                        If w Is Nothing Then Exit Sub
+                        If TypeOf w Is wndMain Then
+                            Dim wm = CType(w, wndMain)
+                            wm.StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, wm.searchobjectclasses))
+                        End If
+                    End Sub
+                    tblck.Inlines.Add(hl)
                 Next
                 tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex)))
-
+                tblck.TextWrapping = TextWrapping.Wrap
                 items.Add(tblck)
 
 

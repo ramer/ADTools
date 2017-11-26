@@ -542,29 +542,22 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property StatusImage As Grid
         Get
-            Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(Me.StatusFormatted), Nothing, Me.StatusFormatted), .SnapsToDevicePixels = True, .Margin = New Thickness(0, 2, 0, 2)}
-            Dim imggrd As New Grid With {.Margin = New Thickness(1)}
+            Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(StatusFormatted), Nothing, StatusFormatted), .SnapsToDevicePixels = True}
+            Dim imggrd As New Grid With {.Margin = New Thickness(2)}
             grd.Children.Add(imggrd)
 
             Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both, .HorizontalAlignment = HorizontalAlignment.Center, .VerticalAlignment = VerticalAlignment.Center}
 
             If SchemaClass = enmSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
-                grd.Width = 48
-                grd.Height = 48
-                img.Width = 48
-                img.Height = 48
+                Dim clipbrdp As New Border With {.Background = Brushes.White, .CornerRadius = New CornerRadius(999)}
                 img.Source = thumbnailPhoto
-                imggrd.Clip = New EllipseGeometry(New Point(23, 23), 23, 23)
+                imggrd.Children.Add(clipbrdp)
                 imggrd.Children.Add(img)
+                imggrd.OpacityMask = New VisualBrush() With {.Visual = clipbrdp}
 
-                Dim el As New Ellipse With {.StrokeThickness = 3, .Stroke = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(74, 217, 65)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(246, 204, 33)), New SolidColorBrush(Color.FromRgb(228, 71, 71))))}
-                el.Effect = New Effects.BlurEffect With {.Radius = 1}
-                grd.Children.Add(el)
+                Dim strokebrdr As New Border With {.BorderThickness = New Thickness(3), .CornerRadius = New CornerRadius(999), .BorderBrush = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(74, 217, 65)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(246, 204, 33)), New SolidColorBrush(Color.FromRgb(228, 71, 71))))}
+                grd.Children.Add(strokebrdr)
             Else
-                grd.Width = 32
-                grd.Height = 32
-                img.Width = 32
-                img.Height = 32
                 img.Source = Image
                 imggrd.Children.Add(img)
             End If

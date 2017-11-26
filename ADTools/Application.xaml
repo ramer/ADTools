@@ -7,6 +7,7 @@
 >
 
     <Application.Resources>
+        <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
 
         <SolidColorBrush  Color="Black" x:Key="ColorText" />
         <SolidColorBrush  Color="WhiteSmoke" x:Key="ColorWindowBackground" />
@@ -631,6 +632,112 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+
+        <Style x:Key="ListView_View_Tiles" TargetType="{x:Type ListView}">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
+                                <ItemsControl FontWeight="Medium" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                <ItemsControl FontWeight="Light" ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                <ItemsControl FontWeight="Light" ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
+                            </VirtualizingStackPanel>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <local:VirtualizingWrapPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="Width" Value="250" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="ListView_View_MediumIcons" TargetType="{x:Type ListView}">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical">
+                            <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ItemsControl ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" TextBlock.TextAlignment="Center"/>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <local:VirtualizingWrapPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="Width" Value="100" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="ListView_View_List" TargetType="{x:Type ListView}">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding Image, Converter={StaticResource ConverterDataToUIElement}}" Width="16" Height="16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ItemsControl ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" Margin="5,0,0,0"/>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <local:VirtualizingWrapPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="5,1,5,1" />
+                    <Setter Property="Width" Value="250" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        
+        <!--lv resource
+        <Style TargetType="{x:Type GroupItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Expander IsExpanded="True">
+                            <Expander.Header>
+                                <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
+                            </Expander.Header>
+                            <ItemsPresenter />
+                        </Expander>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+
 
         <Style TargetType="{x:Type ListBox}">
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />

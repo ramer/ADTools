@@ -337,171 +337,117 @@
 
                     <Grid>
                         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
-                        <UniformGrid Columns="2">
-                            <ListView x:Name="lvObjects"
-                                local:clsSelector.Enabled="True"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                VirtualizingPanel.IsVirtualizing="True"
-                                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                KeyboardNavigation.DirectionalNavigation="None"
-                                >
-                                <ListView.GroupStyle>
-                                    <GroupStyle>
-                                        <GroupStyle.ContainerStyle>
-                                            <Style TargetType="{x:Type GroupItem}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate>
-                                                            <Expander IsExpanded="True">
-                                                                <Expander.Header>
-                                                                    <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
-                                                                </Expander.Header>
-                                                                <ItemsPresenter />
-                                                            </Expander>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </GroupStyle.ContainerStyle>
-                                    </GroupStyle>
-                                </ListView.GroupStyle>
-                                
-                                <ListView.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="123"/>
-                                        <MenuItem Header="456"/>
-                                        <MenuItem Header="789"/>
-                                    </ContextMenu>
-                                </ListView.ContextMenu>
-                                <!--<ListView.View>
-                                </ListView.View>-->
+                        <ListView x:Name="lvObjects"
+                            local:clsSelector.Enabled="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            Visibility="Visible"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            KeyboardNavigation.DirectionalNavigation="None"
+                            Style="{StaticResource ListView_View_Tiles}"
+                            >
 
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <!--<local:VirtualizingWrapPanel/>-->
-                                        <WrapPanel/>
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
+                        </ListView>
 
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <VirtualizingStackPanel Orientation="Horizontal">
-                                            <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                            <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
-                                                <ItemsControl FontWeight="Bold" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                                <ItemsControl ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                                <ItemsControl ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                            </VirtualizingStackPanel>
-                                        </VirtualizingStackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                                <ListView.Resources>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Margin" Value="5" />
-                                        <Setter Property="Width" Value="250" />
-                                    </Style>
-                                </ListView.Resources>
-                            </ListView>
-
-                            <DataGrid 
-                                x:Name="dgObjects"
-                                Foreground="Black"
-                                AlternationCount="2"
-                                VirtualizingPanel.IsVirtualizing="True"
-                                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                VirtualizingStackPanel.CacheLength="2"
-                                VirtualizingStackPanel.CacheLengthUnit="Page"
-                                AutoGenerateColumns="False"
-                                GridLinesVisibility="None"
-                                IsReadOnly="True"
-                                IsSynchronizedWithCurrentItem="True" 
-                                IsTextSearchCaseSensitive="False"
-                                IsTextSearchEnabled="True"
-                                TextSearch.TextPath="name"
-                                SelectionMode="Extended"
-                                ScrollViewer.CanContentScroll ="True"
-                                ScrollViewer.IsDeferredScrollingEnabled="True"
-                                Margin="0,0,0,5">
+                        <DataGrid 
+                            Visibility="Collapsed"
+                            x:Name="dgObjects"
+                            Foreground="Black"
+                            AlternationCount="2"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VirtualizingStackPanel.CacheLength="2"
+                            VirtualizingStackPanel.CacheLengthUnit="Page"
+                            AutoGenerateColumns="False"
+                            GridLinesVisibility="None"
+                            IsReadOnly="True"
+                            IsSynchronizedWithCurrentItem="True" 
+                            IsTextSearchCaseSensitive="False"
+                            IsTextSearchEnabled="True"
+                            TextSearch.TextPath="name"
+                            SelectionMode="Extended"
+                            ScrollViewer.CanContentScroll ="True"
+                            ScrollViewer.IsDeferredScrollingEnabled="True"
+                            Margin="0,0,0,5">
                             
-                                <DataGrid.GroupStyle>
-                                    <GroupStyle>
-                                        <GroupStyle.ContainerStyle>
-                                            <Style TargetType="{x:Type GroupItem}">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate>
-                                                            <Expander IsExpanded="True">
-                                                                <Expander.Header>
-                                                                    <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
-                                                                </Expander.Header>
-                                                                <ItemsPresenter />
-                                                            </Expander>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </GroupStyle.ContainerStyle>
-                                    </GroupStyle>
-                                </DataGrid.GroupStyle>
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Expander IsExpanded="True">
+                                                            <Expander.Header>
+                                                                <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
+                                                            </Expander.Header>
+                                                            <ItemsPresenter />
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
 
-                                <DataGrid.ContextMenu>
-                                    <ContextMenu x:Name="ctxmnuObjects">
-                                        <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestore}" Click="ctxmnuObjectsRestore_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsRestoreToContainer" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestoreToContainer}" Click="ctxmnuObjectsRestoreToContainer_Click"/>
-                                        <Separator x:Name="ctxmnuObjectsRestoreSeparator"/>
-                                        <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
-                                        <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
-                                        <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/folder_add.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <Separator x:Name="ctxmnuObjectsCopySeparator"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
-                                        <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
-                                        <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
-                                        <MenuItem x:Name="ctxmnuObjectsFilterData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsFilterData}"/>
-                                        <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/favorites_add.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/location.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/password.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
-                                        <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/sheduler.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
-                                        <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
-                                            <MenuItem.Icon>
-                                                <Image Source="/images/property.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </DataGrid.ContextMenu>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu x:Name="ctxmnuObjects">
+                                    <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestore}" Click="ctxmnuObjectsRestore_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRestoreToContainer" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestoreToContainer}" Click="ctxmnuObjectsRestoreToContainer_Click"/>
+                                    <Separator x:Name="ctxmnuObjectsRestoreSeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExternalSoftware" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExternalSoftware}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsSelectAll" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsSelectAll}"/>
+                                    <Separator x:Name="ctxmnuObjectsSelectAllSeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCreateObject" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCreateObject}" Click="ctxmnuSharedCreateObject_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/folder_add.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator x:Name="ctxmnuObjectsCopySeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopy" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopy}" Click="ctxmnuSharedCopy_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCut" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCut}" Click="ctxmnuSharedCut_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsPaste" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsPaste}" Click="ctxmnuSharedPaste_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRename" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRename}" Click="ctxmnuSharedRename_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsRemove" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRemove}" Click="ctxmnuSharedRemove_Click"/>
+                                    <Separator x:Name="ctxmnuObjectsCopyDataSeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsCopyData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsCopyData}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsFilterData" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsFilterData}"/>
+                                    <MenuItem x:Name="ctxmnuObjectsAddToFavorites" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsAddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/favorites_add.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectLocation" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/location.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem x:Name="ctxmnuObjectsOpenObjectTree" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsOpenObjectTree}" Click="ctxmnuSharedOpenObjectTree_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsResetPassword" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsResetPassword}" Click="ctxmnuSharedResetPassword_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/password.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem x:Name="ctxmnuObjectsDisableEnable" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsDisableEnable}" Click="ctxmnuSharedDisableEnable_Click"/>
+                                    <MenuItem x:Name="ctxmnuObjectsExpirationDate" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsExpirationDate}" Click="ctxmnuSharedExpirationDate_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/sheduler.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <Separator x:Name="ctxmnuObjectsPropertiesSeparator"/>
+                                    <MenuItem x:Name="ctxmnuObjectsProperties" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsProperties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
+                                        <MenuItem.Icon>
+                                            <Image Source="/images/property.png"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             
-                            </DataGrid>
-                        </UniformGrid>
+                        </DataGrid>
                     </Grid>
                 </DockPanel>
             </Grid>

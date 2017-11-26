@@ -49,8 +49,13 @@ Class wndMain
 
         cvscurrentobjects = New CollectionViewSource() With {.Source = currentobjects}
         cvcurrentobjects = cvscurrentobjects.View
+        cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
+
         dgObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
+
+        'If preferences.SearchResultGrouping Then lvObjects.GroupStyle.Clear() : lvObjects.GroupStyle.Add(New GroupStyle)
+
         If preferences.FirstRun Then ShowPopups()
 
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
@@ -796,9 +801,9 @@ Class wndMain
         End Select
     End Sub
 
-    Private Sub dgObjects_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDoubleClick
-        If dgObjects.SelectedItem Is Nothing Or Not (e.ChangedButton = MouseButton.Left) Then Exit Sub
-        Dim current As clsDirectoryObject = CType(dgObjects.SelectedItem, clsDirectoryObject)
+    Private Sub lvObjects_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDoubleClick
+        If lvObjects.SelectedItem Is Nothing Or Not (e.ChangedButton = MouseButton.Left) Then Exit Sub
+        Dim current As clsDirectoryObject = CType(lvObjects.SelectedItem, clsDirectoryObject)
         OpenObject(current)
     End Sub
 
@@ -1111,11 +1116,6 @@ Class wndMain
     End Sub
 
     Public Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
-        Try
-            CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Clear()
-        Catch
-        End Try
-
         tbSearchPattern.SelectAll()
 
         ApplyPostfilter(Nothing, Nothing)
@@ -1132,10 +1132,7 @@ Class wndMain
         searcher.SearchAsync(currentobjects, root, filter, domainlist)
 
         If preferences.SearchResultGrouping AndAlso root Is Nothing Then
-            Try
-                CollectionViewSource.GetDefaultView(dgObjects.ItemsSource).GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
-            Catch
-            End Try
+
         End If
 
     End Sub

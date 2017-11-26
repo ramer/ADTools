@@ -407,7 +407,7 @@ Public Class VirtualizingWrapPanel
                     child.Measure(ChildSlotSize)
                 Else
                     ' The child has already been created, let's be sure it's in the right spot
-                    Debug.Assert(child Is _children(childIndex), "Wrong child was generated")
+                    'Debug.Assert(child Is _children(childIndex), "Wrong child was generated")
                 End If
                 childSize = child.DesiredSize
                 Dim childRect As New Rect(New Point(currentX, currentY), childSize)
@@ -458,7 +458,9 @@ Public Class VirtualizingWrapPanel
 
         ComputeExtentAndViewport(availableSize, visibleSections)
 
-        Return availableSize
+        Dim desiredSize = New Size(If(Double.IsInfinity(availableSize.Width), 0, availableSize.Width), If(Double.IsInfinity(availableSize.Height), 0, availableSize.Height))
+
+        Return desiredSize
     End Function
     Protected Overrides Function ArrangeOverride(finalSize As Size) As Size
         If _children IsNot Nothing Then

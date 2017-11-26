@@ -175,8 +175,10 @@ Public NotInheritable Class clsSelector
     End Sub
 
     Private Sub OnPreviewMouseDown(sender As Object, e As MouseButtonEventArgs)
-        ' Check that the mouse is inside the scroll content (could be on the
-        ' scroll bars for example).
+        If TypeOf e.OriginalSource Is Hyperlink OrElse
+         (TypeOf e.OriginalSource Is Run AndAlso
+         TypeOf CType(e.OriginalSource, Run).Parent Is Hyperlink) Then Exit Sub
+
         _mousedownpoint = e.GetPosition(sender)
 
         _dragoperation = False
