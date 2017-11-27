@@ -229,12 +229,12 @@
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0">
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
-                    <Run Text="{Binding ElementName=dgObjects, Path=Items.Count, Mode=OneWay}"/>/<Run Text="{Binding Path=currentobjects.Count, Mode=OneWay, FallbackValue=0}"/>
+                    <Run Text="{Binding ElementName=lvObjects, Path=Items.Count, Mode=OneWay}"/>/<Run Text="{Binding Path=currentobjects.Count, Mode=OneWay, FallbackValue=0}"/>
                 </TextBlock>
                 <Image x:Name="imgFilterStatus" Source="/images/filter.png" Width="16" Height="16" Visibility="Collapsed"/>
                 <TextBlock>
                     <Run Text="{x:Static r:Resources.lbl_ObjectsSelected}"/>
-                    <Run Text="{Binding ElementName=dgObjects, Path=SelectedItems.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding ElementName=lvObjects, Path=SelectedItems.Count, Mode=OneWay}"/>
                 </TextBlock>
                 <StatusBarItem HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
@@ -409,52 +409,8 @@
                             Visibility="Visible"
                             local:clsSelector.Enabled="True"
                             Style="{StaticResource ListView_ViewTiles}"
-                            />
-
-                        <DataGrid 
-                            Visibility="Collapsed"
-                            x:Name="dgObjects"
-                            Foreground="Black"
-                            AlternationCount="2"
-                            VirtualizingPanel.IsVirtualizing="True"
-                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            VirtualizingStackPanel.CacheLength="2"
-                            VirtualizingStackPanel.CacheLengthUnit="Page"
-                            AutoGenerateColumns="False"
-                            GridLinesVisibility="None"
-                            IsReadOnly="True"
-                            IsSynchronizedWithCurrentItem="True" 
-                            IsTextSearchCaseSensitive="False"
-                            IsTextSearchEnabled="True"
-                            TextSearch.TextPath="name"
-                            SelectionMode="Extended"
-                            ScrollViewer.CanContentScroll ="True"
-                            ScrollViewer.IsDeferredScrollingEnabled="True"
-                            Margin="0,0,0,5">
-                            
-                            <DataGrid.GroupStyle>
-                                <GroupStyle>
-                                    <GroupStyle.ContainerStyle>
-                                        <Style TargetType="{x:Type GroupItem}">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate>
-                                                        <Expander IsExpanded="True">
-                                                            <Expander.Header>
-                                                                <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
-                                                            </Expander.Header>
-                                                            <ItemsPresenter />
-                                                        </Expander>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </GroupStyle.ContainerStyle>
-                                </GroupStyle>
-                            </DataGrid.GroupStyle>
-
-                            <DataGrid.ContextMenu>
+                            >
+                            <ListView.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">
                                     <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestore}" Click="ctxmnuObjectsRestore_Click"/>
                                     <MenuItem x:Name="ctxmnuObjectsRestoreToContainer" Header="{x:Static r:Resources.wndMain_ctxmnuObjectsRestoreToContainer}" Click="ctxmnuObjectsRestoreToContainer_Click"/>
@@ -505,7 +461,53 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                 </ContextMenu>
-                            </DataGrid.ContextMenu>
+                            </ListView.ContextMenu>
+
+                        </ListView>
+
+                        <DataGrid 
+                            Visibility="Collapsed"
+                            x:Name="dgObjects"
+                            Foreground="Black"
+                            AlternationCount="2"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VirtualizingStackPanel.CacheLength="2"
+                            VirtualizingStackPanel.CacheLengthUnit="Page"
+                            AutoGenerateColumns="False"
+                            GridLinesVisibility="None"
+                            IsReadOnly="True"
+                            IsSynchronizedWithCurrentItem="True" 
+                            IsTextSearchCaseSensitive="False"
+                            IsTextSearchEnabled="True"
+                            TextSearch.TextPath="name"
+                            SelectionMode="Extended"
+                            ScrollViewer.CanContentScroll ="True"
+                            ScrollViewer.IsDeferredScrollingEnabled="True"
+                            Margin="0,0,0,5">
+                            
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Expander IsExpanded="True">
+                                                            <Expander.Header>
+                                                                <TextBlock FontWeight="Bold" FontSize="14" Margin="10,10,0,10"><Run Text="{Binding Name, Mode=OneWay}"/> (<Run Text="{Binding ItemCount, Mode=OneWay}"/>)</TextBlock>
+                                                            </Expander.Header>
+                                                            <ItemsPresenter />
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
+
                             
                         </DataGrid>
                     </Grid>

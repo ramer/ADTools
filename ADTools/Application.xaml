@@ -881,7 +881,45 @@
                 </Style>
             </Style.Resources>
         </Style>
-        
+
+        <Style x:Key="ListView_ViewDetails" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="None"/>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal">
+                            <ItemsControl ItemsSource="{Binding Image, Converter={StaticResource ConverterDataToUIElement}}" Width="16" Height="16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ItemsControl ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" Margin="5,0,0,0"/>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="View">
+                <Setter.Value>
+                    <GridView>
+                        <GridViewColumn Header="⬕" Width="250">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal">
+                                        <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                                        <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
+                                            <ItemsControl FontWeight="Medium" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                            <ItemsControl FontWeight="Light" ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                            <ItemsControl FontWeight="Light" ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                        </VirtualizingStackPanel>
+                                    </VirtualizingStackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <!--lv resource
         <Style TargetType="{x:Type GroupItem}">
             <Setter Property="Template">

@@ -51,7 +51,6 @@ Class wndMain
         cvcurrentobjects = cvscurrentobjects.View
         cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
 
-        dgObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
 
         'If preferences.SearchResultGrouping Then lvObjects.GroupStyle.Clear() : lvObjects.GroupStyle.Add(New GroupStyle)
@@ -243,17 +242,17 @@ Class wndMain
         CType(sender, StackPanel).ContextMenu.Tag = flt
     End Sub
 
-    Private Sub dgObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles dgObjects.ContextMenuOpening
+    Private Sub lvObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles lvObjects.ContextMenuOpening
         Dim objects As New List(Of clsDirectoryObject)
 
-        If dgObjects.SelectedItems.Count = 0 Then
+        If lvObjects.SelectedItems.Count = 0 Then
             If currentcontainer IsNot Nothing Then objects = New List(Of clsDirectoryObject) From {currentcontainer}
-        ElseIf dgObjects.SelectedItems.Count = 1 Then
-            If TypeOf dgObjects.SelectedItem Is clsDirectoryObject Then objects = New List(Of clsDirectoryObject) From {dgObjects.SelectedItem}
-        ElseIf dgObjects.SelectedItems.Count > 1 Then
+        ElseIf lvObjects.SelectedItems.Count = 1 Then
+            If TypeOf lvObjects.SelectedItem Is clsDirectoryObject Then objects = New List(Of clsDirectoryObject) From {lvObjects.SelectedItem}
+        ElseIf lvObjects.SelectedItems.Count > 1 Then
             Dim isobjectsflag As Boolean = True ' all selected objects is clsDirectoryObject
             Dim tmpobjs As New List(Of clsDirectoryObject)
-            For Each obj In dgObjects.SelectedItems
+            For Each obj In lvObjects.SelectedItems
                 If TypeOf obj IsNot clsDirectoryObject Then isobjectsflag = False : Exit For
                 tmpobjs.Add(obj)
             Next
@@ -267,7 +266,7 @@ Class wndMain
 
         ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(preferences.ExternalSoftware.Count > 0 AndAlso objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
 
-        ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(dgObjects.Items.Count > 1)
+        ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(lvObjects.Items.Count > 1)
         ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
 
         ctxmnuObjectsCreateObject.Visibility = BooleanToVisibility(True)
@@ -365,7 +364,7 @@ Class wndMain
             Next
         End If
 
-        dgObjects.ContextMenu.Tag = objects.ToArray
+        lvObjects.ContextMenu.Tag = objects.ToArray
     End Sub
 
     Private Sub ctxmnuObjectsRestore_Click(sender As Object, e As RoutedEventArgs)
@@ -451,7 +450,7 @@ Class wndMain
     End Sub
 
     Private Sub ctxmnuObjectsSelectAll_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnuObjectsSelectAll.Click
-        dgObjects.SelectAll()
+        lvObjects.SelectAll()
     End Sub
 
     Private Sub ctxmnuSharedCreateObject_Click(sender As Object, e As RoutedEventArgs)
@@ -782,21 +781,21 @@ Class wndMain
         End If
     End Sub
 
-    Private Sub dgObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgObjects.PreviewKeyDown
+    Private Sub lvObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles lvObjects.PreviewKeyDown
         Select Case e.Key
             Case Key.Enter
-                If dgObjects.SelectedItem Is Nothing Then Exit Sub
-                Dim current As clsDirectoryObject = CType(dgObjects.SelectedItem, clsDirectoryObject)
+                If lvObjects.SelectedItem Is Nothing Then Exit Sub
+                Dim current As clsDirectoryObject = CType(lvObjects.SelectedItem, clsDirectoryObject)
                 OpenObject(current)
                 e.Handled = True
             Case Key.Back
                 OpenObjectParent()
                 e.Handled = True
             Case Key.Home
-                If dgObjects.Items.Count > 0 Then dgObjects.SelectedIndex = 0 : dgObjects.CurrentItem = dgObjects.SelectedItem
+                If lvObjects.Items.Count > 0 Then lvObjects.SelectedIndex = 0
                 e.Handled = True
             Case Key.End
-                If dgObjects.Items.Count > 0 Then dgObjects.SelectedIndex = dgObjects.Items.Count - 1 : dgObjects.CurrentItem = dgObjects.SelectedItem
+                If lvObjects.Items.Count > 0 Then lvObjects.SelectedIndex = lvObjects.Items.Count - 1
                 e.Handled = True
         End Select
     End Sub
@@ -807,46 +806,46 @@ Class wndMain
         OpenObject(current)
     End Sub
 
-    Private Sub dgObjects_ColumnReordered_LayoutUpdated() Handles dgObjects.ColumnReordered, dgObjects.LayoutUpdated
+    Private Sub lvObjects_ColumnReordered_LayoutUpdated() Handles lvObjects.LayoutUpdated
         UpdateColumns()
     End Sub
 
-    Private Sub dgObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgObjects.MouseDown
-        If (e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right) AndAlso Keyboard.Modifiers = 0 Then
-            Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
-            If r IsNot Nothing Then
-                If TypeOf r.VisualHit Is ScrollViewer Then
-                    dgObjects.UnselectAll()
-                Else
-                    Dim dp As DependencyObject = r.VisualHit
-                    While (dp IsNot Nothing) AndAlso Not (TypeOf dp Is DataGridRow)
-                        dp = VisualTreeHelper.GetParent(dp)
-                    End While
-                    If dp Is Nothing Then Return
+    Private Sub lvObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDown
+        'If (e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right) AndAlso Keyboard.Modifiers = 0 Then
+        '    Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
+        '    If r IsNot Nothing Then
+        '        If TypeOf r.VisualHit Is ScrollViewer Then
+        '            lvObjects.UnselectAll()
+        '        Else
+        '            Dim dp As DependencyObject = r.VisualHit
+        '            While (dp IsNot Nothing) AndAlso Not (TypeOf dp Is DataGridRow)
+        '                dp = VisualTreeHelper.GetParent(dp)
+        '            End While
+        '            If dp Is Nothing Then Return
 
-                    If TypeOf dp Is DataGridRow Then
-                        dgObjects.SelectedItem = CType(dp, DataGridRow).DataContext
-                    End If
-                End If
-            End If
-        End If
+        '            If TypeOf dp Is DataGridRow Then
+        '                lvObjects.SelectedItem = CType(dp, DataGridRow).DataContext
+        '            End If
+        '        End If
+        '    End If
+        'End If
         If e.ChangedButton = MouseButton.XButton1 Then SearchPrevious()
         If e.ChangedButton = MouseButton.XButton2 Then SearchNext()
     End Sub
 
-    Private Sub dgObjects_MouseMove(sender As Object, e As MouseEventArgs) Handles dgObjects.MouseMove
-        Dim datagrid As DataGrid = TryCast(sender, DataGrid)
+    'Private Sub lvObjects_MouseMove(sender As Object, e As MouseEventArgs) Handles lvObjects.MouseMove
+    '    Dim datagrid As DataGrid = TryCast(sender, DataGrid)
 
-        If e.LeftButton = MouseButtonState.Pressed And
-            e.GetPosition(sender).X < datagrid.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-            e.GetPosition(sender).Y < datagrid.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
-            datagrid.SelectedItems.Count > 0 Then
+    '    If e.LeftButton = MouseButtonState.Pressed And
+    '        e.GetPosition(sender).X < datagrid.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+    '        e.GetPosition(sender).Y < datagrid.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
+    '        datagrid.SelectedItems.Count > 0 Then
 
-            Dim dragData As New DataObject(datagrid.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
+    '        Dim dragData As New DataObject(datagrid.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
 
-            DragDrop.DoDragDrop(datagrid, dragData, DragDropEffects.All)
-        End If
-    End Sub
+    '        DragDrop.DoDragDrop(datagrid, dragData, DragDropEffects.All)
+    '    End If
+    'End Sub
 
     Private Sub btnBack_Click(sender As Object, e As RoutedEventArgs) Handles btnBack.Click
         SearchPrevious()
@@ -922,6 +921,13 @@ Class wndMain
 
     Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click
         cap.Visibility = Visibility.Visible
+    End Sub
+
+    Private Sub btnViewPreferences_Click(sender As Object, e As RoutedEventArgs) Handles btnViewPreferences.Click
+        Dim w As New wndPreferences
+        w.InitializeComponent()
+        w.tcPreferences.SelectedIndex = 2
+        ShowWindow(New wndPreferences, True, Me, True)
     End Sub
 
 #End Region
@@ -1052,21 +1058,21 @@ Class wndMain
     End Sub
 
     Public Sub RebuildColumns()
-        dgObjects.Columns.Clear()
-        For Each columninfo As clsDataGridColumnInfo In preferences.Columns
-            dgObjects.Columns.Add(CreateColumn(columninfo))
-        Next
+        'dgObjects.Columns.Clear()
+        'For Each columninfo As clsDataGridColumnInfo In preferences.Columns
+        '    dgObjects.Columns.Add(CreateColumn(columninfo))
+        'Next
     End Sub
 
     Public Sub UpdateColumns()
-        For Each dgcolumn As DataGridColumn In dgObjects.Columns
-            For Each pcolumn As clsDataGridColumnInfo In preferences.Columns
-                If dgcolumn.Header.ToString = pcolumn.Header Then
-                    pcolumn.DisplayIndex = dgcolumn.DisplayIndex
-                    pcolumn.Width = dgcolumn.ActualWidth
-                End If
-            Next
-        Next
+        'For Each dgcolumn As DataGridColumn In dgObjects.Columns
+        '    For Each pcolumn As clsDataGridColumnInfo In preferences.Columns
+        '        If dgcolumn.Header.ToString = pcolumn.Header Then
+        '            pcolumn.DisplayIndex = dgcolumn.DisplayIndex
+        '            pcolumn.Width = dgcolumn.ActualWidth
+        '        End If
+        '    Next
+        'Next
     End Sub
 
     Private Sub ApplyPostfilter(Optional prop As String = Nothing, Optional value As String = Nothing)
@@ -1275,8 +1281,12 @@ Class wndMain
         ElseIf sender Is rbViewTiles Then
             Dim style As Style = FindResource("ListView_ViewTiles")
             If style IsNot Nothing Then lvObjects.Style = style
+        ElseIf sender Is rbViewDetails Then
+            Dim style As Style = FindResource("ListView_ViewDetails")
+            If style IsNot Nothing Then lvObjects.Style = style
         End If
     End Sub
+
 
 #End Region
 

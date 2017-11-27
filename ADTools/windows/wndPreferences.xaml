@@ -16,7 +16,7 @@
     
     <Grid>
         <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
-            <TabControl TabStripPlacement="Left" Margin="0,-1,-1,-1">
+            <TabControl x:Name="tcPreferences" TabStripPlacement="Left" Margin="0,-1,-1,-1">
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Basic}">
                     <DockPanel LastChildFill="True">
                         <StackPanel DockPanel.Dock="Top" Margin="5">
