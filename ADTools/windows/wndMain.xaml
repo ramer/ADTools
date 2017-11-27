@@ -52,8 +52,6 @@
 
         <DockPanel LastChildFill="True">
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorMenuBackground}" LastChildFill="True">
-                <Button x:Name="btnWindowClone" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
-                <Button x:Name="btnDummy" DockPanel.Dock="Right" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
                 <Menu>
                     <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
                         <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}">
@@ -125,6 +123,76 @@
                     </MenuItem>
                 </Menu>
             </DockPanel>
+            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
+                <Grid>
+                    <TabControl Height="100" Margin="5,0,5,5">
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuFile}"></TabItem>
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuEdit}"></TabItem>
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuView}">
+                            <StackPanel Orientation="Horizontal">
+                                <ToggleButton Width="80" Height="60" Margin="3,0,3,0">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/view_navigation.png" Stretch="Uniform"/>
+                                    </DockPanel>
+                                </ToggleButton>
+                                <ToggleButton Width="80" Height="60" Margin="3,0,3,0">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/view_preview.png" Stretch="Uniform"/>
+                                    </DockPanel>
+                                </ToggleButton>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <UniformGrid Width="300" Columns="2" Margin="5,0,5,0">
+                                    <RadioButton x:Name="rbViewMediumIcons" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                        <DockPanel>
+                                            <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </RadioButton>
+                                    <RadioButton x:Name="rbViewList" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                        <DockPanel>
+                                            <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </RadioButton>
+                                    <RadioButton x:Name="rbViewTiles" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                        <DockPanel>
+                                            <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </RadioButton>
+                                    <RadioButton x:Name="rbViewDetails" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                        <DockPanel>
+                                            <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        </DockPanel>
+                                    </RadioButton>
+                                </UniformGrid>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="btnViewPreferences" Width="80" Height="60" Margin="5,0,5,0" Style="{StaticResource ToolbarButton}">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreferences}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/view_preferences.png" Stretch="Uniform"/>
+                                    </DockPanel>
+                                </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuSearch}"></TabItem>
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuService}"></TabItem>
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuHelp}"></TabItem>
+                    </TabControl>
+
+                    <Button x:Name="btnWindowClone" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
+                    <Button x:Name="btnDummy" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
+                </Grid>
+            </DockPanel>
             <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorMenuBackground}" Margin="0,0,0,5">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Height="23">
                     <Button x:Name="btnBack" Width="23" Margin="5,0,5,0">
@@ -180,7 +248,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
-                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"/>
+                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="True"/>
                 <TreeView 
                     x:Name="tvObjects" 
                     Grid.Column="0" 
@@ -322,7 +390,7 @@
                             <TextBox x:Name="tbSearchPattern" Text="" Margin="0,0,5,0"/>
                             <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="3,0,5,0" Opacity="0.5">
                                 <TextBlock.Style>
-                                    <Style TargetType="{x:Type TextBlock}">
+                                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Text, ElementName=tbSearchPattern}" Value="">
@@ -335,21 +403,13 @@
                         </Grid>
                     </DockPanel>
 
-                    <Grid>
+                    <Grid Margin="0,0,0,5">
                         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
                         <ListView x:Name="lvObjects"
-                            local:clsSelector.Enabled="True"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             Visibility="Visible"
-                            VirtualizingPanel.IsVirtualizing="True"
-                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            KeyboardNavigation.DirectionalNavigation="None"
-                            Style="{StaticResource ListView_View_Tiles}"
-                            >
-
-                        </ListView>
+                            local:clsSelector.Enabled="True"
+                            Style="{StaticResource ListView_ViewTiles}"
+                            />
 
                         <DataGrid 
                             Visibility="Collapsed"

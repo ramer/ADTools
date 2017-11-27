@@ -1430,6 +1430,106 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
+        Public ReadOnly Property view_details() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_details", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_extralargeicons() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_extralargeicons", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_largeicons() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_largeicons", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_list() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_list", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_mediumicons() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_mediumicons", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_navigation() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_navigation", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_preferences() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_preferences", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_preview() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_preview", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_smallicons() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_smallicons", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property view_tiles() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("view_tiles", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
         Public ReadOnly Property warning() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("warning", resourceCulture)
@@ -2615,6 +2715,69 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Details.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewDetails() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewDetails", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на List.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewList() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewList", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Medium icons.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewMediumIcons() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewMediumIcons", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Navigation pane.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewNavigationPane() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewNavigationPane", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Options.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewPreferences() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewPreferences", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Preview pane.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewPreviewPane() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewPreviewPane", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Tiles.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_ViewTiles() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_ViewTiles", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Edit.
         '''</summary>
         Public ReadOnly Property wndMain_mnuEdit() As String
@@ -2782,6 +2945,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_mnuService_Preferences() As String
             Get
                 Return ResourceManager.GetString("wndMain_mnuService_Preferences", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на View.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuView() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuView", resourceCulture)
             End Get
         End Property
         

@@ -982,10 +982,11 @@ Class wndMain
             Loop
 
             buttons.Reverse()
-
+            spPath.Children.Add(New Shapes.Path() With {.Style = FindResource("PathSeparator")})
             For Each child As Button In buttons
                 AddHandler child.Click, AddressOf btnPath_Click
                 spPath.Children.Add(child)
+                spPath.Children.Add(New Shapes.Path() With {.Style = FindResource("PathSeparator")})
             Next
 
         ElseIf filter IsNot Nothing Then
@@ -1262,6 +1263,19 @@ Class wndMain
 
         RefreshDataGrid()
         If organizationalunitaffected Then RefreshDomainTree()
+    End Sub
+
+    Private Sub rbViewMediumIcons_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
+        If sender Is rbViewMediumIcons Then
+            Dim style As Style = FindResource("ListView_ViewMediumIcons")
+            If style IsNot Nothing Then lvObjects.Style = style
+        ElseIf sender Is rbViewList Then
+            Dim style As Style = FindResource("ListView_ViewList")
+            If style IsNot Nothing Then lvObjects.Style = style
+        ElseIf sender Is rbViewTiles Then
+            Dim style As Style = FindResource("ListView_ViewTiles")
+            If style IsNot Nothing Then lvObjects.Style = style
+        End If
     End Sub
 
 #End Region

@@ -1547,4 +1547,58 @@ To obtain the API key:
   <data name="_property" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\property.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="wndMain_mnuView" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="view_navigation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_navigation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_preview" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_preview.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wndMain_lbl_ViewNavigationPane" xml:space="preserve">
+    <value>Navigation pane</value>
+  </data>
+  <data name="wndMain_lbl_ViewPreviewPane" xml:space="preserve">
+    <value>Preview pane</value>
+  </data>
+  <data name="wndMain_lbl_ViewTiles" xml:space="preserve">
+    <value>Tiles</value>
+  </data>
+  <data name="wndMain_lbl_ViewMediumIcons" xml:space="preserve">
+    <value>Medium icons</value>
+  </data>
+  <data name="wndMain_lbl_ViewList" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="wndMain_lbl_ViewDetails" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="view_details" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_details.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_extralargeicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_extralargeicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_largeicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_largeicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_list" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_list.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_mediumicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_mediumicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_preferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_preferences.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_smallicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_smallicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="view_tiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\view_tiles.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="wndMain_lbl_ViewPreferences" xml:space="preserve">
+    <value>Options</value>
+  </data>
 </root>

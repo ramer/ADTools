@@ -450,6 +450,16 @@
     <Resource Include="images\password.png" />
     <Resource Include="images\favorites_add.png" />
     <Resource Include="images\location.png" />
+    <Resource Include="images\view_navigation.png" />
+    <Resource Include="images\view_preview.png" />
+    <Resource Include="images\view_details.png" />
+    <Resource Include="images\view_extralargeicons.png" />
+    <Resource Include="images\view_largeicons.png" />
+    <Resource Include="images\view_list.png" />
+    <Resource Include="images\view_mediumicons.png" />
+    <Resource Include="images\view_smallicons.png" />
+    <Resource Include="images\view_tiles.png" />
+    <Resource Include="images\view_preferences.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />

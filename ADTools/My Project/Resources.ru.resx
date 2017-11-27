@@ -1428,4 +1428,28 @@
   <data name="wndDomains_lbl_EnableWatcherDefinition" xml:space="preserve">
     <value>Обновлять атрибуты объектов при их изменении на сервере</value>
   </data>
+  <data name="wndMain_mnuView" xml:space="preserve">
+    <value>Вид</value>
+  </data>
+  <data name="wndMain_lbl_ViewNavigationPane" xml:space="preserve">
+    <value>Область навигации</value>
+  </data>
+  <data name="wndMain_lbl_ViewPreviewPane" xml:space="preserve">
+    <value>Область просмотра</value>
+  </data>
+  <data name="wndMain_lbl_ViewTiles" xml:space="preserve">
+    <value>Плитка</value>
+  </data>
+  <data name="wndMain_lbl_ViewMediumIcons" xml:space="preserve">
+    <value>Обычные значки</value>
+  </data>
+  <data name="wndMain_lbl_ViewList" xml:space="preserve">
+    <value>Список</value>
+  </data>
+  <data name="wndMain_lbl_ViewDetails" xml:space="preserve">
+    <value>Таблица</value>
+  </data>
+  <data name="wndMain_lbl_ViewPreferences" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
 </root>
