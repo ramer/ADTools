@@ -10,10 +10,16 @@ Public Class ConverterDataToUIElement
 
         Select Case value.GetType()
             Case GetType(Grid)
+                Dim grid = CType(value, Grid)
+                grid.MaxHeight = 48
+                grid.MaxWidth = 48
+
                 items.Add(value)
             Case GetType(BitmapImage)
                 Dim img As New Image
                 img.Source = value
+                img.MaxHeight = 48
+                img.MaxWidth = 48
                 items.Add(img)
             Case GetType(clsDirectoryObject)
 

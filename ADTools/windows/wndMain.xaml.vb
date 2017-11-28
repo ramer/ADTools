@@ -38,7 +38,7 @@ Class wndMain
         Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
         RefreshDomainTree()
-        RebuildColumns()
+        UpdateDetailsViewGroupStyle(True)
 
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
         tbSearchPattern.Focus()
@@ -52,8 +52,6 @@ Class wndMain
         cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
 
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
-
-        'If preferences.SearchResultGrouping Then lvObjects.GroupStyle.Clear() : lvObjects.GroupStyle.Add(New GroupStyle)
 
         If preferences.FirstRun Then ShowPopups()
 
@@ -117,7 +115,7 @@ Class wndMain
         header.Background = Brushes.AliceBlue
         rowGroup.Rows.Add(header)
 
-        For Each column As clsDataGridColumnInfo In preferences.Columns
+        For Each column As clsViewColumnInfo In preferences.Columns
             Dim tableColumn = New TableColumn()
             'configure width and such
             tableColumn.Width = New GridLength(column.Width / 96, GridUnitType.Star)
@@ -137,7 +135,7 @@ Class wndMain
             Dim tableRow = New TableRow()
             rowGroup.Rows.Add(tableRow)
 
-            For Each column As clsDataGridColumnInfo In preferences.Columns
+            For Each column As clsViewColumnInfo In preferences.Columns
                 Dim cell As New TableCell
                 cell.BorderBrush = Brushes.Gray
                 cell.BorderThickness = New Thickness(0.1)
@@ -353,7 +351,7 @@ Class wndMain
 
             ctxmnuObjectsCopyData.Items.Add(New Separator)
 
-            For Each col As clsDataGridColumnInfo In preferences.Columns
+            For Each col As clsViewColumnInfo In preferences.Columns
                 For Each attr In col.Attributes
                     Dim cdmnu As New MenuItem
                     cdmnu.Header = attr.Label
@@ -807,7 +805,17 @@ Class wndMain
     End Sub
 
     Private Sub lvObjects_ColumnReordered_LayoutUpdated() Handles lvObjects.LayoutUpdated
-        UpdateColumns()
+        Dim view = lvObjects.View
+        If view Is Nothing OrElse Not TypeOf view Is GridView Then Exit Sub
+        Dim gridview As GridView = CType(view, GridView)
+        For Each dgcolumn As GridViewColumn In gridview.Columns
+            For Each pcolumn As clsViewColumnInfo In preferences.Columns
+                If dgcolumn.Header.ToString = pcolumn.Header Then
+                    'pcolumn.DisplayIndex = dgcolumn.DisplayIndex
+                    pcolumn.Width = dgcolumn.ActualWidth
+                End If
+            Next
+        Next
     End Sub
 
     Private Sub lvObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDown
@@ -920,7 +928,7 @@ Class wndMain
     End Sub
 
     Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click
-        cap.Visibility = Visibility.Visible
+        UpdateDetailsViewGroupStyle(True)
     End Sub
 
     Private Sub btnViewPreferences_Click(sender As Object, e As RoutedEventArgs) Handles btnViewPreferences.Click
@@ -936,6 +944,19 @@ Class wndMain
 
     Public Sub RefreshDomainTree()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
+    End Sub
+
+    Public Sub UpdateDetailsViewGroupStyle(show As Boolean)
+        If show Then
+            Dim groupstyle = New GroupStyle()
+            groupstyle.ContainerStyle = TryFindResource("ListView_ViewDetails_GroupItem")
+            If groupstyle.ContainerStyle Is Nothing Then Exit Sub
+            Debug.WriteLine(lvObjects.Style.ToString)
+            lvObjects.GroupStyle.Clear()
+            lvObjects.GroupStyle.Add(groupstyle)
+        Else
+            lvObjects.GroupStyle.Clear()
+        End If
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
@@ -1057,24 +1078,6 @@ Class wndMain
         Next
     End Sub
 
-    Public Sub RebuildColumns()
-        'dgObjects.Columns.Clear()
-        'For Each columninfo As clsDataGridColumnInfo In preferences.Columns
-        '    dgObjects.Columns.Add(CreateColumn(columninfo))
-        'Next
-    End Sub
-
-    Public Sub UpdateColumns()
-        'For Each dgcolumn As DataGridColumn In dgObjects.Columns
-        '    For Each pcolumn As clsDataGridColumnInfo In preferences.Columns
-        '        If dgcolumn.Header.ToString = pcolumn.Header Then
-        '            pcolumn.DisplayIndex = dgcolumn.DisplayIndex
-        '            pcolumn.Width = dgcolumn.ActualWidth
-        '        End If
-        '    Next
-        'Next
-    End Sub
-
     Private Sub ApplyPostfilter(Optional prop As String = Nothing, Optional value As String = Nothing)
         If String.IsNullOrEmpty(prop) Then
             imgFilterStatus.Visibility = Visibility.Collapsed
@@ -1124,6 +1127,7 @@ Class wndMain
 
     Public Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         tbSearchPattern.SelectAll()
+        'UpdateDetailsViewGroupStyle(False)
 
         ApplyPostfilter(Nothing, Nothing)
 
@@ -1137,11 +1141,6 @@ Class wndMain
         ShowPath(currentcontainer, filter)
 
         searcher.SearchAsync(currentobjects, root, filter, domainlist)
-
-        If preferences.SearchResultGrouping AndAlso root Is Nothing Then
-
-        End If
-
     End Sub
 
     Private Sub Searcher_SearchAsyncDataRecieved() Handles searcher.SearchAsyncDataRecieved
@@ -1151,9 +1150,13 @@ Class wndMain
     Private Sub Searcher_SearchAsyncCompleted() Handles searcher.SearchAsyncCompleted
         cap.Visibility = Visibility.Hidden
         pbSearch.Visibility = Visibility.Hidden
+
+        'If preferences.SearchResultGrouping AndAlso currentcontainer Is Nothing Then
+        '    UpdateDetailsViewGroupStyle(True)
+        'End If
     End Sub
 
-    Public Function CreateColumn(columninfo As clsDataGridColumnInfo) As DataGridTemplateColumn
+    Public Function CreateColumn(columninfo As clsViewColumnInfo) As DataGridTemplateColumn
         Dim column As New DataGridTemplateColumn()
         column.Header = columninfo.Header
         column.SetValue(DataGridColumn.CanUserSortProperty, True)
@@ -1273,17 +1276,17 @@ Class wndMain
 
     Private Sub rbViewMediumIcons_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
         If sender Is rbViewMediumIcons Then
-            Dim style As Style = FindResource("ListView_ViewMediumIcons")
-            If style IsNot Nothing Then lvObjects.Style = style
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewMediumIcons")
         ElseIf sender Is rbViewList Then
-            Dim style As Style = FindResource("ListView_ViewList")
-            If style IsNot Nothing Then lvObjects.Style = style
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewList")
         ElseIf sender Is rbViewTiles Then
-            Dim style As Style = FindResource("ListView_ViewTiles")
-            If style IsNot Nothing Then lvObjects.Style = style
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewTiles")
         ElseIf sender Is rbViewDetails Then
-            Dim style As Style = FindResource("ListView_ViewDetails")
-            If style IsNot Nothing Then lvObjects.Style = style
+            UpdateDetailsViewGroupStyle(True)
+            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewDetails")
         End If
     End Sub
 

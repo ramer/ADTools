@@ -1,4 +1,4 @@
-﻿Public Class clsDataGridColumnInfo
+﻿Public Class clsViewColumnInfo
     Private _header As String
     Private _attributes As New List(Of clsAttribute)
     Private _displayindex As Integer

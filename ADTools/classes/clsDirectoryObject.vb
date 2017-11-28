@@ -281,9 +281,9 @@ Public Class clsDirectoryObject
                 Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Delete, attributename, Nothing)
                 Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
                 Refresh({attributename})
-
+                If _cache.ContainsKey(attributename) Then _cache.Remove(attributename)
             Catch e As DirectoryOperationException
-                Throw e
+
             End Try
 
         Else
@@ -305,11 +305,11 @@ Public Class clsDirectoryObject
                     Refresh({attributename})
 
                 Catch e As DirectoryOperationException
-                    Throw e
+
                 End Try
 
             Catch e As Exception
-                Throw e
+
             End Try
 
         End If

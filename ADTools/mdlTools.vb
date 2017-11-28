@@ -1,8 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
-Imports System.Reflection
 Imports Microsoft.Win32
 Imports IRegisty
-Imports System.Windows.Forms
 Imports IPrompt.VisualBasic
 Imports System.DirectoryServices
 Imports System.DirectoryServices.ActiveDirectory
@@ -61,15 +59,15 @@ Module mdlTools
     Public Const ADS_GROUP_TYPE_SECURITY_ENABLED = -2147483648 '0x80000000
 
 
-    Public columnsDefault As New ObservableCollection(Of clsDataGridColumnInfo) From {
-        New clsDataGridColumnInfo("Статус", New List(Of clsAttribute) From {New clsAttribute("StatusImage", "Статус ⬕")}, 0, 51),
-        New clsDataGridColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
-        New clsDataGridColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")}, 2, 450),
-        New clsDataGridColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
-        New clsDataGridColumnInfo("Место работы", New List(Of clsAttribute) From {New clsAttribute("title", "Должность"), New clsAttribute("department", "Подразделение"), New clsAttribute("company", "Компания")}, 4, 300),
-        New clsDataGridColumnInfo("Основной адрес", New List(Of clsAttribute) From {New clsAttribute("mail", "Основной адрес")}, 5, 170),
-        New clsDataGridColumnInfo("Объект", New List(Of clsAttribute) From {New clsAttribute("whenCreatedFormated", "Создан (формат)"), New clsAttribute("lastLogonFormated", "Последний вход (формат)"), New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")}, 6, 150),
-        New clsDataGridColumnInfo("Пароль", New List(Of clsAttribute) From {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)"), New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")}, 7, 150)}
+    Public columnsDefault As New ObservableCollection(Of clsViewColumnInfo) From {
+        New clsViewColumnInfo("Статус", New List(Of clsAttribute) From {New clsAttribute("StatusImage", "Статус ⬕")}, 0, 51),
+        New clsViewColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
+        New clsViewColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")}, 2, 450),
+        New clsViewColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
+        New clsViewColumnInfo("Место работы", New List(Of clsAttribute) From {New clsAttribute("title", "Должность"), New clsAttribute("department", "Подразделение"), New clsAttribute("company", "Компания")}, 4, 300),
+        New clsViewColumnInfo("Основной адрес", New List(Of clsAttribute) From {New clsAttribute("mail", "Основной адрес")}, 5, 170),
+        New clsViewColumnInfo("Объект", New List(Of clsAttribute) From {New clsAttribute("whenCreatedFormated", "Создан (формат)"), New clsAttribute("lastLogonFormated", "Последний вход (формат)"), New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")}, 6, 150),
+        New clsViewColumnInfo("Пароль", New List(Of clsAttribute) From {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)"), New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")}, 7, 150)}
 
     Public attributesDefault As New ObservableCollection(Of clsAttribute) From {
         {New clsAttribute("accountExpires", "Объект истекает")},
@@ -282,7 +280,7 @@ Module mdlTools
             Dim w As wndUser
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndUser) Is wnd.GetType AndAlso CType(wnd, wndUser).currentobject Is obj Then
+                    If GetType(wndUser) Is wnd.GetType AndAlso CType(wnd, wndUser).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -297,14 +295,14 @@ Module mdlTools
                 w.Owner = owner
             End If
 
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
             Dim w As wndContact
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).currentobject Is obj Then
+                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -319,14 +317,14 @@ Module mdlTools
                 w.Owner = owner
             End If
 
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
             Dim w As wndComputer
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndComputer) Is wnd.GetType AndAlso CType(wnd, wndComputer).currentobject Is obj Then
+                    If GetType(wndComputer) Is wnd.GetType AndAlso CType(wnd, wndComputer).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -338,14 +336,14 @@ Module mdlTools
 
             w = New wndComputer
             If owner IsNot Nothing Then w.Owner = owner
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
             Dim w As wndGroup
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndGroup) Is wnd.GetType AndAlso CType(wnd, wndGroup).currentobject Is obj Then
+                    If GetType(wndGroup) Is wnd.GetType AndAlso CType(wnd, wndGroup).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -357,14 +355,14 @@ Module mdlTools
 
             w = New wndGroup
             If owner IsNot Nothing Then w.Owner = owner
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         ElseIf obj.objectClass.Contains("organizationalunit") Then
             Dim w As wndOrganizationalUnit
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndOrganizationalUnit) Is wnd.GetType AndAlso CType(wnd, wndOrganizationalUnit).currentobject Is obj Then
+                    If GetType(wndOrganizationalUnit) Is wnd.GetType AndAlso CType(wnd, wndOrganizationalUnit).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -376,14 +374,14 @@ Module mdlTools
 
             w = New wndOrganizationalUnit
             If owner IsNot Nothing Then w.Owner = owner
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         Else
             Dim w As wndUnknownObject
             If owner IsNot Nothing Then
                 For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndUnknownObject) Is wnd.GetType AndAlso CType(wnd, wndUnknownObject).currentobject Is obj Then
+                    If GetType(wndUnknownObject) Is wnd.GetType AndAlso CType(wnd, wndUnknownObject).CurrentObject Is obj Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -395,7 +393,7 @@ Module mdlTools
 
             w = New wndUnknownObject
             If owner IsNot Nothing Then w.Owner = owner
-            w.currentobject = obj
+            w.CurrentObject = obj
             w.Show()
             Return w
         End If
@@ -426,7 +424,7 @@ Module mdlTools
     End Function
 
     Public Function GetDefaultColumns()
-        Dim results As New ObservableCollection(Of clsDataGridColumnInfo)
+        Dim results As New ObservableCollection(Of clsViewColumnInfo)
         For Each c In columnsDefault
             results.Add(c)
         Next
@@ -468,7 +466,7 @@ Module mdlTools
 
     Public Sub ThrowInformation(Message As String)
         With ADToolsApplication.nicon
-            .BalloonTipIcon = ToolTipIcon.Info
+            .BalloonTipIcon = Forms.ToolTipIcon.Info
             .BalloonTipTitle = My.Application.Info.AssemblyName
             .BalloonTipText = Message
             .Tag = Nothing

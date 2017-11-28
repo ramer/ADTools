@@ -50,7 +50,7 @@ Public Class wndPreferences
         grdLayout.ColumnDefinitions.Clear()
         grdLayout.Children.Clear()
 
-        For Each columnindo As clsDataGridColumnInfo In preferences.Columns
+        For Each columnindo As clsViewColumnInfo In preferences.Columns
             grdLayout.ColumnDefinitions.Add(New ColumnDefinition())
         Next
 
@@ -82,10 +82,10 @@ Public Class wndPreferences
     End Sub
 
     Private Sub SaveLayout()
-        Dim layout As New ObservableCollection(Of clsDataGridColumnInfo)
+        Dim layout As New ObservableCollection(Of clsViewColumnInfo)
 
         For x As Integer = 0 To grdLayout.ColumnDefinitions.Count - 1
-            Dim dgci As New clsDataGridColumnInfo
+            Dim dgci As New clsViewColumnInfo
             dgci.DisplayIndex = x
             For y As Integer = 0 To grdLayout.RowDefinitions.Count - 1
                 For Each element As UIElement In grdLayout.Children

@@ -19,7 +19,7 @@ Public Class clsPreferences
     Private _showdeletedobjects As Boolean = False
 
     ' layout
-    Private _columns As New ObservableCollection(Of clsDataGridColumnInfo)
+    Private _columns As New ObservableCollection(Of clsViewColumnInfo)
 
     ' search attributes
     Private _attributesforsearch As New ObservableCollection(Of clsAttribute)
@@ -126,18 +126,66 @@ Public Class clsPreferences
         End Set
     End Property
 
-    Public Property Columns() As ObservableCollection(Of clsDataGridColumnInfo)
+    Public Property Columns() As ObservableCollection(Of clsViewColumnInfo)
         Get
             Return _columns
         End Get
-        Set(value As ObservableCollection(Of clsDataGridColumnInfo))
+        Set(value As ObservableCollection(Of clsViewColumnInfo))
             _columns = If(value, GetDefaultColumns())
 
-            For Each w As Window In Application.Current.Windows
-                If w.GetType Is GetType(wndMain) Then
-                    CType(w, wndMain).RebuildColumns()
-                End If
+            Dim newstyle As New Style
+            newstyle.BasedOn = Windows.Application.Current.TryFindResource(GetType(ListView))
+            newstyle.TargetType = GetType(ListView)
+
+            newstyle.Setters.Add(New Setter(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+            newstyle.Setters.Add(New Setter(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+            newstyle.Setters.Add(New Setter(ScrollViewer.CanContentScrollProperty, True))
+            newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
+            newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
+            newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
+            newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
+
+            Dim gridview As New GridView
+
+            For Each columninfo As clsViewColumnInfo In _columns
+                Dim column As New GridViewColumn()
+                column.Header = columninfo.Header
+                'column.SetValue(DataGridColumn.CanUserSortProperty, True)
+                'If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
+                column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
+                'column.MinWidth = 58
+                Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+                panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
+                panel.SetValue(FrameworkElement.MarginProperty, New Thickness(5, 0, 5, 0))
+
+                Dim first As Boolean = True
+                For Each attr As clsAttribute In columninfo.Attributes
+                    Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr.Name}
+
+
+                    Dim container As New FrameworkElementFactory(GetType(ItemsControl))
+                    If first Then
+                        first = False
+                        container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
+                        'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+                    Else
+                        container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
+                    End If
+
+                    container.SetBinding(ItemsControl.ItemsSourceProperty, bind)
+                    container.SetValue(FrameworkElement.ToolTipProperty, attr.Label)
+                    panel.AppendChild(container)
+                Next
+
+                Dim template As New DataTemplate()
+                template.VisualTree = panel
+                column.CellTemplate = template
+                gridview.Columns.Add(column)
             Next
+
+            newstyle.Setters.Add(New Setter(ListView.ViewProperty, gridview))
+
+            Windows.Application.Current.Resources("ListView_ViewDetails") = newstyle
         End Set
     End Property
 
