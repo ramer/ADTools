@@ -459,7 +459,6 @@
     <Resource Include="images\view_mediumicons.png" />
     <Resource Include="images\view_smallicons.png" />
     <Resource Include="images\view_tiles.png" />
-    <Resource Include="images\view_preferences.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />

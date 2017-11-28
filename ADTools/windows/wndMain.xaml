@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="ADTools"
         d:DesignWidth="1024"
-        d:DesignHeight="768"
+        d:DesignHeight="368"
         WindowState="Maximized"
         Icon="/images/app.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -19,7 +19,7 @@
     </Window.Resources>
     
     <Grid>
-        <Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
+        <!--<Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
             <Grid Width="200" Height="70">
                 <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
 
@@ -38,159 +38,223 @@
                     <Run Text="{x:Static r:Resources.hint_poptbSearchPattern}"/>
                 </TextBlock>
             </Grid>
-        </Popup>
-
-        <Popup x:Name="popF1Hint" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=mnuHelp}" Placement="Bottom" HorizontalOffset="30" VerticalOffset="-5">
-            <Grid Width="200" Height="55">
-                <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
-
-                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
-                    <Run Text="{x:Static r:Resources.hint_popF1Hint}"/>
-                </TextBlock>
-            </Grid>
-        </Popup>
+        </Popup>-->
 
         <DockPanel LastChildFill="True">
-            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}" LastChildFill="True">
-                <Menu>
-                    <MenuItem x:Name="mnuFile" Header="{x:Static r:Resources.wndMain_mnuFile}">
-                        <MenuItem x:Name="mnuFilePrint" Header="{x:Static r:Resources.wndMain_mnuFile_Print}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/print_preview.png"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator/>
-                        <MenuItem x:Name="mnuFileExit" Header="{x:Static r:Resources.wndMain_mnuFile_Exit}"/>
-                    </MenuItem>
-                    <MenuItem x:Name="mnuEdit" Header="{x:Static r:Resources.wndMain_mnuEdit}">
-                        <MenuItem x:Name="mnuEditCreateObject" Header="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/folder_add.png"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </MenuItem>
-                    <MenuItem x:Name="mnuSearch" Header="{x:Static r:Resources.wndMain_mnuSearch}">
-                        <MenuItem x:Name="mnuSearchMode" Header="{x:Static r:Resources.wndMain_mnuSearchMode}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/filter.png"/>
-                            </MenuItem.Icon>
-                            <RadioButton x:Name="mnuSearchModeDefault" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Default}" IsChecked="True"/>
-                            <RadioButton x:Name="mnuSearchModeAdvanced" Content="{x:Static r:Resources.wndMain_mnuSearchMode_Advanced}"/>
-                        </MenuItem>
-                        <MenuItem x:Name="mnuSearchObjectClasses" Header="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DataContext="{Binding searchobjectclasses}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/puzzle.png"/>
-                            </MenuItem.Icon>
-                            <CheckBox IsChecked="{Binding User}" Content="User" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                            <CheckBox IsChecked="{Binding Contact}" Content="Contact" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                            <CheckBox IsChecked="{Binding Computer}" Content="Computer" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                            <CheckBox IsChecked="{Binding Group}" Content="Group" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                            <CheckBox IsChecked="{Binding OrganizationalUnit}" Content="Organizational Unit" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                        </MenuItem>
-                        <MenuItem x:Name="mnuSearchDomains" Header="{x:Static r:Resources.wndMain_mnuSearchDomains}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/domain.png"/>
-                            </MenuItem.Icon>
-                            <MenuItem.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding IsSearchable}" Content="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
-                                </DataTemplate>
-                            </MenuItem.ItemTemplate>
-                        </MenuItem>
-                        <MenuItem x:Name="mnuSearchSaveCurrentFilter" Header="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/filter_add.png"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </MenuItem>
-                    <MenuItem x:Name="mnuService" Header="{x:Static r:Resources.wndMain_mnuService}">
-                        <MenuItem x:Name="mnuServiceDomainOptions" Header="{x:Static r:Resources.wndMain_mnuService_DomainOptions}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/domain_options.png"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <MenuItem x:Name="mnuServicePreferences" Header="{x:Static r:Resources.wndMain_mnuService_Preferences}">
-                            <MenuItem.Icon>
-                                <Image Source="/images/preferences.png"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                        <Separator/>
-                        <MenuItem x:Name="mnuServiceLog" Header="{x:Static r:Resources.wndMain_mnuService_Log}"/>
-                        <MenuItem x:Name="mnuServiceErrorLog" Header="{x:Static r:Resources.wndMain_mnuService_ErrorLog}"/>
-                    </MenuItem>
-                    <MenuItem x:Name="mnuHelp" Header="{x:Static r:Resources.wndMain_mnuHelp}">
-                        <MenuItem x:Name="mnuHelpAbout" Header="{x:Static r:Resources.wndMain_mnuHelp_About}"/>
-                    </MenuItem>
-                </Menu>
-            </DockPanel>
             <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
                 <Grid>
-                    <TabControl Height="100" Margin="5,0,5,5">
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuFile}"></TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuEdit}"></TabItem>
+                    <TabControl Margin="5,0,5,5" Height="110">
+                        <TabItem Header="{x:Static r:Resources.wndMain_mnuMain}">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="mnuFilePrint" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuFile_Print}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/print_preview.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="mnuEditCreateObject" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/Folder_add.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="mnuServiceDomainOptions" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_DomainOptions}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/domain_options.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+                                <Button x:Name="mnuServicePreferences" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_Preferences}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/preferences.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="mnuServiceLog" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_Log}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/log.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+                                <Button x:Name="mnuServiceErrorLog" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_ErrorLog}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/log.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+                                
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="mnuHelpAbout" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuHelp_About}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/app.ico" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                            </StackPanel>
+                        </TabItem>
                         <TabItem Header="{x:Static r:Resources.wndMain_mnuView}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Width="80" Height="60" Margin="3,0,3,0">
+                                <ToggleButton Margin="3" Width="100">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
-                                        <Image Source="/images/view_navigation.png" Stretch="Uniform"/>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/view_navigation.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </ToggleButton>
-                                <ToggleButton Width="80" Height="60" Margin="3,0,3,0">
+                                <ToggleButton Margin="3" Width="100">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
-                                        <Image Source="/images/view_preview.png" Stretch="Uniform"/>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/view_preview.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </ToggleButton>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <UniformGrid Width="300" Columns="2" Margin="5,0,5,0">
-                                    <RadioButton x:Name="rbViewMediumIcons" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                <UniformGrid Columns="2">
+                                    <RadioButton x:Name="rbViewMediumIcons" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                         <DockPanel>
-                                            <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                            <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                         </DockPanel>
                                     </RadioButton>
-                                    <RadioButton x:Name="rbViewList" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                    <RadioButton x:Name="rbViewList" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                         <DockPanel>
-                                            <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                            <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                         </DockPanel>
                                     </RadioButton>
-                                    <RadioButton x:Name="rbViewTiles" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                    <RadioButton x:Name="rbViewTiles" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                         <DockPanel>
-                                            <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                            <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                         </DockPanel>
                                     </RadioButton>
-                                    <RadioButton x:Name="rbViewDetails" Style="{StaticResource ToggleRadioButton}" Height="24">
+                                    <RadioButton x:Name="rbViewDetails" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                         <DockPanel>
-                                            <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+                                            <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                         </DockPanel>
                                     </RadioButton>
                                 </UniformGrid>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem x:Name="mnuMain" Header="{x:Static r:Resources.wndMain_mnuSearch}">
+                            <StackPanel Orientation="Horizontal">
+                                <DockPanel>
+                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <UniformGrid Rows="2">
+                                        <RadioButton x:Name="mnuSearchModeDefault" Style="{StaticResource ToggleRadioButton}" IsChecked="True" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel>
+                                                <Image Source="/images/property.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode_Default}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                        <RadioButton x:Name="mnuSearchModeAdvanced" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel VerticalAlignment="Center">
+                                                <Image Source="/images/property.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode_Advanced}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                    </UniformGrid>
+                                </DockPanel>
 
-                                <Button x:Name="btnViewPreferences" Width="80" Height="60" Margin="5,0,5,0" Style="{StaticResource ToolbarButton}">
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <DockPanel>
+                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <UniformGrid Rows="2" DataContext="{Binding searchobjectclasses}">
+                                        <ToggleButton IsChecked="{Binding User}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/user_unknown.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="User" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding Contact}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/contact.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="Contact" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding Computer}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/computer_unknown.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="Computer" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding Group}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/group.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="Group" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding OrganizationalUnit}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/folder.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="OrganizationalUnit" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                    </UniformGrid>
+                                </DockPanel>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <DockPanel>
+                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchDomains}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <ItemsControl x:Name="mnuSearchDomains">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <ToggleButton IsChecked="{Binding IsSearchable}" HorizontalContentAlignment="Left" Margin="3">
+                                                    <DockPanel>
+                                                        <Image Source="/images/domain.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                                    </DockPanel>
+                                                </ToggleButton>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </DockPanel>
+                                
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <Button x:Name="mnuSearchSaveCurrentFilter" Style="{StaticResource ToolbarButton}" Margin="3" Width="120">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreferences}" TextWrapping="Wrap" DockPanel.Dock="Bottom" TextAlignment="Center"/>
-                                        <Image Source="/images/view_preferences.png" Stretch="Uniform"/>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/filter_add.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </Button>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuSearch}"></TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuService}"></TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuHelp}"></TabItem>
                     </TabControl>
 
-                    <Button x:Name="btnWindowClone" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
-                    <Button x:Name="btnDummy" Width="23" Height="23" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Visible"/>
+                    <DockPanel HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <Button x:Name="btnDummy" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
+                        <ToggleButton x:Name="btnToolbarExpander" Style="{StaticResource ToolbarExpanderToggleButton}" Width="23" Height="23" Margin="0,5,5,0">
+                            
+                        </ToggleButton>
+                        <Button x:Name="btnWindowClone" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
+                    </DockPanel>
                 </Grid>
             </DockPanel>
             <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorElementBackground}" Margin="5,0,0,5">
@@ -414,7 +478,7 @@
                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
                             KeyboardNavigation.DirectionalNavigation="None"
-                            Style="{StaticResource ListView_ViewDetails}">
+                            >
                             
                             <ListView.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">

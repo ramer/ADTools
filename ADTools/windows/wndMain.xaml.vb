@@ -30,8 +30,6 @@ Class wndMain
     Private clipboardlastdata As String
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        hkF1.InputGestures.Add(New KeyGesture(Key.F1))
-        Me.CommandBindings.Add(New CommandBinding(hkF1, AddressOf ShowPopups))
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
         Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshDataGrid))
         hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
@@ -53,8 +51,6 @@ Class wndMain
 
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
 
-        If preferences.FirstRun Then ShowPopups()
-
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
         clipboardTimer.Start()
     End Sub
@@ -69,37 +65,33 @@ Class wndMain
         If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
     End Sub
 
-#Region "Popups"
+    '#Region "Popups"
 
-    Private Sub ShowPopups()
-        poptvObjects.IsOpen = True
-        poptbSearchPattern.IsOpen = True
-        popF1Hint.IsOpen = True
-    End Sub
+    '    Private Sub ShowPopups()
+    '        poptvObjects.IsOpen = True
+    '        poptbSearchPattern.IsOpen = True
+    '        popF1Hint.IsOpen = True
+    '    End Sub
 
-    Private Sub MovePopups() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, tbSearchPattern.SizeChanged
-        poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
-        poptbSearchPattern.HorizontalOffset += 1 : poptbSearchPattern.HorizontalOffset -= 1
-        popF1Hint.HorizontalOffset += 1 : popF1Hint.HorizontalOffset -= 1
-    End Sub
+    '    Private Sub MovePopups() Handles Me.LocationChanged, Me.SizeChanged, tvObjects.SizeChanged, tbSearchPattern.SizeChanged
+    '        poptvObjects.HorizontalOffset += 1 : poptvObjects.HorizontalOffset -= 1
+    '        poptbSearchPattern.HorizontalOffset += 1 : poptbSearchPattern.HorizontalOffset -= 1
+    '        popF1Hint.HorizontalOffset += 1 : popF1Hint.HorizontalOffset -= 1
+    '    End Sub
 
-    Private Sub ClosePopups()
-        poptvObjects.IsOpen = False
-        poptbSearchPattern.IsOpen = False
-        popF1Hint.IsOpen = False
-    End Sub
+    '    Private Sub ClosePopups()
+    '        poptvObjects.IsOpen = False
+    '        poptbSearchPattern.IsOpen = False
+    '        popF1Hint.IsOpen = False
+    '    End Sub
 
-    Private Sub ClosePopup(sender As Object, e As MouseButtonEventArgs) Handles poptvObjects.MouseLeftButtonDown, poptbSearchPattern.MouseLeftButtonDown, popF1Hint.MouseLeftButtonDown
-        CType(sender, Popup).IsOpen = False
-    End Sub
+    '    Private Sub ClosePopup(sender As Object, e As MouseButtonEventArgs) Handles poptvObjects.MouseLeftButtonDown, poptbSearchPattern.MouseLeftButtonDown, popF1Hint.MouseLeftButtonDown
+    '        CType(sender, Popup).IsOpen = False
+    '    End Sub
 
-#End Region
+    '#End Region
 
 #Region "Main Menu"
-
-    Private Sub mnuFileExit_Click(sender As Object, e As RoutedEventArgs) Handles mnuFileExit.Click
-        Me.Close()
-    End Sub
 
     Private Sub mnuFilePrint_Click(sender As Object, e As RoutedEventArgs) Handles mnuFilePrint.Click
         Dim fd As New FlowDocument
@@ -183,7 +175,7 @@ Class wndMain
         ShowWindow(w, False, Me, False)
     End Sub
 
-    Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click, hlpoptvObjects.Click
+    Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click
         ShowWindow(New wndDomains, True, Me, True)
         RefreshDomainTree()
     End Sub
@@ -905,6 +897,10 @@ Class wndMain
         End If
     End Sub
 
+    Private Sub tbSearchPattern_PreviewMouseDown(sender As Object, e As MouseButtonEventArgs) Handles tbSearchPattern.PreviewMouseDown
+        If e.ClickCount = 3 Then tbSearchPattern.SelectAll()
+    End Sub
+
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If mnuSearchModeDefault.IsChecked = True Then
             StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
@@ -928,14 +924,7 @@ Class wndMain
     End Sub
 
     Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click
-        UpdateDetailsViewGroupStyle(True)
-    End Sub
 
-    Private Sub btnViewPreferences_Click(sender As Object, e As RoutedEventArgs) Handles btnViewPreferences.Click
-        Dim w As New wndPreferences
-        w.InitializeComponent()
-        w.tcPreferences.SelectedIndex = 2
-        ShowWindow(New wndPreferences, True, Me, True)
     End Sub
 
 #End Region

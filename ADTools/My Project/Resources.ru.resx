@@ -1452,4 +1452,7 @@
   <data name="wndMain_lbl_ViewPreferences" xml:space="preserve">
     <value>Параметры</value>
   </data>
+  <data name="wndMain_mnuMain" xml:space="preserve">
+    <value>Главная</value>
+  </data>
 </root>

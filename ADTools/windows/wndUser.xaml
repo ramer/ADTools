@@ -60,7 +60,7 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True" Margin="5,5,5,0">
                                 <TextBlock Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}" Width="140"/>
-                                <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
+                                <ComboBox x:Name="cmboTelephoneNumber" Height="23" Text="{Binding telephoneNumber, UpdateSourceTrigger=LostFocus}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Setter Property="SnapsToDevicePixels" Value="True"/>

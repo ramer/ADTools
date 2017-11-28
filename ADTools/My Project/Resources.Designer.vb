@@ -1490,16 +1490,6 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
-        Public ReadOnly Property view_preferences() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("view_preferences", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        '''</summary>
         Public ReadOnly Property view_preview() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("view_preview", resourceCulture)
@@ -2837,6 +2827,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_mnuHelp_About() As String
             Get
                 Return ResourceManager.GetString("wndMain_mnuHelp_About", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Main.
+        '''</summary>
+        Public ReadOnly Property wndMain_mnuMain() As String
+            Get
+                Return ResourceManager.GetString("wndMain_mnuMain", resourceCulture)
             End Get
         End Property
         

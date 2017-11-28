@@ -1589,9 +1589,6 @@ To obtain the API key:
   <data name="view_mediumicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\view_mediumicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="view_preferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\view_preferences.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="view_smallicons" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\view_smallicons.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -1600,5 +1597,8 @@ To obtain the API key:
   </data>
   <data name="wndMain_lbl_ViewPreferences" xml:space="preserve">
     <value>Options</value>
+  </data>
+  <data name="wndMain_mnuMain" xml:space="preserve">
+    <value>Main</value>
   </data>
 </root>
