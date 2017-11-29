@@ -36,12 +36,14 @@ Class wndMain
         Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
         RefreshDomainTree()
-        UpdateDetailsViewGroupStyle(True)
+        'UpdateDetailsViewGroupStyle(True)
 
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
         tbSearchPattern.Focus()
 
         mnuSearchDomains.ItemsSource = domains
+        mnuView.DataContext = preferences
+
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
 
@@ -936,7 +938,7 @@ Class wndMain
     End Sub
 
     Public Sub UpdateDetailsViewGroupStyle(show As Boolean)
-        If show Then
+        If show And preferences.ViewResultGrouping Then
             Dim groupstyle = New GroupStyle()
             groupstyle.ContainerStyle = TryFindResource("ListView_ViewDetails_GroupItem")
             If groupstyle.ContainerStyle Is Nothing Then Exit Sub
@@ -1263,20 +1265,35 @@ Class wndMain
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
 
-    Private Sub rbViewMediumIcons_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
+    Private Sub rbView_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
         If sender Is rbViewMediumIcons Then
             UpdateDetailsViewGroupStyle(False)
-            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewMediumIcons")
+            lvObjects.Style = TryFindResource("ListView_ViewMediumIcons")
         ElseIf sender Is rbViewList Then
             UpdateDetailsViewGroupStyle(False)
-            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewList")
+            lvObjects.Style = TryFindResource("ListView_ViewList")
         ElseIf sender Is rbViewTiles Then
             UpdateDetailsViewGroupStyle(False)
-            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewTiles")
+            lvObjects.Style = TryFindResource("ListView_ViewTiles")
         ElseIf sender Is rbViewDetails Then
             UpdateDetailsViewGroupStyle(True)
-            lvObjects.SetResourceReference(StyleProperty, "ListView_ViewDetails")
+            lvObjects.Style = GetViewDetailsStyle()
         End If
+    End Sub
+
+    Private Sub togbResultGrouping_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles togbViewResultGrouping.Checked, togbViewResultGrouping.Unchecked
+        If rbViewDetails.IsChecked Then
+            UpdateDetailsViewGroupStyle(togbViewResultGrouping.IsChecked)
+        End If
+    End Sub
+
+
+    Private Sub btnViewSetDefaultView_Click(sender As Object, e As RoutedEventArgs) Handles btnViewSetDefaultView.Click
+        preferences.DefaultView =
+            If(rbViewDetails.IsChecked, clsPreferences.enmView.Details,
+            If(rbViewTiles.IsChecked, clsPreferences.enmView.Tiles,
+            If(rbViewList.IsChecked, clsPreferences.enmView.List,
+            If(rbViewMediumIcons.IsChecked, clsPreferences.enmView.MediumIcons, clsPreferences.enmView.Details))))
     End Sub
 
 

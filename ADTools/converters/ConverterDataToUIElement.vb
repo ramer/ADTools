@@ -6,21 +6,20 @@ Public Class ConverterDataToUIElement
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
         If value Is Nothing Then Return Nothing
-        Dim items As New ObservableCollection(Of Object)
+        Dim content As Object
 
         Select Case value.GetType()
             Case GetType(Grid)
-                Dim grid = CType(value, Grid)
-                grid.MaxHeight = 48
-                grid.MaxWidth = 48
 
-                items.Add(value)
+                Dim grid = CType(value, Grid)
+                content = grid
+
             Case GetType(BitmapImage)
+
                 Dim img As New Image
                 img.Source = value
-                img.MaxHeight = 48
-                img.MaxWidth = 48
-                items.Add(img)
+                content = img
+
             Case GetType(clsDirectoryObject)
 
                 Dim obj As clsDirectoryObject = CType(value, clsDirectoryObject)
@@ -33,7 +32,7 @@ Public Class ConverterDataToUIElement
                         ShowDirectoryObjectProperties(obj, Window.GetWindow(rn))
                     End Sub
                 tblck.Inlines.Add(rn)
-                items.Add(tblck)
+                content = tblck
 
             Case GetType(String)
 
@@ -74,7 +73,7 @@ Public Class ConverterDataToUIElement
                 Next
                 tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex)))
                 tblck.TextWrapping = TextWrapping.Wrap
-                items.Add(tblck)
+                content = tblck
 
 
                 '    valuetyped = value
@@ -88,7 +87,7 @@ Public Class ConverterDataToUIElement
                 '    valuetyped = value
         End Select
 
-        Return items
+        Return content
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack

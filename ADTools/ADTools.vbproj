@@ -124,6 +124,7 @@
     <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
     <Compile Include="classes\clsWatcher.vb" />
     <Compile Include="classes\clsWmi.vb" />
+    <Compile Include="controlsinherited\ColumnDefinitionExtended.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
     <Compile Include="controlsinherited\VirtualizingWrapPanel.vb" />
     <Compile Include="controls\ctlContactMailbox.xaml.vb">
@@ -159,6 +160,8 @@
       <DependentUpon>ctlUserWorkstations.xaml</DependentUpon>
     </Compile>
     <Compile Include="classes\clsPreferences.vb" />
+    <Compile Include="converters\ConverterBooleanToEnum.vb" />
+    <Compile Include="converters\ConverterBooleanToWidthStar.vb" />
     <Compile Include="converters\ConverterDataToUIElement.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
@@ -459,6 +462,7 @@
     <Resource Include="images\view_mediumicons.png" />
     <Resource Include="images\view_smallicons.png" />
     <Resource Include="images\view_tiles.png" />
+    <Resource Include="images\grouping.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />

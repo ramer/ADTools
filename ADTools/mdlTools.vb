@@ -291,13 +291,16 @@ Module mdlTools
             End If
 
             w = New wndUser
+
             If owner IsNot Nothing Then
+
                 w.Owner = owner
             End If
 
             w.CurrentObject = obj
             w.Show()
             Return w
+
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
             Dim w As wndContact
             If owner IsNot Nothing Then
@@ -313,6 +316,8 @@ Module mdlTools
             End If
 
             w = New wndContact
+
+
             If owner IsNot Nothing Then
                 w.Owner = owner
             End If
@@ -320,6 +325,7 @@ Module mdlTools
             w.CurrentObject = obj
             w.Show()
             Return w
+
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
             Dim w As wndComputer
             If owner IsNot Nothing Then
@@ -429,6 +435,63 @@ Module mdlTools
             results.Add(c)
         Next
         Return results
+    End Function
+
+    Public Function GetViewDetailsStyle() As Style
+
+        Dim newstyle As New Style
+        newstyle.BasedOn = Windows.Application.Current.TryFindResource(GetType(ListView))
+        newstyle.TargetType = GetType(ListView)
+
+        newstyle.Setters.Add(New Setter(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+        newstyle.Setters.Add(New Setter(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+        newstyle.Setters.Add(New Setter(ScrollViewer.CanContentScrollProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
+        newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
+
+        Dim gridview As New GridView
+
+        For Each columninfo As clsViewColumnInfo In preferences.Columns
+            Dim column As New GridViewColumn()
+            column.Header = columninfo.Header
+            'column.SetValue(DataGridColumn.CanUserSortProperty, True)
+            'If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
+            column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
+            'column.MinWidth = 58
+            Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+            panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
+            panel.SetValue(FrameworkElement.MarginProperty, New Thickness(5, 0, 5, 0))
+
+            Dim first As Boolean = True
+            For Each attr As clsAttribute In columninfo.Attributes
+                Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr.Name}
+
+                Dim container As New FrameworkElementFactory(GetType(ContentControl))
+                If first Then
+                    first = False
+                    container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
+                    'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+                Else
+                    container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
+                End If
+
+                container.SetBinding(ContentControl.ContentProperty, bind)
+                container.SetValue(FrameworkElement.ToolTipProperty, attr.Label)
+                container.SetValue(FrameworkElement.MaxHeightProperty, 48.0)
+                panel.AppendChild(container)
+            Next
+
+            Dim template As New DataTemplate()
+            template.VisualTree = panel
+            column.CellTemplate = template
+            gridview.Columns.Add(column)
+        Next
+
+        newstyle.Setters.Add(New Setter(ListView.ViewProperty, gridview))
+
+        Return newstyle
     End Function
 
     Public Function GetAttributesExtended() As clsAttribute()

@@ -253,7 +253,7 @@ However, you can also specify the root of the domain as the root of the search.<
     <value>Help</value>
   </data>
   <data name="wndMain_mnuHelp_About" xml:space="preserve">
-    <value>About ...</value>
+    <value>About</value>
   </data>
   <data name="wndMain_mnuSearch" xml:space="preserve">
     <value>Search</value>
@@ -274,22 +274,22 @@ However, you can also specify the root of the domain as the root of the search.<
     <value>Classes</value>
   </data>
   <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
-    <value>Save current filter ...</value>
+    <value>Save current filter</value>
   </data>
   <data name="wndMain_mnuService" xml:space="preserve">
     <value>Service</value>
   </data>
   <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
-    <value>Domain options ...</value>
+    <value>Domain options</value>
   </data>
   <data name="wndMain_mnuService_ErrorLog" xml:space="preserve">
-    <value>Error log ...</value>
+    <value>Error log</value>
   </data>
   <data name="wndMain_mnuService_Log" xml:space="preserve">
-    <value>Log ...</value>
+    <value>Log</value>
   </data>
   <data name="wndMain_mnuService_Preferences" xml:space="preserve">
-    <value>Preferences ...</value>
+    <value>Preferences</value>
   </data>
   <data name="wndMain_msg_CannotSaveCurrentFilter" xml:space="preserve">
     <value>Current filter is empty.</value>
@@ -1156,8 +1156,8 @@ A universal group can not be a member of a global group.</value>
   <data name="wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition" xml:space="preserve">
     <value>Search will be performed if the number of words in the clipboard does not exceed three.</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_SearchResultGrouping" xml:space="preserve">
-    <value>Search result grouping</value>
+  <data name="wndMain_lbl_SearchResultGrouping" xml:space="preserve">
+    <value>Result grouping</value>
   </data>
   <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
     <value>The search results will be grouped by domain name.</value>
@@ -1600,5 +1600,8 @@ To obtain the API key:
   </data>
   <data name="wndMain_mnuMain" xml:space="preserve">
     <value>Main</value>
+  </data>
+  <data name="wndMain_tt_SetAsDefaultView" xml:space="preserve">
+    <value>Set as default view</value>
   </data>
 </root>

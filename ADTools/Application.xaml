@@ -161,11 +161,8 @@
         </Style>
 
         <Style TargetType="ToggleButton">
-            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}">
-            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
@@ -197,7 +194,8 @@
                                 <VisualStateGroup x:Name="CheckStates">
                                     <VisualState x:Name="Checked">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.7"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.3"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Border" Storyboard.TargetProperty="Opacity" To="1"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Unchecked"/>
@@ -206,6 +204,7 @@
 
                             <Border Opacity="0" x:Name="Background" Background="{DynamicResource ColorButtonBackground}" />
                             <Border Opacity="0" x:Name="MouseOverBackground" Background="{DynamicResource ColorButtonBackground}" />
+                            <Border Opacity="0" x:Name="Border" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" />
 
                             <ContentPresenter
                               x:Name="contentPresenter"
@@ -223,11 +222,8 @@
         </Style>
 
         <Style x:Key="ToggleRadioButton" TargetType="RadioButton">
-            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
             <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}">
-            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -241,7 +237,7 @@
                                     <VisualState x:Name="Normal"/>
                                     <VisualState x:Name="MouseOver">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="MouseOverBackground" Storyboard.TargetProperty="Opacity" To="0.3"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="MouseOverBackground" Storyboard.TargetProperty="Opacity" To="0.5"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
@@ -259,7 +255,8 @@
                                 <VisualStateGroup x:Name="CheckStates">
                                     <VisualState x:Name="Checked">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.7"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0.3"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="Border" Storyboard.TargetProperty="Opacity" To="1"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Unchecked"/>
@@ -268,6 +265,7 @@
 
                             <Border Opacity="0" x:Name="Background" Background="{DynamicResource ColorButtonBackground}" />
                             <Border Opacity="0" x:Name="MouseOverBackground" Background="{DynamicResource ColorButtonBackground}" />
+                            <Border Opacity="0" x:Name="Border" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" />
 
                             <ContentPresenter
                               x:Name="contentPresenter"
@@ -861,15 +859,7 @@
 
         <!--this style will be replaced by clsPreferences.columns setter in codebehind-->
         <Style x:Key="ListView_ViewDetails" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
-            <!--<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
-            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
-            <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
-            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-            <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="None"/>-->
-           
-            <Setter Property="View">
+            <!--<Setter Property="View">
                 <Setter.Value>
                     <GridView>
                         <GridViewColumn Header="⬕" Width="250">
@@ -888,7 +878,7 @@
                         </GridViewColumn>
                     </GridView>
                 </Setter.Value>
-            </Setter>
+            </Setter>-->
         </Style>
 
         <Style x:Key="ListView_ViewDetails_GroupItem" TargetType="{x:Type GroupItem}">

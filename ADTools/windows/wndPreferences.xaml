@@ -24,8 +24,6 @@
                             <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceDefinition}"/>
                             <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimit}" IsChecked="{Binding ClipboardSourceLimit}" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Margin="20,0,0,0"/>
                             <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition}"/>
-                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGrouping}" IsChecked="{Binding SearchResultGrouping}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_SearchResultGroupingDefinition}"/>
                             <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjects}" IsChecked="{Binding ShowDeletedObjects}"/>
                             <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition}"/>
                         </StackPanel>
@@ -124,7 +122,7 @@
                                 </Grid>
                                 <Grid Grid.Column="2" Grid.Row="1">
                                     <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
-                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearchDefault}" />
+                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="⌗" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearchDefault}" />
                                     <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                                         <ListView.View>
                                             <GridView AllowsColumnReorder="False">

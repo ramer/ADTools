@@ -59,7 +59,7 @@ Public Class clsSearcher
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
             searchRequest.Controls.Add(searchOptionsControl)
-            If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+            If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
             Dim searchResponse As SearchResponse
             Dim pageResponseControl As PageResultResponseControl
@@ -110,7 +110,7 @@ Public Class clsSearcher
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
             searchRequest.Controls.Add(searchOptionsControl)
-            If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+            If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
             Dim searchResponse As SearchResponse
             Dim pageResponseControl As PageResultResponseControl
@@ -178,7 +178,7 @@ Public Class clsSearcher
                 searchRequest.Controls.Add(pageRequestControl)
                 Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
                 searchRequest.Controls.Add(searchOptionsControl)
-                If preferences.ShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+                If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
                 Dim helper As New clsSearcherHelper
                 helper.root = root

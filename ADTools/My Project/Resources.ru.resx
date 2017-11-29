@@ -245,7 +245,7 @@
     <value>Справка</value>
   </data>
   <data name="wndMain_mnuHelp_About" xml:space="preserve">
-    <value>О программе …</value>
+    <value>О программе</value>
   </data>
   <data name="wndMain_mnuSearch" xml:space="preserve">
     <value>Поиск</value>
@@ -266,22 +266,19 @@
     <value>Классы</value>
   </data>
   <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
-    <value>Сохранить текущий фильтр …</value>
+    <value>Сохранить текущий фильтр</value>
   </data>
   <data name="wndMain_mnuService" xml:space="preserve">
     <value>Сервис</value>
   </data>
-  <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
-    <value>Настройки доменов …</value>
-  </data>
   <data name="wndMain_mnuService_ErrorLog" xml:space="preserve">
-    <value>Журнал ошибок …</value>
+    <value>Журнал ошибок</value>
   </data>
   <data name="wndMain_mnuService_Log" xml:space="preserve">
-    <value>Журнал …</value>
+    <value>Журнал</value>
   </data>
   <data name="wndMain_mnuService_Preferences" xml:space="preserve">
-    <value>Настройки приложения …</value>
+    <value>Настройки приложения</value>
   </data>
   <data name="wndDomains_tabctlDomain1" xml:space="preserve">
     <value>Домен</value>
@@ -1154,8 +1151,8 @@
   <data name="wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition" xml:space="preserve">
     <value>Поиск будет производится в случае, если количество слов в буфере обмена не превышает трех.</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_SearchResultGrouping" xml:space="preserve">
-    <value>Группировать результаты поиска</value>
+  <data name="wndMain_lbl_SearchResultGrouping" xml:space="preserve">
+    <value>Группировать результаты</value>
   </data>
   <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
     <value>Результаты поиска будут сгруппированы по имени домена.</value>
@@ -1454,5 +1451,11 @@
   </data>
   <data name="wndMain_mnuMain" xml:space="preserve">
     <value>Главная</value>
+  </data>
+  <data name="wndMain_tt_SetAsDefaultView" xml:space="preserve">
+    <value>Задать как вид по умолчанию</value>
+  </data>
+  <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
+    <value>Настройки доменов</value>
   </data>
 </root>

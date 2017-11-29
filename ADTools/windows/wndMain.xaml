@@ -16,6 +16,9 @@
     
     <Window.Resources>
         <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
+        <local:ConverterBooleanToEnum x:Key="ConverterBooleanToEnum" />
+        <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility"/>
+        <local:ConverterBooleanToWidthStar x:Key="ConverterBooleanToWidthStar"/>
     </Window.Resources>
     
     <Grid>
@@ -105,50 +108,67 @@
 
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuView}">
+                        <TabItem x:Name="mnuView" Header="{x:Static r:Resources.wndMain_mnuView}">
                             <StackPanel Orientation="Horizontal">
-                                <ToggleButton Margin="3" Width="100">
-                                    <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
-                                        <Image Source="/images/view_navigation.png" Stretch="Uniform" MaxHeight="48"/>
+                                <DockPanel>
+                                    <ToggleButton x:Name="togbViewShowNavigation" Margin="3" Width="100" IsChecked="{Binding Path=ViewShowNavigation}">
+                                        <DockPanel>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                            <Image Source="/images/view_navigation.png" Stretch="Uniform" MaxHeight="48"/>
+                                        </DockPanel>
+                                    </ToggleButton>
+                                    <ToggleButton x:Name="togbViewShowPreview" Margin="3" Width="100" IsChecked="{Binding Path=ViewShowPreview}">
+                                        <DockPanel>
+                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                            <Image Source="/images/view_preview.png" Stretch="Uniform" MaxHeight="48"/>
+                                        </DockPanel>
+                                    </ToggleButton>
+                                </DockPanel>
+                                
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <DockPanel>
+                                    <DockPanel DockPanel.Dock="Bottom">
+                                        <Button x:Name="btnViewSetDefaultView" Style="{StaticResource ToolbarButton}" Content="⌗" ToolTip="{x:Static r:Resources.wndMain_tt_SetAsDefaultView}" DockPanel.Dock="Right" Width="16" SnapsToDevicePixels="True"/>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuView}" HorizontalAlignment="Center" FontWeight="Light"/>
                                     </DockPanel>
-                                </ToggleButton>
-                                <ToggleButton Margin="3" Width="100">
-                                    <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
-                                        <Image Source="/images/view_preview.png" Stretch="Uniform" MaxHeight="48"/>
-                                    </DockPanel>
-                                </ToggleButton>
+                                    <UniformGrid Columns="2">
+                                        <RadioButton x:Name="rbViewMediumIcons" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=MediumIcons}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel>
+                                                <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                        <RadioButton x:Name="rbViewList" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=List}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel>
+                                                <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                        <RadioButton x:Name="rbViewTiles" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Tiles}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel>
+                                                <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                        <RadioButton x:Name="rbViewDetails" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Details}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                            <DockPanel>
+                                                <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                    </UniformGrid>
+                                </DockPanel>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <UniformGrid Columns="2">
-                                    <RadioButton x:Name="rbViewMediumIcons" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
-                                        <DockPanel>
-                                            <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
-                                        </DockPanel>
-                                    </RadioButton>
-                                    <RadioButton x:Name="rbViewList" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
-                                        <DockPanel>
-                                            <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
-                                        </DockPanel>
-                                    </RadioButton>
-                                    <RadioButton x:Name="rbViewTiles" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
-                                        <DockPanel>
-                                            <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
-                                        </DockPanel>
-                                    </RadioButton>
-                                    <RadioButton x:Name="rbViewDetails" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
-                                        <DockPanel>
-                                            <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
-                                        </DockPanel>
-                                    </RadioButton>
-                                </UniformGrid>
-
+                                <ToggleButton x:Name="togbViewResultGrouping" Margin="3" Width="100" IsChecked="{Binding Path=ViewResultGrouping}">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_SearchResultGrouping}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/grouping.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </ToggleButton>
+                                
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
                             </StackPanel>
                         </TabItem>
@@ -308,14 +328,17 @@
             </StatusBar>
             <Grid Margin="5,0,5,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="6*"/>
+                    <local:ColumnDefinitionExtended Width="250" Visible="{Binding ElementName=togbViewShowNavigation, Path=IsChecked, Mode=TwoWay}"/>
+                    <local:ColumnDefinitionExtended Width="Auto"/>
+                    <local:ColumnDefinitionExtended/>
+                    <local:ColumnDefinitionExtended Width="Auto"/>
+                    <local:ColumnDefinitionExtended Width="250" Visible="{Binding ElementName=togbViewShowPreview, Path=IsChecked, Mode=TwoWay}"/>
                 </Grid.ColumnDefinitions>
-                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="True" Background="{DynamicResource ColorWindowBackground}"/>
-                <TreeView 
+                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+                <GridSplitter Grid.Column="3" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+
+                <TreeView Grid.Column="0" 
                     x:Name="tvObjects" 
-                    Grid.Column="0" 
                     VirtualizingStackPanel.IsVirtualizing="True"
                     VirtualizingStackPanel.VirtualizationMode="Recycling"
                     ScrollViewer.VerticalScrollBarVisibility="Auto" 
@@ -447,6 +470,7 @@
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
                 </TreeView>
+
                 <DockPanel Grid.Column="2" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
@@ -535,6 +559,30 @@
 
                         </ListView>
                     </Grid>
+                </DockPanel>
+
+                <DockPanel Grid.Column="4">
+                    <Border BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Background="{DynamicResource ColorElementBackground}">
+                        <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=lvObjects, Path=SelectedItem}">
+                            <ContentControl Content="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" MaxWidth="128" MaxHeight="128" HorizontalAlignment="Center" Margin="20"/>
+
+                            <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" HorizontalAlignment="Center"/>
+                            <ContentControl FontSize="14" Content="{Binding displayName, Converter={StaticResource ConverterDataToUIElement}}" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+
+                            <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_lbl_Description}" HorizontalAlignment="Center"/>
+                            <ContentControl FontSize="14" Content="{Binding description, Converter={StaticResource ConverterDataToUIElement}}" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+
+                            <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_tt_Created}" HorizontalAlignment="Center"/>
+                            <ContentControl FontSize="14" Content="{Binding whenCreatedFormated, Converter={StaticResource ConverterDataToUIElement}}" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+
+                            <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_tt_LastLogon}" HorizontalAlignment="Center"/>
+                            <ContentControl FontSize="14" Content="{Binding lastLogonFormated, Converter={StaticResource ConverterDataToUIElement}}" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+
+                            <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_tt_AccountExpires}" HorizontalAlignment="Center"/>
+                            <ContentControl FontSize="14" Content="{Binding accountExpiresFormated, Converter={StaticResource ConverterDataToUIElement}}" HorizontalAlignment="Center" Margin="10,0,10,10"/>
+
+                        </StackPanel>
+                    </Border>
                 </DockPanel>
             </Grid>
         </DockPanel>

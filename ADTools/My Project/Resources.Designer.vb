@@ -2687,6 +2687,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Result grouping.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_SearchResultGrouping() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_SearchResultGrouping", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Search results:.
         '''</summary>
         Public ReadOnly Property wndMain_lbl_SearchResults() As String
@@ -2822,7 +2831,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на About ....
+        '''  Ищет локализованную строку, похожую на About.
         '''</summary>
         Public ReadOnly Property wndMain_mnuHelp_About() As String
             Get
@@ -2894,7 +2903,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Save current filter ....
+        '''  Ищет локализованную строку, похожую на Save current filter.
         '''</summary>
         Public ReadOnly Property wndMain_mnuSearchSaveCurrentFilter() As String
             Get
@@ -2912,7 +2921,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Domain options ....
+        '''  Ищет локализованную строку, похожую на Domain options.
         '''</summary>
         Public ReadOnly Property wndMain_mnuService_DomainOptions() As String
             Get
@@ -2921,7 +2930,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Error log ....
+        '''  Ищет локализованную строку, похожую на Error log.
         '''</summary>
         Public ReadOnly Property wndMain_mnuService_ErrorLog() As String
             Get
@@ -2930,7 +2939,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Log ....
+        '''  Ищет локализованную строку, похожую на Log.
         '''</summary>
         Public ReadOnly Property wndMain_mnuService_Log() As String
             Get
@@ -2939,7 +2948,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Preferences ....
+        '''  Ищет локализованную строку, похожую на Preferences.
         '''</summary>
         Public ReadOnly Property wndMain_mnuService_Preferences() As String
             Get
@@ -3092,6 +3101,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_msg_ThisIsOrganizationaUnit() As String
             Get
                 Return ResourceManager.GetString("wndMain_msg_ThisIsOrganizationaUnit", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Set as default view.
+        '''</summary>
+        Public ReadOnly Property wndMain_tt_SetAsDefaultView() As String
+            Get
+                Return ResourceManager.GetString("wndMain_tt_SetAsDefaultView", resourceCulture)
             End Get
         End Property
         
@@ -4100,15 +4118,6 @@ Namespace My.Resources
         Public ReadOnly Property wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition() As String
             Get
                 Return ResourceManager.GetString("wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Ищет локализованную строку, похожую на Search result grouping.
-        '''</summary>
-        Public ReadOnly Property wndPreferences_lbl_Basic_SearchResultGrouping() As String
-            Get
-                Return ResourceManager.GetString("wndPreferences_lbl_Basic_SearchResultGrouping", resourceCulture)
             End Get
         End Property
         
