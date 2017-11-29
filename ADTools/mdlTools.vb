@@ -276,133 +276,53 @@ Module mdlTools
     End Function
 
     Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As Window
+        Dim w As Window
+
         If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
-            Dim w As wndUser
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndUser) Is wnd.GetType AndAlso CType(wnd, wndUser).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndUser
-
-            If owner IsNot Nothing Then
-
-                w.Owner = owner
-            End If
-
-            w.CurrentObject = obj
-            w.Show()
-            Return w
-
+            CType(w, wndUser).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
-            Dim w As wndContact
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndContact) Is wnd.GetType AndAlso CType(wnd, wndContact).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndContact
-
-
-            If owner IsNot Nothing Then
-                w.Owner = owner
-            End If
-
-            w.CurrentObject = obj
-            w.Show()
-            Return w
-
+            CType(w, wndContact).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
-            Dim w As wndComputer
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndComputer) Is wnd.GetType AndAlso CType(wnd, wndComputer).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndComputer
-            If owner IsNot Nothing Then w.Owner = owner
-            w.CurrentObject = obj
-            w.Show()
-            Return w
+            CType(w, wndComputer).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
-            Dim w As wndGroup
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndGroup) Is wnd.GetType AndAlso CType(wnd, wndGroup).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndGroup
-            If owner IsNot Nothing Then w.Owner = owner
-            w.CurrentObject = obj
-            w.Show()
-            Return w
+            CType(w, wndGroup).CurrentObject = obj
         ElseIf obj.objectClass.Contains("organizationalunit") Then
-            Dim w As wndOrganizationalUnit
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndOrganizationalUnit) Is wnd.GetType AndAlso CType(wnd, wndOrganizationalUnit).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndOrganizationalUnit
-            If owner IsNot Nothing Then w.Owner = owner
-            w.CurrentObject = obj
-            w.Show()
-            Return w
+            CType(w, wndOrganizationalUnit).CurrentObject = obj
         Else
-            Dim w As wndUnknownObject
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If GetType(wndUnknownObject) Is wnd.GetType AndAlso CType(wnd, wndUnknownObject).CurrentObject Is obj Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        Return Nothing
-                    End If
-                Next
-            End If
-
             w = New wndUnknownObject
-            If owner IsNot Nothing Then w.Owner = owner
-            w.CurrentObject = obj
-            w.Show()
-            Return w
+            CType(w, wndUnknownObject).CurrentObject = obj
         End If
+
+        Dim rootwindow As Window = Nothing
+        If owner IsNot Nothing Then
+            rootwindow = owner
+            While rootwindow.Owner IsNot Nothing AndAlso TypeOf rootwindow IsNot wndMain
+                rootwindow = rootwindow.Owner
+            End While
+        End If
+
+        If rootwindow IsNot Nothing Then
+
+            For Each wnd As Window In rootwindow.OwnedWindows
+                If w.GetType Is wnd.GetType AndAlso CType(wnd, Object).CurrentObject Is obj Then
+                    w = wnd
+                    w.Show() : w.Activate()
+                    If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                    w.Topmost = True : w.Topmost = False
+                    Return w
+                End If
+            Next
+
+            w.Owner = rootwindow
+        End If
+
+        w.Show()
+        Return w
     End Function
 
     Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
