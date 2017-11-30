@@ -126,6 +126,7 @@
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\ColumnDefinitionExtended.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
+    <Compile Include="controlsinherited\TabControlExtended.vb" />
     <Compile Include="controlsinherited\VirtualizingWrapPanel.vb" />
     <Compile Include="controls\ctlContactMailbox.xaml.vb">
       <DependentUpon>ctlContactMailbox.xaml</DependentUpon>
@@ -163,6 +164,7 @@
     <Compile Include="converters\ConverterBooleanToEnum.vb" />
     <Compile Include="converters\ConverterBooleanToWidthStar.vb" />
     <Compile Include="converters\ConverterDataToUIElement.vb" />
+    <Compile Include="converters\ConverterIntegerToVisibility.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
     <Compile Include="My Project\Resources.Designer.vb">

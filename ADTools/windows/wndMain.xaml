@@ -19,6 +19,7 @@
         <local:ConverterBooleanToEnum x:Key="ConverterBooleanToEnum" />
         <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility"/>
         <local:ConverterBooleanToWidthStar x:Key="ConverterBooleanToWidthStar"/>
+        <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
     </Window.Resources>
     
     <Grid>
@@ -44,9 +45,9 @@
         </Popup>-->
 
         <DockPanel LastChildFill="True">
-            <DockPanel DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
+            <DockPanel x:Name="dpToolbar" DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
                 <Grid>
-                    <TabControl Margin="5,0,5,5" Height="110">
+                    <local:TabControlExtended x:Name="tabctlMain" Margin="5,0,5,5" Height="105" MinHeight="34" Visible="{Binding ElementName=togbToolbarExpander, Path=IsChecked, Mode=TwoWay}">
                         <TabItem Header="{x:Static r:Resources.wndMain_mnuMain}">
                             <StackPanel Orientation="Horizontal">
                                 <Button x:Name="mnuFilePrint" Style="{StaticResource ToolbarButton}" Margin="3" Width="100">
@@ -194,9 +195,9 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <DockPanel>
+                                <DockPanel x:Name="dockpSearchObjectClasses">
                                     <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
-                                    <UniformGrid Rows="2" DataContext="{Binding searchobjectclasses}">
+                                    <UniformGrid Rows="2">
                                         <ToggleButton IsChecked="{Binding User}" HorizontalContentAlignment="Left" Margin="3">
                                             <DockPanel>
                                                 <Image Source="/images/user_unknown.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
@@ -266,11 +267,11 @@
 
                             </StackPanel>
                         </TabItem>
-                    </TabControl>
+                    </local:TabControlExtended>
 
                     <DockPanel HorizontalAlignment="Right" VerticalAlignment="Top">
                         <Button x:Name="btnDummy" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="߹" ToolTip="Test button (do not touch)" Visibility="Collapsed"/>
-                        <ToggleButton x:Name="btnToolbarExpander" Style="{StaticResource ToolbarExpanderToggleButton}" Width="23" Height="23" Margin="0,5,5,0">
+                        <ToggleButton x:Name="togbToolbarExpander" Style="{StaticResource ToolbarExpanderToggleButton}" IsChecked="{Binding ViewShowToolbarPanel}" Width="23" Height="23" Margin="0,5,5,0">
                             
                         </ToggleButton>
                         <Button x:Name="btnWindowClone" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
@@ -563,7 +564,7 @@
 
                 <DockPanel Grid.Column="4">
                     <Border BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Background="{DynamicResource ColorElementBackground}">
-                        <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=lvObjects, Path=SelectedItem}">
+                        <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=lvObjects, Path=SelectedItem}" Visibility="{Binding ElementName=lvObjects, Path=SelectedItems.Count, Converter={StaticResource ConverterIntegerToVisibility}}">
                             <ContentControl Content="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" MaxWidth="128" MaxHeight="128" HorizontalAlignment="Center" Margin="20"/>
 
                             <TextBlock FontWeight="Light" Text="{x:Static r:Resources.wndObject_lbl_DisplayName}" HorizontalAlignment="Center"/>

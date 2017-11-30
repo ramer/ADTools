@@ -22,6 +22,7 @@ Public NotInheritable Class clsSelector
     Private _start As Point
     Private _end As Point
     Private _mousedownpoint As Point
+    Private _operationstarted As Boolean
 
     Private _dragoperation As Boolean
 
@@ -119,6 +120,8 @@ Public NotInheritable Class clsSelector
             AddHandler _listBox.PreviewMouseDown, AddressOf OnPreviewMouseDown
             AddHandler _listBox.MouseUp, AddressOf OnMouseUp
             AddHandler _listBox.MouseMove, AddressOf OnMouseMove
+
+            _listBox.SelectionMode = SelectionMode.Extended
         End If
 
         ' Return success if we found the ScrollContentPresenter
@@ -155,35 +158,24 @@ Public NotInheritable Class clsSelector
         End If
     End Sub
 
-    Private Sub OnMouseMove(sender As Object, e As MouseEventArgs)
-        If _dragoperation AndAlso Math.Abs(Point.Subtract(_mousedownpoint, e.GetPosition(sender)).Length) > 3 Then
-            _mouseCaptured = False
-            _scrollContent.ReleaseMouseCapture()
-            StopSelection()
+    Private Sub OnPreviewMouseDown(sender As Object, e As MouseButtonEventArgs)
+        If (TypeOf e.OriginalSource Is Hyperlink OrElse
+         (TypeOf e.OriginalSource Is Run AndAlso
+         TypeOf CType(e.OriginalSource, Run).Parent Is Hyperlink)) Or
+         (e.ClickCount > 1) Then
 
-            _dragoperation = False
-
-            DragDrop.DoDragDrop(e.Source, New DataObject(CType(e.Source, ListBox).SelectedItems), DragDropEffects.All)
+            Exit Sub
         End If
 
         If _mouseCaptured Then
-            ' Get the position relative to the content of the ScrollViewer.
-            _end = e.GetPosition(_scrollContent)
-            _autoScroller.Update(_end)
-            UpdateSelection()
+            _mouseCaptured = False
+            _scrollContent.ReleaseMouseCapture()
+            StopSelection()
         End If
-    End Sub
-
-    Private Sub OnPreviewMouseDown(sender As Object, e As MouseButtonEventArgs)
-        If TypeOf e.OriginalSource Is Hyperlink OrElse
-         (TypeOf e.OriginalSource Is Run AndAlso
-         TypeOf CType(e.OriginalSource, Run).Parent Is Hyperlink) Then Exit Sub
-
-        _mousedownpoint = e.GetPosition(sender)
-
+        _mousedownpoint = e.GetPosition(_scrollContent)
         _dragoperation = False
 
-        Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
+        Dim r As HitTestResult = VisualTreeHelper.HitTest(_scrollContent, e.GetPosition(_scrollContent))
         If r IsNot Nothing Then
             Dim dp As DependencyObject = r.VisualHit
             While (dp IsNot Nothing) AndAlso Not (TypeOf dp Is ListBoxItem)
@@ -196,42 +188,66 @@ Public NotInheritable Class clsSelector
                 End If
             End If
         End If
+    End Sub
 
-        If Not _dragoperation Then
-            Dim mouse As Point = e.GetPosition(_scrollContent)
-            If (mouse.X >= 0) AndAlso (mouse.X < _scrollContent.ActualWidth) AndAlso (mouse.Y >= 0) AndAlso (mouse.Y < _scrollContent.ActualHeight) Then
-                _mouseCaptured = TryCaptureMouse(e)
-                If _mouseCaptured Then
-                    StartSelection(mouse)
+    Private Sub OnMouseMove(sender As Object, e As MouseEventArgs)
+        If (TypeOf e.OriginalSource Is Hyperlink OrElse
+         (TypeOf e.OriginalSource Is Run AndAlso
+         TypeOf CType(e.OriginalSource, Run).Parent Is Hyperlink)) Or
+         (e.LeftButton = MouseButtonState.Released And e.RightButton = MouseButtonState.Released) Then
+            If _mouseCaptured Then
+                _mouseCaptured = False
+                _scrollContent.ReleaseMouseCapture()
+                StopSelection()
+            End If
+            Exit Sub
+        End If
+
+        Dim mouse As Point = e.GetPosition(_scrollContent)
+        If Math.Abs(Point.Subtract(_mousedownpoint, mouse).Length) > 3 AndAlso
+            (mouse.X >= 0) AndAlso (mouse.X < _scrollContent.ActualWidth) AndAlso (mouse.Y >= 0) AndAlso (mouse.Y < _scrollContent.ActualHeight) Then
+
+            If _dragoperation Then
+                DragDrop.DoDragDrop(e.Source, New DataObject(CType(e.Source, ListBox).SelectedItems.Cast(Of clsDirectoryObject).ToArray), DragDropEffects.All)
+            Else
+                If Not _mouseCaptured Then
+                    _mouseCaptured = _scrollContent.CaptureMouse()
+                    If _mouseCaptured Then StartSelection(mouse)
                 End If
             End If
         End If
+
+        If _mouseCaptured Then
+            _end = e.GetPosition(_scrollContent)
+            _autoScroller.Update(_end)
+            UpdateSelection()
+        End If
     End Sub
 
-    Private Function TryCaptureMouse(e As MouseButtonEventArgs) As Boolean
-        Dim pos As Point = e.GetPosition(_scrollContent)
+    'Private Function TryCaptureMouse(e As MouseButtonEventArgs) As Boolean
+    '    Dim pos As Point = e.GetPosition(_scrollContent)
 
-        ' Check if there is anything under the mouse.
-        Dim element As UIElement = TryCast(_scrollContent.InputHitTest(pos), UIElement)
-        If element IsNot Nothing Then
-            ' Simulate a mouse click by sending it the MouseButtonDown
-            ' event based on the data we received.
-            Dim args = New MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left, e.StylusDevice)
-            args.RoutedEvent = Mouse.MouseDownEvent
-            args.Source = e.Source
-            element.[RaiseEvent](args)
+    '    ' Check if there is anything under the mouse.
+    '    Dim element As UIElement = TryCast(_scrollContent.InputHitTest(pos), UIElement)
+    '    If element IsNot Nothing Then
+    '        ' Simulate a mouse click by sending it the MouseButtonDown
+    '        ' event based on the data we received.
+    '        Dim args = New MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left, e.StylusDevice)
+    '        args.RoutedEvent = Mouse.MouseDownEvent
+    '        args.Source = e.Source
+    '        element.[RaiseEvent](args)
 
-            ' The ListBox will try to capture the mouse unless something
-            ' else captures it.
-            If Mouse.Captured IsNot _listBox Then
-                ' Something else wanted the mouse, let it keep it.
-                Return False
-            End If
-        End If
+    '        ' The ListBox will try to capture the mouse unless something
+    '        ' else captures it.
+    '        If Mouse.Captured IsNot _listBox Then
+    '            ' Something else wanted the mouse, let it keep it.
+    '            Return False
+    '        End If
+    '    End If
 
-        ' Either there's nothing under the mouse or the element doesn't want the mouse.
-        Return _scrollContent.CaptureMouse()
-    End Function
+    '    ' Either there's nothing under the mouse or the element doesn't want the mouse.
+    '    Return _scrollContent.CaptureMouse()
+    'End Function
 
     Private Sub StopSelection()
         ' Hide the selection rectangle and stop the auto scrolling.

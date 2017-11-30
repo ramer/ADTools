@@ -36,13 +36,14 @@ Class wndMain
         Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
         RefreshDomainTree()
-        'UpdateDetailsViewGroupStyle(True)
 
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
         tbSearchPattern.Focus()
 
+        dpToolbar.DataContext = preferences
+
         mnuSearchDomains.ItemsSource = domains
-        mnuView.DataContext = preferences
+        dockpSearchObjectClasses.DataContext = searchobjectclasses
 
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
@@ -1295,7 +1296,6 @@ Class wndMain
             If(rbViewList.IsChecked, clsPreferences.enmView.List,
             If(rbViewMediumIcons.IsChecked, clsPreferences.enmView.MediumIcons, clsPreferences.enmView.Details))))
     End Sub
-
 
 #End Region
 

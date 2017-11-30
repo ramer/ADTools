@@ -765,11 +765,11 @@
                 <Setter.Value>
                     <DataTemplate>
                         <VirtualizingStackPanel Orientation="Horizontal">
-                            <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ContentControl Content="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
                             <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
-                                <ItemsControl FontWeight="Medium" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                <ItemsControl FontWeight="Light" ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                <ItemsControl FontWeight="Light" ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
+                                <ContentControl Content="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" FontWeight="Medium"/>
+                                <ContentControl Content="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}" FontWeight="Light"/>
+                                <ContentControl Content="{Binding description, Converter={StaticResource ConverterDataToUIElement}}" FontWeight="Light"/>
                             </VirtualizingStackPanel>
                         </VirtualizingStackPanel>
                     </DataTemplate>
@@ -800,8 +800,8 @@
                 <Setter.Value>
                     <DataTemplate>
                         <VirtualizingStackPanel Orientation="Vertical">
-                            <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-                            <ItemsControl ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" TextBlock.TextAlignment="Center"/>
+                            <ContentControl Content="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ContentControl Content="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" TextBlock.TextAlignment="Center"/>
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </Setter.Value>
@@ -831,8 +831,8 @@
                 <Setter.Value>
                     <DataTemplate>
                         <VirtualizingStackPanel Orientation="Horizontal">
-                            <ItemsControl ItemsSource="{Binding Image, Converter={StaticResource ConverterDataToUIElement}}" Width="16" Height="16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-                            <ItemsControl ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" Margin="5,0,0,0"/>
+                            <ContentControl Content="{Binding Image, Converter={StaticResource ConverterDataToUIElement}}" Width="16" Height="16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+                            <ContentControl Content="{Binding name, Converter={StaticResource ConverterDataToUIElement}}" Margin="5,0,0,0"/>
                         </VirtualizingStackPanel>
                     </DataTemplate>
                 </Setter.Value>
@@ -1088,13 +1088,13 @@
                             <Path x:Name="CollapsedArrow"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Data="M 0 7 L 5 2 L 10 7 L 10 9 L 5 4 L 0 9 Z"
+                                Data="M 0 4 L 5 9 L 10 4 L 10 2 L 5 7 L 0 2 Z"
                                 Fill="{DynamicResource ColorText}"/>
                             <Path x:Name="ExpandededArrow"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Visibility="Collapsed"
-                                Data="M 0 4 L 5 9 L 10 4 L 10 2 L 5 7 L 0 2 Z"
+                                Data="M 0 7 L 5 2 L 10 7 L 10 9 L 5 4 L 0 9 Z"
                                 Fill="{DynamicResource ColorText}"/>
 
                             <VisualStateManager.VisualStateGroups>

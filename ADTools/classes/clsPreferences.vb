@@ -15,6 +15,7 @@ Public Class clsPreferences
     ' basic
     Private _clipboardsource As Boolean = False
     Private _clipboardsourcelimit As Boolean = True
+    Private _viewshowtoolbarpanel As Boolean = False
     Private _viewshownavigation As Boolean = True
     Private _viewshowpreview As Boolean = True
     Private _viewresultgrouping As Boolean = False
@@ -113,6 +114,16 @@ Public Class clsPreferences
         Set(value As Boolean)
             _clipboardsourcelimit = value
             NotifyPropertyChanged("ClipboardSourceLimit")
+        End Set
+    End Property
+
+    Public Property ViewShowToolbarPanel As Boolean
+        Get
+            Return _viewshowtoolbarpanel
+        End Get
+        Set(value As Boolean)
+            _viewshowtoolbarpanel = value
+            NotifyPropertyChanged("ViewShowToolbarPanel")
         End Set
     End Property
 

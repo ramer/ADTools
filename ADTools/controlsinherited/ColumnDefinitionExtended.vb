@@ -17,7 +17,7 @@ Public Class ColumnDefinitionExtended
             Return GetValue(VisibleProperty)
         End Get
         Set
-            SetValue(VisibleProperty, Value)
+            SetCurrentValue(VisibleProperty, Value)
         End Set
     End Property
 
