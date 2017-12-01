@@ -31,7 +31,7 @@ Class wndMain
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
-        Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshDataGrid))
+        Me.CommandBindings.Add(New CommandBinding(hkF5, AddressOf RefreshSearchResults))
         hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
         Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
@@ -144,13 +144,13 @@ Class wndMain
                         If pi.Name = attr.Name Then
                             Dim value = pi.GetValue(obj)
 
-                            If attr.Name <> "Image" Then
+                            If TypeOf value Is String Then
                                 Dim p As New Paragraph(New Run(value))
                                 p.FontSize = 8.0
                                 p.FontFamily = New FontFamily("Segoe UI")
                                 If first Then p.FontWeight = FontWeights.Bold : first = False
                                 cell.Blocks.Add(p)
-                            Else
+                            ElseIf TypeOf value Is BitmapImage Then
                                 Dim img As New Image
                                 img.Source = value
                                 img.Width = 16
@@ -168,7 +168,11 @@ Class wndMain
         Next
 
         fd.Blocks.Add(table)
-        IPrintDialog.PreviewDocument(fd)
+        Try
+            IPrintDialog.PreviewDocument(fd)
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
     End Sub
 
     Private Sub mnuEditCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles mnuEditCreateObject.Click
@@ -560,7 +564,7 @@ Class wndMain
                     obj.Rename("CN=" & name)
                 End If
 
-                RefreshDataGrid()
+                RefreshSearchResults()
                 If organizationalunitaffected Then RefreshDomainTree()
             End If
         Catch ex As Exception
@@ -593,7 +597,7 @@ Class wndMain
                 OpenObjectParent()
                 RefreshDomainTree()
             Else
-                RefreshDataGrid()
+                RefreshSearchResults()
             End If
 
         Catch ex As Exception
@@ -1083,7 +1087,7 @@ Class wndMain
         End If
     End Sub
 
-    Public Sub RefreshDataGrid()
+    Public Sub RefreshSearchResults()
         If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
         Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Filter)
     End Sub
@@ -1132,7 +1136,7 @@ Class wndMain
         currentfilter = filter
         ShowPath(currentcontainer, filter)
 
-        searcher.SearchAsync(currentobjects, root, filter, domainlist)
+        searcher.SearchAsync(currentobjects, root, filter, domainlist, attributesToLoadDefault, preferences.ViewShowDeletedObjects)
     End Sub
 
     Private Sub Searcher_SearchAsyncDataRecieved() Handles searcher.SearchAsyncDataRecieved
@@ -1262,7 +1266,7 @@ Class wndMain
             ThrowException(ex, "ObjectsMove")
         End Try
 
-        RefreshDataGrid()
+        RefreshSearchResults()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
 
@@ -1288,13 +1292,16 @@ Class wndMain
         End If
     End Sub
 
-
     Private Sub btnViewSetDefaultView_Click(sender As Object, e As RoutedEventArgs) Handles btnViewSetDefaultView.Click
         preferences.DefaultView =
             If(rbViewDetails.IsChecked, clsPreferences.enmView.Details,
             If(rbViewTiles.IsChecked, clsPreferences.enmView.Tiles,
             If(rbViewList.IsChecked, clsPreferences.enmView.List,
             If(rbViewMediumIcons.IsChecked, clsPreferences.enmView.MediumIcons, clsPreferences.enmView.Details))))
+    End Sub
+
+    Private Sub togbViewShowDeletedObjects_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles togbViewShowDeletedObjects.Checked, togbViewShowDeletedObjects.Unchecked
+        RefreshDomainTree()
     End Sub
 
 #End Region

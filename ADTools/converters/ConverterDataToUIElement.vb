@@ -75,16 +75,8 @@ Public Class ConverterDataToUIElement
                 tblck.TextWrapping = TextWrapping.Wrap
                 content = tblck
 
-
-                '    valuetyped = value
-                'Case GetType(Byte())
-                '    valuetyped = value
-                'Case GetType(Object())
-                '    valuetyped = value
-                'Case GetType(DateTime)
-                '    valuetyped = value
-                'Case GetType(Boolean)
-                '    valuetyped = value
+            Case Else
+                content = Nothing
         End Select
 
         Return content

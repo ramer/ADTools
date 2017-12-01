@@ -1,10 +1,12 @@
-﻿Imports TeleBotDotNet.Requests.Methods
+﻿Imports System.Collections.ObjectModel
+Imports TeleBotDotNet.Requests.Methods
 Imports TeleBotDotNet.Responses.Methods
 
 Module mdlDialogue
 
     Private currentuser As clsDirectoryObject
     Private currentgroup As clsDirectoryObject
+    Private searcher As New clsSearcher
 
     Public Enum DialogueStage
         SearchUser
@@ -168,7 +170,11 @@ Module mdlDialogue
                     Catch
                     End Try
                     If Not responceguid = Nothing Then
-                        Dim obj As clsDirectoryObject = SearchGUID(responceguid)
+                        Dim guidresults As New List(Of clsDirectoryObject)
+                        For Each dmn In domains
+                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+                        Next
+                        Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
                             If Not obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
                                 SendRequestUnexpectedUser(responce)
@@ -183,7 +189,12 @@ Module mdlDialogue
                         End If
                     End If
 
-                    SendRequestStageSearchListObjects(responce, Search(New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False), False), Nothing))
+                    Dim results As New List(Of clsDirectoryObject)
+                    For Each dmn In domains
+                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+                    Next
+
+                    SendRequestStageSearchListObjects(responce, results)
 
                 Case DialogueStage.SearchGroup
 
@@ -198,7 +209,11 @@ Module mdlDialogue
                     Catch
                     End Try
                     If Not responceguid = Nothing Then
-                        Dim obj As clsDirectoryObject = SearchGUID(responceguid)
+                        Dim guidresults As New List(Of clsDirectoryObject)
+                        For Each dmn In domains
+                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+                        Next
+                        Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
                             If Not obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
                                 SendRequestUnexpectedGroup(responce)
@@ -213,7 +228,12 @@ Module mdlDialogue
                         End If
                     End If
 
-                    SendRequestStageSearchListObjects(responce, Search(New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False), True), currentuser.Domain))
+                    Dim results As New List(Of clsDirectoryObject)
+                    For Each dmn In domains
+                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
+                    Next
+
+                    SendRequestStageSearchListObjects(responce, results)
 
                 Case Else
 
@@ -404,17 +424,15 @@ Module mdlDialogue
             Next
 
             If newgroup Then
-                currentgroup.Entry.Invoke("Add", currentuser.distinguishedNameFull)
-                currentgroup.Entry.CommitChanges()
+                currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Add, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Add(currentgroup)
                 msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
             Else
-                currentgroup.Entry.Invoke("Remove", currentuser.distinguishedNameFull)
-                currentgroup.Entry.CommitChanges()
-
-                For Each group As clsDirectoryObject In currentuser.memberOf
-                    If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
-                Next
+                currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Delete, "member", currentuser.distinguishedName)
+                currentuser.memberOf.Remove(currentgroup)
+                'For Each group As clsDirectoryObject In currentuser.memberOf
+                '    If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
+                'Next
                 msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
             End If
 

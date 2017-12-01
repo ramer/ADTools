@@ -73,7 +73,7 @@ Public Class wndCreateObject
         If obj IsNot Nothing Then
             If TypeOf Me.Owner Is wndMain Then
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
-                CType(Me.Owner, wndMain).RefreshDataGrid()
+                CType(Me.Owner, wndMain).RefreshSearchResults()
             End If
             If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Me.Owner)
             If chbCloseWindow.IsChecked = True Then Me.Close()

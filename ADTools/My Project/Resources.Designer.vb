@@ -81,6 +81,26 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property clipboard() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("clipboard", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property clipboard_limit() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("clipboard_limit", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Default password is not set.
         '''</summary>
         Public ReadOnly Property cls_msg_DefaultPasswordIsNotSet() As String
@@ -2674,6 +2694,15 @@ Namespace My.Resources
         Public ReadOnly Property wndMain_ctxmnutviFavoritesRemoveFromFavorites() As String
             Get
                 Return ResourceManager.GetString("wndMain_ctxmnutviFavoritesRemoveFromFavorites", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Clipboard.
+        '''</summary>
+        Public ReadOnly Property wndMain_lbl_Clipboard() As String
+            Get
+                Return ResourceManager.GetString("wndMain_lbl_Clipboard", resourceCulture)
             End Get
         End Property
         

@@ -163,7 +163,7 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <ToggleButton x:Name="togbViewResultGrouping" Margin="3" Width="100" IsChecked="{Binding Path=ViewResultGrouping}">
+                                <ToggleButton x:Name="togbViewResultGrouping" Margin="3" Width="130" IsChecked="{Binding Path=ViewResultGrouping}">
                                     <DockPanel>
                                         <TextBlock Text="{x:Static r:Resources.wndMain_lbl_SearchResultGrouping}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
                                         <Image Source="/images/grouping.png" Stretch="Uniform" MaxHeight="48"/>
@@ -171,6 +171,16 @@
                                 </ToggleButton>
                                 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <ToggleButton x:Name="togbViewShowDeletedObjects" Margin="3" Width="130" IsChecked="{Binding Path=ViewShowDeletedObjects}">
+                                    <DockPanel>
+                                        <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjects}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                        <Image Source="/images/trash.png" Stretch="Uniform" MaxHeight="48"/>
+                                    </DockPanel>
+                                </ToggleButton>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
                             </StackPanel>
                         </TabItem>
                         <TabItem x:Name="mnuMain" Header="{x:Static r:Resources.wndMain_mnuSearch}">
@@ -262,6 +272,26 @@
                                         <Image Source="/images/filter_add.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </Button>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <DockPanel>
+                                    <TextBlock Text="{x:Static r:Resources.wndMain_lbl_Clipboard}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <UniformGrid Rows="2">
+                                        <ToggleButton x:Name="togbClipboardSource" IsChecked="{Binding ClipboardSource}" HorizontalContentAlignment="Left" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/clipboard.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSource}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                        <ToggleButton IsChecked="{Binding ClipboardSourceLimit}" HorizontalContentAlignment="Left" IsEnabled="{Binding ElementName=togbClipboardSource, Path=IsChecked}" Margin="3">
+                                            <DockPanel>
+                                                <Image Source="/images/clipboard_limit.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimit}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left"/>
+                                            </DockPanel>
+                                        </ToggleButton>
+                                    </UniformGrid>
+                                </DockPanel>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 

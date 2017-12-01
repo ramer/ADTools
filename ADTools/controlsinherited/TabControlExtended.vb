@@ -33,10 +33,17 @@ Public Class TabControlExtended
     End Sub
 
     Private Sub TabControlExtended_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseDoubleClick
+        Dim dp As FrameworkElement = e.OriginalSource
+        If Not dp.IsMouseDirectlyOver Then Exit Sub
         Visible = Not Visible
     End Sub
 
     Private Sub TabControlExtended_Initialized(sender As Object, e As EventArgs) Handles Me.Initialized
         baseheight = If(Height > 0, Height, 100)
+    End Sub
+
+    Private Sub TabControlExtended_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles Me.SelectionChanged
+        If Not TypeOf e.OriginalSource Is TabControlExtended Then Exit Sub
+        Visible = True
     End Sub
 End Class

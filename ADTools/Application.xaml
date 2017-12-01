@@ -187,7 +187,7 @@
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="0.5"/>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -214,7 +214,7 @@
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               Margin="{TemplateBinding Padding}"/>
 
-                            <Border Opacity="0" x:Name="DisabledBackground" Background="{DynamicResource ColorButtonBackground}" IsHitTestVisible="false" />
+                            <Border Opacity="0" x:Name="DisabledBackground" Background="{DynamicResource ColorElementBackground}" IsHitTestVisible="false" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -248,7 +248,7 @@
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledBackground" Storyboard.TargetProperty="Opacity" To="0.5"/>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -275,7 +275,7 @@
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               Margin="{TemplateBinding Padding}"/>
 
-                            <Border Opacity="0" x:Name="DisabledBackground" Background="{DynamicResource ColorButtonBackground}" IsHitTestVisible="false" />
+                            <Border Opacity="0" x:Name="DisabledBackground" Background="{DynamicResource ColorElementBackground}" IsHitTestVisible="false" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

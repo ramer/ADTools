@@ -394,7 +394,7 @@ Public Class clsDirectoryObject
 
             _childcontainers = searcher.SearchChildContainersSync(
                 Me,
-                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"))
+                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, preferences.ViewShowDeletedObjects)
 
             Return _childcontainers
         End Get
@@ -1361,7 +1361,14 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property objectGUID() As String
+    Public ReadOnly Property objectGUID() As Guid
+        Get
+            Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte()))
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property objectGUIDFormated() As String
         Get
             Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte())).ToString
         End Get

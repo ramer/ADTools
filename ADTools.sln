@@ -7,7 +7,14 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ADTools", "ADTools\ADTools.
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ADToolsTelegramBot", "ADToolsTelegramBot\ADToolsTelegramBot.vbproj", "{A5B5AA70-8BA4-439F-B045-EEA32084C431}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ADToolsShared", "ADToolsShared\ADToolsShared.shproj", "{E4C0BFC5-C981-41E5-B5F0-9C673303E5BD}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ADToolsShared\ADToolsShared.projitems*{a5b5aa70-8ba4-439f-b045-eea32084c431}*SharedItemsImports = 4
+		ADToolsShared\ADToolsShared.projitems*{acea8a09-9e83-4bfd-bb5b-3e2dded1cffe}*SharedItemsImports = 4
+		ADToolsShared\ADToolsShared.projitems*{e4c0bfc5-c981-41e5-b5f0-9c673303e5bd}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

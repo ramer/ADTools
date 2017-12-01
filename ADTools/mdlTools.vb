@@ -93,6 +93,7 @@ Module mdlTools
         {New clsAttribute("managedBy", "Управляется")},
         {New clsAttribute("name", "Имя объекта")},
         {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
+        {New clsAttribute("objectGUIDFormated", "Уникальный идентификатор (GUID) (формат)")},
         {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},
         {New clsAttribute("passwordExpiresDate", "Пароль истекает")},
         {New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")},

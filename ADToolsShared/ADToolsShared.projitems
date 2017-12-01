@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>e4c0bfc5-c981-41e5-b5f0-9c673303e5bd</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>ADToolsShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttribute.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsDirectoryObject.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomain.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomainProperty.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsFilter.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsSearcher.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsSearchObjectClasses.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsTelephoneNumberPattern.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsThreadSafeObservableCollection.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)clsWatcher.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)modules\" />
+  </ItemGroup>
+</Project>

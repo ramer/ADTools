@@ -86,7 +86,7 @@ Public Class clsMailbox
             _mailboxadpermission = Nothing
             _mailboxpermission = Nothing
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("Exist")
             NotifyPropertyChanged("CurrentProhibitSendQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendQuota")
@@ -106,7 +106,7 @@ Public Class clsMailbox
         If _mailbox IsNot Nothing Then
 
             Try
-                _mailboxstatistics = GetMailboxStatistics(_exchangeconnection, _currentobject.objectGUID)
+                _mailboxstatistics = GetMailboxStatistics(_exchangeconnection, _currentobject.objectGUIDFormated)
                 NotifyPropertyChanged("Size")
                 NotifyPropertyChanged("SizeFormatted")
             Catch ex As Exception
@@ -127,7 +127,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
+                _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUIDFormated)
                 NotifyPropertyChanged("SentItemsConfigurationSendAs")
                 NotifyPropertyChanged("SentItemsConfigurationSendOnBehalf")
             Catch ex As Exception
@@ -136,7 +136,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
+                _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
                 NotifyPropertyChanged("PermissionSendAs")
             Catch ex As Exception
                 _mailboxadpermission = Nothing
@@ -144,7 +144,7 @@ Public Class clsMailbox
             End Try
 
             Try
-                _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
+                _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
                 NotifyPropertyChanged("PermissionFullAccess")
             Catch ex As Exception
                 _mailboxpermission = Nothing
@@ -362,10 +362,10 @@ Public Class clsMailbox
         Set(value As Long)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("IssueWarningQuota", If(value < 0, "unlimited", value))
             Dim obj As Object = _exchangeconnection.Command(cmd)
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("IssueWarningQuota")
         End Set
     End Property
@@ -383,10 +383,10 @@ Public Class clsMailbox
         Set(value As Long)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("ProhibitSendQuota", If(value < 0, "unlimited", value))
             Dim obj As Object = _exchangeconnection.Command(cmd)
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("CurrentProhibitSendQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendQuota")
             NotifyPropertyChanged("ProhibitSendQuota")
@@ -406,10 +406,10 @@ Public Class clsMailbox
         Set(value As Long)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("ProhibitSendReceiveQuota", If(value < 0, "unlimited", value))
             Dim obj As Object = _exchangeconnection.Command(cmd)
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("ProhibitSendReceiveQuota")
         End Set
     End Property
@@ -422,10 +422,10 @@ Public Class clsMailbox
         Set(value As Boolean)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("UseDatabaseQuotaDefaults", value)
             Dim obj As Object = _exchangeconnection.Command(cmd)
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("UseDatabaseQuotaDefaults")
             NotifyPropertyChanged("CurrentProhibitSendReceiveQuotaFormatted")
             NotifyPropertyChanged("CurrentProhibitSendReceiveQuota")
@@ -504,12 +504,12 @@ Public Class clsMailbox
 
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("HiddenFromAddressListsEnabled", value)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
 
             NotifyPropertyChanged("HiddenFromAddressListsEnabled")
         End Set
@@ -534,12 +534,12 @@ Public Class clsMailbox
 
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Type", If(value, "Shared", "Regular"))
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
 
             NotifyPropertyChanged("Type")
         End Set
@@ -556,12 +556,12 @@ Public Class clsMailbox
 
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
 
         Else
@@ -569,14 +569,14 @@ Public Class clsMailbox
             Dim cmd As New PSCommand
             cmd = New PSCommand
             cmd.AddCommand("Enable-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Alias", name)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Customattribute1", domain)
 
             Dim dummy2 = _exchangeconnection.Command(cmd)
@@ -586,7 +586,7 @@ Public Class clsMailbox
 
                 cmd = New PSCommand
                 cmd.AddCommand("Get-Mailbox")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
 
                 Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj IsNot Nothing AndAlso (obj.Count = 1) Then Exit For
@@ -606,14 +606,14 @@ Public Class clsMailbox
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Alias", newname)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Customattribute1", newdomain)
 
             Dim dummy2 = _exchangeconnection.Command(cmd)
@@ -631,12 +631,12 @@ Public Class clsMailbox
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy3 = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
         Else
 
@@ -653,12 +653,12 @@ Public Class clsMailbox
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
 
             NotifyPropertyChanged("EmailAddresses")
         End If
@@ -673,7 +673,7 @@ Public Class clsMailbox
 
             cmd = New PSCommand
             cmd.AddCommand("Disable-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Confirm", False)
 
             Dim dummy = _exchangeconnection.Command(cmd)
@@ -683,7 +683,7 @@ Public Class clsMailbox
 
                 cmd = New PSCommand
                 cmd.AddCommand("Get-Mailbox")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
 
                 Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj Is Nothing OrElse (obj.Count <> 1) Then Exit For
@@ -705,12 +705,12 @@ Public Class clsMailbox
 
             cmd = New PSCommand
             cmd.AddCommand("Set-Mailbox")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
         End If
     End Sub
@@ -750,7 +750,7 @@ Public Class clsMailbox
             If oldname <> newname Then
                 cmd = New PSCommand
                 cmd.AddCommand("Set-Mailbox")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
                 cmd.AddParameter("Alias", newname)
 
                 Dim dummy = _exchangeconnection.Command(cmd)
@@ -759,13 +759,13 @@ Public Class clsMailbox
             If olddomain <> newdomain Then
                 cmd = New PSCommand
                 cmd.AddCommand("Set-Mailbox")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
                 cmd.AddParameter("Customattribute1", newdomain)
 
                 Dim dummy = _exchangeconnection.Command(cmd)
             End If
 
-            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+            _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
         End If
     End Sub
@@ -786,12 +786,12 @@ Public Class clsMailbox
         Set(value As Boolean)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-MailboxSentItemsConfiguration")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("SendAsItemsCopiedTo", If(value, "SenderAndFrom", "Sender"))
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
+            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("SentItemsConfigurationSendAs")
         End Set
     End Property
@@ -811,12 +811,12 @@ Public Class clsMailbox
         Set(value As Boolean)
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-MailboxSentItemsConfiguration")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("SendOnBehalfOfItemsCopiedTo", If(value, "SenderAndFrom", "Sender"))
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUID)
+            _mailboxsentitemsconfiguration = GetMailboxSentItemsConfiguration(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("SentItemsConfigurationSendOnBehalf")
         End Set
     End Property
@@ -844,7 +844,7 @@ Public Class clsMailbox
     Public Sub AddPermissionSendAs(user As clsDirectoryObject)
         Dim cmd As New PSCommand
         cmd.AddCommand("Get-User")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddCommand("Add-ADPermission")
         cmd.AddParameter("User", user.userPrincipalNameName)
         cmd.AddParameter("Extendedrights", "Send-As")
@@ -852,14 +852,14 @@ Public Class clsMailbox
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
+        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
         NotifyPropertyChanged("PermissionSendAs")
     End Sub
 
     Public Sub RemovePermissionSendAs(user As clsDirectoryObject)
         Dim cmd As New PSCommand
         cmd.AddCommand("Get-User")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddCommand("Remove-ADPermission")
         cmd.AddParameter("User", user.userPrincipalNameName)
         cmd.AddParameter("Extendedrights", "Send-As")
@@ -867,7 +867,7 @@ Public Class clsMailbox
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUID)
+        _mailboxadpermission = GetMailboxADPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
         NotifyPropertyChanged("PermissionSendAs")
     End Sub
 
@@ -896,7 +896,7 @@ Public Class clsMailbox
     Public Sub AddPermissionFullAccess(user As clsDirectoryObject)
         Dim cmd As New PSCommand
         cmd.AddCommand("Add-MailboxPermission")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddParameter("User", user.userPrincipalNameName)
         cmd.AddParameter("AccessRights", "FullAccess")
         cmd.AddParameter("InheritanceType", "All")
@@ -904,14 +904,14 @@ Public Class clsMailbox
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
+        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
         NotifyPropertyChanged("PermissionFullAccess")
     End Sub
 
     Public Sub RemovePermissionFullAccess(user As clsDirectoryObject)
         Dim cmd As New PSCommand
         cmd.AddCommand("Remove-MailboxPermission")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddParameter("User", user.userPrincipalNameName)
         cmd.AddParameter("AccessRights", "FullAccess")
         cmd.AddParameter("InheritanceType", "All")
@@ -919,7 +919,7 @@ Public Class clsMailbox
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUID)
+        _mailboxpermission = GetMailboxPermission(_exchangeconnection, _currentobject.objectGUIDFormated)
         NotifyPropertyChanged("PermissionFullAccess")
     End Sub
 
@@ -952,12 +952,12 @@ Public Class clsMailbox
         Dim cmd As New PSCommand
         cmd = New PSCommand
         cmd.AddCommand("Set-Mailbox")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddParameter("GrantSendOnBehalfTo", obj)
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
     End Sub
 
     Public Sub RemovePermissionSendOnBehalf(user As clsDirectoryObject)
@@ -976,12 +976,12 @@ Public Class clsMailbox
         Dim cmd As New PSCommand
         cmd = New PSCommand
         cmd.AddCommand("Set-Mailbox")
-        cmd.AddParameter("Identity", _currentobject.objectGUID)
+        cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
         cmd.AddParameter("GrantSendOnBehalfTo", obj)
 
         Dim dummy = _exchangeconnection.Command(cmd)
 
-        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUID)
+        _mailbox = GetMailbox(_exchangeconnection, _currentobject.objectGUIDFormated)
         NotifyPropertyChanged("PermissionSendOnBehalf")
     End Sub
 

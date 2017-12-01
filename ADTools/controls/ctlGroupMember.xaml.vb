@@ -170,7 +170,7 @@ Public Class ctlGroupMember
 
             If Not _currentobject.member.Contains([object]) Then Exit Sub
 
-            _currentobject.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Replace, "member", [object].distinguishedName)
+            _currentobject.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Delete, "member", [object].distinguishedName)
             _currentobject.member.Remove([object])
             lvSelectedObjects.Items.Remove([object])
 

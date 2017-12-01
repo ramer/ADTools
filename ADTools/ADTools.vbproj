@@ -103,26 +103,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="classes\clsAttribute.vb" />
     <Compile Include="classes\clsContact.vb" />
     <Compile Include="classes\clsDataGridColumnInfo.vb" />
     <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
     <Compile Include="classes\clsEvent.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
-    <Compile Include="classes\clsFilter.vb" />
     <Compile Include="classes\clsLog.vb" />
     <Compile Include="classes\clsMailbox.vb" />
     <Compile Include="classes\clsPowerShell.vb" />
-    <Compile Include="classes\clsSearcher.vb" />
     <Compile Include="classes\clsSearchHistory.vb" />
-    <Compile Include="classes\clsSearchObjectClasses.vb" />
     <Compile Include="classes\clsSearchParameters.vb" />
     <Compile Include="classes\clsSelector.vb" />
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
-    <Compile Include="classes\clsThreadSafeObservableCollection.vb" />
-    <Compile Include="classes\clsWatcher.vb" />
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\ColumnDefinitionExtended.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
@@ -324,10 +318,6 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="classes\clsDirectoryObject.vb" />
-    <Compile Include="classes\clsDomain.vb" />
-    <Compile Include="classes\clsDomainProperty.vb" />
-    <Compile Include="classes\clsTelephoneNumberPattern.vb" />
     <Compile Include="converters\ConverterBooleanToVisibility.vb" />
     <Compile Include="converters\ConverterBooleanToVisibilityInverted.vb" />
     <Compile Include="controls\ctlCap.xaml.vb">
@@ -465,6 +455,8 @@
     <Resource Include="images\view_smallicons.png" />
     <Resource Include="images\view_tiles.png" />
     <Resource Include="images\grouping.png" />
+    <Resource Include="images\clipboard.png" />
+    <Resource Include="images\clipboard_limit.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />
@@ -473,5 +465,6 @@
     <Content Include="libraries\IPrompt.dll" />
     <Content Include="libraries\IRegisty.dll" />
   </ItemGroup>
+  <Import Project="..\ADToolsShared\ADToolsShared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

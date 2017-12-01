@@ -75,7 +75,7 @@ Public Class clsContact
 
     Private Sub UpdateContactInfo()
         Try
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("Exist")
             NotifyPropertyChanged("EmailAddresses")
             NotifyPropertyChanged("HiddenFromAddressListsEnabled")
@@ -212,12 +212,12 @@ Public Class clsContact
 
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("HiddenFromAddressListsEnabled", value)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
 
             NotifyPropertyChanged("HiddenFromAddressListsEnabled")
         End Set
@@ -233,12 +233,12 @@ Public Class clsContact
 
             Dim cmd As New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
 
         Else
@@ -246,7 +246,7 @@ Public Class clsContact
             Dim cmd As New PSCommand
             cmd = New PSCommand
             cmd.AddCommand("Enable-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("ExternalEmailAddress", "smtp:" & name & "@" & domain)
 
             Dim dummy = _exchangeconnection.Command(cmd)
@@ -256,7 +256,7 @@ Public Class clsContact
 
                 cmd = New PSCommand
                 cmd.AddCommand("Get-MailContact")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
 
                 Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj IsNot Nothing AndAlso (obj.Count = 1) Then Exit For
@@ -276,7 +276,7 @@ Public Class clsContact
 
             cmd = New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("ExternalEmailAddress", "smtp:" & newname & "@" & newdomain)
 
             Dim dummy = _exchangeconnection.Command(cmd)
@@ -294,12 +294,12 @@ Public Class clsContact
 
             cmd = New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy3 = _exchangeconnection.Command(cmd)
 
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
         Else
 
@@ -316,12 +316,12 @@ Public Class clsContact
 
             cmd = New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
 
             NotifyPropertyChanged("EmailAddresses")
         End If
@@ -336,7 +336,7 @@ Public Class clsContact
 
             cmd = New PSCommand
             cmd.AddCommand("Disable-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("Confirm", False)
 
             Dim dummy = _exchangeconnection.Command(cmd)
@@ -346,7 +346,7 @@ Public Class clsContact
 
                 cmd = New PSCommand
                 cmd.AddCommand("Get-MailContact")
-                cmd.AddParameter("Identity", _currentobject.objectGUID)
+                cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
 
                 Dim obj As Collection(Of PSObject) = _exchangeconnection.Command(cmd)
                 If obj Is Nothing OrElse (obj.Count <> 1) Then Exit For
@@ -368,12 +368,12 @@ Public Class clsContact
 
             cmd = New PSCommand
             cmd.AddCommand("Set-MailContact")
-            cmd.AddParameter("Identity", _currentobject.objectGUID)
+            cmd.AddParameter("Identity", _currentobject.objectGUIDFormated)
             cmd.AddParameter("EmailAddresses", obj)
 
             Dim dummy = _exchangeconnection.Command(cmd)
 
-            _contact = GetContact(_exchangeconnection, _currentobject.objectGUID)
+            _contact = GetContact(_exchangeconnection, _currentobject.objectGUIDFormated)
             NotifyPropertyChanged("EmailAddresses")
         End If
     End Sub

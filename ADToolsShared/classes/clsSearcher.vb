@@ -59,7 +59,6 @@ Public Class clsSearcher
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
             searchRequest.Controls.Add(searchOptionsControl)
-            If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
             Dim searchResponse As SearchResponse
             Dim pageResponseControl As PageResultResponseControl
@@ -88,7 +87,8 @@ Public Class clsSearcher
 
     Public Function SearchChildContainersSync(Optional root As clsDirectoryObject = Nothing,
                                               Optional filter As clsFilter = Nothing,
-                                              Optional attributes As String() = Nothing) As ObservableCollection(Of clsDirectoryObject)
+                                              Optional attributes As String() = Nothing,
+                                              Optional showdeletedobjects As Boolean = False) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
 
@@ -110,7 +110,7 @@ Public Class clsSearcher
             searchRequest.Controls.Add(pageRequestControl)
             Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
             searchRequest.Controls.Add(searchOptionsControl)
-            If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+            If showdeletedobjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
             Dim searchResponse As SearchResponse
             Dim pageResponseControl As PageResultResponseControl
@@ -140,7 +140,8 @@ Public Class clsSearcher
                             Optional parentObject As clsDirectoryObject = Nothing,
                             Optional filter As clsFilter = Nothing,
                             Optional specificDomains As ObservableCollection(Of clsDomain) = Nothing,
-                            Optional attributes As String() = Nothing)
+                            Optional attributes As String() = Nothing,
+                            Optional showdeletedobjects As Boolean = False)
 
         StopAllSearchAsync()
 
@@ -178,7 +179,7 @@ Public Class clsSearcher
                 searchRequest.Controls.Add(pageRequestControl)
                 Dim searchOptionsControl As New SearchOptionsControl(SearchOption.DomainScope)
                 searchRequest.Controls.Add(searchOptionsControl)
-                If preferences.ViewShowDeletedObjects Then searchRequest.Controls.Add(New ShowDeletedControl())
+                If showdeletedobjects Then searchRequest.Controls.Add(New ShowDeletedControl())
 
                 Dim helper As New clsSearcherHelper
                 helper.root = root

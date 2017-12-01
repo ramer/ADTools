@@ -57,7 +57,7 @@ Module mdlTools
         {New clsAttribute("distinguishedName", "LDAP-путь")},
         {New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")},
         {New clsAttribute("givenName", "Имя")},
-        {New clsAttribute("Image", "⬕")},
+        {New clsAttribute("Image", "Картинка ⬕")},
         {New clsAttribute("initials", "Инициалы")},
         {New clsAttribute("lastLogonDate", "Последний вход")},
         {New clsAttribute("lastLogonFormated", "Последний вход (формат)")},
@@ -65,6 +65,7 @@ Module mdlTools
         {New clsAttribute("logonCount", "Входов")},
         {New clsAttribute("mail", "Основной адрес")},
         {New clsAttribute("manager", "Руководитель")},
+        {New clsAttribute("managedBy", "Управляется")},
         {New clsAttribute("name", "Имя объекта")},
         {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
         {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},
@@ -76,10 +77,10 @@ Module mdlTools
         {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")},
         {New clsAttribute("SchemaClassName", "Класс")},
         {New clsAttribute("sn", "Фамилия")},
-        {New clsAttribute("Status", "Статус")},
-        {New clsAttribute("StatusFormated", "Статус (формат)")},
+        {New clsAttribute("StatusImage", "Статус ⬕")},
+        {New clsAttribute("StatusFormatted", "Статус (формат)")},
         {New clsAttribute("telephoneNumber", "Телефон")},
-        {New clsAttribute("thumbnailPhoto", "Фото")},
+        {New clsAttribute("thumbnailPhoto", "Фото ⬕")},
         {New clsAttribute("title", "Должность")},
         {New clsAttribute("userPrincipalName", "Имя входа")},
         {New clsAttribute("whenCreated", "Создан")},
@@ -88,41 +89,58 @@ Module mdlTools
     Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
         {New clsAttribute("name", "Имя объекта")},
         {New clsAttribute("displayName", "Отображаемое имя")},
-        {New clsAttribute("givenName", "Имя")},
-        {New clsAttribute("sn", "Фамилия")},
+        {New clsAttribute("userPrincipalName", "Имя входа")},
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
+    }
+    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From { ' 
+        {New clsAttribute("name", "Имя объекта")},
+        {New clsAttribute("displayName", "Отображаемое имя")},
         {New clsAttribute("userPrincipalName", "Имя входа")}
     }
+    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
+    }
+    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
+    }
+    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
+        {New clsAttribute("name", "Имя объекта")}
+    }
 
-    Public propertiesToLoadDefault As String() =
-        {"objectGUID",
-        "userAccountControl",
-        "accountExpires",
-        "name",
-        "description",
-        "userPrincipalName",
-        "distinguishedName",
-        "telephoneNumber",
-        "physicalDeliveryOfficeName",
-        "title",
-        "department",
+    Public attributesToLoadDefault As String() =
+        {"accountExpires",
         "company",
-        "mail",
-        "whenCreated",
-        "lastLogon",
-        "pwdLastSet",
-        "thumbnailPhoto",
-        "memberOf",
-        "givenName",
-        "sn",
-        "initials",
+        "department",
+        "description",
         "displayName",
-        "manager",
-        "sAMAccountName",
-        "groupType",
+        "distinguishedName",
         "dNSHostName",
+        "givenName",
+        "groupType",
+        "initials",
+        "isDeleted",
+        "isRecycled",
+        "lastLogon",
         "location",
+        "mail",
+        "manager",
+        "memberOf",
+        "name",
+        "objectCategory",
+        "objectClass",
+        "objectGUID",
         "operatingSystem",
-        "operatingSystemVersion"}
+        "operatingSystemVersion",
+        "physicalDeliveryOfficeName",
+        "pwdLastSet",
+        "sAMAccountName",
+        "sn",
+        "telephoneNumber",
+        "thumbnailPhoto",
+        "title",
+        "userAccountControl",
+        "userPrincipalName",
+        "whenCreated"}
 
     Public Sub initializeCredentials()
         Dim cred As New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
@@ -135,7 +153,6 @@ Module mdlTools
 
         Bot = New TeleBotDotNet.TeleBot(TelegramAPIKey, False)
     End Sub
-
 
     Public Sub initializeTimer()
         dispatcherTimer = New Threading.DispatcherTimer()

@@ -17,18 +17,6 @@
     <Grid>
         <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
             <TabControl x:Name="tcPreferences" TabStripPlacement="Left" Margin="0,-1,-1,-1">
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Basic}">
-                    <DockPanel LastChildFill="True">
-                        <StackPanel DockPanel.Dock="Top" Margin="5">
-                            <CheckBox x:Name="chbClipboardSource" Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSource}" IsChecked="{Binding ClipboardSource}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceDefinition}"/>
-                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimit}" IsChecked="{Binding ClipboardSourceLimit}" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Margin="20,0,0,0"/>
-                            <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding ElementName=chbClipboardSource, Path=IsChecked}" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition}"/>
-                            <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjects}" IsChecked="{Binding ShowDeletedObjects}"/>
-                            <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition}"/>
-                        </StackPanel>
-                    </DockPanel>
-                </TabItem>
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow}">
                     <DockPanel Margin="5">
                         <DockPanel DockPanel.Dock="Bottom">
