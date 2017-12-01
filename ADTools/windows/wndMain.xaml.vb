@@ -177,8 +177,15 @@ Class wndMain
 
     Private Sub mnuEditCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles mnuEditCreateObject.Click
         Dim w As New wndCreateObject
-        w.destinationcontainer = Nothing
-        w.destinationdomain = Nothing
+
+        If currentcontainer IsNot Nothing Then
+            w.destinationcontainer = currentcontainer
+            w.destinationdomain = currentcontainer.Domain
+        Else
+            w.destinationcontainer = Nothing
+            w.destinationdomain = Nothing
+        End If
+
         ShowWindow(w, False, Me, False)
     End Sub
 
@@ -798,9 +805,9 @@ Class wndMain
     End Sub
 
     Private Sub lvObjects_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDoubleClick
-        If lvObjects.SelectedItem Is Nothing Or Not (e.ChangedButton = MouseButton.Left) Then Exit Sub
-        Dim current As clsDirectoryObject = CType(lvObjects.SelectedItem, clsDirectoryObject)
-        OpenObject(current)
+        Dim obj = FindVisualParent(Of ListViewItem)(e.OriginalSource)
+        If obj Is Nothing OrElse TypeOf obj.DataContext IsNot clsDirectoryObject Then Exit Sub
+        OpenObject(obj.DataContext)
     End Sub
 
     Private Sub lvObjects_ColumnReordered_LayoutUpdated() Handles lvObjects.LayoutUpdated
