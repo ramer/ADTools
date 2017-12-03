@@ -7,7 +7,7 @@ Imports System.Text.RegularExpressions
 Imports System.IO
 Imports System.ComponentModel
 
-Class wndMain
+Class pgMain
     Public WithEvents searcher As New clsSearcher
 
     Public Shared hkF5 As New RoutedCommand
@@ -27,7 +27,6 @@ Class wndMain
     Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True, False)
 
     Public WithEvents clipboardTimer As New Threading.DispatcherTimer()
-
     Private clipboardlastdata As String
 
     Private Sub wndMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
@@ -41,6 +40,11 @@ Class wndMain
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
         tbSearchPattern.Focus()
 
+        dpToolbar.DataContext = preferences
+
+        mnuSearchDomains.ItemsSource = domains
+        dockpSearchObjectClasses.DataContext = searchobjectclasses
+
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
 
@@ -48,20 +52,13 @@ Class wndMain
         cvcurrentobjects = cvscurrentobjects.View
         cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
 
-        dpToolbar.DataContext = preferences
-        mnuSearchDomains.ItemsSource = domains
-        dockpSearchObjectClasses.DataContext = searchobjectclasses
-
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
-        lvObjects.ViewStyleDetails = GetViewDetailsStyle()
-        lvObjects.CurrentView = preferences.DefaultView
-        lvObjects.EnableGrouping = preferences.ViewResultGrouping
 
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
         clipboardTimer.Start()
     End Sub
 
-    Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing, MyBase.Closing
+    Private Sub wndMain_Closing(sender As Object, e As ComponentModel.CancelEventArgs)
         Dim count As Integer = 0
 
         For Each wnd As Window In ADToolsApplication.Current.Windows
@@ -189,16 +186,16 @@ Class wndMain
             w.destinationdomain = Nothing
         End If
 
-        ShowWindow(w, False, Me, False)
+        ShowWindow(w, False, , False)
     End Sub
 
     Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click
-        ShowWindow(New wndDomains, True, Me, True)
+        ShowWindow(New wndDomains, True, , True)
         RefreshDomainTree()
     End Sub
 
     Private Sub mnuServicePreferences_Click(sender As Object, e As RoutedEventArgs) Handles mnuServicePreferences.Click
-        ShowWindow(New wndPreferences, True, Me, True)
+        ShowWindow(New wndPreferences, True, , True)
         RefreshDomainTree()
     End Sub
 
@@ -213,9 +210,9 @@ Class wndMain
     End Sub
 
     Private Sub mnuSearchSaveCurrentFilter_Click(sender As Object, e As RoutedEventArgs) Handles mnuSearchSaveCurrentFilter.Click
-        If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Me) : Exit Sub
+        If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation) : Exit Sub
 
-        Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterFilterName,,, vbQuestion, Me)
+        Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterFilterName,,, vbQuestion)
 
         If String.IsNullOrEmpty(name) Then Exit Sub
 
@@ -225,7 +222,7 @@ Class wndMain
 
     Private Sub mnuHelpAbout_Click(sender As Object, e As RoutedEventArgs) Handles mnuHelpAbout.Click
         Dim w As New wndAbout
-        ShowWindow(w, True, Me, False)
+        ShowWindow(w, True, , False)
     End Sub
 
 #End Region
@@ -479,7 +476,7 @@ Class wndMain
             w.destinationdomain = Nothing
         End If
 
-        ShowWindow(w, False, Me, False)
+        ShowWindow(w, False, , False)
     End Sub
 
     Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
@@ -565,7 +562,7 @@ Class wndMain
             Dim organizationalunitaffected As Boolean = False
 
             Dim obj As clsDirectoryObject = objects(0)
-            Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion, Me)
+            Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion)
             If Len(name) > 0 Then
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
                     obj.Rename("OU=" & name)
@@ -595,9 +592,9 @@ Class wndMain
         Try
             Dim currentcontaineraffected As Boolean = False
 
-            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject) <> MsgBoxResult.Yes Then Exit Sub
             If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Me) <> MsgBoxResult.Yes Then Exit Sub
+                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject) <> MsgBoxResult.Yes Then Exit Sub
                 If currentcontainer IsNot Nothing AndAlso objects(0).distinguishedName = currentcontainer.distinguishedName Then currentcontaineraffected = True
             End If
 
@@ -640,7 +637,7 @@ Class wndMain
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
 
         Try
-            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword, Me) = MsgBoxResult.Yes Then
+            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword) = MsgBoxResult.Yes Then
                 objects(0).ResetPassword()
                 objects(0).passwordNeverExpires = False
                 IMsgBox(My.Resources.wndObject_msg_PasswordChanged, vbOKOnly + vbInformation, My.Resources.wndObject_msg_ResetPassword)
@@ -659,7 +656,7 @@ Class wndMain
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer)) Then Exit Sub
 
         Try
-            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.wndObject_msg_Enable, My.Resources.wndObject_msg_Disable), Me) = MsgBoxResult.Yes Then
+            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.wndObject_msg_Enable, My.Resources.wndObject_msg_Disable)) = MsgBoxResult.Yes Then
                 objects(0).disabled = Not objects(0).disabled
             End If
 
@@ -676,7 +673,7 @@ Class wndMain
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)
-            Dim w As Window = ShowDirectoryObjectProperties(objects(0), Me)
+            Dim w As Window = ShowDirectoryObjectProperties(objects(0))
             If GetType(wndUser) Is w.GetType Then CType(w, wndUser).tabctlUser.SelectedIndex = 1
 
         Catch ex As Exception
@@ -851,29 +848,16 @@ Class wndMain
     End Sub
 
     'Private Sub lvObjects_MouseMove(sender As Object, e As MouseEventArgs) Handles lvObjects.MouseMove
-    '    Dim listview As ListView = TryCast(sender, ListView)
+    '    Dim datagrid As DataGrid = TryCast(sender, DataGrid)
 
     '    If e.LeftButton = MouseButtonState.Pressed And
-    '        e.GetPosition(sender).X < listview.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-    '        e.GetPosition(sender).Y < listview.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
-    '        listview.SelectedItems.Count > 0 Then
+    '        e.GetPosition(sender).X < datagrid.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+    '        e.GetPosition(sender).Y < datagrid.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
+    '        datagrid.SelectedItems.Count > 0 Then
 
-    '        Dim dragData As New DataObject(listview.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
+    '        Dim dragData As New DataObject(datagrid.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
 
-    '        DragDrop.DoDragDrop(listview, dragData, DragDropEffects.All)
-    '    End If
-    'End Sub
-
-    'Private Sub lvObjects_TouchMove(sender As Object, e As TouchEventArgs) Handles lvObjects.TouchMove
-    '    Dim listView As ListView = TryCast(sender, ListView)
-
-    '    If e.GetTouchPoint(sender).Position.X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-    '        listView.SelectedItems.Count > 0 Then
-
-    '        Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-
-    '        e.Handled = True
-    '        DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
+    '        DragDrop.DoDragDrop(datagrid, dragData, DragDropEffects.All)
     '    End If
     'End Sub
 
@@ -963,6 +947,19 @@ Class wndMain
 
     Public Sub RefreshDomainTree()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
+    End Sub
+
+    Public Sub UpdateDetailsViewGroupStyle(show As Boolean)
+        If show And preferences.ViewResultGrouping Then
+            Dim groupstyle = New GroupStyle()
+            groupstyle.ContainerStyle = TryFindResource("ListView_ViewDetails_GroupItem")
+            If groupstyle.ContainerStyle Is Nothing Then Exit Sub
+            Debug.WriteLine(lvObjects.Style.ToString)
+            lvObjects.GroupStyle.Clear()
+            lvObjects.GroupStyle.Add(groupstyle)
+        Else
+            lvObjects.GroupStyle.Clear()
+        End If
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
@@ -1181,7 +1178,7 @@ Class wndMain
             Dim container As New FrameworkElementFactory(GetType(ItemsControl))
             If first Then
                 first = False
-                container.SetValue(FontWeightProperty, FontWeights.Bold)
+                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
                 column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
             End If
 
@@ -1199,7 +1196,7 @@ Class wndMain
 
     Public Sub ObjectsCopy(destination As clsDirectoryObject, sourceobjects() As clsDirectoryObject)
         If sourceobjects(0).Domain Is destination.Domain Then ' same domain
-            If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me) : Exit Sub
+            If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject) : Exit Sub
 
             ' single object
 
@@ -1243,13 +1240,13 @@ Class wndMain
                     w.tabctlObject.SelectedIndex = 4
 
                 Case Else
-                    IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Me)
+                    IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject)
             End Select
-            ShowWindow(w, False, Me, False)
+            ShowWindow(w, False,, False)
 
         Else ' another domain
             ' TODO
-            If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка", Me) <> MessageBoxResult.Yes Then Exit Sub
+            If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка") <> MessageBoxResult.Yes Then Exit Sub
 
         End If
     End Sub
@@ -1258,13 +1255,13 @@ Class wndMain
         Dim organizationalunitaffected As Boolean = False
 
         ' another domain
-        If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject, Me) : Exit Sub
+        If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject) : Exit Sub
 
         ' same domain
         If IMsgBox(My.Resources.wndMain_msg_AreYouSure & vbCrLf & vbCrLf &
                    String.Format(My.Resources.wndMain_msg_MoveObjectToContainer,
                                  If(sourceobjects.Count > 1, String.Format(My.Resources.wndMain_msg_NObjects, sourceobjects.Count), sourceobjects(0).name),
-                                 destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_MoveObject, Me) <> MessageBoxResult.Yes Then Exit Sub
+                                 destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_MoveObject) <> MessageBoxResult.Yes Then Exit Sub
 
         Try
             For Each obj In sourceobjects
@@ -1281,23 +1278,33 @@ Class wndMain
     End Sub
 
     Private Sub rbView_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
-        'If sender Is rbViewMediumIcons Then
-        '    UpdateDetailsViewGroupStyle(False)
-        '    lvObjects.Style = TryFindResource("ListView_ViewMediumIcons")
-        'ElseIf sender Is rbViewList Then
-        '    UpdateDetailsViewGroupStyle(False)
-        '    lvObjects.Style = TryFindResource("ListView_ViewList")
-        'ElseIf sender Is rbViewTiles Then
-        '    UpdateDetailsViewGroupStyle(False)
-        '    lvObjects.Style = TryFindResource("ListView_ViewTiles")
-        'ElseIf sender Is rbViewDetails Then
-        '    UpdateDetailsViewGroupStyle(True)
-        '    lvObjects.Style = GetViewDetailsStyle()
-        'End If
+        If sender Is rbViewMediumIcons Then
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.Style = TryFindResource("ListView_ViewMediumIcons")
+        ElseIf sender Is rbViewList Then
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.Style = TryFindResource("ListView_ViewList")
+        ElseIf sender Is rbViewTiles Then
+            UpdateDetailsViewGroupStyle(False)
+            lvObjects.Style = TryFindResource("ListView_ViewTiles")
+        ElseIf sender Is rbViewDetails Then
+            UpdateDetailsViewGroupStyle(True)
+            lvObjects.Style = GetViewDetailsStyle()
+        End If
+    End Sub
+
+    Private Sub togbResultGrouping_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles togbViewResultGrouping.Checked, togbViewResultGrouping.Unchecked
+        If rbViewDetails.IsChecked Then
+            UpdateDetailsViewGroupStyle(togbViewResultGrouping.IsChecked)
+        End If
     End Sub
 
     Private Sub btnViewSetDefaultView_Click(sender As Object, e As RoutedEventArgs) Handles btnViewSetDefaultView.Click
-        preferences.DefaultView = lvObjects.CurrentView
+        preferences.DefaultView =
+            If(rbViewDetails.IsChecked, clsPreferences.enmView.Details,
+            If(rbViewTiles.IsChecked, clsPreferences.enmView.Tiles,
+            If(rbViewList.IsChecked, clsPreferences.enmView.List,
+            If(rbViewMediumIcons.IsChecked, clsPreferences.enmView.MediumIcons, clsPreferences.enmView.Details))))
     End Sub
 
     Private Sub togbViewShowDeletedObjects_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles togbViewShowDeletedObjects.Checked, togbViewShowDeletedObjects.Unchecked

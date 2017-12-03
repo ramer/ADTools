@@ -10,7 +10,7 @@ Public Class wndPreferences
     Private attributesExtended As New ObservableCollection(Of clsAttribute)
     Private Property PluginProcessTelegramBot As Process
 
-    Private Sub wndPreferences_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Private Async Sub wndPreferences_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         'grid gridlines style (magic)
         Dim GLR = Activator.CreateInstance(Type.[GetType]("System.Windows.Controls.Grid+GridLinesRenderer," + " PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"))
         GLR.[GetType]().GetField("s_oddDashPen", BindingFlags.[Static] Or BindingFlags.NonPublic).SetValue(GLR, New Pen(New SolidColorBrush(preferences.ColorButtonBackground), 0.5))
@@ -18,7 +18,6 @@ Public Class wndPreferences
 
         DataContext = preferences
         lvAttributesDefault.ItemsSource = attributesDefault
-        lvAttributesExtended.ItemsSource = attributesExtended
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch
         RebuildLayout()
 
@@ -29,6 +28,9 @@ Public Class wndPreferences
         tbPluginTelegramBotAPIKey.Text = cred.Password
 
         UpdatePluginsStatus()
+
+        Await Task.Run(Sub() attributesExtended = New ObservableCollection(Of clsAttribute)(GetAttributesExtended()))
+        lvAttributesExtended.ItemsSource = attributesExtended
     End Sub
 
     Private Sub UpdatePluginsStatus()
@@ -381,16 +383,6 @@ Public Class wndPreferences
         Else
             My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).DeleteValue(My.Application.Info.AssemblyName, False)
         End If
-    End Sub
-
-    Private Async Sub btnGetExtendedAttributes_Click(sender As Object, e As RoutedEventArgs) Handles btnGetExtendedAttributes.Click
-        cap1.Visibility = Visibility.Visible
-
-        Await Task.Run(Sub() attributesExtended = New ObjectModel.ObservableCollection(Of clsAttribute)(GetAttributesExtended()))
-
-        lvAttributesExtended.ItemsSource = attributesExtended
-
-        cap1.Visibility = Visibility.Hidden
     End Sub
 
     Private Sub btnExternalSoftwareBrowse_Click(sender As Object, e As RoutedEventArgs)

@@ -23,7 +23,7 @@ Public Class clsPreferences
 
     ' layout
     Private _columns As New ObservableCollection(Of clsViewColumnInfo)
-    Private _defaultview As enmView
+    Private _defaultview As ListViewExtended.Views
 
     ' search attributes
     Private _attributesforsearch As New ObservableCollection(Of clsAttribute)
@@ -59,13 +59,6 @@ Public Class clsPreferences
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
     End Sub
-
-    Public Enum enmView
-        Details = 0
-        Tiles = 1
-        List = 2
-        MediumIcons = 3
-    End Enum
 
     Sub New()
 
@@ -187,11 +180,11 @@ Public Class clsPreferences
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property DefaultView As enmView
+    Public Property DefaultView As ListViewExtended.Views
         Get
             Return _defaultview
         End Get
-        Set(value As enmView)
+        Set(value As ListViewExtended.Views)
             _defaultview = value
             NotifyPropertyChanged("DefaultView")
         End Set

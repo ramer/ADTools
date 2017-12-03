@@ -23,7 +23,7 @@
             <Grid>
                 <local:ctlTrash x:Name="trashSelectedGroups" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
                 <Button x:Name="btnDefaultGroups" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="#" Panel.ZIndex="5" ToolTip="По умолчанию" Margin="0,0,3,0"/>
-                <ListView x:Name="lvSelectedGroups" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
+                <ListView x:Name="lvSelectedGroups" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>

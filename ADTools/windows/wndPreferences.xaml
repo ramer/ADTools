@@ -82,32 +82,28 @@
                                         </GridView>
                                     </ListView.View>
                                 </ListView>
-                                <Grid Grid.Column="1" Grid.Row="1" >
-                                    <local:ctlCap x:Name="cap1" Panel.ZIndex="2" Visibility="Hidden"/>
-                                    <Button x:Name="btnGetExtendedAttributes" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="🔎" Panel.ZIndex="1" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesExtendedGet}"/>
-                                    <ListView x:Name="lvAttributesExtended" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                        <ListView.View>
-                                            <GridView AllowsColumnReorder="False">
-                                                <GridView.Columns>
-                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
-                                                        <GridViewColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Label}"/>
-                                                            </DataTemplate>
-                                                        </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>
-                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
-                                                        <GridViewColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Name}"/>
-                                                            </DataTemplate>
-                                                        </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>
-                                                </GridView.Columns>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </Grid>
+                                <ListView x:Name="lvAttributesExtended" Grid.Column="1" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                    <ListView.View>
+                                        <GridView AllowsColumnReorder="False">
+                                            <GridView.Columns>
+                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Label}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Name}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView.Columns>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
                                 <Grid Grid.Column="2" Grid.Row="1">
                                     <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
                                     <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="⌗" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearchDefault}" />

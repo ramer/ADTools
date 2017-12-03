@@ -2,8 +2,7 @@
 Imports Microsoft.Win32
 Imports IRegisty
 Imports IPrompt.VisualBasic
-Imports System.DirectoryServices
-Imports System.DirectoryServices.ActiveDirectory
+Imports System.DirectoryServices.Protocols
 Imports HandlebarsDotNet
 Imports System.Windows.Markup
 Imports System.Globalization
@@ -416,28 +415,34 @@ Module mdlTools
     End Function
 
     Public Function GetAttributesExtended() As clsAttribute()
-        Dim attributes As New Dictionary(Of String, clsAttribute)
+        Dim attributes As New HashSet(Of String)
+        Dim filters As New List(Of String) From
+            {"(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))",
+            "(&(objectCategory=person)(objectClass=contact))",
+            "(objectClass=computer)",
+            "(objectClass=group)",
+            "(objectClass=organizationalunit)"}
 
         For Each domain In domains
             Try
-                Dim _domaincontrollers As DirectoryEntry = Nothing 'domain.DefaultNamingContext.Children.Find("OU=Domain Controllers")
-                Dim _directorycontext As New DirectoryContext(DirectoryContextType.DirectoryServer, GetLDAPProperty(_domaincontrollers.Children(0).Properties, "dNSHostName"), domain.Username, domain.Password)
-                Dim _schema As ActiveDirectorySchema = ActiveDirectorySchema.GetSchema(_directorycontext)
-                Dim _userClass As ActiveDirectorySchemaClass = _schema.FindClass("user")
-
-                For Each a As clsAttribute In _userClass.MandatoryProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
-                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
+                For Each f In filters
+                    Dim searchRequest As SearchRequest = New SearchRequest(domain.DefaultNamingContext, f, SearchScope.Subtree, Nothing)
+                    searchRequest.Controls.Add(New PageResultRequestControl(1))
+                    searchRequest.Controls.Add(New SearchOptionsControl(SearchOption.DomainScope))
+                    Dim response As SearchResponse = domain.Connection.SendRequest(searchRequest)
+                    If response.Entries.Count = 1 Then
+                        Dim sampleobject As New clsDirectoryObject(response.Entries(0), domain)
+                        For Each a As String In sampleobject.AllowedAttributes
+                            attributes.Add(a)
+                        Next
+                    End If
                 Next
-                For Each a As clsAttribute In _userClass.OptionalProperties.Cast(Of ActiveDirectorySchemaProperty).Where(Function(attr As ActiveDirectorySchemaProperty) attr.IsSingleValued).Select(Function(attr As ActiveDirectorySchemaProperty) New clsAttribute(attr.Name, attr.CommonName)).ToArray
-                    If Not attributes.ContainsKey(a.Name) Then attributes.Add(a.Name, a)
-                Next
-
             Catch ex As Exception
 
             End Try
         Next
 
-        Return attributes.Values.ToArray.OrderBy(Function(x As clsAttribute) x.Label).ToArray
+        Return attributes.ToArray.OrderBy(Function(x As String) x).Select(Function(x As String) New clsAttribute(x, x)).ToArray
     End Function
 
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
@@ -736,6 +741,22 @@ Module mdlTools
         Else
             Return Nothing
         End If
+    End Function
+
+    Public Function FindVisualChild(Of T As DependencyObject)(ByVal parent As Object) As T
+        Dim queue = New Queue(Of DependencyObject)()
+        queue.Enqueue(parent)
+        While queue.Count > 0
+            Dim child As DependencyObject = queue.Dequeue()
+            If TypeOf child Is T Then
+                Return child
+            End If
+
+            For I As Integer = 0 To VisualTreeHelper.GetChildrenCount(child) - 1
+                queue.Enqueue(VisualTreeHelper.GetChild(child, I))
+            Next
+        End While
+        Return Nothing
     End Function
 
     Public Sub ApplicationDeactivate()

@@ -593,6 +593,7 @@
             </Setter>
         </Style>
         <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="MinHeight" Value="24"/>
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
             <Setter Property="VerticalContentAlignment" Value="{Binding Path=VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
@@ -746,6 +747,7 @@
         </Style>
         <Style TargetType="{x:Type ListViewItem}">
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MinHeight" Value="24"/>
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
                     <Setter Property="Background" Value="{DynamicResource ColorListviewRow}" />
@@ -760,7 +762,7 @@
         </Style>
 
 
-        <Style x:Key="ListView_ViewTiles" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleTiles" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -783,9 +785,9 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="ListViewItem">
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5" />
                     <Setter Property="Width" Value="250" />
                 </Style>
@@ -795,7 +797,7 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ListView_ViewMediumIcons" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleMediumIcons" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -814,9 +816,9 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5" />
                     <Setter Property="Width" Value="100" />
                 </Style>
@@ -826,7 +828,7 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ListView_ViewList" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleList" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -845,9 +847,9 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="ListViewItem">
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5,1,5,1" />
                     <Setter Property="Width" Value="250" />
                 </Style>
@@ -857,31 +859,7 @@
             </Style.Resources>
         </Style>
 
-        <!--this style will be replaced by clsPreferences.columns setter in codebehind-->
-        <Style x:Key="ListView_ViewDetails" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
-            <!--<Setter Property="View">
-                <Setter.Value>
-                    <GridView>
-                        <GridViewColumn Header="⬕" Width="250">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <VirtualizingStackPanel Orientation="Horizontal">
-                                        <ItemsControl ItemsSource="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" Width="48" Height="48" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-                                        <VirtualizingStackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="5,0,0,0">
-                                            <ItemsControl FontWeight="Medium" ItemsSource="{Binding name, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                            <ItemsControl FontWeight="Light" ItemsSource="{Binding userPrincipalName, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                            <ItemsControl FontWeight="Light" ItemsSource="{Binding description, Converter={StaticResource ConverterDataToUIElement}}"/>
-                                        </VirtualizingStackPanel>
-                                    </VirtualizingStackPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </Setter.Value>
-            </Setter>-->
-        </Style>
-
-        <Style x:Key="ListView_ViewDetails_GroupItem" TargetType="{x:Type GroupItem}">
+        <Style x:Key="ListViewExtended_GroupItemStyle" TargetType="{x:Type GroupItem}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
