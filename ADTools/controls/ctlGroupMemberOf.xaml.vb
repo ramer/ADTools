@@ -127,32 +127,19 @@ Public Class ctlGroupMemberOf
         ShowDirectoryObjectProperties(lvSelectedGroups.SelectedItem, Window.GetWindow(Me))
     End Sub
 
-    Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvSelectedGroups.MouseMove,
-                                                                            lvDomainGroups.MouseMove
-        Dim listView As ListView = TryCast(sender, ListView)
+    'Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvSelectedGroups.MouseMove,
+    '                                                                        lvDomainGroups.MouseMove
+    '    Dim listView As ListView = TryCast(sender, ListView)
 
-        If e.LeftButton = MouseButtonState.Pressed And
-            e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-            listView.SelectedItems.Count > 0 Then
+    '    If e.LeftButton = MouseButtonState.Pressed And
+    '        e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
+    '        listView.SelectedItems.Count > 0 Then
 
-            Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
+    '        Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
 
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
-        End If
-    End Sub
-
-    Private Sub lv_TouchMove(sender As Object, e As TouchEventArgs) Handles lvSelectedGroups.TouchMove,
-                                                                            lvDomainGroups.TouchMove
-        Dim listView As ListView = TryCast(sender, ListView)
-
-        If e.GetTouchPoint(sender).Position.X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-            listView.SelectedItems.Count > 0 Then
-
-            Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
-        End If
-    End Sub
+    '        DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
+    '    End If
+    'End Sub
 
     Private Sub lvSelectedGroups_DragEnter(sender As Object, e As DragEventArgs) Handles lvSelectedGroups.DragEnter,
                                                                                          trashSelectedGroups.DragEnter,

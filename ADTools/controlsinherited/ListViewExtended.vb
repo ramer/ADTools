@@ -230,8 +230,7 @@ Public Class ListViewExtended
         Dim currentitem As ListViewItem = FindVisualParent(Of ListViewItem)(OriginalSource)
         If currentitem Is Nothing OrElse currentitem.IsSelected = False Then Exit Sub
 
-        Dim DragScope = TryCast(Windows.Application.Current.MainWindow.Content, FrameworkElement)
-        System.Diagnostics.Debug.Assert(DragScope IsNot Nothing)
+        Dim DragScope = TryCast(Window.GetWindow(Me).Content, FrameworkElement)
         Dim previousDrop As Boolean = DragScope.AllowDrop
         DragScope.AllowDrop = True
         Dim feedbackhandler As GiveFeedbackEventHandler = New GiveFeedbackEventHandler(AddressOf DragSource_GiveFeedback)

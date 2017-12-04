@@ -22,24 +22,22 @@
             <Label Margin="0,0,3,0" Content="{x:Static r:Resources.ctlGroupMember_lbl_SelectedObjects}" DockPanel.Dock="Top"/>
             <Grid>
                 <local:ctlTrash x:Name="trashSelectedObjects" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
-                <ListView x:Name="lvSelectedObjects" AlternationCount="2" Margin="0,0,3,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
-                    <ListView.View>
-                        <GridView AllowsColumnReorder="False">
-                            <GridView.Columns>
-                                <GridViewColumn Header="{x:Static r:Resources.ctlGroupMember_lbl_Objects}" Width="230" local:clsSorter.PropertyName="name">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <DockPanel>
-                                                <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding name}"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView.Columns>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <local:ListViewExtended x:Name="lvSelectedObjects"
+                    AllowDrop="True"
+                    Margin="0,0,3,0"
+                    local:clsSorter.AutoSort="True"
+                    IsSynchronizedWithCurrentItem="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.PanningMode="VerticalFirst"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    KeyboardNavigation.DirectionalNavigation="None"
+                    ViewStyleList="{StaticResource ListViewExtended_ViewStyleSmallList}"
+                    CurrentView="List"
+                    />
             </Grid>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Column="1">
@@ -59,24 +57,22 @@
                     </TextBlock.Style>
                 </TextBlock>
             </Grid>
-            <ListView x:Name="lvDomainObjects" AlternationCount="2" DockPanel.Dock="Bottom" Margin="3,0,0,0" Foreground="Black" AllowDrop="True" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True">
-                <ListView.View>
-                    <GridView AllowsColumnReorder="False">
-                        <GridView.Columns>
-                            <GridViewColumn Header="{x:Static r:Resources.ctlGroupMember_lbl_Objects}" Width="230" local:clsSorter.PropertyName="name">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <DockPanel>
-                                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                            <TextBlock Text="{Binding name}"/>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView.Columns>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <local:ListViewExtended x:Name="lvDomainObjects"
+                AllowDrop="True"
+                Margin="3,0,0,0"
+                local:clsSorter.AutoSort="True"
+                IsSynchronizedWithCurrentItem="True"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.CanContentScroll="True"
+                ScrollViewer.PanningMode="VerticalFirst"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                KeyboardNavigation.DirectionalNavigation="None"
+                ViewStyleList="{StaticResource ListViewExtended_ViewStyleSmallList}"
+                CurrentView="List"
+                />
         </DockPanel>
     </Grid>
 </UserControl>
