@@ -167,211 +167,230 @@ Public Class ListViewExtended
         End If
     End Sub
 
+
+#Region "HoldAssist"
+
+    Private _touchmovelastpoint As Point
+    Private _touchmovecount As Integer
+    Public Event TouchHold As EventHandler(Of TouchEventArgs)
+
+    Private Sub HoldAssist_TD(sender As Object, e As TouchEventArgs) Handles Me.TouchDown
+        _touchmovelastpoint = e.GetTouchPoint(Me).Position
+        _touchmovecount = 0
+    End Sub
+
+    Private Sub HoldAssist_TM(sender As Object, e As TouchEventArgs) Handles Me.TouchMove
+        If _touchmovelastpoint = e.GetTouchPoint(Me).Position Then
+            _touchmovecount += 1
+            If _touchmovecount = 3 Then RaiseEvent TouchHold(sender, e)
+        End If
+    End Sub
+
+#End Region
+
 #Region "Drag'n'Drop"
 
     Private _startpoint As Point
     Private _isdragging As Boolean
-    Private _allOpsCursor As Cursor
+    Private _cursor As Cursor
+    Private _adorner As DragAdorner
 
     Private Sub DragSource_PreviewMouseLeftButtonDown(ByVal sender As Object, ByVal e As MouseButtonEventArgs) Handles Me.PreviewMouseLeftButtonDown
-        _startpoint = e.GetPosition(Nothing)
+        _startpoint = e.GetPosition(Me)
+    End Sub
+
+    Private Sub DragSource_PreviewMouseLeftButtonDown(ByVal sender As Object, ByVal e As TouchEventArgs) Handles Me.PreviewTouchDown
+        _startpoint = e.GetTouchPoint(Me).Position
     End Sub
 
     Private Sub DragSource_PreviewMouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles Me.PreviewMouseMove
         If e.LeftButton = MouseButtonState.Pressed AndAlso Not _isdragging Then
-            Dim position As Point = e.GetPosition(Nothing)
+            Dim position As Point = e.GetPosition(Me)
             If Math.Abs(position.X - _startpoint.X) > SystemParameters.MinimumHorizontalDragDistance OrElse Math.Abs(position.Y - _startpoint.Y) > SystemParameters.MinimumVerticalDragDistance Then
-                StartDragWindow(e)
+                StartDragProcess(e.OriginalSource, e.GetPosition(Me))
             End If
         End If
     End Sub
 
-    Private Sub StartDrag(ByVal e As MouseEventArgs)
-        _isdragging = True
-        Dim dragData As New DataObject(SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-        Dim de As DragDropEffects = DragDrop.DoDragDrop(Me, dragData, DragDropEffects.All)
-        _isdragging = False
+    Private Sub DragSource_TouchMove(ByVal sender As Object, ByVal e As TouchEventArgs) Handles Me.TouchMove
+        Dim position As Point = e.GetTouchPoint(Me).Position
+        If Math.Abs(position.X - _startpoint.X) > SystemParameters.MinimumHorizontalDragDistance OrElse Math.Abs(position.Y - _startpoint.Y) > SystemParameters.MinimumVerticalDragDistance Then
+            StartDragProcess(e.OriginalSource, e.GetTouchPoint(Me).Position)
+        End If
     End Sub
 
-    Private Sub StartDragCustomCursor(ByVal e As MouseEventArgs)
-        Dim handler As GiveFeedbackEventHandler = New GiveFeedbackEventHandler(AddressOf DragSource_GiveFeedback)
-        AddHandler Me.GiveFeedback, handler
-        _isdragging = True
-        Dim dragData As New DataObject(SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-        Dim de As DragDropEffects = DragDrop.DoDragDrop(Me, dragData, DragDropEffects.All)
-        RemoveHandler Me.GiveFeedback, handler
-        _isdragging = False
+    Private Sub DragTarget_PreviewDragOver(sender As Object, e As DragEventArgs)
+        If _adorner IsNot Nothing Then
+            _adorner.LeftOffset = e.GetPosition(Me).X
+            _adorner.TopOffset = e.GetPosition(Me).Y
+        End If
     End Sub
 
-    Private Sub StartDragWindow(ByVal e As MouseEventArgs)
+    Private Sub StartDragProcess(OriginalSource As Object, Position As Point)
+        Dim currentitem As ListViewItem = FindVisualParent(Of ListViewItem)(OriginalSource)
+        If currentitem Is Nothing OrElse currentitem.IsSelected = False Then Exit Sub
+
+        Dim DragScope = TryCast(Windows.Application.Current.MainWindow.Content, FrameworkElement)
+        System.Diagnostics.Debug.Assert(DragScope IsNot Nothing)
+        Dim previousDrop As Boolean = DragScope.AllowDrop
+        DragScope.AllowDrop = True
         Dim feedbackhandler As GiveFeedbackEventHandler = New GiveFeedbackEventHandler(AddressOf DragSource_GiveFeedback)
         AddHandler Me.GiveFeedback, feedbackhandler
+        Dim dragoverhandler As DragEventHandler = New DragEventHandler(AddressOf DragTarget_PreviewDragOver)
+        AddHandler DragScope.PreviewDragOver, dragoverhandler
+        'Dim dragleavehandler As DragEventHandler = New DragEventHandler(DragScope_DragLeave)
+        'DragScope.DragLeave += dragleavehandler
         Dim queryhandler As QueryContinueDragEventHandler = New QueryContinueDragEventHandler(AddressOf DragSource_QueryContinueDrag)
-        AddHandler Me.QueryContinueDrag, queryhandler
-        _isdragging = True
+        AddHandler DragScope.QueryContinueDrag, queryhandler
 
-        CreateDragDropWindow(FindVisualParent(Of VirtualizingStackPanel)(e.OriginalSource))
+        _adorner = New DragAdorner(Me, CreateAdornerContent(SelectedItems.Cast(Of clsDirectoryObject).ToArray), Position)
+        AdornerLayer.GetAdornerLayer(DragScope).Add(_adorner)
+
+        _isdragging = True
         Dim dragData As New DataObject(SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-        _dragdropWindow.Show()
         Dim de As DragDropEffects = DragDrop.DoDragDrop(Me, dragData, DragDropEffects.All)
-        DestroyDragDropWindow()
-        _isdragging = False
+
+        DragScope.AllowDrop = previousDrop
+
+        AdornerLayer.GetAdornerLayer(DragScope).Remove(_adorner)
+        _adorner = Nothing
+
         RemoveHandler Me.GiveFeedback, feedbackhandler
-        RemoveHandler Me.QueryContinueDrag, queryhandler
+        'RemoveHandler DragScope.DragLeave, dragleavehandler
+        RemoveHandler DragScope.QueryContinueDrag, queryhandler
+        RemoveHandler DragScope.PreviewDragOver, dragoverhandler
+        _isdragging = False
     End Sub
 
     Private Sub DragSource_GiveFeedback(ByVal sender As Object, ByVal e As GiveFeedbackEventArgs)
-        Try
-            'If _allOpsCursor Is Nothing Then
-            '    Using cursorStream As Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("SimplestDragDrop.DDIcon.cur")
-            '        _allOpsCursor = New Cursor(cursorStream)
-            '    End Using
-            'End If
-
-            'Mouse.SetCursor(_allOpsCursor)
-            e.UseDefaultCursors = False
-            UpdateWindowLocation()
-            e.Handled = True
-        Finally
-        End Try
+        'Try
+        '    Try
+        '        Using cursorStream As Stream = New MemoryStream(My.Resources.deny)
+        '            _cursor = New Cursor(cursorStream)
+        '        End Using
+        '        Mouse.SetCursor(_cursor)
+        '    Catch ex As Exception
+        '        Debug.Print(ex.Message)
+        '    End Try
+        '    e.UseDefaultCursors = False
+        '    e.Handled = True
+        'Finally
+        'End Try
     End Sub
 
     Private Sub DragSource_QueryContinueDrag(ByVal sender As Object, ByVal e As QueryContinueDragEventArgs)
-        Try
-
-            If e.EscapePressed Then e.Action = DragAction.Cancel
-            e.Handled = True
-        Finally
-        End Try
+        If e.EscapePressed Then e.Action = DragAction.Cancel
     End Sub
 
-    Private _dragdropWindow As Window = Nothing
+    Private Function CreateAdornerContent(selecteditems() As clsDirectoryObject) As UIElement
+        Dim brd As New Border With {
+            .CornerRadius = New CornerRadius(5, 5, 5, 5),
+            .Background = FindResource("ColorElementBackground"),
+            .BorderThickness = New Thickness(2),
+            .BorderBrush = FindResource("ColorButtonBackground"),
+            .Opacity = 0.7,
+            .Width = 100,
+            .Height = 100}
+        Dim grd As New Grid
+        If selecteditems.Count > 0 Then grd.Children.Add(selecteditems(0).StatusImage)
+        If selecteditems.Count > 1 Then grd.Children.Add(
+             New Border With {
+                 .VerticalAlignment = VerticalAlignment.Bottom,
+                 .HorizontalAlignment = HorizontalAlignment.Center,
+                 .Background = FindResource("ColorElementBackground"),
+                 .BorderThickness = New Thickness(1),
+                 .BorderBrush = FindResource("ColorButtonBackground"),
+                 .Child = New TextBlock(New Run(selecteditems.Count)) With {
+                     .Margin = New Thickness(5, 0, 5, 0),
+                     .FontSize = 16,
+                     .FontWeight = FontWeights.Medium}})
 
-    <DllImport("user32.dll", EntryPoint:="GetWindowLong")>
-    Private Shared Function GetWindowLongPtr32(ByVal hWnd As IntPtr, ByVal nIndex As Integer) As IntPtr
+        brd.Child = grd
+        brd.Measure(New Size(100, 100))
+        brd.Arrange(New Rect(brd.DesiredSize))
+        brd.UpdateLayout()
+        Return brd
     End Function
 
-    <DllImport("user32.dll", EntryPoint:="GetWindowLongPtr")>
-    Private Shared Function GetWindowLongPtr64(ByVal hWnd As IntPtr, ByVal nIndex As Integer) As IntPtr
-    End Function
+    Private Class DragAdorner
+        Inherits Adorner
 
-    ' This static method is required because Win32 does not support GetWindowLongPtr dirctly
-    Public Shared Function GetWindowLongPtr(ByVal hWnd As IntPtr, ByVal nIndex As Integer) As IntPtr
-        If IntPtr.Size = 8 Then
-            Return GetWindowLongPtr64(hWnd, nIndex)
-        Else
-            Return GetWindowLongPtr32(hWnd, nIndex)
-        End If
-    End Function
+        Private _child As Rectangle
+        Private _leftoffset As Double
+        Private _topoffset As Double
+        Private _startoffset As Point
 
-    <DllImport("user32.dll", EntryPoint:="SetWindowLong")>
-    Private Shared Function SetWindowLong32(ByVal hWnd As IntPtr, <MarshalAs(UnmanagedType.I4)> nIndex As WindowLongFlags, ByVal dwNewLong As Integer) As Integer
-    End Function
+        Public Sub New(ByVal adornedElement As UIElement, ByVal content As UIElement, Optional startOffset As Point = Nothing)
+            MyBase.New(adornedElement)
 
-    <DllImport("user32.dll", EntryPoint:="SetWindowLongPtr")>
-    Private Shared Function SetWindowLongPtr64(ByVal hWnd As IntPtr, <MarshalAs(UnmanagedType.I4)> nIndex As WindowLongFlags, ByVal dwNewLong As IntPtr) As IntPtr
-    End Function
+            _startoffset = startOffset
+            _child = New Rectangle()
+            _child.Width = content.RenderSize.Width
+            _child.Height = content.RenderSize.Height
+            _child.Fill = New VisualBrush(content)
+        End Sub
 
-    Public Shared Function SetWindowLongPtr(ByVal hWnd As IntPtr, nIndex As WindowLongFlags, ByVal dwNewLong As IntPtr) As IntPtr
-        If IntPtr.Size = 8 Then
-            Return SetWindowLongPtr64(hWnd, nIndex, dwNewLong)
-        Else
-            Return New IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32))
-        End If
-    End Function
+        Protected Overrides Function MeasureOverride(ByVal constraint As System.Windows.Size) As System.Windows.Size
+            _child.Measure(constraint)
+            Return _child.DesiredSize
+        End Function
 
-    <DllImport("user32.dll", ExactSpelling:=True, SetLastError:=True)>
-    Public Shared Function GetCursorPos(ByRef lpPoint As POINTFX) As <MarshalAs(UnmanagedType.Bool)> Boolean
-    End Function
+        Protected Overrides Function ArrangeOverride(ByVal finalSize As System.Windows.Size) As System.Windows.Size
+            _child.Arrange(New Rect(finalSize))
+            Return finalSize
+        End Function
 
-    Public Enum WindowLongFlags
-        GWL_WNDPROC = -4
-        GWL_HINSTANCE = -6
-        GWL_HWNDPARENT = -8
-        GWL_STYLE = -16
-        GWL_EXSTYLE = -20
-        GWL_USERDATA = -21
-        GWL_ID = -12
-    End Enum
+        Protected Overrides Function GetVisualChild(ByVal index As Integer) As System.Windows.Media.Visual
+            Return _child
+        End Function
 
-    Public Enum WindowStylesEx
-        WS_EX_ACCEPTFILES = &H10
-        WS_EX_APPWINDOW = &H40000
-        WS_EX_CLIENTEDGE = &H200
-        WS_EX_COMPOSITED = &H2000000
-        WS_EX_CONTEXTHELP = &H400
-        WS_EX_CONTROLPARENT = &H10000
-        WS_EX_DLGMODALFRAME = &H1
-        WS_EX_LAYERED = &H80000
-        WS_EX_LAYOUTRTL = &H400000
-        WS_EX_LEFT = &H0
-        WS_EX_LEFTSCROLLBAR = &H4000
-        WS_EX_LTRREADING = &H0
-        WS_EX_MDICHILD = &H40
-        WS_EX_NOACTIVATE = &H8000000
-        WS_EX_NOINHERITLAYOUT = &H100000
-        WS_EX_NOPARENTNOTIFY = &H4
-        WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE Or WS_EX_CLIENTEDGE
-        WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE Or WS_EX_TOOLWINDOW Or WS_EX_TOPMOST
-        WS_EX_RIGHT = &H1000
-        WS_EX_RIGHTSCROLLBAR = &H0
-        WS_EX_RTLREADING = &H2000
-        WS_EX_STATICEDGE = &H20000
-        WS_EX_TOOLWINDOW = &H80
-        WS_EX_TOPMOST = &H8
-        WS_EX_TRANSPARENT = &H20
-        WS_EX_WINDOWEDGE = &H100
-    End Enum
+        Protected Overrides ReadOnly Property VisualChildrenCount() As Integer
+            Get
+                Return 1
+            End Get
+        End Property
 
-    Structure POINTFX
-        Public X As Integer
-        Public Y As Integer
-    End Structure
+        'With this bit Of code, we can already show the rectangle we wanted.
+        'We'll want to allow the drag/drop code we wrote in the window to update the adorner to follow the mouse, so we'll add a couple of properties for this.
 
-    Private Sub CreateDragDropWindow(ByVal dragElement As Visual)
-        System.Diagnostics.Debug.Assert(Me._dragdropWindow Is Nothing)
-        System.Diagnostics.Debug.Assert(dragElement IsNot Nothing)
-        System.Diagnostics.Debug.Assert(TypeOf dragElement Is FrameworkElement)
-        _dragdropWindow = New Window()
-        _dragdropWindow.WindowStyle = WindowStyle.None
-        _dragdropWindow.AllowsTransparency = True
-        _dragdropWindow.AllowDrop = False
-        _dragdropWindow.Background = Nothing
-        _dragdropWindow.IsHitTestVisible = False
-        _dragdropWindow.SizeToContent = SizeToContent.WidthAndHeight
-        _dragdropWindow.Topmost = True
-        _dragdropWindow.ShowInTaskbar = False
-        AddHandler _dragdropWindow.SourceInitialized, New EventHandler(
-            Sub(ByVal sender As Object, ByVal args As EventArgs)
-                Dim windowSource As PresentationSource = PresentationSource.FromVisual(Me._dragdropWindow)
-                Dim handle As IntPtr = (CType(windowSource, System.Windows.Interop.HwndSource)).Handle
-                Dim styles As Int32 = GetWindowLongPtr(handle, WindowLongFlags.GWL_EXSTYLE)
-                SetWindowLongPtr(handle, WindowLongFlags.GWL_EXSTYLE, styles Or WindowStylesEx.WS_EX_LAYERED Or WindowStylesEx.WS_EX_TRANSPARENT)
-            End Sub)
-        Dim r As Rectangle = New Rectangle()
-        r.Width = (CType(dragElement, FrameworkElement)).ActualWidth
-        r.Height = (CType(dragElement, FrameworkElement)).ActualHeight
-        r.Fill = New VisualBrush(dragElement)
-        _dragdropWindow.Content = r
-        UpdateWindowLocation()
-    End Sub
+        Public Property LeftOffset() As Double
+            Get
+                Return _leftoffset
+            End Get
+            Set(ByVal value As Double)
+                _leftoffset = value
+                UpdatePosition()
+            End Set
+        End Property
 
-    Private Sub DestroyDragDropWindow()
-        _dragdropWindow.Close()
-        _dragdropWindow = Nothing
-    End Sub
+        Public Property TopOffset() As Double
+            Get
+                Return _topoffset
+            End Get
+            Set(ByVal value As Double)
+                _topoffset = value
+                UpdatePosition()
+            End Set
+        End Property
 
-    Private Sub UpdateWindowLocation()
-        If _dragdropWindow IsNot Nothing Then
-            Dim p As POINTFX
-            If Not GetCursorPos(p) Then
-                Return
+        Private Sub UpdatePosition()
+            Dim adornerLayer As AdornerLayer = Me.Parent
+            If Not adornerLayer Is Nothing Then
+                adornerLayer.Update(AdornedElement)
             End If
+        End Sub
 
-            _dragdropWindow.Left = p.X
-            _dragdropWindow.Top = p.Y
-        End If
-    End Sub
+        'Finally, adorners are always placed relative To the element they adorn. You can Then place them relative To the corners, the middle, off To the side, within, etc. We'll just offset the adorner to where the user would like to drop the dragged element, by adding a translate transform to whatever was necessary to get to the adorned element.
+
+        Public Overrides Function GetDesiredTransform(ByVal transform As System.Windows.Media.GeneralTransform) As System.Windows.Media.GeneralTransform
+            Dim result As GeneralTransformGroup = New GeneralTransformGroup()
+            result.Children.Add(MyBase.GetDesiredTransform(transform))
+            result.Children.Add(New TranslateTransform(LeftOffset - _child.ActualWidth / 2, TopOffset - _child.ActualHeight))
+            Return result
+        End Function
+    End Class
+
+
 
 #End Region
 

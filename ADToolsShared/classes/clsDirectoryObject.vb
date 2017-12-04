@@ -72,7 +72,13 @@ Public Class clsDirectoryObject
         If AttributeNames Is Nothing Then AttributeNames = attributesToLoadDefault
         Dim searchRequest = New SearchRequest(DistinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AttributeNames)
         searchRequest.Controls.Add(New ShowDeletedControl())
-        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+        Dim response As SearchResponse
+        Try
+            response = Connection.SendRequest(searchRequest)
+        Catch ex As Exception
+            Exit Sub
+        End Try
 
         _cache.Clear()
 
@@ -108,7 +114,13 @@ Public Class clsDirectoryObject
 
                 Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributesToLoadDefault)
                 searchRequest.Controls.Add(New ShowDeletedControl())
-                Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                Dim response As SearchResponse
+                Try
+                    response = Connection.SendRequest(searchRequest)
+                Catch ex As Exception
+                    Exit Sub
+                End Try
 
                 _cache.Clear()
 
@@ -117,6 +129,8 @@ Public Class clsDirectoryObject
                         _cache.Add(a.Name, a)
                     Next
                 End If
+
+                Exit For
             End If
         Next
     End Sub
@@ -207,7 +221,13 @@ Public Class clsDirectoryObject
 
         Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
         searchRequest.Controls.Add(New ShowDeletedControl())
-        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+        Dim response As SearchResponse
+        Try
+            response = Connection.SendRequest(searchRequest)
+        Catch ex As Exception
+            Exit Sub
+        End Try
 
         If response.Entries.Count = 1 Then
             For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
@@ -227,7 +247,13 @@ Public Class clsDirectoryObject
 
         Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AllowedAttributes.ToArray)
         searchRequest.Controls.Add(New ShowDeletedControl())
-        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+        Dim response As SearchResponse
+        Try
+            response = Connection.SendRequest(searchRequest)
+        Catch ex As Exception
+            Exit Sub
+        End Try
 
         If response.Entries.Count = 1 Then
             For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
