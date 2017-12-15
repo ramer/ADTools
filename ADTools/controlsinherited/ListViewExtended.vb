@@ -194,9 +194,12 @@ Public Class ListViewExtended
     Private _isdragging As Boolean
     Private _cursor As Cursor
     Private _adorner As DragAdorner
+    Private _selecteditems As New List(Of Object)
 
     Private Sub DragSource_PreviewMouseLeftButtonDown(ByVal sender As Object, ByVal e As MouseButtonEventArgs) Handles Me.PreviewMouseLeftButtonDown
         _startpoint = e.GetPosition(Me)
+        _selecteditems.Clear()
+        _selecteditems.AddRange(SelectedItems.Cast(Of Object))
     End Sub
 
     Private Sub DragSource_PreviewMouseLeftButtonDown(ByVal sender As Object, ByVal e As TouchEventArgs) Handles Me.PreviewTouchDown
@@ -205,6 +208,10 @@ Public Class ListViewExtended
 
     Private Sub DragSource_PreviewMouseMove(ByVal sender As Object, ByVal e As MouseEventArgs) Handles Me.PreviewMouseMove
         If e.LeftButton = MouseButtonState.Pressed AndAlso Not _isdragging Then
+            For Each obj In _selecteditems
+                If Not SelectedItems.Contains(obj) Then SelectedItems.Add(obj)
+            Next
+
             Dim position As Point = e.GetPosition(Me)
             If Math.Abs(position.X - _startpoint.X) > SystemParameters.MinimumHorizontalDragDistance OrElse Math.Abs(position.Y - _startpoint.Y) > SystemParameters.MinimumVerticalDragDistance Then
                 StartDragProcess(e.OriginalSource, e.GetPosition(Me))

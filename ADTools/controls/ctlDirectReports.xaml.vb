@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports IPrompt.VisualBasic
 
 Public Class ctlDirectReports
@@ -33,6 +34,12 @@ Public Class ctlDirectReports
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
             ._currentdomainobjects.Clear()
             .lvDomainObjects.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomainobjects, Nothing)
+
+            If .lvDomainObjects.ItemsSource IsNot Nothing Then
+                Dim view As CollectionView = CollectionViewSource.GetDefaultView(.lvDomainObjects.ItemsSource)
+                view.SortDescriptions.Clear()
+                view.SortDescriptions.Add(New SortDescription("name", ListSortDirection.Ascending))
+            End If
         End With
     End Sub
 
@@ -56,6 +63,8 @@ Public Class ctlDirectReports
             For Each o In objects
                 lvSelectedObjects.Items.Add(o)
             Next
+            lvSelectedObjects.Items.SortDescriptions.Clear()
+            lvSelectedObjects.Items.SortDescriptions.Add(New SortDescription("name", ListSortDirection.Ascending))
 
             cap.Visibility = Visibility.Hidden
         End If

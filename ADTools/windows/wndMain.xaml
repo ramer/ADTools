@@ -365,8 +365,8 @@
                     <local:ColumnDefinitionExtended Width="Auto"/>
                     <local:ColumnDefinitionExtended Width="250" Visible="{Binding ElementName=togbViewShowPreview, Path=IsChecked, Mode=TwoWay}"/>
                 </Grid.ColumnDefinitions>
-                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
-                <GridSplitter Grid.Column="3" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+                <GridSplitter Grid.Column="1" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+                <GridSplitter Grid.Column="3" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
 
                 <TreeView Grid.Column="0" 
                     x:Name="tvObjects" 

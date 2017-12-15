@@ -26,6 +26,7 @@ Public Class ctlObjectAttributes
     Sub New()
         cvsAttributes = New CollectionViewSource() With {.Source = attributes}
         cvAttributes = cvsAttributes.View
+        cvAttributes.SortDescriptions.Add(New SortDescription("Name", ListSortDirection.Ascending))
 
         InitializeComponent()
 

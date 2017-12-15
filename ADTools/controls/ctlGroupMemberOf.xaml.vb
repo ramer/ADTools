@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports IPrompt.VisualBasic
 
 Public Class ctlGroupMemberOf
@@ -58,6 +59,12 @@ Public Class ctlGroupMemberOf
 
             ._currentdomaingroups.Clear()
             .lvDomainGroups.ItemsSource = If(._currentobject IsNot Nothing, ._currentdomaingroups, Nothing)
+
+            If .lvDomainGroups.ItemsSource IsNot Nothing Then
+                Dim view As CollectionView = CollectionViewSource.GetDefaultView(.lvDomainGroups.ItemsSource)
+                view.SortDescriptions.Clear()
+                view.SortDescriptions.Add(New SortDescription("name", ListSortDirection.Ascending))
+            End If
         End With
     End Sub
 
@@ -101,6 +108,8 @@ Public Class ctlGroupMemberOf
             For Each g In groups
                 lvSelectedGroups.Items.Add(g)
             Next
+            lvSelectedGroups.Items.SortDescriptions.Clear()
+            lvSelectedGroups.Items.SortDescriptions.Add(New SortDescription("name", ListSortDirection.Ascending))
 
             cap.Visibility = Visibility.Hidden
         End If
