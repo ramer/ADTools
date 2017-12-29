@@ -162,6 +162,7 @@
     <Compile Include="converters\ConverterBooleanToEnum.vb" />
     <Compile Include="converters\ConverterBooleanToWidthStar.vb" />
     <Compile Include="converters\ConverterDataToUIElement.vb" />
+    <Compile Include="converters\ConverterDesiredWidthToVisibility.vb" />
     <Compile Include="converters\ConverterIntegerToVisibility.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
@@ -169,6 +170,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\pgDomains.xaml.vb">
+      <DependentUpon>pgDomains.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\pgMain.xaml.vb">
+      <DependentUpon>pgMain.xaml</DependentUpon>
     </Compile>
     <Compile Include="windows\wndAbout.xaml.vb">
       <DependentUpon>wndAbout.xaml</DependentUpon>
@@ -263,6 +270,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="controls\ctlUserWorkstations.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\pgDomains.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\pgMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

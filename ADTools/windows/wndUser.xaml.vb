@@ -64,7 +64,7 @@ Public Class wndUser
     Private Sub imgPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgPhoto.MouseDown
         Dim w As New wndUserPhoto
         w.CurrentObject = CurrentObject
-        ShowWindow(w, True, Me, False)
+        ShowPage(w, True, Me, False)
     End Sub
 
     Private Sub btnResetPassword_Click(sender As Object, e As RoutedEventArgs) Handles btnResetPassword.Click

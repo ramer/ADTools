@@ -8,7 +8,12 @@
 
     <Application.Resources>
         <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
-
+        <local:ConverterBooleanToEnum x:Key="ConverterBooleanToEnum" />
+        <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility"/>
+        <local:ConverterBooleanToWidthStar x:Key="ConverterBooleanToWidthStar"/>
+        <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
+        <local:ConverterBooleanToVisibilityInverted x:Key="ConverterBooleanToVisibilityInverted"/>
+        
         <SolidColorBrush  Color="Black" x:Key="ColorText" />
         <SolidColorBrush  Color="WhiteSmoke" x:Key="ColorWindowBackground" />
         <SolidColorBrush  Color="White" x:Key="ColorElementBackground" />

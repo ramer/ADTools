@@ -235,43 +235,61 @@ Module mdlTools
             End Sub)
     End Sub
 
-    Public Function ShowWindow(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
+    Public Function ShowPage(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
         If applicationdeactivating Then Return Nothing
 
-        If w Is Nothing Then Return Nothing
 
-        If singleinstance Then
-            If owner IsNot Nothing Then
-                For Each wnd As Window In owner.OwnedWindows
-                    If w.GetType Is wnd.GetType Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        w.Owner = owner
-                        Return w
-                    End If
-                Next
-            Else
-                For Each wnd As Window In Application.Current.Windows
-                    If w.GetType Is wnd.GetType Then
-                        w = wnd
-                        w.Show() : w.Activate()
-                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                        w.Topmost = True : w.Topmost = False
-                        w.Owner = Nothing
-                        Return w
-                    End If
-                Next
+    End Function
+
+    Public Function ShowPage(p As Page, Optional owner As NavigationWindow = Nothing, Optional singleinstance As Boolean = False, Optional modal As Boolean = False) As NavigationWindow
+        If applicationdeactivating Then Return Nothing
+        If p Is Nothing Then Return Nothing
+
+        If owner Is Nothing Then
+
+            If singleinstance Then
+                If owner IsNot Nothing Then
+                    For Each wnd As Window In owner.OwnedWindows
+                        If w.GetType Is wnd.GetType Then
+                            w = wnd
+                            w.Show() : w.Activate()
+                            If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                            w.Topmost = True : w.Topmost = False
+                            w.Owner = owner
+                            Return w
+                        End If
+                    Next
+                Else
+                    For Each wnd As Window In Application.Current.Windows
+                        If w.GetType Is wnd.GetType Then
+                            w = wnd
+                            w.Show() : w.Activate()
+                            If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                            w.Topmost = True : w.Topmost = False
+                            w.Owner = Nothing
+                            Return w
+                        End If
+                    Next
+                End If
             End If
+
+            w.Owner = owner
+            If modal Then
+                w.ShowDialog()
+            Else
+                w.Show()
+            End If
+            Return w
         End If
 
-        w.Owner = owner
-        If modal Then
-            w.ShowDialog()
+        Dim w As NavigationWindow
+        If owner IsNot Nothing Then
+            w = owner
         Else
-            w.Show()
+            w = New NavigationWindow
         End If
+
+        w.Navigate(p)
         Return w
     End Function
 
@@ -761,7 +779,7 @@ Module mdlTools
 
     Public Sub ApplicationDeactivate()
         Dim w As New wndAboutDonate
-        ShowWindow(w, True, Nothing, True)
+        ShowPage(w, True, Nothing, True)
         applicationdeactivating = True
     End Sub
 

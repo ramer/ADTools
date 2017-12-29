@@ -1,17 +1,39 @@
 ﻿<Page x:Class="pgMain"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:local="clr-namespace:ADTools"
-        xmlns:r="clr-namespace:ADTools.My.Resources"
-        mc:Ignorable="d"
-        Title="ADTools"
-        d:DesignWidth="1024"
-        d:DesignHeight="368"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}">
-
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADTools"
+      xmlns:r="clr-namespace:ADTools.My.Resources"
+      mc:Ignorable="d"
+      WindowTitle="ADTools"
+      d:DesignWidth="1024"
+      d:DesignHeight="368"
+      KeepAlive="True"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    
     <Grid>
+        <!--<Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
+            <Grid Width="200" Height="70">
+                <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
+
+                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
+                    <Run Text="{x:Static r:Resources.hint_poptvObjects_1}"/>
+                    <Hyperlink x:Name="hlpoptvObjects"><Run Text="{x:Static r:Resources.hint_poptvObjects_2}"/></Hyperlink>
+                    <Run Text="{x:Static r:Resources.hint_poptvObjects_3}"/>
+                </TextBlock>
+            </Grid>
+        </Popup>
+        <Popup x:Name="poptbSearchPattern" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tbSearchPattern}" Placement="Top" HorizontalOffset="80" VerticalOffset="12">
+            <Grid Width="200" Height="55">
+                <Border CornerRadius="10,10,10,0" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
+
+                <TextBlock TextWrapping="Wrap" Margin="10" TextAlignment="Justify">
+                    <Run Text="{x:Static r:Resources.hint_poptbSearchPattern}"/>
+                </TextBlock>
+            </Grid>
+        </Popup>-->
+
         <DockPanel LastChildFill="True">
             <DockPanel x:Name="dpToolbar" DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
                 <Grid>
@@ -102,30 +124,30 @@
                                         <TextBlock Text="{x:Static r:Resources.wndMain_mnuView}" HorizontalAlignment="Center" FontWeight="Light"/>
                                     </DockPanel>
                                     <UniformGrid Columns="2">
-                                        <RadioButton x:Name="rbViewMediumIcons" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=MediumIcons}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <ToggleButton x:Name="rbViewMediumIcons" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=MediumIcons}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                             <DockPanel>
                                                 <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
                                                 <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                             </DockPanel>
-                                        </RadioButton>
-                                        <RadioButton x:Name="rbViewList" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=List}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="rbViewList" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=List}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                             <DockPanel>
                                                 <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
                                                 <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                             </DockPanel>
-                                        </RadioButton>
-                                        <RadioButton x:Name="rbViewTiles" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Tiles}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="rbViewTiles" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Tiles}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                             <DockPanel>
                                                 <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
                                                 <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                             </DockPanel>
-                                        </RadioButton>
-                                        <RadioButton x:Name="rbViewDetails" IsChecked="{Binding Path=DefaultView, Mode=OneTime, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Details}" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="rbViewDetails" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Details}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
                                             <DockPanel>
                                                 <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
                                                 <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" TextWrapping="Wrap" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center"/>
                                             </DockPanel>
-                                        </RadioButton>
+                                        </ToggleButton>
                                     </UniformGrid>
                                 </DockPanel>
 
@@ -334,8 +356,8 @@
                     <local:ColumnDefinitionExtended Width="Auto"/>
                     <local:ColumnDefinitionExtended Width="250" Visible="{Binding ElementName=togbViewShowPreview, Path=IsChecked, Mode=TwoWay}"/>
                 </Grid.ColumnDefinitions>
-                <GridSplitter Grid.Column="1" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
-                <GridSplitter Grid.Column="3" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+                <GridSplitter Grid.Column="1" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
+                <GridSplitter Grid.Column="3" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
 
                 <TreeView Grid.Column="0" 
                     x:Name="tvObjects" 
@@ -493,15 +515,20 @@
 
                     <Grid Margin="0,0,0,4">
                         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
-                        <ListView x:Name="lvObjects"
-                            local:clsSelector.Enabled="True"
+                        <local:ListViewExtended x:Name="lvObjects"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.PanningMode="VerticalFirst"
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
                             KeyboardNavigation.DirectionalNavigation="None"
+                            ViewStyleTiles="{StaticResource ListViewExtended_ViewStyleTiles}"
+                            ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
+                            ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
+                            GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
+                            EnableGrouping="{Binding ElementName=togbViewResultGrouping, Path=IsChecked}"
                             >
 
                             <ListView.ContextMenu>
@@ -557,7 +584,7 @@
                                 </ContextMenu>
                             </ListView.ContextMenu>
 
-                        </ListView>
+                        </local:ListViewExtended>
                     </Grid>
                 </DockPanel>
 
@@ -587,5 +614,5 @@
             </Grid>
         </DockPanel>
     </Grid>
-</Page>
 
+</Page>

@@ -1461,4 +1461,10 @@
   <data name="wndMain_lbl_Clipboard" xml:space="preserve">
     <value>Буфер обмена</value>
   </data>
+  <data name="wndPreferences_lbl_Behavior_PageInterface" xml:space="preserve">
+    <value>Страничный интерфейс</value>
+  </data>
+  <data name="wndPreferences_lbl_Behavior_PageInterfaceDefinition" xml:space="preserve">
+    <value>Интерфейс оптимизирован для работы мобильных устройств</value>
+  </data>
 </root>

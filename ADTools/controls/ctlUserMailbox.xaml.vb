@@ -140,7 +140,7 @@ Public Class ctlUserMailbox
         If mailbox Is Nothing Then Exit Sub
         Dim w As New wndMailboxQuota
         w.mailbox = mailbox
-        ShowWindow(w, True, Window.GetWindow(Me), True)
+        ShowPage(w, True, Window.GetWindow(Me), True)
     End Sub
 
     Private Sub btnMailboxShare_Click(sender As Object, e As RoutedEventArgs) Handles btnMailboxShare.Click
@@ -148,7 +148,7 @@ Public Class ctlUserMailbox
         Dim w As New wndMailboxShare
         w.currentuser = CurrentObject
         w.mailbox = mailbox
-        ShowWindow(w, True, Window.GetWindow(Me), True)
+        ShowPage(w, True, Window.GetWindow(Me), True)
     End Sub
 
     Private Sub ctlMailbox_Unloaded(sender As Object, e As RoutedEventArgs) Handles Me.Unloaded

@@ -65,8 +65,9 @@ Public Class ConverterDataToUIElement
                         Dim w As Window = Window.GetWindow(hl)
                         If w Is Nothing Then Exit Sub
                         If TypeOf w Is wndMain Then
-                            Dim wm = CType(w, wndMain)
-                            wm.StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, wm.searchobjectclasses))
+                            ' TODO 
+                            'Dim wm = CType(w, wndMain)
+                            'wm.StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, wm.searchobjectclasses))
                         End If
                     End Sub
                     tblck.Inlines.Add(hl)

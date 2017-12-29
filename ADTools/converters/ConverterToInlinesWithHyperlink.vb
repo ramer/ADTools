@@ -45,12 +45,13 @@ Public Class ConverterToInlinesWithHyperlink
     End Function
 
     Public Sub Hyperlink_Click(sender As Object, e As RoutedEventArgs)
-        Dim w As Window = Window.GetWindow(sender)
-        If w Is Nothing Then Exit Sub
-        If TypeOf w Is wndMain Then
-            Dim wm = CType(w, wndMain)
-            wm.StartSearch(Nothing, New clsFilter("""" & CType(sender, Hyperlink).Tag.ToString & """", attributesForSearchDefault, wm.searchobjectclasses))
-        End If
+        ' TODO 
+        'Dim w As Window = Window.GetWindow(sender)
+        'If w Is Nothing Then Exit Sub
+        'If TypeOf w Is wndMain Then
+        '    Dim wm = CType(w, wndMain)
+        '    wm.StartSearch(Nothing, New clsFilter("""" & CType(sender, Hyperlink).Tag.ToString & """", attributesForSearchDefault, wm.searchobjectclasses))
+        'End If
     End Sub
 
 End Class

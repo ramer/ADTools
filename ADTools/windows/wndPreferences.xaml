@@ -142,6 +142,8 @@
                         <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition}"/>
                         <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButton}" IsChecked="{Binding CloseOnXButton}" />
                         <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButtonDefinition}"/>
+                        <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterface}" IsChecked="{Binding PageInterface}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterfaceDefinition}"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Appearance}">

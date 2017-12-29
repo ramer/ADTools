@@ -32,6 +32,7 @@ Public Class clsPreferences
     Private _startwithwindows As Boolean?
     Private _startwithwindowsminimized As Boolean?
     Private _closeonxbutton As Boolean?
+    Private _pageinterface As Boolean?
 
     ' appearance
     Private _colortext As Color
@@ -227,6 +228,16 @@ Public Class clsPreferences
         Set(value As Boolean?)
             _closeonxbutton = If(value, True)
             NotifyPropertyChanged("CloseOnXButton")
+        End Set
+    End Property
+
+    Public Property PageInterface As Boolean?
+        Get
+            Return _pageinterface
+        End Get
+        Set(value As Boolean?)
+            _pageinterface = If(value, False)
+            NotifyPropertyChanged("PageInterface")
         End Set
     End Property
 

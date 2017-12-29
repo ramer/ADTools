@@ -20,7 +20,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsThreadSafeObservableCollection.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)clsWatcher.vb" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)modules\" />
-  </ItemGroup>
 </Project>

@@ -29,7 +29,7 @@ Public Class wndCreateObject
         Dim domain As clsDomain = CType(cmboDomain.SelectedItem, clsDomain)
 
         domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
-        ShowWindow(domainbrowser, True, Me, True)
+        ShowPage(domainbrowser, True, Me, True)
 
         If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
             domain.SearchRoot = domainbrowser.currentobject.distinguishedName
@@ -72,8 +72,9 @@ Public Class wndCreateObject
 
         If obj IsNot Nothing Then
             If TypeOf Me.Owner Is wndMain Then
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
-                CType(Me.Owner, wndMain).RefreshSearchResults()
+                ' TODO 
+                'If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
+                'CType(Me.Owner, wndMain).RefreshSearchResults()
             End If
             If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Me.Owner)
             If chbCloseWindow.IsChecked = True Then Me.Close()

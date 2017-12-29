@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -4201,6 +4201,24 @@ Namespace My.Resources
         Public ReadOnly Property wndPreferences_lbl_Behavior_CloseOnXButtonDefinition() As String
             Get
                 Return ResourceManager.GetString("wndPreferences_lbl_Behavior_CloseOnXButtonDefinition", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Page interface.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_PageInterface() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_PageInterface", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Interface is optimized for mobile devices.
+        '''</summary>
+        Public ReadOnly Property wndPreferences_lbl_Behavior_PageInterfaceDefinition() As String
+            Get
+                Return ResourceManager.GetString("wndPreferences_lbl_Behavior_PageInterfaceDefinition", resourceCulture)
             End Get
         End Property
         
