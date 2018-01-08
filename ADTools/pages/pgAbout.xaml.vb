@@ -1,6 +1,6 @@
 ﻿Imports System.Reflection
 
-Public Class wndAbout
+Public Class pgAbout
 
     Public ReadOnly Property AppName As String
         Get

@@ -1,16 +1,18 @@
 ﻿<Page x:Class="pgMain"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ADTools"
-      xmlns:r="clr-namespace:ADTools.My.Resources"
-      mc:Ignorable="d"
-      WindowTitle="ADTools"
-      d:DesignWidth="1024"
-      d:DesignHeight="368"
-      KeepAlive="True"
-      DataContext="{Binding RelativeSource={RelativeSource Self}}">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
+        mc:Ignorable="d"
+        WindowTitle="ADTools"
+        d:DesignWidth="1024"
+        d:DesignHeight="368"
+        KeepAlive="True"
+        Title="ADTools"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        >
     
     <Grid>
         <!--<Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
@@ -102,6 +104,12 @@
                         <TabItem x:Name="mnuView" Header="{x:Static r:Resources.wndMain_mnuView}">
                             <StackPanel Orientation="Horizontal">
                                 <DockPanel>
+                                    <ToggleButton x:Name="togbViewPageInterface" Margin="3" Width="100" IsChecked="{Binding Path=PageInterface}">
+                                        <DockPanel>
+                                            <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterface}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>
+                                            <Image Source="/images/view_pageinterface.png" Stretch="Uniform" MaxHeight="48"/>
+                                        </DockPanel>
+                                    </ToggleButton>
                                     <ToggleButton x:Name="togbViewShowNavigation" Margin="3" Width="100" IsChecked="{Binding Path=ViewShowNavigation}">
                                         <DockPanel>
                                             <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" TextWrapping="Wrap" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center"/>

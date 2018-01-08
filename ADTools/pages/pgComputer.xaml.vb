@@ -3,10 +3,10 @@ Imports System.Net.NetworkInformation
 Imports System.Windows.Threading
 Imports IPrompt.VisualBasic
 
-Public Class wndComputer
+Public Class pgComputer
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
-                                                            GetType(wndComputer),
+                                                            GetType(pgComputer),
                                                             New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
     Private Property _currentobject As clsDirectoryObject
@@ -22,7 +22,7 @@ Public Class wndComputer
     End Property
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As wndComputer = CType(d, wndComputer)
+        Dim instance As pgComputer = CType(d, pgComputer)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
         End With
@@ -30,17 +30,6 @@ Public Class wndComputer
 
     Public Property events As New clsThreadSafeObservableCollection(Of clsEvent)
     Public WithEvents wmisearcher As New clsWmi
-
-    Private Sub wndComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        dgEvents.ItemsSource = events
-
-        dtpPeriodTo.Value = Now
-        dtpPeriodFrom.Value = Now.AddDays(-1)
-    End Sub
-
-    Private Sub wndComputer_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If Me.Owner IsNot Nothing Then Me.Owner.Activate() 'magic - if we don't do that and wndUser(this) had children, wndMain becomes not focused and even under VisualStudio window, so we bring it back
-    End Sub
 
     Private Sub dtpPeriodFrom_ValueChanged(sender As Object, e As RoutedPropertyChangedEventArgs(Of Object)) Handles dtpPeriodFrom.ValueChanged
         If dtpPeriodTo.Value < dtpPeriodFrom.Value Then dtpPeriodTo.Value = dtpPeriodFrom.Value
@@ -64,7 +53,14 @@ Public Class wndComputer
     End Sub
 
     Private Sub hlManagedBy_Click(sender As Object, e As RoutedEventArgs) Handles hlManagedBy.Click
-        ShowDirectoryObjectProperties(currentobject.managedBy, Me)
+        ShowDirectoryObjectProperties(CurrentObject.managedBy, Window.GetWindow(Me))
+    End Sub
+
+    Private Sub pgComputer_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+        dgEvents.ItemsSource = events
+
+        dtpPeriodTo.Value = Now
+        dtpPeriodFrom.Value = Now.AddDays(-1)
     End Sub
 
 End Class

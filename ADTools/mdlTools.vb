@@ -235,112 +235,115 @@ Module mdlTools
             End Sub)
     End Sub
 
-    Public Function ShowPage(w As Window, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As Window
-        If applicationdeactivating Then Return Nothing
-
-
-    End Function
-
-    Public Function ShowPage(p As Page, Optional owner As NavigationWindow = Nothing, Optional singleinstance As Boolean = False, Optional modal As Boolean = False) As NavigationWindow
+    Public Function ShowPage(p As Page, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As NavigationWindow
         If applicationdeactivating Then Return Nothing
         If p Is Nothing Then Return Nothing
 
-        If owner Is Nothing Then
+        Dim w As NavigationWindow = Nothing
 
-            If singleinstance Then
-                If owner IsNot Nothing Then
-                    For Each wnd As Window In owner.OwnedWindows
-                        If w.GetType Is wnd.GetType Then
-                            w = wnd
-                            w.Show() : w.Activate()
-                            If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                            w.Topmost = True : w.Topmost = False
-                            w.Owner = owner
-                            Return w
-                        End If
-                    Next
-                Else
-                    For Each wnd As Window In Application.Current.Windows
-                        If w.GetType Is wnd.GetType Then
-                            w = wnd
-                            w.Show() : w.Activate()
-                            If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                            w.Topmost = True : w.Topmost = False
-                            w.Owner = Nothing
-                            Return w
-                        End If
-                    Next
-                End If
-            End If
+        If preferences.PageInterface Then
 
-            w.Owner = owner
-            If modal Then
-                w.ShowDialog()
+            If owner Is Nothing Then
+                w = New NavigationWindow
             Else
-                w.Show()
+                w = owner
             End If
+
+            w.Navigate(p)
             Return w
-        End If
 
-        Dim w As NavigationWindow
-        If owner IsNot Nothing Then
-            w = owner
         Else
-            w = New NavigationWindow
+
+            If owner Is Nothing Then
+
+                w = New NavigationWindow
+                w.WindowStartupLocation = WindowStartupLocation.CenterScreen
+                w.ShowInTaskbar = False
+                w.Navigate(p)
+                w.UpdateLayout()
+
+                If modal Then
+                    w.ShowDialog()
+                Else
+                    w.Show()
+                End If
+
+                Return w
+
+            Else
+
+                For Each wnd As NavigationWindow In owner.OwnedWindows
+                    If p.GetType Is wnd.Content.GetType AndAlso
+                        (TypeOf p Is pgComputer Or
+                        TypeOf p Is pgContact Or
+                        TypeOf p Is pgGroup Or
+                        TypeOf p Is pgOrganizationalUnit Or
+                        TypeOf p Is pgUnknownObject Or
+                        TypeOf p Is pgUser) AndAlso
+                            wnd.Content.CurrentObject Is CType(p, Object).CurrentObject Then
+                        w = wnd
+                        w.Show() : w.Activate()
+                        If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
+                        w.Topmost = True : w.Topmost = False
+                    End If
+                Next
+
+                If w Is Nothing Then w = New NavigationWindow
+                w.Owner = owner
+                w.WindowStartupLocation = WindowStartupLocation.CenterOwner
+                w.ShowInTaskbar = False
+                w.Navigate(p)
+                w.UpdateLayout()
+
+                If modal Then
+                    w.ShowDialog()
+                Else
+                    w.Show()
+                End If
+
+                Return w
+
+            End If
+
         End If
 
-        w.Navigate(p)
-        Return w
     End Function
 
-    Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As Window
-        Dim w As Window
+    Public Sub ClearWindowHistory(w As NavigationWindow)
+        If Not w.CanGoBack AndAlso Not w.CanGoForward Then Exit Sub
+
+        Dim entry = w.RemoveBackEntry()
+        While entry IsNot Nothing
+            entry = w.RemoveBackEntry()
+        End While
+
+        w.Navigate(New PageFunction(Of String)() With {.RemoveFromJournal = True})
+    End Sub
+
+    Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As NavigationWindow
+        Dim p As Page
 
         If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
-            w = New wndUser
-            CType(w, wndUser).CurrentObject = obj
+            p = New pgUser
+            CType(p, pgUser).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
-            w = New wndContact
-            CType(w, wndContact).CurrentObject = obj
+            p = New pgContact
+            CType(p, pgContact).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
-            w = New wndComputer
-            CType(w, wndComputer).CurrentObject = obj
+            p = New pgComputer
+            CType(p, pgComputer).CurrentObject = obj
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
-            w = New wndGroup
-            CType(w, wndGroup).CurrentObject = obj
+            p = New pgGroup
+            CType(p, pgGroup).CurrentObject = obj
         ElseIf obj.objectClass.Contains("organizationalunit") Then
-            w = New wndOrganizationalUnit
-            CType(w, wndOrganizationalUnit).CurrentObject = obj
+            p = New pgOrganizationalUnit
+            CType(p, pgOrganizationalUnit).CurrentObject = obj
         Else
-            w = New wndUnknownObject
-            CType(w, wndUnknownObject).CurrentObject = obj
+            p = New pgUnknownObject
+            CType(p, pgUnknownObject).CurrentObject = obj
         End If
 
-        Dim rootwindow As Window = Nothing
-        If owner IsNot Nothing Then
-            rootwindow = owner
-            While rootwindow.Owner IsNot Nothing AndAlso TypeOf rootwindow IsNot wndMain
-                rootwindow = rootwindow.Owner
-            End While
-        End If
-
-        If rootwindow IsNot Nothing Then
-
-            For Each wnd As Window In rootwindow.OwnedWindows
-                If w.GetType Is wnd.GetType AndAlso CType(wnd, Object).CurrentObject Is obj Then
-                    w = wnd
-                    w.Show() : w.Activate()
-                    If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
-                    w.Topmost = True : w.Topmost = False
-                    Return w
-                End If
-            Next
-
-            w.Owner = rootwindow
-        End If
-
-        w.Show()
-        Return w
+        Return ShowPage(p, False, owner, False)
     End Function
 
     Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
@@ -778,9 +781,10 @@ Module mdlTools
     End Function
 
     Public Sub ApplicationDeactivate()
-        Dim w As New wndAboutDonate
-        ShowPage(w, True, Nothing, True)
-        applicationdeactivating = True
+        'Dim w As New wndAboutDonate
+        'ShowPage(w, True, Nothing, True)
+        'applicationdeactivating = True
+        Application.Current.Shutdown()
     End Sub
 
     Public Sub Donate()

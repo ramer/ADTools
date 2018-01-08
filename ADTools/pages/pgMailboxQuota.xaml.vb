@@ -1,6 +1,6 @@
 ﻿Imports System.ComponentModel
 
-Public Class wndMailboxQuota
+Public Class pgMailboxQuota
 
     Public Property mailbox As clsMailbox
 
@@ -172,10 +172,6 @@ Public Class wndMailboxQuota
         ValidateProhibitSendReceiveQuota()
     End Sub
 
-    Private Sub wndMailboxQuota_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If Me.Owner IsNot Nothing Then Me.Owner.Activate() 'magic - if we don't do that and wndUser(this) had children, wndMain becomes not focused and even under VisualStudio window, so we bring it back
-    End Sub
-
     Private Async Sub btnOK_Click(sender As Object, e As RoutedEventArgs) Handles btnOK.Click
         cap.Visibility = Visibility.Visible
 
@@ -192,7 +188,7 @@ Public Class wndMailboxQuota
 
         cap.Visibility = Visibility.Hidden
 
-        Me.Close()
+        'TODO Me.Close()
     End Sub
 
     Private Function StringToLong(str) As Long

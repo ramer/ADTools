@@ -2,7 +2,7 @@
 Imports System.DirectoryServices.Protocols
 Imports IPrompt.VisualBasic
 
-Public Class wndCreateObject
+Public Class pgCreateObject
     Public Property destinationdomain As clsDomain
     Public Property destinationcontainer As clsDirectoryObject
     Public Property copyingobject As clsDirectoryObject = Nothing
@@ -25,18 +25,18 @@ Public Class wndCreateObject
     Private Sub btnContainerBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnContainerBrowse.Click
         If cmboDomain.SelectedItem Is Nothing Then Exit Sub
 
-        Dim domainbrowser As New wndDomainBrowser
+        Dim domainbrowser As New pgDomainBrowser
         Dim domain As clsDomain = CType(cmboDomain.SelectedItem, clsDomain)
 
         domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
-        ShowPage(domainbrowser, True, Me, True)
+        ShowPage(domainbrowser, True, Window.GetWindow(Me), True)
 
-        If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
-            domain.SearchRoot = domainbrowser.currentobject.distinguishedName
+        'TODO If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
+        domain.SearchRoot = domainbrowser.currentobject.distinguishedName
             destinationdomain = CType(cmboDomain.SelectedItem, clsDomain)
             destinationcontainer = domainbrowser.currentobject
             tbContainer.Text = destinationcontainer.distinguishedNameFormated
-        End If
+        'End If
     End Sub
 
     Private Sub cmboUserUserPrincipalName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboUserUserPrincipalName.DropDownOpened
@@ -71,18 +71,14 @@ Public Class wndCreateObject
         cap.Visibility = Visibility.Hidden
 
         If obj IsNot Nothing Then
-            If TypeOf Me.Owner Is wndMain Then
+            If TypeOf Window.GetWindow(Me) Is wndMain Then
                 ' TODO 
                 'If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
                 'CType(Me.Owner, wndMain).RefreshSearchResults()
             End If
-            If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Me.Owner)
-            If chbCloseWindow.IsChecked = True Then Me.Close()
+            If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Window.GetWindow(Me))
+            'TODO If chbCloseWindow.IsChecked = True Then NavigationService.GoBack()
         End If
-    End Sub
-
-    Private Sub wndCreateObject_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If Me.Owner IsNot Nothing Then Me.Owner.Activate() 'magic - if we don't do that and wndUser(this) had children, wndMain becomes not focused and even under VisualStudio window, so we bring it back
     End Sub
 
     Private Async Function CreateUser() As Task(Of clsDirectoryObject)

@@ -1,4 +1,4 @@
-﻿<Window x:Class="wndMailboxShare"
+﻿<Page x:Class="pgMailboxShare"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,13 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="{x:Static r:Resources.wndMailboxShare_lbl_SharedMailbox}" Height="674.893" Width="821.546"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
+        d:DesignHeight="675" d:DesignWidth="820"
+        WindowTitle="{x:Static r:Resources.wndMailboxShare_lbl_SharedMailbox}"
+        WindowHeight="675"
+        WindowWidth="820"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        >
+    
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <Grid Margin="5,5,5,7">
@@ -145,4 +150,4 @@
             </DockPanel>
         </Grid>
     </Grid>
-</Window>
+</Page>

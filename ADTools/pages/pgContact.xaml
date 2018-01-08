@@ -1,24 +1,17 @@
-﻿<Window x:Class="wndContact"
+﻿<Page x:Class="pgContact"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="{Binding name, Mode=OneWay}"
-        Height="540"
-        Width="675"
-        WindowStartupLocation="CenterOwner"
-        ShowInTaskbar="False"
-        Icon="{Binding ClassImage}"
+        d:DesignHeight="540" d:DesignWidth="675"
+        WindowTitle="{Binding name, Mode=OneWay}"
+        WindowHeight="540"
+        WindowWidth="675"
         DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
         >
-
-    <Window.Resources>
-        <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
-    </Window.Resources>
     
     <Grid>
         <TabControl x:Name="tabctlContact" Margin="5">
@@ -154,4 +147,4 @@
         </TabControl>
 
     </Grid>
-</Window>
+</Page>

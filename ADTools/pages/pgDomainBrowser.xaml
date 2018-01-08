@@ -1,4 +1,4 @@
-﻿<Window x:Class="wndDomainBrowser"
+﻿<Page x:Class="pgDomainBrowser"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="{x:Static r:Resources.wndDomainBrowser_lbl_DomainBrowser}"
-        Height="800"
-        Width="400"
-        WindowStartupLocation="CenterOwner"
-        ShowInTaskbar="False"
-        Icon="/images/app.ico">
+        d:DesignHeight="800" d:DesignWidth="400"
+        WindowTitle="{x:Static r:Resources.wndDomainBrowser_lbl_DomainBrowser}"
+        WindowHeight="800"
+        WindowWidth="400"
+        >
     
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
@@ -33,4 +32,4 @@
             </TreeView>
         </DockPanel>
     </Grid>
-</Window>
+</Page>

@@ -1,4 +1,4 @@
-﻿<Window x:Class="wndMailboxQuota"
+﻿<Page x:Class="pgMailboxQuota"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        Title="{x:Static r:Resources.wndMailboxQuota_lbl_Quotas}" Height="254" Width="459.377" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Icon="/images/app.ico">
-
-    <Window.Resources>
-        <local:ConverterBooleanInverted x:Key="ConverterBooleanInverted" />
-    </Window.Resources>
+        d:DesignHeight="254" d:DesignWidth="460"
+        WindowTitle="{x:Static r:Resources.wndMailboxQuota_lbl_Quotas}"
+        WindowHeight="254"
+        WindowWidth="460"
+        >
 
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
@@ -51,4 +51,4 @@
             </StackPanel>
         </Border>
     </Grid>
-</Window>
+</Page>

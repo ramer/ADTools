@@ -1,4 +1,4 @@
-﻿Public Class wndAboutDonate
+﻿Public Class pgAboutDonate
 
     Public WithEvents closeTimer As New Threading.DispatcherTimer()
     Private counter As Integer

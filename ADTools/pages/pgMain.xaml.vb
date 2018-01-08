@@ -170,7 +170,7 @@ Class pgMain
     End Sub
 
     Private Sub mnuEditCreateObject_Click(sender As Object, e As RoutedEventArgs) Handles mnuEditCreateObject.Click
-        Dim w As New wndCreateObject
+        Dim w As New pgCreateObject
 
         If currentcontainer IsNot Nothing Then
             w.destinationcontainer = currentcontainer
@@ -184,12 +184,12 @@ Class pgMain
     End Sub
 
     Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click, ctxmnutviDomainsDomainOptions.Click
-        ShowPage(New pgDomains, Window.GetWindow(Me))
+        ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
         RefreshDomainTree()
     End Sub
 
     Private Sub mnuServicePreferences_Click(sender As Object, e As RoutedEventArgs) Handles mnuServicePreferences.Click
-        'TODO   ShowWindow(New wndPreferences, True, Me, True)
+        ShowPage(New pgPreferences, True, Window.GetWindow(Me), True)
         RefreshDomainTree()
     End Sub
 
@@ -204,20 +204,19 @@ Class pgMain
     End Sub
 
     Private Sub mnuSearchSaveCurrentFilter_Click(sender As Object, e As RoutedEventArgs) Handles mnuSearchSaveCurrentFilter.Click
-        'TODO   
-        'If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Me) : Exit Sub
+        If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.wndMain_msg_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Window.GetWindow(Me)) : Exit Sub
 
-        'Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterFilterName,,, vbQuestion, Me)
+        Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterFilterName,,, vbQuestion, Window.GetWindow(Me))
 
-        'If String.IsNullOrEmpty(name) Then Exit Sub
+        If String.IsNullOrEmpty(name) Then Exit Sub
 
-        'currentfilter.Name = name
-        'preferences.Filters.Add(currentfilter)
+        currentfilter.Name = name
+        preferences.Filters.Add(currentfilter)
     End Sub
 
     Private Sub mnuHelpAbout_Click(sender As Object, e As RoutedEventArgs) Handles mnuHelpAbout.Click
-        Dim w As New wndAbout
-        'TODO   ShowWindow(w, True, Me, False)
+        Dim p As New pgAbout
+        ShowPage(p, True, Window.GetWindow(Me), False)
     End Sub
 
 #End Region
@@ -456,7 +455,7 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
 
-        Dim w As New wndCreateObject
+        Dim w As New pgCreateObject
 
         If objects.Count = 1 AndAlso (
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
@@ -471,7 +470,7 @@ Class pgMain
             w.destinationdomain = Nothing
         End If
 
-        'TODO   ShowWindow(w, False, Me, False)
+        ShowPage(w, False, Window.GetWindow(Me), False)
     End Sub
 
     Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
@@ -668,8 +667,8 @@ Class pgMain
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)
-            Dim w As Window = ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
-            If GetType(wndUser) Is w.GetType Then CType(w, wndUser).tabctlUser.SelectedIndex = 1
+            ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
+            'TODO If GetType(wndUser) Is w.GetType Then CType(w, wndUser).tabctlUser.SelectedIndex = 1
 
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedExpirationDate_Click")
@@ -1195,7 +1194,7 @@ Class pgMain
 
             ' single object
 
-            Dim w As New wndCreateObject
+            Dim w As New pgCreateObject
             w.destinationcontainer = destination
             w.destinationdomain = destination.Domain
 
@@ -1237,7 +1236,7 @@ Class pgMain
                 Case Else
                     IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Window.GetWindow(Me))
             End Select
-            ' TODO  ShowWindow(w, False, Me, False)
+            ShowPage(w, False, Window.GetWindow(Me), False)
 
         Else ' another domain
             ' TODO

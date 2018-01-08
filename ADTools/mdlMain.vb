@@ -145,7 +145,7 @@ Public Class ADToolsApplication
 
     Public Shared Sub wndMainActivate()
         Dim w As New wndMain
-        ShowPage(w, True, Nothing, False)
+        w.Show()
     End Sub
 
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)

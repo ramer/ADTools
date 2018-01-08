@@ -5,7 +5,7 @@ Imports System.Threading.Tasks
 Imports CredentialManagement
 Imports IPrompt.VisualBasic
 
-Public Class wndPreferences
+Public Class pgPreferences
 
     Private attributesExtended As New ObservableCollection(Of clsAttribute)
     Private Property PluginProcessTelegramBot As Process
@@ -410,7 +410,7 @@ Public Class wndPreferences
             Try
                 Process.Start(IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot.exe"))
             Catch ex As Exception
-                IMsgBox(ex.Message, vbOKOnly + vbExclamation,, Me)
+                IMsgBox(ex.Message, vbOKOnly + vbExclamation,, Window.GetWindow(Me))
             End Try
         Else
             PluginProcessTelegramBot.Kill()

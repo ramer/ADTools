@@ -1,15 +1,17 @@
 ﻿<Page x:Class="pgDomains"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:ADTools"
-      xmlns:r="clr-namespace:ADTools.My.Resources"
-      mc:Ignorable="d" 
-      WindowHeight="600"
-      WindowWidth="762"
-      d:DesignHeight="600" d:DesignWidth="762"
-      Title="pgDomains">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:ADTools"
+        xmlns:r="clr-namespace:ADTools.My.Resources"
+        mc:Ignorable="d" 
+        d:DesignHeight="600" d:DesignWidth="762"
+        WindowHeight="600"
+        WindowWidth="762"
+        WindowTitle="pgDomains"
+        >
+    
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <Grid>

@@ -1,5 +1,5 @@
 ﻿
-Public Class wndDomainBrowser
+Public Class pgDomainBrowser
 
     Public Property currentobject As clsDirectoryObject
     Public Property rootobject As clsDirectoryObject
@@ -23,6 +23,6 @@ Public Class wndDomainBrowser
     End Sub
 
     Private Sub btnOK_Click(sender As Object, e As RoutedEventArgs) Handles btnOK.Click
-        DialogResult = True
+        'TODO DialogResult = True
     End Sub
 End Class

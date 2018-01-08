@@ -1,6 +1,4 @@
-﻿
-Imports System.ComponentModel
-Imports IRegisty
+﻿Imports IRegisty
 Imports IPrompt.VisualBasic
 
 Public Class pgDomains
@@ -65,15 +63,15 @@ Public Class pgDomains
     Private Sub btnSearchRootBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnSearchRootBrowse.Click
         If lvDomains.SelectedItem Is Nothing Then Exit Sub
 
-        Dim domainbrowser As New wndDomainBrowser
+        Dim domainbrowser As New pgDomainBrowser
         Dim domain As clsDomain = CType(lvDomains.SelectedItem, clsDomain)
 
         domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
         ShowPage(domainbrowser, True, Window.GetWindow(Me), True)
 
-        If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
-            domain.SearchRoot = domainbrowser.currentobject.distinguishedName
-        End If
+        'TODO If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
+        domain.SearchRoot = domainbrowser.currentobject.distinguishedName
+        'End If
     End Sub
 
     Private Sub hlTemplateHelp_Click(sender As Object, e As RoutedEventArgs) Handles hlTemplateHelp.Click

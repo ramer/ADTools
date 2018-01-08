@@ -177,53 +177,53 @@
     <Compile Include="pages\pgMain.xaml.vb">
       <DependentUpon>pgMain.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndAbout.xaml.vb">
-      <DependentUpon>wndAbout.xaml</DependentUpon>
+    <Compile Include="pages\pgUser.xaml.vb">
+      <DependentUpon>pgUser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndAboutDonate.xaml.vb">
-      <DependentUpon>wndAboutDonate.xaml</DependentUpon>
+    <Compile Include="pages\pgAbout.xaml.vb">
+      <DependentUpon>pgAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndComputer.xaml.vb">
-      <DependentUpon>wndComputer.xaml</DependentUpon>
+    <Compile Include="pages\pgAboutDonate.xaml.vb">
+      <DependentUpon>pgAboutDonate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndContact.xaml.vb">
-      <DependentUpon>wndContact.xaml</DependentUpon>
+    <Compile Include="pages\pgComputer.xaml.vb">
+      <DependentUpon>pgComputer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndCreateObject.xaml.vb">
-      <DependentUpon>wndCreateObject.xaml</DependentUpon>
+    <Compile Include="pages\pgContact.xaml.vb">
+      <DependentUpon>pgContact.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndDomainBrowser.xaml.vb">
-      <DependentUpon>wndDomainBrowser.xaml</DependentUpon>
+    <Compile Include="pages\pgCreateObject.xaml.vb">
+      <DependentUpon>pgCreateObject.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndErrorLog.xaml.vb">
+    <Compile Include="pages\pgDomainBrowser.xaml.vb">
+      <DependentUpon>pgDomainBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\wndErrorLog.xaml.vb">
       <DependentUpon>wndErrorLog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndGroup.xaml.vb">
-      <DependentUpon>wndGroup.xaml</DependentUpon>
+    <Compile Include="pages\pgGroup.xaml.vb">
+      <DependentUpon>pgGroup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndLog.xaml.vb">
+    <Compile Include="pages\wndLog.xaml.vb">
       <DependentUpon>wndLog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndMailboxQuota.xaml.vb">
-      <DependentUpon>wndMailboxQuota.xaml</DependentUpon>
+    <Compile Include="pages\pgMailboxQuota.xaml.vb">
+      <DependentUpon>pgMailboxQuota.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndMailboxShare.xaml.vb">
-      <DependentUpon>wndMailboxShare.xaml</DependentUpon>
+    <Compile Include="pages\pgMailboxShare.xaml.vb">
+      <DependentUpon>pgMailboxShare.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndOrganizationalUnit.xaml.vb">
-      <DependentUpon>wndOrganizationalUnit.xaml</DependentUpon>
+    <Compile Include="pages\pgOrganizationalUnit.xaml.vb">
+      <DependentUpon>pgOrganizationalUnit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndPreferences.xaml.vb">
-      <DependentUpon>wndPreferences.xaml</DependentUpon>
+    <Compile Include="pages\pgPreferences.xaml.vb">
+      <DependentUpon>pgPreferences.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndUnknownObject.xaml.vb">
-      <DependentUpon>wndUnknownObject.xaml</DependentUpon>
+    <Compile Include="pages\pgUnknownObject.xaml.vb">
+      <DependentUpon>pgUnknownObject.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndUser.xaml.vb">
-      <DependentUpon>wndUser.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="windows\wndUserPhoto.xaml.vb">
-      <DependentUpon>wndUserPhoto.xaml</DependentUpon>
+    <Compile Include="pages\pgUserPhoto.xaml.vb">
+      <DependentUpon>pgUserPhoto.xaml</DependentUpon>
     </Compile>
     <Page Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -281,51 +281,51 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndAbout.xaml">
+    <Page Include="pages\pgUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndAboutDonate.xaml">
+    <Page Include="pages\pgAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndComputer.xaml">
+    <Page Include="pages\pgAboutDonate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndContact.xaml">
+    <Page Include="pages\pgComputer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndCreateObject.xaml">
+    <Page Include="pages\pgContact.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndDomainBrowser.xaml">
+    <Page Include="pages\pgCreateObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndDomains.xaml">
+    <Page Include="pages\pgDomainBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndErrorLog.xaml">
+    <Page Include="pages\wndErrorLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndGroup.xaml">
+    <Page Include="pages\pgGroup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndLog.xaml">
+    <Page Include="pages\wndLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndMailboxQuota.xaml">
+    <Page Include="pages\pgMailboxQuota.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndMailboxShare.xaml">
+    <Page Include="pages\pgMailboxShare.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -344,30 +344,23 @@
     </Compile>
     <Compile Include="mdlMain.vb" />
     <Compile Include="mdlTools.vb" />
-    <Compile Include="windows\wndDomains.xaml.vb">
-      <DependentUpon>wndDomains.xaml</DependentUpon>
-    </Compile>
     <Compile Include="windows\wndMain.xaml.vb">
       <DependentUpon>wndMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="windows\wndOrganizationalUnit.xaml">
+    <Page Include="pages\pgOrganizationalUnit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndPreferences.xaml">
+    <Page Include="pages\pgPreferences.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndUnknownObject.xaml">
+    <Page Include="pages\pgUnknownObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndUser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="windows\wndUserPhoto.xaml">
+    <Page Include="pages\pgUserPhoto.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -478,6 +471,7 @@
     <Resource Include="images\clipboard_limit.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
+    <Resource Include="images\view_pageinterface.png" />
     <Content Include="libraries\Xceed.Wpf.Toolkit.dll" />
     <Content Include="libraries\CredentialManagement.dll" />
     <Content Include="libraries\IPrint.dll" />

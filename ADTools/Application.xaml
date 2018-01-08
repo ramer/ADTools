@@ -7,12 +7,17 @@
 >
 
     <Application.Resources>
-        <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
+        <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
+        <local:ConverterBooleanInverted x:Key="ConverterBooleanInverted" />
         <local:ConverterBooleanToEnum x:Key="ConverterBooleanToEnum" />
         <local:ConverterBooleanToVisibility x:Key="ConverterBooleanToVisibility"/>
-        <local:ConverterBooleanToWidthStar x:Key="ConverterBooleanToWidthStar"/>
-        <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
         <local:ConverterBooleanToVisibilityInverted x:Key="ConverterBooleanToVisibilityInverted"/>
+        <local:ConverterBooleanToWidthStar x:Key="ConverterBooleanToWidthStar"/>
+        <local:ConverterDataToUIElement x:Key="ConverterDataToUIElement" />
+        <local:ConverterDesiredWidthToVisibility x:Key="ConverterDesiredWidthToVisibility" />
+        <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
+        <local:ConverterToInlinesWithHyperlink x:Key="ConverterToInlinesWithHyperlink"/>
+        <local:ConverterToSingleLine x:Key="ConverterToSingleLine"/>
         
         <SolidColorBrush  Color="Black" x:Key="ColorText" />
         <SolidColorBrush  Color="WhiteSmoke" x:Key="ColorWindowBackground" />
@@ -23,26 +28,182 @@
         <SolidColorBrush  Color="White" x:Key="ColorListviewRow" />
         <SolidColorBrush  Color="AliceBlue" x:Key="ColorListviewAlternationRow" />
 
+        <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border BorderThickness="0" BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid Background="{TemplateBinding Background}">
+                                <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
+                                <Border Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter x:Name="MyContentPresenter" 
+                                                  Content="{TemplateBinding Content}"
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.2" />
+                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.6" Duration="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="NavigationWindow" x:Key="{x:Type NavigationWindow}">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="31" ResizeBorderThickness="4" GlassFrameThickness="-10"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="NavigationWindow">
+
+                        <!--If there is no wrap container for DockPanel it's margin take no effect-->
+                        <Grid>
+
+                            <DockPanel>
+                                <!--Main DockPanel Margin depends on WindowState-->
+                                <DockPanel.Style>
+                                    <Style TargetType="DockPanel">
+                                        <Setter Property="Margin" Value="0" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                                                <Setter Property="Margin" Value="6" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DockPanel.Style>
+
+                                <!--Header DockPanel-->
+                                <DockPanel LastChildFill="True" DockPanel.Dock="Top" Height="31" WindowChrome.IsHitTestVisibleInChrome="True" Margin="0,0,150,0">
+
+                                    <!--Back Button-->
+                                    <!--Background="{x:Static SystemParameters.WindowGlassBrush}"-->
+                                    <!--Foreground="{x:Static SystemColors.HighlightTextBrush}"-->
+                                    <Button Focusable="False" Style="{StaticResource ToolbarButton}" Command="NavigationCommands.BrowseBack" Width="45" VerticalAlignment="Stretch">
+                                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock.RenderTransform>
+                                                <TransformGroup>
+                                                    <RotateTransform Angle="270"/>
+                                                </TransformGroup>
+                                            </TextBlock.RenderTransform>
+                                        </TextBlock>
+                                    </Button>
+
+                                    <!--Forward Button-->
+                                    <Button Focusable="False" Style="{StaticResource ToolbarButton}" Command="NavigationCommands.BrowseForward" Width="32" VerticalAlignment="Stretch">
+                                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="-3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
+                                            <TextBlock.RenderTransform>
+                                                <TransformGroup>
+                                                    <RotateTransform Angle="90"/>
+                                                </TransformGroup>
+                                            </TextBlock.RenderTransform>
+                                        </TextBlock>
+                                    </Button>
+
+                                    <!--Page History-->
+                                    <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type NavigationWindow}}, Path=BackStack}" VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel KeyboardNavigation.TabNavigation="Cycle"
+                                                    KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Command="NavigationCommands.NavigateJournal"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                                Content="{Binding Name}">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <WrapPanel>
+                                                                <TextBlock Name="text1" FontWeight="Bold" Text="{TemplateBinding Content}" Margin="5,0,0,0"/>
+                                                                <TextBlock Name="text2" FontWeight="Bold" Text=">" Margin="2,0,0,0"/>
+                                                            </WrapPanel>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="text1" Property="Foreground" Value="Blue"/>
+                                                                    <Setter TargetName="text2" Property="Foreground" Value="Blue"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    
+                                    <!--Current Page-->
+                                    <Button Command="NavigationCommands.Refresh"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Self}}"
+                                    Content="{Binding Name}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <WrapPanel>
+                                                    <TextBlock Name="text1" FontWeight="Bold" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" Margin="5,0,0,0"/>
+                                                </WrapPanel>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="text1" Property="Foreground" Value="Blue"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </DockPanel>
+
+                                <!--Window Content-->
+                                <Border>
+                                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                                </Border>
+
+                            </DockPanel>
+
+                        </Grid>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="Window">
             <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}" />
         </Style>
-        <Style TargetType="{x:Type local:wndAbout}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndComputer}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndContact}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndCreateObject}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndDomainBrowser}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndDomains}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndErrorLog}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndGroup}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndLog}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndMailboxQuota}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndMailboxShare}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndMain}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndOrganizationalUnit}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndPreferences}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndUnknownObject}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndUser}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndUserPhoto}" BasedOn="{StaticResource {x:Type Window}}"/>
+
+        <Style TargetType="{x:Type local:wndMain}" BasedOn="{StaticResource {x:Type NavigationWindow}}"/>
 
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
@@ -79,57 +240,6 @@
                                               Content="{TemplateBinding Content}"
                                               HorizontalAlignment="Center" 
                                               VerticalAlignment="Center" />
-                                </Border>
-                            </Grid>
-
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.2" />
-                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
-                                    </VisualStateGroup.Transitions>
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.6" Duration="0"/>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource ColorButtonInactiveBackground}"/>
-                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="{x:Type Button}" x:Key="ToolbarButton">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
-            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border BorderThickness="0" BorderBrush="{TemplateBinding BorderBrush}">
-                            <Grid Background="{TemplateBinding Background}">
-                                <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
-                                <Border Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter x:Name="MyContentPresenter" 
-                                                  Content="{TemplateBinding Content}"
-                                                  HorizontalAlignment="Center" 
-                                                  VerticalAlignment="Center" />
                                 </Border>
                             </Grid>
 

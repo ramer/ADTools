@@ -2,7 +2,7 @@
 Imports System.ComponentModel
 Imports IPrompt.VisualBasic
 
-Public Class wndMailboxShare
+Public Class pgMailboxShare
 
     Public WithEvents searcherusers As New clsSearcher
 
@@ -111,28 +111,24 @@ Public Class wndMailboxShare
         End If
     End Sub
 
-    Private Sub wndMailboxShare_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        If Me.Owner IsNot Nothing Then Me.Owner.Activate() 'magic - if we don't do that and wndUser(this) had children, wndMain becomes not focused and even under VisualStudio window, so we bring it back
-    End Sub
-
     Private Sub lvUsers_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvUsers.MouseDoubleClick
         If lvUsers.SelectedItem Is Nothing Then Exit Sub
-        ShowDirectoryObjectProperties(lvUsers.SelectedItem, Me)
+        ShowDirectoryObjectProperties(lvUsers.SelectedItem, Window.GetWindow(Me))
     End Sub
 
     Private Sub lvFullAccess_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvFullAccess.MouseDoubleClick
         If lvFullAccess.SelectedItem Is Nothing Then Exit Sub
-        ShowDirectoryObjectProperties(lvFullAccess.SelectedItem, Me)
+        ShowDirectoryObjectProperties(lvFullAccess.SelectedItem, Window.GetWindow(Me))
     End Sub
 
     Private Sub lvSendAs_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvSendAs.MouseDoubleClick
         If lvSendAs.SelectedItem Is Nothing Then Exit Sub
-        ShowDirectoryObjectProperties(lvSendAs.SelectedItem, Me)
+        ShowDirectoryObjectProperties(lvSendAs.SelectedItem, Window.GetWindow(Me))
     End Sub
 
     Private Sub lvSendOnBehalf_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvSendOnBehalf.MouseDoubleClick
         If lvSendOnBehalf.SelectedItem Is Nothing Then Exit Sub
-        ShowDirectoryObjectProperties(lvSendOnBehalf.SelectedItem, Me)
+        ShowDirectoryObjectProperties(lvSendOnBehalf.SelectedItem, Window.GetWindow(Me))
     End Sub
 
 End Class
