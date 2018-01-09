@@ -177,6 +177,9 @@
     <Compile Include="pages\pgMain.xaml.vb">
       <DependentUpon>pgMain.xaml</DependentUpon>
     </Compile>
+    <Compile Include="pages\pgObjects.xaml.vb">
+      <DependentUpon>pgObjects.xaml</DependentUpon>
+    </Compile>
     <Compile Include="pages\pgUser.xaml.vb">
       <DependentUpon>pgUser.xaml</DependentUpon>
     </Compile>
@@ -278,6 +281,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="pages\pgMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\pgObjects.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
