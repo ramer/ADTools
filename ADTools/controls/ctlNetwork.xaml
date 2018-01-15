@@ -13,7 +13,7 @@
     </UserControl.Resources>
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
-        <DockPanel Margin="5">
+        <DockPanel>
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkAvailabilityICMP}" Margin="0,0,0,5"/>
                 <WrapPanel x:Name="wpPing"/>

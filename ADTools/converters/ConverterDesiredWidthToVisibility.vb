@@ -4,7 +4,6 @@ Public NotInheritable Class ConverterDesiredWidthToVisibility
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-        If TypeOf value IsNot Double Then Throw New ArgumentException
         If Not IsNumeric(parameter) Then Throw New ArgumentException
         If CType(value, Double) > parameter Then
             Return Visibility.Visible

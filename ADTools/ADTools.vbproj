@@ -163,6 +163,7 @@
     <Compile Include="converters\ConverterBooleanToWidthStar.vb" />
     <Compile Include="converters\ConverterDataToUIElement.vb" />
     <Compile Include="converters\ConverterDesiredWidthToVisibility.vb" />
+    <Compile Include="converters\ConverterEnumToVisibility.vb" />
     <Compile Include="converters\ConverterIntegerToVisibility.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
@@ -171,17 +172,62 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="pages\object\pgComputerBasicInformation.xaml.vb">
+      <DependentUpon>pgComputerBasicInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgComputerLoginEventLog.xaml.vb">
+      <DependentUpon>pgComputerLoginEventLog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgComputerNetwork.xaml.vb">
+      <DependentUpon>pgComputerNetwork.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgContactBasicInformation.xaml.vb">
+      <DependentUpon>pgContactBasicInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgContactExchange.xaml.vb">
+      <DependentUpon>pgContactExchange.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgGroupBasicInformation.xaml.vb">
+      <DependentUpon>pgGroupBasicInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgGroupOrganization.xaml.vb">
+      <DependentUpon>pgGroupOrganization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgOrganizationalUnitBasicInformation.xaml.vb">
+      <DependentUpon>pgOrganizationalUnitBasicInformation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgUserOrganization.xaml.vb">
+      <DependentUpon>pgUserOrganization.xaml</DependentUpon>
+    </Compile>
     <Compile Include="pages\pgDomains.xaml.vb">
       <DependentUpon>pgDomains.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgMain.xaml.vb">
       <DependentUpon>pgMain.xaml</DependentUpon>
     </Compile>
+    <Compile Include="pages\object\pgObject.xaml.vb">
+      <DependentUpon>pgObject.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgObjectAllAttributes.xaml.vb">
+      <DependentUpon>pgObjectAllAttributes.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgUserExchange.xaml.vb">
+      <DependentUpon>pgUserExchange.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgObjectMember.xaml.vb">
+      <DependentUpon>pgObjectMember.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgObjectMemberOf.xaml.vb">
+      <DependentUpon>pgObjectMemberOf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="pages\object\pgUserObject.xaml.vb">
+      <DependentUpon>pgUserObject.xaml</DependentUpon>
+    </Compile>
     <Compile Include="pages\pgObjects.xaml.vb">
       <DependentUpon>pgObjects.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgUser.xaml.vb">
-      <DependentUpon>pgUser.xaml</DependentUpon>
+    <Compile Include="pages\object\pgUserBasicInformation.xaml.vb">
+      <DependentUpon>pgUserBasicInformation.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgAbout.xaml.vb">
       <DependentUpon>pgAbout.xaml</DependentUpon>
@@ -189,25 +235,16 @@
     <Compile Include="pages\pgAboutDonate.xaml.vb">
       <DependentUpon>pgAboutDonate.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgComputer.xaml.vb">
-      <DependentUpon>pgComputer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="pages\pgContact.xaml.vb">
-      <DependentUpon>pgContact.xaml</DependentUpon>
-    </Compile>
     <Compile Include="pages\pgCreateObject.xaml.vb">
       <DependentUpon>pgCreateObject.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgDomainBrowser.xaml.vb">
       <DependentUpon>pgDomainBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\wndErrorLog.xaml.vb">
+    <Compile Include="windows\wndErrorLog.xaml.vb">
       <DependentUpon>wndErrorLog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgGroup.xaml.vb">
-      <DependentUpon>pgGroup.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="pages\wndLog.xaml.vb">
+    <Compile Include="windows\wndLog.xaml.vb">
       <DependentUpon>wndLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgMailboxQuota.xaml.vb">
@@ -216,16 +253,10 @@
     <Compile Include="pages\pgMailboxShare.xaml.vb">
       <DependentUpon>pgMailboxShare.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgOrganizationalUnit.xaml.vb">
-      <DependentUpon>pgOrganizationalUnit.xaml</DependentUpon>
-    </Compile>
     <Compile Include="pages\pgPreferences.xaml.vb">
       <DependentUpon>pgPreferences.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgUnknownObject.xaml.vb">
-      <DependentUpon>pgUnknownObject.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="pages\pgUserPhoto.xaml.vb">
+    <Compile Include="pages\object\pgUserPhoto.xaml.vb">
       <DependentUpon>pgUserPhoto.xaml</DependentUpon>
     </Compile>
     <Page Include="Application.xaml">
@@ -276,6 +307,42 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="pages\object\pgComputerBasicInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgComputerLoginEventLog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgComputerNetwork.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgContactBasicInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgContactExchange.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgGroupBasicInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgGroupOrganization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgOrganizationalUnitBasicInformation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgUserOrganization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="pages\pgDomains.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -284,11 +351,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="pages\object\pgObject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgObjectAllAttributes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgUserExchange.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgObjectMember.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgObjectMemberOf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="pages\object\pgUserObject.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="pages\pgObjects.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgUser.xaml">
+    <Page Include="pages\object\pgUserBasicInformation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -300,14 +391,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgComputer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="pages\pgContact.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="pages\pgCreateObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -316,15 +399,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\wndErrorLog.xaml">
+    <Page Include="windows\wndErrorLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgGroup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="pages\wndLog.xaml">
+    <Page Include="windows\wndLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -355,19 +434,11 @@
       <DependentUpon>wndMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="pages\pgOrganizationalUnit.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="pages\pgPreferences.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgUnknownObject.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="pages\pgUserPhoto.xaml">
+    <Page Include="pages\object\pgUserPhoto.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,10 +1,11 @@
-﻿Public Class pgUserPhoto
+﻿Class pgUserOrganization
+
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
-                                                            GetType(pgUserPhoto),
+                                                            GetType(pgUserOrganization),
                                                             New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
-    Public Property _currentobject As clsDirectoryObject
+    Private Property _currentobject As clsDirectoryObject
 
     Public Property CurrentObject() As clsDirectoryObject
         Get
@@ -16,18 +17,19 @@
     End Property
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As pgUserPhoto = CType(d, pgUserPhoto)
+        Dim instance As pgUserOrganization = CType(d, pgUserOrganization)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
         End With
     End Sub
 
-    Private Sub imgPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgPhoto.MouseDown
-        NavigationService.GoBack()
+    Sub New(obj As clsDirectoryObject)
+        InitializeComponent()
+        CurrentObject = obj
     End Sub
 
-    Private Sub wndUserPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles Me.MouseDown
-        NavigationService.GoBack()
+    Private Sub hlManager_Click(sender As Object, e As RoutedEventArgs) Handles hlManager.Click
+        ShowDirectoryObjectProperties(CurrentObject.manager, Nothing)
     End Sub
 
 End Class

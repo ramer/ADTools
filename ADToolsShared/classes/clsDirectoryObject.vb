@@ -976,6 +976,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalNameName() As String
         Get
+            If userPrincipalName Is Nothing Then Return Nothing
             Dim s As String
             If userPrincipalName.Contains("@") Then
                 s = Split(userPrincipalName, "@")(0)
@@ -994,6 +995,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalNameDomain() As String
         Get
+            If userPrincipalName Is Nothing Then Return Nothing
             Dim s As String
             If userPrincipalName.Contains("@") Then
                 s = Split(userPrincipalName, "@")(1)

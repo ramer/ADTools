@@ -552,12 +552,9 @@ Class pgObjects
         End If
     End Sub
 
-
     Public Sub RefreshDomainTree()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
     End Sub
-
-
 
     Public Sub OpenObjectParent()
         If currentcontainer Is Nothing OrElse (currentcontainer.Parent Is Nothing OrElse currentcontainer.distinguishedName = currentcontainer.Domain.DefaultNamingContext) Then Exit Sub
@@ -577,6 +574,8 @@ Class pgObjects
             Dim buttons As New List(Of Button)
 
             Dim containerDN As String = container.distinguishedName
+
+            Title = GetNameFromDN(containerDN)
 
             Do
                 Dim btn As New Button
@@ -613,6 +612,7 @@ Class pgObjects
             tblck.Margin = New Thickness(2, 0, 2, 0)
             tblck.Padding = New Thickness(5, 0, 5, 0)
             spPath.Children.Add(tblck)
+            Title = tblck.Text
 
         End If
     End Sub
@@ -987,14 +987,6 @@ Class pgObjects
             End If
 
         End If
-    End Sub
-
-    Private Sub btnBack_Click(sender As Object, e As RoutedEventArgs) Handles btnBack.Click
-        SearchPrevious()
-    End Sub
-
-    Private Sub btnForward_Click(sender As Object, e As RoutedEventArgs) Handles btnForward.Click
-        SearchNext()
     End Sub
 
     Private Sub btnUp_Click(sender As Object, e As RoutedEventArgs) Handles btnUp.Click

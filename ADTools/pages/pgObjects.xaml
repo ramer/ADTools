@@ -6,46 +6,13 @@
       xmlns:local="clr-namespace:ADTools"
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
-      Title="pgObjects"
+      d:DesignHeight="300" d:DesignWidth="800"
+      Title="ADTools"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       >
     
     <Grid>
         <DockPanel LastChildFill="True">
-            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorElementBackground}" Margin="5,0,0,5">
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Height="23">
-                    <Button x:Name="btnBack" Width="23" Margin="5,0,5,0">
-                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
-                            <TextBlock.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="270"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
-                    </Button>
-                    <Button x:Name="btnForward" Width="23" Margin="0,0,5,0">
-                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="-3,-12,0,0" Height="20" RenderTransformOrigin="0.5,0.5">
-                            <TextBlock.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform Angle="90"/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
-                    </Button>
-                    <Button x:Name="btnUp" Width="23">
-                        <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
-                    </Button>
-                </StackPanel>
-                <StackPanel x:Name="spPath" Background="Transparent" VerticalAlignment="Stretch" Orientation="Horizontal" Margin="5,0,5,0" SnapsToDevicePixels="True">
-                </StackPanel>
-            </DockPanel>
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0" Background="Transparent">
                 <TextBlock>
                         <Run Text="{x:Static r:Resources.lbl_ObjectsTotal}"/>
@@ -208,6 +175,15 @@
                 </TreeView>
 
                 <DockPanel Grid.Column="2" LastChildFill="True">
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorElementBackground}" Margin="0,0,0,5" Height="23">
+                        <Button DockPanel.Dock="Right" x:Name="btnUp" Width="23">
+                            <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
+                        </Button>
+                        <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" Margin="0,0,5,0">
+                            <StackPanel x:Name="spPath" Background="Transparent" VerticalAlignment="Stretch" Orientation="Horizontal" Margin="0,0,5,0" SnapsToDevicePixels="True"/>
+                        </Border>
+                    </DockPanel>
+                    
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="True" Height="23">
                         <Button x:Name="btnSearch" Content="🔎" Width="23" DockPanel.Dock="Right"/>
                         <Grid>

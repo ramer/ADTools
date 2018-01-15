@@ -8,8 +8,6 @@
         mc:Ignorable="d"
         d:DesignHeight="675" d:DesignWidth="820"
         WindowTitle="{x:Static r:Resources.wndMailboxShare_lbl_SharedMailbox}"
-        WindowHeight="675"
-        WindowWidth="820"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
     

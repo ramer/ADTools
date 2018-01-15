@@ -14,17 +14,17 @@
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" MinHeight="24">
                 <RadioButton x:Name="rbAttributesWithValue" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_WithValue}" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
                 <RadioButton x:Name="rbAttributesAll" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_All}" Margin="0,0,15,0" VerticalAlignment="Center"/>
                 <RadioButton x:Name="rbAttributesChanged" Content="{x:Static r:Resources.ctlObjectAttributes_lbl_Changed}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                <Button x:Name="btnAttributesRefresh" Content="↺" Height="17" Width="17" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
+                <Button x:Name="btnAttributesRefresh" Content="↺" MinHeight="24" MinWidth="24" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
             </StackPanel>
-            <Grid Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom">
+            <Grid Margin="0,5,0,0" MinHeight="24" DockPanel.Dock="Bottom">
                 <TextBox x:Name="tbAttributesFilter"/>
                 <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
                     <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=tbAttributesFilter}" Value="">

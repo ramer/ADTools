@@ -1,13 +1,11 @@
-﻿Imports System.ComponentModel
+﻿Class pgGroupBasicInformation
 
-Public Class pgGroup
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
-                                                            GetType(clsDirectoryObject),
-                                                            GetType(pgGroup),
-                                                            New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
+                                            GetType(clsDirectoryObject),
+                                            GetType(pgGroupBasicInformation),
+                                            New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
     Private Property _currentobject As clsDirectoryObject
-    Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     Public Property CurrentObject() As clsDirectoryObject
         Get
@@ -19,17 +17,15 @@ Public Class pgGroup
     End Property
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As pgGroup = CType(d, pgGroup)
+        Dim instance As pgGroupBasicInformation = CType(d, pgGroupBasicInformation)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
         End With
     End Sub
 
-    Private Sub hlManagedBy_Click(sender As Object, e As RoutedEventArgs) Handles hlManagedBy.Click
-        ShowDirectoryObjectProperties(CurrentObject.managedBy, Window.GetWindow(Me))
-    End Sub
-
-    Private Sub pgGroup_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Sub New(obj As clsDirectoryObject)
+        InitializeComponent()
+        CurrentObject = obj
     End Sub
 
 End Class

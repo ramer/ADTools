@@ -31,8 +31,8 @@ Class pgMain
         'hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
         'Me.CommandBindings.Add(New CommandBinding(hkEsc, AddressOf StopSearch))
 
-        'dpToolbar.DataContext = preferences
-        'mnuSearchDomains.ItemsSource = domains
+        dpToolbar.DataContext = preferences
+        mnuSearchDomains.ItemsSource = domains
         'dockpSearchObjectClasses.DataContext = searchobjectclasses
 
         'DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)

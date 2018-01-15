@@ -1,13 +1,11 @@
-﻿Imports System.ComponentModel
+﻿Class pgUserExchange
 
-Public Class pgUnknownObject
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
-                                                            GetType(clsDirectoryObject),
-                                                            GetType(pgUnknownObject),
-                                                            New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
+                                                        GetType(clsDirectoryObject),
+                                                        GetType(pgUserExchange),
+                                                        New FrameworkPropertyMetadata(Nothing, AddressOf CurrentObjectPropertyChanged))
 
     Private Property _currentobject As clsDirectoryObject
-    Private Property _currentdomainobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
     Public Property CurrentObject() As clsDirectoryObject
         Get
@@ -19,13 +17,15 @@ Public Class pgUnknownObject
     End Property
 
     Private Shared Sub CurrentObjectPropertyChanged(d As DependencyObject, e As DependencyPropertyChangedEventArgs)
-        Dim instance As pgUnknownObject = CType(d, pgUnknownObject)
+        Dim instance As pgUserExchange = CType(d, pgUserExchange)
         With instance
             ._currentobject = CType(e.NewValue, clsDirectoryObject)
         End With
     End Sub
 
-    Private Sub pgUnknownObject_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Sub New(obj As clsDirectoryObject)
+        InitializeComponent()
+        CurrentObject = obj
     End Sub
 
 End Class

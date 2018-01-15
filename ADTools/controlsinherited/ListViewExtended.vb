@@ -49,21 +49,21 @@ Public Class ListViewExtended
         End Set
     End Property
 
-    Public Property GroupItemStyle() As Style
-        Get
-            Return GetValue(GroupItemStyleProperty)
-        End Get
-        Set
-            SetCurrentValue(GroupItemStyleProperty, Value)
-        End Set
-    End Property
-
     Public Property ViewStyleMediumIcons() As Style
         Get
             Return GetValue(ViewStyleMediumIconsProperty)
         End Get
         Set
             SetCurrentValue(ViewStyleMediumIconsProperty, Value)
+        End Set
+    End Property
+
+    Public Property GroupItemStyle() As Style
+        Get
+            Return GetValue(GroupItemStyleProperty)
+        End Get
+        Set
+            SetCurrentValue(GroupItemStyleProperty, Value)
         End Set
     End Property
 

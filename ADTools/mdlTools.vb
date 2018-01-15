@@ -30,6 +30,8 @@ Module mdlTools
     Public ClipboardBuffer As clsDirectoryObject()
     Public ClipboardAction As enmClipboardAction
 
+    Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 600
+
     Public Const ADS_UF_SCRIPT = 1 '0x1
     Public Const ADS_UF_ACCOUNTDISABLE = 2 '0x2
     Public Const ADS_UF_HOMEDIR_REQUIRED = 8 '0x8
@@ -273,14 +275,7 @@ Module mdlTools
             Else
 
                 For Each wnd As NavigationWindow In owner.OwnedWindows
-                    If p.GetType Is wnd.Content.GetType AndAlso
-                        (TypeOf p Is pgComputer Or
-                        TypeOf p Is pgContact Or
-                        TypeOf p Is pgGroup Or
-                        TypeOf p Is pgOrganizationalUnit Or
-                        TypeOf p Is pgUnknownObject Or
-                        TypeOf p Is pgUser) AndAlso
-                            wnd.Content.CurrentObject Is CType(p, Object).CurrentObject Then
+                    If p.GetType Is wnd.Content.GetType AndAlso TypeOf p Is pgObject AndAlso wnd.Content.CurrentObject Is CType(p, Object).CurrentObject Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -324,23 +319,17 @@ Module mdlTools
         Dim p As Page
 
         If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
-            p = New pgUser
-            CType(p, pgUser).CurrentObject = obj
+            p = New pgObject(obj)
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
-            p = New pgContact
-            CType(p, pgContact).CurrentObject = obj
+            p = New pgObject(obj)
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
-            p = New pgComputer
-            CType(p, pgComputer).CurrentObject = obj
+            p = New pgObject(obj)
         ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
-            p = New pgGroup
-            CType(p, pgGroup).CurrentObject = obj
-        ElseIf obj.objectClass.Contains("organizationalunit") Then
-            p = New pgOrganizationalUnit
-            CType(p, pgOrganizationalUnit).CurrentObject = obj
+            p = New pgObject(obj)
+        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+            p = New pgObject(obj)
         Else
-            p = New pgUnknownObject
-            CType(p, pgUnknownObject).CurrentObject = obj
+            p = New pgObject(obj)
         End If
 
         Return ShowPage(p, False, owner, False)

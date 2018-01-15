@@ -1,0 +1,52 @@
+﻿<Page x:Class="pgUserOrganization"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ADTools"
+      xmlns:r="clr-namespace:ADTools.My.Resources"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="600"
+      Title="{x:Static r:Resources.wndObject_lbl_Organization}"
+      DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
+      >
+    
+    <Page.Resources>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="10,5,10,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="MinHeight" Value="24"/>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0">
+                <DockPanel LastChildFill="True" DockPanel.Dock="Top">
+                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
+                    <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
+                        <TextBlock Height="23" Margin="2,0,2,0">
+                            <Hyperlink x:Name="hlManager">
+                                <Run Text="{Binding manager.name, Mode=OneWay}"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </Border>
+                </DockPanel>
+                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DirectReports}" DockPanel.Dock="Top" Height="24"/>
+                <local:ctlDirectReports CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}}}" Margin="10,5,10,5" MinHeight="250"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1">
+                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedObjects}" DockPanel.Dock="Top" Height="24"/>
+                <local:ctlManagedObjects CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}}}" Margin="10,5,10,5" MinHeight="250"/>
+            </DockPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

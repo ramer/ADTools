@@ -19,37 +19,38 @@
 
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
         <DockPanel LastChildFill="True" Grid.Column="0">
-            <Grid DockPanel.Dock="Top">
-                <Label Margin="0,0,3,0" Content="{x:Static r:Resources.ctlGroupMemberOf_lbl_SelectedGroups}"/>
-                <Button x:Name="btnDefaultGroups" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Content="#" Panel.ZIndex="5" ToolTip="По умолчанию" Margin="0,0,3,0"/>
+            <Grid DockPanel.Dock="Top" MinHeight="24">
+                <TextBlock Margin="0,0,3,0" Text="{x:Static r:Resources.ctlGroupMemberOf_lbl_SelectedGroups}"/>
+                <Button x:Name="btnDefaultGroups" Style="{StaticResource LightButton}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Content="#" Panel.ZIndex="5" ToolTip="По умолчанию" Margin="0,0,3,0"/>
             </Grid>
             <Grid>
                 <local:ctlTrash x:Name="trashSelectedGroups" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
                 <local:ListViewExtended x:Name="lvSelectedGroups"
-                            AllowDrop="True"
-                            Margin="0,0,3,0"
-                            local:clsSorter.AutoSort="True"
-                            IsSynchronizedWithCurrentItem="True"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.PanningMode="VerticalFirst"
-                            VirtualizingPanel.IsVirtualizing="True"
-                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            KeyboardNavigation.DirectionalNavigation="None"
-                            ViewStyleList="{StaticResource ListViewExtended_ViewStyleSmallList}"
-                            CurrentView="List"
-                            />
+                    AlternationCount="2"
+                    AllowDrop="True"
+                    Margin="0,0,3,0"
+                    local:clsSorter.AutoSort="True"
+                    IsSynchronizedWithCurrentItem="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.PanningMode="VerticalFirst"
+                    VirtualizingPanel.IsVirtualizing="True"
+                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                    VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    KeyboardNavigation.DirectionalNavigation="None"
+                    ViewStyleList="{StaticResource ListViewExtended_ViewStyleList_Small}"
+                    CurrentView="List"
+                    />
             </Grid>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Column="1">
-            <Label Margin="3,0,0,0" Content="{x:Static r:Resources.ctlGroupMemberOf_lbl_GroupsList}" DockPanel.Dock="Top"/>
-            <Grid Margin="3,5,0,0" Height="23" DockPanel.Dock="Bottom">
+            <TextBlock  MinHeight="24" Margin="3,0,0,0" Text="{x:Static r:Resources.ctlGroupMemberOf_lbl_GroupsList}" DockPanel.Dock="Top"/>
+            <Grid Margin="3,5,0,0" MinHeight="24" DockPanel.Dock="Bottom">
                 <TextBox x:Name="tbDomainGroupsFilter"/>
                 <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
                     <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Text, ElementName=tbDomainGroupsFilter}" Value="">
@@ -73,7 +74,7 @@
                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
                             KeyboardNavigation.DirectionalNavigation="None"
-                            ViewStyleList="{StaticResource ListViewExtended_ViewStyleSmallList}"
+                            ViewStyleList="{StaticResource ListViewExtended_ViewStyleList_Small}"
                             CurrentView="List"
                             />
         </DockPanel>
