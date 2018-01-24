@@ -18,10 +18,10 @@
         <local:ConverterDesiredWidthToVisibility x:Key="ConverterDesiredWidthToVisibility" />
         <local:ConverterEnumToVisibility x:Key="ConverterEnumToVisibility" />
         <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
-        <local:ConverterToInlinesWithHyperlink x:Key="ConverterToInlinesWithHyperlink"/>
         <local:ConverterToSingleLine x:Key="ConverterToSingleLine"/>
 
-        <!--<sys:Double x:Key="FontSizeNormal">16</sys:Double>-->
+        <sys:Double x:Key="FontSizePage">12</sys:Double>
+        <sys:Double x:Key="FontSizeSmall">12</sys:Double>
 
         <SolidColorBrush Color="Black" x:Key="ColorText" />
         <SolidColorBrush Color="WhiteSmoke" x:Key="ColorWindowBackground" />
@@ -206,8 +206,6 @@
             </Setter>
         </Style>
 
-        <Style TargetType="{x:Type local:wndMain}" BasedOn="{StaticResource {x:Type NavigationWindow}}"/>
-
         <Style TargetType="{x:Type Frame}" x:Key="FrameWithoutNavigationUI">
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
             <Setter Property="JournalOwnership" Value="OwnsJournal"/>
@@ -224,11 +222,10 @@
         
         <Style TargetType="Page">
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizePage}" />
         </Style>
 
         <Style TargetType="{x:Type local:pgAbout}" BasedOn="{StaticResource {x:Type Page}}"/>
-        <Style TargetType="{x:Type local:pgAboutDonate}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgComputerBasicInformation}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgComputerLoginEventLog}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgComputerNetwork}" BasedOn="{StaticResource {x:Type Page}}"/>
@@ -239,8 +236,6 @@
         <Style TargetType="{x:Type local:pgDomains}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgGroupBasicInformation}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgGroupOrganization}" BasedOn="{StaticResource {x:Type Page}}"/>
-        <Style TargetType="{x:Type local:pgMailboxQuota}" BasedOn="{StaticResource {x:Type Page}}"/>
-        <Style TargetType="{x:Type local:pgMailboxShare}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgMain}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgObject}" BasedOn="{StaticResource {x:Type Page}}"/>
         <Style TargetType="{x:Type local:pgObjectAllAttributes}" BasedOn="{StaticResource {x:Type Page}}"/>
@@ -683,7 +678,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Track Name="PART_Track" Grid.Column="1" Height="8" VerticalAlignment="Bottom">
+                <Track Name="PART_Track" Grid.Column="1" Height="6" VerticalAlignment="Bottom">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Command="ScrollBar.PageLeftCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
                         </RepeatButton>
@@ -725,7 +720,7 @@
                     <Setter Property="Width"
               Value="Auto" />
                     <Setter Property="Height"
-              Value="20" />
+              Value="19" />
                     <Setter Property="Template"
               Value="{StaticResource HorizontalScrollBar}" />
                 </Trigger>
@@ -776,6 +771,7 @@
                                 Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
                                 Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
                                 ViewportSize="{TemplateBinding ViewportHeight}"/>
+
                             <ScrollBar x:Name="PART_HorizontalScrollBar"
                                 AutomationProperties.AutomationId="HorizontalScrollBar"
                                 Grid.Column="0"

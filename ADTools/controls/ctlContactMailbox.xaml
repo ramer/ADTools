@@ -30,7 +30,7 @@
                     </TextBlock>
                     <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="Exchange Server"></TextBlock>
                     <StackPanel MinWidth="250" IsEnabled="{Binding Connected}">
-                        <Button x:Name="btnContactAdd" Content="{x:Static r:Resources.ctlMailbox_lbl_Add}" MinHeight="24" Margin="0,0,0,10">
+                        <Button x:Name="btnContactAdd" Content="{x:Static r:Resources.str_AddAddress}" MinHeight="24" Margin="0,0,0,10">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -38,7 +38,7 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactEdit" Content="{x:Static r:Resources.ctlMailbox_lbl_Change}" MinHeight="24" Margin="0,0,0,10">
+                        <Button x:Name="btnContactEdit" Content="{x:Static r:Resources.str_ChangeAddress}" MinHeight="24" Margin="0,0,0,10">
                             <Button.IsEnabled>
                                 <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
                                     <Binding ElementName="tbContact" Path="Text.Length" />
@@ -47,9 +47,9 @@
                                 </MultiBinding>
                             </Button.IsEnabled>
                         </Button>
-                        <Button x:Name="btnContactRemove" Content="{x:Static r:Resources.ctlMailbox_lbl_Remove}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnContactSetPrimary" Content="{x:Static r:Resources.ctlMailbox_lbl_SetPrimary}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <CheckBox x:Name="chbContactHidden" MinHeight="24" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_HiddenToolTip}">
+                        <Button x:Name="btnContactRemove" Content="{x:Static r:Resources.str_RemoveAddress}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <Button x:Name="btnContactSetPrimary" Content="{x:Static r:Resources.str_SetPrimaryAddress}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                        <CheckBox x:Name="chbContactHidden" MinHeight="24" Margin="0,0,0,5" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.str_EmailHiddenToolTip}">
                             <CheckBox.Style>
                                 <Style TargetType="{x:Type CheckBox}">
                                     <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
@@ -85,8 +85,8 @@
 
                                                             <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
 
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                            <TextBlock Text="{x:Static r:Resources.str_EmailShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                            <TextBlock Text="{x:Static r:Resources.str_EmailHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         </Grid>
                                                     </Border>
 

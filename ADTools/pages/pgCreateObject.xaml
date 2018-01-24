@@ -7,28 +7,28 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         d:DesignHeight="540" d:DesignWidth="675"
-        WindowTitle="{x:Static r:Resources.wndCreateObject_lbl_CreateObject}"
-        WindowHeight="540"
-        WindowWidth="675"
+        WindowTitle="{x:Static r:Resources.str_CreateObject}"
+        WindowWidth="675" WindowHeight="540"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
-    
+
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
             <DockPanel DockPanel.Dock="Bottom" Margin="5,5,5,7">
-                <Button x:Name="btnCreate" DockPanel.Dock="Right" Width="150" Height="23" Content="{x:Static r:Resources.wndCreateObject_lbl_Create}"/>
-                <CheckBox x:Name="chbCloseWindow" Content="{x:Static r:Resources.wndCreateObject_lbl_CloseWindowOnCreate}" IsChecked="True" VerticalContentAlignment="Center" Margin="0,0,20,0"/>
-                <CheckBox x:Name="chbOpenObject" Content="{x:Static r:Resources.wndCreateObject_lbl_OpenObject}" IsChecked="True" VerticalContentAlignment="Center"/>
+                <Button x:Name="btnCreate" DockPanel.Dock="Right" Width="150" Height="23" Content="{x:Static r:Resources.str_CreateObject}"/>
+                <CheckBox x:Name="chbCloseWindow" Content="{x:Static r:Resources.str_CloseWindowOnObjectCreate}" IsChecked="True" VerticalContentAlignment="Center" Margin="0,0,20,0"/>
+                <CheckBox x:Name="chbOpenObject" Content="{x:Static r:Resources.str_OpenObject}" IsChecked="True" VerticalContentAlignment="Center"/>
             </DockPanel>
             <Border BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Margin="5">
                 <DockPanel>
                     <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="7,5,7,5">
                         <StackPanel>
-                            <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_Domain}"/>
+                            <TextBlock Text="{x:Static r:Resources.str_Domain}"/>
                             <ComboBox x:Name="cmboDomain" Width="150" Height="23" DisplayMemberPath="Name"/>
                         </StackPanel>
                         <StackPanel Margin="5,0,0,0">
-                            <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_Container}"/>
+                            <TextBlock Text="{x:Static r:Resources.str_Container}"/>
                             <DockPanel>
                                 <Button x:Name="btnContainerBrowse" Width="23" Height="23" Content="🔎" DockPanel.Dock="Right" Margin="5,0,0,0"/>
                                 <TextBox x:Name="tbContainer" Height="23" IsReadOnly="True"/>
@@ -36,18 +36,18 @@
                         </StackPanel>
                     </DockPanel>
                     <TabControl x:Name="tabctlObject" BorderThickness="0">
-                        <TabItem Header="{x:Static r:Resources.wndCreateObject_lbl_User}">
+                        <TabItem Header="{x:Static r:Resources.str_User}">
                             <StackPanel Margin="5">
                                 <StackPanel Margin="0,0,0,0">
                                     <DockPanel LastChildFill="True">
-                                        <CheckBox x:Name="chbUserSharedMailbox" Content="{x:Static r:Resources.wndCreateObject_lbl_SharedMailbox}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_DisplayName}" Margin="0,0,0,5"/>
+                                        <CheckBox x:Name="chbUserSharedMailbox" Content="{x:Static r:Resources.str_SharedMailbox}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_DisplayName}" Margin="0,0,0,5"/>
                                     </DockPanel>
                                     <TextBox x:Name="tbUserDisplayname" Height="23"/>
                                 </StackPanel>
                                 <DockPanel LastChildFill="True" Margin="0,10,0,0">
                                     <StackPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_UserPrincipalName}" Margin="0,0,0,5"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_UserPrincipalName}" Margin="0,0,0,5"/>
                                         <DockPanel LastChildFill="True">
                                             <ComboBox x:Name="cmboUserUserPrincipalNameDomain" Width="150" Height="23" DockPanel.Dock="Right" ItemsSource="{Binding ElementName=cmboDomain, Path=SelectedItem.Suffixes, Mode=OneWay}" Margin="5,0,0,0"></ComboBox>
                                             <ComboBox x:Name="cmboUserUserPrincipalName" Height="23" IsEditable="True"></ComboBox>
@@ -55,28 +55,28 @@
                                     </StackPanel>
                                 </DockPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_ObjectName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_ObjectNameCN}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbUserObjectName" Height="23" Text="{Binding ElementName=tbUserDisplayname, Path=Text, Mode=OneWay}"></TextBox>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_SAMAccountName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_SAMAccountName}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbUserSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=cmboUserUserPrincipalName, Path=Text, Mode=OneWay}"></TextBox>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndCreateObject_lbl_Computer}">
+                        <TabItem Header="{x:Static r:Resources.str_Computer}">
                             <StackPanel Margin="5">
                                 <StackPanel Margin="0,0,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_ObjectName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_ObjectNameCN}" Margin="0,0,0,5"/>
                                     <ComboBox x:Name="cmboComputerObjectName" Height="23" IsEditable="True"></ComboBox>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_SAMAccountName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_SAMAccountName}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbComputerSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=cmboComputerObjectName, Path=Text, Mode=OneWay}"></TextBox>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndCreateObject_lbl_Group}">
+                        <TabItem Header="{x:Static r:Resources.str_Group}">
                             <StackPanel Margin="5">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -84,43 +84,43 @@
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Margin="0,0,0,0" Grid.Column="0">
-                                        <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_GroupScope}"/>
-                                        <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="{x:Static r:Resources.wndCreateObject_lbl_GroupScopeDomainLocal}" IsChecked="True"/>
-                                        <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="{x:Static r:Resources.wndCreateObject_lbl_GroupScopeGlobal}"/>
-                                        <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="{x:Static r:Resources.wndCreateObject_lbl_GroupScopeUniversal}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_GroupScope}"/>
+                                        <RadioButton x:Name="rbGroupScopeDomainLocal" Margin="0,10,0,0" Content="{x:Static r:Resources.str_GroupScopeDomainLocal}" IsChecked="True"/>
+                                        <RadioButton x:Name="rbGroupScopeGlobal" Margin="0,5,0,0" Content="{x:Static r:Resources.str_GroupScopeGlobal}"/>
+                                        <RadioButton x:Name="rbGroupScopeUniversal" Margin="0,5,0,0" Content="{x:Static r:Resources.str_GroupScopeUniversal}"/>
                                     </StackPanel>
                                     <StackPanel Margin="0,0,0,0" Grid.Column="1">
-                                        <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_GroupType}"/>
-                                        <RadioButton x:Name="rbGroupTypeSecurity" Margin="0,10,0,0" Content="{x:Static r:Resources.wndCreateObject_lbl_GroupTypeSecurity}" IsChecked="True"/>
-                                        <RadioButton x:Name="rbGroupTypeDistribution" Margin="0,5,0,0" Content="{x:Static r:Resources.wndCreateObject_lbl_GroupTypeDistribution}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_GroupType}"/>
+                                        <RadioButton x:Name="rbGroupTypeSecurity" Margin="0,10,0,0" Content="{x:Static r:Resources.str_GroupTypeSecurity}" IsChecked="True"/>
+                                        <RadioButton x:Name="rbGroupTypeDistribution" Margin="0,5,0,0" Content="{x:Static r:Resources.str_GroupTypeDistribution}"/>
                                     </StackPanel>
                                 </Grid>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_ObjectName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_ObjectNameCN}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbGroupObjectName" Height="23"></TextBox>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_SAMAccountName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_SAMAccountName}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbGroupSamAccountName" Height="23" IsReadOnly="True" Text="{Binding ElementName=tbGroupObjectName, Path=Text, Mode=OneWay}"></TextBox>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndCreateObject_lbl_Contact}">
+                        <TabItem Header="{x:Static r:Resources.str_Contact}">
                             <StackPanel Margin="5">
                                 <StackPanel Margin="0,0,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_DisplayName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_DisplayName}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbContactDisplayname" Height="23"></TextBox>
                                 </StackPanel>
                                 <StackPanel Margin="0,10,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_ObjectName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_ObjectNameCN}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbContactObjectName" Height="23" Text="{Binding ElementName=tbContactDisplayname, Path=Text, Mode=OneWay}"></TextBox>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>
-                        <TabItem Header="{x:Static r:Resources.wndCreateObject_lbl_OrganizationalUnit}">
+                        <TabItem Header="{x:Static r:Resources.str_OrganizationalUnit}">
                             <StackPanel Margin="5">
                                 <StackPanel Margin="0,0,0,0">
-                                    <TextBlock Text="{x:Static r:Resources.wndCreateObject_lbl_ObjectName}" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_ObjectNameCN}" Margin="0,0,0,5"/>
                                     <TextBox x:Name="tbOrganizationalUnitObjectName" Height="23"></TextBox>
                                 </StackPanel>
                             </StackPanel>

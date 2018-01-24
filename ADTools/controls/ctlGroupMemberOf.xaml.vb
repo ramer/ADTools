@@ -189,7 +189,7 @@ Public Class ctlGroupMemberOf
 
             For Each obj In dropped
                 If sender Is lvSelectedGroups Then ' adding member
-                    If Mode = enmMode.ObjectMemberOf AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.ctlGroupMember_msg_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.ctlGroupMember_msg_AnotherDomainTitle) : Exit Sub
+                    If Mode = enmMode.ObjectMemberOf AndAlso obj.Domain IsNot _currentobject.Domain Then IMsgBox(My.Resources.str_AnotherDomain, vbOKOnly + vbExclamation, My.Resources.str_AnotherDomainTitle) : Exit Sub
                     AddMember(obj)
                 ElseIf sender Is trashSelectedGroups Then
                     RemoveMember(obj)

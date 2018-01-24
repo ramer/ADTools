@@ -6,6 +6,11 @@ Imports System.Windows.Controls.Primitives
 Imports IPrompt.VisualBasic
 
 Class pgObjects
+    Public Shared hkF5 As New RoutedCommand
+    Public Shared hkEsc As New RoutedCommand
+
+    Public WithEvents clipboardTimer As New Threading.DispatcherTimer()
+    Private clipboardlastdata As String
 
     Public WithEvents searcher As New clsSearcher
 
@@ -13,22 +18,21 @@ Class pgObjects
     Public Property currentfilter As clsFilter
     Public Property currentobjects As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
-    Public Property searchobjectclasses As New clsSearchObjectClasses(True, True, True, True, False)
-
     Public Property cvscurrentobjects As New CollectionViewSource
     Public Property cvcurrentobjects As ICollectionView
 
     Sub New()
         InitializeComponent()
+        InitializeObject()
     End Sub
 
     Sub New(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         InitializeComponent()
-
+        InitializeObject()
         Search(root, filter)
     End Sub
 
-    Private Sub pgObjects_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Private Sub InitializeObject()
         RefreshDomainTree()
 
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
@@ -37,18 +41,31 @@ Class pgObjects
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
 
+        gcdNavigation.DataContext = preferences
+        gcdPreview.DataContext = preferences
+
+        hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
+        Me.CommandBindings.Add(New CommandBinding(hkEsc, Sub() StopSearch()))
+        hkF5.InputGestures.Add(New KeyGesture(Key.F5))
+        Me.CommandBindings.Add(New CommandBinding(hkF5, Sub() Search(currentcontainer, currentfilter)))
+
+        clipboardTimer.Interval = New TimeSpan(0, 0, 1)
+        clipboardTimer.Start()
+
         cvscurrentobjects = New CollectionViewSource() With {.Source = currentobjects}
         cvcurrentobjects = cvscurrentobjects.View
         cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
 
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         lvObjects.ViewStyleDetails = GetViewDetailsStyle()
-        lvObjects.CurrentView = preferences.DefaultView
+        ' mega-crutch - lvObjects binded to local cvcurrentobjects property and remote preferences properties
+        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "ViewResultGrouping" Then lvObjects.EnableGrouping = preferences.ViewResultGrouping
+        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "CurrentView" Then lvObjects.CurrentView = preferences.CurrentView
+        lvObjects.CurrentView = preferences.CurrentView
         lvObjects.EnableGrouping = preferences.ViewResultGrouping
     End Sub
 
 #Region "ContextMenu"
-
 
     Private Sub tviDomainstviFavorites_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
         Dim obj As clsDirectoryObject = Nothing
@@ -67,13 +84,9 @@ Class pgObjects
         CType(sender, StackPanel).ContextMenu.Tag = flt
     End Sub
 
-
-
     Private Sub ctxmnuSharedCreateObject_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-
-        Dim w As New pgCreateObject
 
         If objects.Count = 1 AndAlso (
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
@@ -81,14 +94,11 @@ Class pgObjects
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then
 
-            w.destinationcontainer = objects(0)
-            w.destinationdomain = objects(0).Domain
+            ShowPage(New pgCreateObject(objects(0), objects(0).Domain), False, Window.GetWindow(Me), False)
         Else
-            w.destinationcontainer = Nothing
-            w.destinationdomain = Nothing
+            ShowPage(New pgCreateObject(Nothing, Nothing), False, Window.GetWindow(Me), False)
         End If
 
-        ShowPage(w, False, Window.GetWindow(Me), False)
     End Sub
 
     Private Sub ctxmnuSharedCopy_Click(sender As Object, e As RoutedEventArgs)
@@ -174,7 +184,7 @@ Class pgObjects
             Dim organizationalunitaffected As Boolean = False
 
             Dim obj As clsDirectoryObject = objects(0)
-            Dim name As String = IInputBox(My.Resources.wndMain_msg_EnterObjectName, My.Resources.wndMain_msg_RenameObject, objects(0).name, vbQuestion, Window.GetWindow(Me))
+            Dim name As String = IInputBox(My.Resources.str_EnterObjectName, My.Resources.str_RenameObject, objects(0).name, vbQuestion, Window.GetWindow(Me))
             If Len(name) > 0 Then
                 If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
                     obj.Rename("OU=" & name)
@@ -183,7 +193,7 @@ Class pgObjects
                     obj.Rename("CN=" & name)
                 End If
 
-                RefreshSearchResults()
+                'RefreshSearchResults()
                 If organizationalunitaffected Then RefreshDomainTree()
             End If
         Catch ex As Exception
@@ -204,9 +214,9 @@ Class pgObjects
         Try
             Dim currentcontaineraffected As Boolean = False
 
-            If IMsgBox(My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndMain_msg_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
+            If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
             If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
-                If IMsgBox(My.Resources.wndMain_msg_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.wndMain_msg_AreYouSure, vbYesNo + vbExclamation, My.Resources.wndMain_msg_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
+                If IMsgBox(My.Resources.str_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.str_AreYouSure, vbYesNo + vbExclamation, My.Resources.str_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
                 If currentcontainer IsNot Nothing AndAlso objects(0).distinguishedName = currentcontainer.distinguishedName Then currentcontaineraffected = True
             End If
 
@@ -216,7 +226,7 @@ Class pgObjects
                 OpenObjectParent()
                 RefreshDomainTree()
             Else
-                RefreshSearchResults()
+                'RefreshSearchResults()
             End If
 
         Catch ex As Exception
@@ -249,10 +259,10 @@ Class pgObjects
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
 
         Try
-            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ResetPassword, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
+            If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_PasswordReset, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
                 objects(0).ResetPassword()
                 objects(0).passwordNeverExpires = False
-                IMsgBox(My.Resources.wndObject_msg_PasswordChanged, vbOKOnly + vbInformation, My.Resources.wndObject_msg_ResetPassword)
+                IMsgBox(My.Resources.str_PasswordChanged, vbOKOnly + vbInformation, My.Resources.str_PasswordReset)
             End If
 
         Catch ex As Exception
@@ -268,7 +278,7 @@ Class pgObjects
             objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer)) Then Exit Sub
 
         Try
-            If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.wndObject_msg_Enable, My.Resources.wndObject_msg_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
+            If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.str_Enable, My.Resources.str_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
                 objects(0).disabled = Not objects(0).disabled
             End If
 
@@ -285,9 +295,8 @@ Class pgObjects
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)
-            ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
-            'TODO If GetType(wndUser) Is w.GetType Then CType(w, wndUser).tabctlUser.SelectedIndex = 1
-
+            Dim w = ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
+            If w IsNot Nothing AndAlso w.Content IsNot Nothing AndAlso TypeOf w.Content Is pgObject Then CType(w.Content, pgObject).FirstPage = New pgUserObject(objects(0))
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedExpirationDate_Click")
         End Try
@@ -375,7 +384,7 @@ Class pgObjects
             ctxmnuObjectsFilterData.Items.Clear()
             If cvcurrentobjects.Filter IsNot Nothing Then
                 Dim fdmnuclear As New MenuItem
-                fdmnuclear.Header = My.Resources.wndMain_ctxmnuObjectsFilterDataClear
+                fdmnuclear.Header = My.Resources.ctxmnu_PostfilterClear
                 fdmnuclear.Tag = New clsAttribute("", "", "")
                 AddHandler fdmnuclear.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
                 ctxmnuObjectsFilterData.Items.Add(fdmnuclear)
@@ -409,13 +418,13 @@ Class pgObjects
             ctxmnuObjectsCopyData.Items.Clear()
 
             Dim cdmnudn As New MenuItem
-            cdmnudn.Header = My.Resources.wndMain_ctxmnuObjectsCopyDataDisplayName
+            cdmnudn.Header = My.Resources.ctxmnu_CopyDataDisplayName
             cdmnudn.Tag = "displayName"
             AddHandler cdmnudn.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
             ctxmnuObjectsCopyData.Items.Add(cdmnudn)
 
             Dim cdmnuba As New MenuItem
-            cdmnuba.Header = My.Resources.wndMain_ctxmnuObjectsCopyDataBasicAttributes
+            cdmnuba.Header = My.Resources.ctxmnu_CopyDataBasicAttributes
             cdmnuba.Tag = "basicAttributes"
             AddHandler cdmnuba.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
             ctxmnuObjectsCopyData.Items.Add(cdmnuba)
@@ -436,13 +445,19 @@ Class pgObjects
         lvObjects.ContextMenu.Tag = objects.ToArray
     End Sub
 
+    Private Sub ctxmnutviDomainsDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnutviDomainsDomainOptions.Click
+        ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
+        RefreshDomainTree()
+    End Sub
 
     Private Sub ctxmnuObjectsRestore_Click(sender As Object, e As RoutedEventArgs)
         'TODO
+        IMsgBox("Не допилено :/", vbOKOnly, "ADTools", Window.GetWindow(Me))
     End Sub
 
     Private Sub ctxmnuObjectsRestoreToContainer_Click(sender As Object, e As RoutedEventArgs)
         'TODO
+        IMsgBox("Не допилено :/", vbOKOnly, "ADTools", Window.GetWindow(Me))
     End Sub
 
     Private Sub ctxmnuObjectsExternalSoftwareItem_Click(sender As Object, e As RoutedEventArgs)
@@ -529,10 +544,10 @@ Class pgObjects
 
     Private Sub ApplyPostfilter(Optional prop As String = Nothing, Optional value As String = Nothing)
         If String.IsNullOrEmpty(prop) Then
-            'TODO imgFilterStatus.Visibility = Visibility.Collapsed
+            imgFilterStatus.Visibility = Visibility.Collapsed
             cvcurrentobjects.Filter = Nothing
         Else
-            'TODO imgFilterStatus.Visibility = Visibility.Visible
+            imgFilterStatus.Visibility = Visibility.Visible
             cvcurrentobjects.Filter = New Predicate(Of Object)(
                 Function(obj As clsDirectoryObject)
                     Return GetType(clsDirectoryObject).GetProperty(prop).GetValue(obj) = value
@@ -550,6 +565,17 @@ Class pgObjects
         Else
             ShowDirectoryObjectProperties(current, Window.GetWindow(Me))
         End If
+    End Sub
+
+    Public Sub SaveCurrentFilter()
+        If currentfilter Is Nothing OrElse String.IsNullOrEmpty(currentfilter.Filter) Then IMsgBox(My.Resources.str_CannotSaveCurrentFilter, vbOKOnly + vbExclamation,, Window.GetWindow(Me)) : Exit Sub
+
+        Dim name As String = IInputBox(My.Resources.str_EnterFilterName,,, vbQuestion, Window.GetWindow(Me))
+
+        If String.IsNullOrEmpty(name) Then Exit Sub
+
+        currentfilter.Name = name
+        preferences.Filters.Add(currentfilter)
     End Sub
 
     Public Sub RefreshDomainTree()
@@ -608,7 +634,7 @@ Class pgObjects
             Dim tblck As New TextBlock
             tblck.VerticalAlignment = VerticalAlignment.Center
             tblck.Background = Brushes.Transparent
-            tblck.Text = My.Resources.wndMain_lbl_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern.Replace(vbNewLine, " "), " Advanced filter"))
+            tblck.Text = My.Resources.str_SearchResults & " " & If(Not String.IsNullOrEmpty(filter.Name), filter.Name, If(Not String.IsNullOrEmpty(filter.Pattern), filter.Pattern.Replace(vbNewLine, " "), " Advanced filter"))
             tblck.Margin = New Thickness(2, 0, 2, 0)
             tblck.Padding = New Thickness(5, 0, 5, 0)
             spPath.Children.Add(tblck)
@@ -666,24 +692,6 @@ Class pgObjects
         Next
     End Sub
 
-    Public Sub RefreshSearchResults()
-        'If searchhistoryindex < 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
-        'Search(searchhistory(searchhistoryindex).Root, searchhistory(searchhistoryindex).Filter)
-    End Sub
-
-    Private Sub SearchPrevious()
-        'If searchhistoryindex <= 0 OrElse searchhistoryindex + 1 > searchhistory.Count Then Exit Sub
-        'Search(searchhistory(searchhistoryindex - 1).Root, searchhistory(searchhistoryindex - 1).Filter)
-        'searchhistoryindex -= 1
-    End Sub
-
-    Private Sub SearchNext()
-        'If searchhistoryindex < 0 OrElse searchhistoryindex + 2 > searchhistory.Count Then Exit Sub
-        'Search(searchhistory(searchhistoryindex + 1).Root, searchhistory(searchhistoryindex + 1).Filter)
-        'searchhistoryindex += 1
-    End Sub
-
-
     Public Function CreateColumn(columninfo As clsViewColumnInfo) As DataGridTemplateColumn
         Dim column As New DataGridTemplateColumn()
         column.Header = columninfo.Header
@@ -721,13 +729,11 @@ Class pgObjects
 
     Public Sub ObjectsCopy(destination As clsDirectoryObject, sourceobjects() As clsDirectoryObject)
         If sourceobjects(0).Domain Is destination.Domain Then ' same domain
-            If sourceobjects.Count > 1 Then IMsgBox(My.Resources.wndMain_msg_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Window.GetWindow(Me)) : Exit Sub
+            If sourceobjects.Count > 1 Then IMsgBox(My.Resources.str_CopyOneObjectWithinDomain, vbOKOnly + vbExclamation, My.Resources.str_CopyObject, Window.GetWindow(Me)) : Exit Sub
 
             ' single object
 
-            Dim w As New pgCreateObject
-            w.destinationcontainer = destination
-            w.destinationdomain = destination.Domain
+            Dim w As New pgCreateObject(destination, destination.Domain)
 
             Select Case sourceobjects(0).SchemaClass
                 Case clsDirectoryObject.enmSchemaClass.User
@@ -765,13 +771,13 @@ Class pgObjects
                     w.tabctlObject.SelectedIndex = 4
 
                 Case Else
-                    IMsgBox(My.Resources.wndMain_msg_ObjectUnknownClass, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_CopyObject, Window.GetWindow(Me))
+                    IMsgBox(My.Resources.str_UnknownObjectClass, vbOKOnly + vbExclamation, My.Resources.str_CopyObject, Window.GetWindow(Me))
             End Select
             ShowPage(w, False, Window.GetWindow(Me), False)
 
         Else ' another domain
             ' TODO
-            If IMsgBox("А это не допилено еще", vbYesNo + vbQuestion, "Вставка", Window.GetWindow(Me)) <> MessageBoxResult.Yes Then Exit Sub
+            IMsgBox("Не допилено :/", vbOKOnly, "ADTools", Window.GetWindow(Me))
 
         End If
     End Sub
@@ -780,13 +786,13 @@ Class pgObjects
         Dim organizationalunitaffected As Boolean = False
 
         ' another domain
-        If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.wndMain_msg_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.wndMain_msg_MoveObject, Window.GetWindow(Me)) : Exit Sub
+        If sourceobjects(0).Domain IsNot destination.Domain Then IMsgBox(My.Resources.str_MovingIsProhibited, vbOKOnly + vbExclamation, My.Resources.str_MoveObject, Window.GetWindow(Me)) : Exit Sub
 
         ' same domain
-        If IMsgBox(My.Resources.wndMain_msg_AreYouSure & vbCrLf & vbCrLf &
-                   String.Format(My.Resources.wndMain_msg_MoveObjectToContainer,
-                                 If(sourceobjects.Count > 1, String.Format(My.Resources.wndMain_msg_NObjects, sourceobjects.Count), sourceobjects(0).name),
-                                 destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.wndMain_msg_MoveObject, Window.GetWindow(Me)) <> MessageBoxResult.Yes Then Exit Sub
+        If IMsgBox(My.Resources.str_AreYouSure & vbCrLf & vbCrLf &
+                   String.Format(My.Resources.str_MoveObjectToContainer,
+                                 If(sourceobjects.Count > 1, String.Format(My.Resources.str_nObjects, sourceobjects.Count), sourceobjects(0).name),
+                                 destination.distinguishedNameFormated), vbYesNo + vbQuestion, My.Resources.str_MoveObject, Window.GetWindow(Me)) <> MessageBoxResult.Yes Then Exit Sub
 
         Try
             For Each obj In sourceobjects
@@ -798,37 +804,25 @@ Class pgObjects
             ThrowException(ex, "ObjectsMove")
         End Try
 
-        RefreshSearchResults()
+        'RefreshSearchResults()
         If organizationalunitaffected Then RefreshDomainTree()
     End Sub
-
-    'Private Sub rbView_Checked(sender As Object, e As RoutedEventArgs) Handles rbViewMediumIcons.Checked, rbViewList.Checked, rbViewTiles.Checked, rbViewDetails.Checked
-    'If sender Is rbViewMediumIcons Then
-    '    UpdateDetailsViewGroupStyle(False)
-    '    lvObjects.Style = TryFindResource("ListView_ViewMediumIcons")
-    'ElseIf sender Is rbViewList Then
-    '    UpdateDetailsViewGroupStyle(False)
-    '    lvObjects.Style = TryFindResource("ListView_ViewList")
-    'ElseIf sender Is rbViewTiles Then
-    '    UpdateDetailsViewGroupStyle(False)
-    '    lvObjects.Style = TryFindResource("ListView_ViewTiles")
-    'ElseIf sender Is rbViewDetails Then
-    '    UpdateDetailsViewGroupStyle(True)
-    '    lvObjects.Style = GetViewDetailsStyle()
-    'End If
-    'End Sub
-
-    'Private Sub btnViewSetDefaultView_Click(sender As Object, e As RoutedEventArgs) Handles btnViewSetDefaultView.Click
-    '    'TODO preferences.DefaultView = lvObjects.CurrentView
-    'End Sub
-
-    'Private Sub togbViewShowDeletedObjects_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles togbViewShowDeletedObjects.Checked, togbViewShowDeletedObjects.Unchecked
-    '    'TODO RefreshDomainTree()
-    'End Sub
 
 #End Region
 
 #Region "Events"
+
+    Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
+        If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
+        Dim newclipboarddata As String = Clipboard.GetText
+        If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
+        If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
+
+        If clipboardlastdata <> newclipboarddata Then
+            clipboardlastdata = newclipboarddata
+            StartSearch(Nothing, New clsFilter(clipboardlastdata, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+        End If
+    End Sub
 
     Private Sub lvObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles lvObjects.PreviewKeyDown
         Select Case e.Key
@@ -868,57 +862,6 @@ Class pgObjects
             Next
         Next
     End Sub
-
-    Private Sub lvObjects_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDown
-        'If (e.ChangedButton = MouseButton.Left Or e.ChangedButton = MouseButton.Right) AndAlso Keyboard.Modifiers = 0 Then
-        '    Dim r As HitTestResult = VisualTreeHelper.HitTest(sender, e.GetPosition(sender))
-        '    If r IsNot Nothing Then
-        '        If TypeOf r.VisualHit Is ScrollViewer Then
-        '            lvObjects.UnselectAll()
-        '        Else
-        '            Dim dp As DependencyObject = r.VisualHit
-        '            While (dp IsNot Nothing) AndAlso Not (TypeOf dp Is DataGridRow)
-        '                dp = VisualTreeHelper.GetParent(dp)
-        '            End While
-        '            If dp Is Nothing Then Return
-
-        '            If TypeOf dp Is DataGridRow Then
-        '                lvObjects.SelectedItem = CType(dp, DataGridRow).DataContext
-        '            End If
-        '        End If
-        '    End If
-        'End If
-        'If e.ChangedButton = MouseButton.XButton1 Then SearchPrevious()
-        'If e.ChangedButton = MouseButton.XButton2 Then SearchNext()
-    End Sub
-
-    'Private Sub lvObjects_MouseMove(sender As Object, e As MouseEventArgs) Handles lvObjects.MouseMove
-    '    Dim listview As ListView = TryCast(sender, ListView)
-
-    '    If e.LeftButton = MouseButtonState.Pressed And
-    '        e.GetPosition(sender).X < listview.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-    '        e.GetPosition(sender).Y < listview.ActualHeight - SystemParameters.HorizontalScrollBarHeight And
-    '        listview.SelectedItems.Count > 0 Then
-
-    '        Dim dragData As New DataObject(listview.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-
-    '        DragDrop.DoDragDrop(listview, dragData, DragDropEffects.All)
-    '    End If
-    'End Sub
-
-    'Private Sub lvObjects_TouchMove(sender As Object, e As TouchEventArgs) Handles lvObjects.TouchMove
-    '    Dim listView As ListView = TryCast(sender, ListView)
-
-    '    If e.GetTouchPoint(sender).Position.X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-    '        listView.SelectedItems.Count > 0 Then
-
-    '        Dim dragData As New DataObject(listView.SelectedItems.Cast(Of clsDirectoryObject).ToArray)
-
-    '        e.Handled = True
-    '        DragDrop.DoDragDrop(listView, dragData, DragDropEffects.All)
-    '    End If
-    'End Sub
-
 
     Private Sub tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
         Dim sp As StackPanel = CType(sender, StackPanel)
@@ -1023,11 +966,11 @@ Class pgObjects
 
     Private Sub tbSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles tbSearchPattern.KeyDown
         If e.Key = Key.Enter Then
-            'TODO If mnuSearchModeDefault.IsChecked = True Then
-            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
-            'ElseIf mnuSearchModeAdvanced.IsChecked = True Then
-            '    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
-            'End If
+            If preferences.SearchMode = enmSearchMode.Default Then
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+            Else
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
+            End If
         End If
     End Sub
 
@@ -1036,11 +979,11 @@ Class pgObjects
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
-        'TODO If mnuSearchModeDefault.IsChecked = True Then
-        StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, searchobjectclasses))
-        'ElseIf mnuSearchModeAdvanced.IsChecked = True Then
-        '    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
-        'End If
+        If preferences.SearchMode = enmSearchMode.Default Then
+            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+        Else
+            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
+        End If
         tbSearchPattern.Focus()
     End Sub
 
@@ -1049,7 +992,7 @@ Class pgObjects
     End Sub
 
     Private Sub imgFilterStatus_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles imgFilterStatus.MouseLeftButtonDown
-        'TODO ApplyPostfilter()
+        ApplyPostfilter()
     End Sub
 
 #End Region
@@ -1062,22 +1005,14 @@ Class pgObjects
 
     Public Sub StartSearch(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         If root Is Nothing And (filter Is Nothing OrElse String.IsNullOrEmpty(filter.Filter)) Then Exit Sub
-
-        'While searchhistory.Count > searchhistoryindex + 1
-        '    searchhistory.RemoveAt(searchhistory.Count - 1)
-        'End While
-
-        'searchhistory.Add(New clsSearchHistory(root, filter))
-        'searchhistoryindex = searchhistory.Count - 1
         NavigationService.Navigate(New pgObjects(root, filter))
-        'Search(root, filter)
     End Sub
 
     Public Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
-        tbSearchPattern.SelectAll()
-        'UpdateDetailsViewGroupStyle(False)
+        If root Is Nothing And filter Is Nothing Then Exit Sub
 
-        'ApplyPostfilter(Nothing, Nothing)
+        tbSearchPattern.SelectAll()
+        ApplyPostfilter(Nothing, Nothing)
 
         cap.Visibility = Visibility.Visible
         pbSearch.Visibility = Visibility.Visible
@@ -1098,11 +1033,8 @@ Class pgObjects
     Private Sub Searcher_SearchAsyncCompleted() Handles searcher.SearchAsyncCompleted
         cap.Visibility = Visibility.Hidden
         pbSearch.Visibility = Visibility.Hidden
-
-        'If preferences.SearchResultGrouping AndAlso currentcontainer Is Nothing Then
-        '    UpdateDetailsViewGroupStyle(True)
-        'End If
     End Sub
 
 #End Region
+
 End Class

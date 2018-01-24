@@ -7,27 +7,27 @@
         xmlns:local="clr-namespace:ADTools"
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
-        d:DesignHeight="561" d:DesignWidth="983"
-        WindowTitle="{x:Static r:Resources.wndPreferences_lbl_Preferences}"
-        WindowHeight="561"
-        WindowWidth="983"
+        d:DesignHeight="600" d:DesignWidth="1064"
+        WindowTitle="{x:Static r:Resources.str_ApplicationOptions}"
+        WindowHeight="600"
+        WindowWidth="1064"
         >
     
     <Grid>
         <Border Margin="5" BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
             <TabControl x:Name="tcPreferences" TabStripPlacement="Left" Margin="0,-1,-1,-1">
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow}">
+                <TabItem Header="{x:Static r:Resources.str_MainWindow}">
                     <DockPanel Margin="5">
                         <DockPanel DockPanel.Dock="Bottom">
                             <DockPanel LastChildFill="True">
                                 <DockPanel DockPanel.Dock="Top">
-                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutAddColumn}"/>
-                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn}"/>
-                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_LayoutDefault}" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Layout}" DockPanel.Dock="Left"/>
+                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="{x:Static r:Resources.str_LayoutAddColumn}"/>
+                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="{x:Static r:Resources.str_LayoutRemoveLastColumn}"/>
+                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.str_LayoutDefault}" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_Layout}" DockPanel.Dock="Left"/>
                                 </DockPanel>
                                 <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                    <Grid x:Name="grdLayout" ShowGridLines="True" AllowDrop="True" Background="Transparent" Height="150" >
+                                    <Grid x:Name="grdLayout" ShowGridLines="True" AllowDrop="True" Background="Transparent" Height="200" >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition></ColumnDefinition>
                                             <ColumnDefinition></ColumnDefinition>
@@ -56,21 +56,21 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesDefault}" Grid.Column="0" Grid.Row="0"/>
-                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesExtended}" Grid.Column="1" Grid.Row="0"/>
-                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearch}" Grid.Column="2" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.str_AttributesDefault}" Grid.Column="0" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.str_AttributesExtended}" Grid.Column="1" Grid.Row="0"/>
+                                <TextBlock Text="{x:Static r:Resources.str_AttributesForSearch}" Grid.Column="2" Grid.Row="0"/>
                                 <ListView x:Name="lvAttributesDefault" Grid.Column="0" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                                     <ListView.View>
                                         <GridView AllowsColumnReorder="False">
                                             <GridView.Columns>
-                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
+                                                <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Label}"/>
                                                         </DataTemplate>
                                                     </GridViewColumn.CellTemplate>
                                                 </GridViewColumn>
-                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
+                                                <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Name}"/>
@@ -85,14 +85,14 @@
                                     <ListView.View>
                                         <GridView AllowsColumnReorder="False">
                                             <GridView.Columns>
-                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
+                                                <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Label}"/>
                                                         </DataTemplate>
                                                     </GridViewColumn.CellTemplate>
                                                 </GridViewColumn>
-                                                <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
+                                                <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                     <GridViewColumn.CellTemplate>
                                                         <DataTemplate>
                                                             <TextBlock Text="{Binding Name}"/>
@@ -105,19 +105,19 @@
                                 </ListView>
                                 <Grid Grid.Column="2" Grid.Row="1">
                                     <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
-                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="⌗" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.wndPreferences_lbl_MainWindow_AttributesForSearchDefault}" />
+                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="⌗" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.str_AttributesForSearchDefault}" />
                                     <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                                         <ListView.View>
                                             <GridView AllowsColumnReorder="False">
                                                 <GridView.Columns>
-                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_Name}" Width="120" local:clsSorter.PropertyName="Label">
+                                                    <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Label}"/>
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
-                                                    <GridViewColumn Header="{x:Static r:Resources.wndPreferences_lbl_MainWindow_Attributes_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
+                                                    <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <TextBlock Text="{Binding Name}"/>
@@ -133,43 +133,44 @@
                         </DockPanel>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Behavior}">
+                <TabItem Header="{x:Static r:Resources.str_Behavior}">
                     <StackPanel Margin="5">
-                        <CheckBox x:Name="chbStartOnLogon" Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogon}" IsChecked="{Binding StartWithWindows}" />
-                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonDefinition}"/>
-                        <CheckBox x:Name="chbStartOnLogonMinimized" Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonMinimized}" IsChecked="{Binding StartWithWindowsMinimized}" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Margin="20,0,0,0"/>
-                        <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition}"/>
-                        <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButton}" IsChecked="{Binding CloseOnXButton}" />
-                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_CloseOnXButtonDefinition}"/>
-                        <CheckBox Content="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterface}" IsChecked="{Binding PageInterface}" />
-                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterfaceDefinition}"/>
+                        <CheckBox x:Name="chbStartOnLogon" Content="{x:Static r:Resources.str_StartOnLogon}" IsChecked="{Binding StartWithWindows}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_StartOnLogonDefinition}"/>
+                        <CheckBox x:Name="chbStartOnLogonMinimized" Content="{x:Static r:Resources.str_StartOnLogonMinimized}" IsChecked="{Binding StartWithWindowsMinimized}" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Margin="20,0,0,0"/>
+                        <TextBlock TextWrapping="Wrap" Margin="40,0,0,10" IsEnabled="{Binding IsChecked, ElementName=chbStartOnLogon}" Text="{x:Static r:Resources.str_StartOnLogonMinimizedDefinition}"/>
+                        <CheckBox Content="{x:Static r:Resources.str_CloseOnXButton}" IsChecked="{Binding CloseOnXButton}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_CloseOnXButtonDefinition}"/>
+                        <CheckBox Content="{x:Static r:Resources.str_PageInterface}" IsChecked="{Binding PageInterface}" />
+                        <TextBlock TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_PageInterfaceDefinition}"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Appearance}">
+                <TabItem Header="{x:Static r:Resources.str_Appearance}">
                     <StackPanel Margin="5">
-                        <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme}"/>
+                        <TextBlock Text="{x:Static r:Resources.str_MainTheme}"/>
                         <ComboBox x:Name="cmboTheme" Margin="0,0,0,10">
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightGray}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightBlue}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_LightGreen}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkGray}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkBlue}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkGreen}"/>
-                            <ComboBoxItem Content="{x:Static r:Resources.wndPreferences_lbl_Appearance_MainTheme_DarkOrange}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_LightGray}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_LightBlue}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_LightGreen}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_DarkGray}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_DarkBlue}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_DarkGreen}"/>
+                            <ComboBoxItem Content="{x:Static r:Resources.str_MainTheme_DarkOrange}"/>
                         </ComboBox>
-                        <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_Colors}"/>
+                        <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.str_Colors}"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.Resources>
                                 <Style TargetType="{x:Type xctk:ColorPicker}">
                                     <Setter Property="DisplayColorAndName" Value="True"/>
-                                    <Setter Property="AvailableColorsHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_AvailableColors}"/>
-                                    <Setter Property="StandardColorsHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_StandartColors}"/>
-                                    <Setter Property="AdvancedButtonHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton}"/>
-                                    <Setter Property="StandardButtonHeader" Value="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorPicker_StandartButton}"/>
+                                    <Setter Property="AvailableColorsHeader" Value="{x:Static r:Resources.str_ColorPicker_AvailableColors}"/>
+                                    <Setter Property="StandardColorsHeader" Value="{x:Static r:Resources.str_ColorPicker_StandartColors}"/>
+                                    <Setter Property="AdvancedButtonHeader" Value="{x:Static r:Resources.str_ColorPicker_AdvancedButton}"/>
+                                    <Setter Property="StandardButtonHeader" Value="{x:Static r:Resources.str_ColorPicker_StandartButton}"/>
                                 </Style>
                             </Grid.Resources>
 
                             <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
@@ -182,14 +183,14 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="60"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Grid.Row="0" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorText}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorWindowBackground}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorElementBackground}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="3" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorMenuBackground}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorButtonBackground}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorButtonInactiveBackground}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="6" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorListviewRow}"/>
-                            <TextBlock Grid.Column="0" Grid.Row="7" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Appearance_ColorListviewAlternationRow}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="0" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorText}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorWindowBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="2" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorElementBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="3" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorMenuBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorButtonBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorButtonInactiveBackground}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="6" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorListviewRow}"/>
+                            <TextBlock Grid.Column="0" Grid.Row="7" TextWrapping="Wrap" Margin="20,0,0,10" Text="{x:Static r:Resources.str_ColorListviewAlternationRow}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="0" Height="26" SelectedColor="{Binding ColorText}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="1" Height="26" SelectedColor="{Binding ColorWindowBackground}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="2" Height="26" SelectedColor="{Binding ColorElementBackground}"/>
@@ -199,14 +200,59 @@
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="6" Height="26" SelectedColor="{Binding ColorListviewRow}"/>
                             <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}" Grid.Column="1" Grid.Row="7" Height="26" SelectedColor="{Binding ColorListviewAlternationRow}"/>
                         </Grid>
+                        <TextBlock Text="{x:Static r:Resources.str_FontSizePage}" Margin="0,0,0,10"/>
+                        <ScrollBar Minimum="12" Maximum="16" SmallChange="2.0" LargeChange="2.0" Height="20" Orientation="Horizontal" Value="{Binding FontSizePage}" ViewportSize="1">
+                            <ScrollBar.Style>
+                                <Style TargetType="ScrollBar">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                <Grid Background="Transparent">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Track Name="PART_Track" Grid.Column="1" Height="20" VerticalAlignment="Bottom">
+                                                        <Track.DecreaseRepeatButton>
+                                                            <RepeatButton Command="ScrollBar.PageLeftCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                                                            </RepeatButton>
+                                                        </Track.DecreaseRepeatButton>
+                                                        <Track.Thumb>
+                                                            <Thumb Style="{StaticResource ScrollBarThumbStyle}">
+                                                            </Thumb>
+                                                        </Track.Thumb>
+                                                        <Track.IncreaseRepeatButton>
+                                                            <RepeatButton Command="ScrollBar.PageRightCommand" Style="{StaticResource ScrollBarPageButtonStyle}">
+                                                            </RepeatButton>
+                                                        </Track.IncreaseRepeatButton>
+                                                    </Track>
+
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup x:Name="CommonStates">
+                                                            <VisualStateGroup.Transitions>
+                                                                <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                            </VisualStateGroup.Transitions>
+                                                            <VisualState x:Name="Normal" />
+                                                            <VisualState x:Name="MouseOver"/>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                </Grid>
+                                            </ControlTemplate>
+
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ScrollBar.Style>
+                        </ScrollBar>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware}">
+                <TabItem Header="{x:Static r:Resources.str_ExternalSoftware}">
                     <DockPanel Margin="5">
                         <StackPanel DockPanel.Dock="Bottom">
-                            <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_ArgumentPatterns}" Margin="0,5,0,0"/>
+                            <TextBlock Text="{x:Static r:Resources.str_ExternalSoftwareArgumentPatterns}" Margin="0,5,0,0"/>
                             <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"
-                                 VerticalScrollBarVisibility="Auto" Height="60" IsReadOnly="True" 
+                                 VerticalScrollBarVisibility="Auto" Height="80" IsReadOnly="True" 
                                  Text="{}{{myusername}} {{mypassword}} {{mydomain}}&#x0d;&#x0a;{{name}} {{description}} {{displayName}} {{sAMAccountName}} {{userPrincipalName}} {{distinguishedName}} {{telephoneNumber}} {{physicalDeliveryOfficeName}} {{title}} {{department}} {{company}} {{mail}} ..."/>
                         </StackPanel>
                         <DataGrid 
@@ -230,7 +276,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Binding="{Binding Label}" Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Label}"  Width="150" SortMemberPath="Label" CanUserSort="True">
+                                <DataGridTextColumn Binding="{Binding Label}" Header="{x:Static r:Resources.str_ExternalSoftwareLabel}"  Width="150" SortMemberPath="Label" CanUserSort="True">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -238,7 +284,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTemplateColumn Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Path}" Width="200" SortMemberPath="Path" CanUserSort="True">
+                                <DataGridTemplateColumn Header="{x:Static r:Resources.str_ExternalSoftwarePath}" Width="230" SortMemberPath="Path" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <DockPanel LastChildFill="True">
@@ -249,7 +295,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Binding="{Binding Arguments}" Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_Arguments}" Width="330" SortMemberPath="Arguments" CanUserSort="True">
+                                <DataGridTextColumn Binding="{Binding Arguments}" Header="{x:Static r:Resources.str_ExternalSoftwareArguments}" Width="330" SortMemberPath="Arguments" CanUserSort="True">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="VerticalAlignment" Value="Center" />
@@ -257,10 +303,10 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTemplateColumn Header="{x:Static r:Resources.wndPreferences_lbl_ExternalSoftware_CurrentCredentials}" Width="36" SortMemberPath="CurrentCredentials" CanUserSort="True">
+                                <DataGridTemplateColumn Header="{x:Static r:Resources.str_ExternalSoftwareCurrentCredentials}" Width="36" SortMemberPath="CurrentCredentials" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding CurrentCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{x:Static r:Resources.wndPreferences_tt_ExternalSoftware_CurrentCredentials}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            <CheckBox IsChecked="{Binding CurrentCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{x:Static r:Resources.str_CurrentCredentialsToolTip}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -269,11 +315,11 @@
                         </DataGrid>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.wndPreferences_lbl_Plugins}">
+                <TabItem Header="{x:Static r:Resources.str_Plugins}">
                     <TabControl>
                         <TabItem Header="Telegram Bot">
                             <StackPanel Margin="5">
-                                <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_Instructions}"/>
+                                <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.str_PluginsTelegramBot_Instructions}"/>
                                 <StackPanel HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <TextBlock Text="@Username" Width="100"/>
@@ -283,8 +329,8 @@
                                         <TextBlock Text="API" Width="100"/>
                                         <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400"/>
                                     </StackPanel>
-                                    <Button x:Name="btnPluginTelegramBotStartStop" Content="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_Start}" Width="200" Height="24" Margin="0,0,0,20"/>
-                                    <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="{x:Static r:Resources.wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon}" Margin="0,0,0,10"/>
+                                    <Button x:Name="btnPluginTelegramBotStartStop" Content="{x:Static r:Resources.str_PluginsTelegramBot_Start}" Width="200" Height="24" Margin="0,0,0,20"/>
+                                    <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="{x:Static r:Resources.str_PluginsTelegramBot_StartOnLogon}" Margin="0,0,0,10"/>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>

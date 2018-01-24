@@ -54,7 +54,7 @@ Public Class ADToolsApplication
     Inherits Application
 
     Public Shared WithEvents nicon As New NotifyIcon
-    Public Shared ctxmenu As New ContextMenu({New MenuItem(My.Resources.wndMain_mnuFile_Exit, AddressOf ni_ctxmenuExit)})
+    Public Shared ctxmenu As New ContextMenu({New MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
 
     Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
@@ -98,7 +98,7 @@ Public Class ADToolsApplication
 
             If Not minimizedstart Then
                 ' loading main form
-                wndMainActivate()
+                ActivateMainWindow()
             End If
 
         Catch ex As Exception
@@ -107,7 +107,7 @@ Public Class ADToolsApplication
     End Sub
 
     Public Sub Activate()
-        wndMainActivate()
+        ActivateMainWindow()
     End Sub
 
     Protected Overrides Sub OnExit(e As ExitEventArgs)
@@ -132,33 +132,60 @@ Public Class ADToolsApplication
         InitializeComponent()
     End Sub
 
-
     Private Shared Sub ni_ctxmenuExit(sender As Object, e As EventArgs)
         ApplicationDeactivate()
     End Sub
 
     Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
         If e.Button = Forms.MouseButtons.Left Then
-            wndMainActivate()
+            ActivateMainWindow()
         End If
     End Sub
 
-    Public Shared Sub wndMainActivate()
-        Dim w As New wndMain
-        w.Show()
+    Public Shared Sub ShowMainWindow()
+        Dim w As NavigationWindow = ShowPage(New pgMain)
+        If w IsNot Nothing Then
+            w.WindowState = WindowState.Maximized
+            w.ShowInTaskbar = True
+            w.Title = My.Application.Info.AssemblyName
+            AddHandler w.Closing,
+                Sub()
+                    Dim count As Integer = 0
+
+                    For Each wnd As Window In Current.Windows
+                        If TypeOf wnd Is NavigationWindow AndAlso TypeOf CType(wnd, NavigationWindow).Content Is pgMain Then count += 1
+                    Next
+
+                    If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
+                End Sub
+        End If
+    End Sub
+
+    Public Shared Sub ActivateMainWindow()
+        For Each w As Window In Current.Windows
+            If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Maximized
+                w.Show()
+                w.Activate()
+                w.Topmost = True : w.Topmost = False
+                Exit Sub
+            End If
+        Next
+
+        ShowMainWindow()
     End Sub
 
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)
-        ThrowException(e.Exception, My.Resources.mdlMain_msg_UnhandledException)
+        ThrowException(e.Exception, My.Resources.str_UnhandledException)
         e.Handled = True
     End Sub
 
     Public Shared Sub AppDomain_CurrentDomain_UnhandledException(sender As Object, e As Object)
         Dim ex = TryCast(e, UnhandledExceptionEventArgs)
         If ex IsNot Nothing Then
-            ThrowException(ex.Exception, My.Resources.mdlMain_msg_UnhandledException)
+            ThrowException(ex.Exception, My.Resources.str_UnhandledException)
         Else
-            ThrowCustomException(My.Resources.mdlMain_msg_UnhandledException)
+            ThrowCustomException(My.Resources.str_UnhandledException)
         End If
     End Sub
 

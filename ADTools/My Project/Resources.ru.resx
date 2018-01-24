@@ -117,537 +117,447 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="wndDomains" xml:space="preserve">
+  <data name="str_Domains" xml:space="preserve">
     <value>Домены</value>
   </data>
-  <data name="wndDomains_btnDomainsAdd" xml:space="preserve">
+  <data name="str_Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
-  <data name="wndDomains_btnDomainsRemove" xml:space="preserve">
+  <data name="str_Remove" xml:space="preserve">
     <value>Удалить</value>
   </data>
-  <data name="wndDomains_dgPatternTelephoneNumbers1" xml:space="preserve">
+  <data name="str_PatternTelephoneNumberName" xml:space="preserve">
     <value>Название</value>
   </data>
-  <data name="wndDomains_dgPatternTelephoneNumbers2" xml:space="preserve">
+  <data name="str_PatternTelephoneNumberPattern" xml:space="preserve">
     <value>Шаблон</value>
   </data>
-  <data name="wndDomains_dgPatternTelephoneNumbers3" xml:space="preserve">
+  <data name="str_PatternTelephoneNumberRange" xml:space="preserve">
     <value>Диапазон</value>
   </data>
-  <data name="wndDomains_lbl_Connect" xml:space="preserve">
+  <data name="str_Connect" xml:space="preserve">
     <value>Подключить</value>
   </data>
-  <data name="wndDomains_lbl_DomainName" xml:space="preserve">
+  <data name="str_DomainName" xml:space="preserve">
     <value>Имя домена</value>
   </data>
-  <data name="wndDomains_lbl_Password" xml:space="preserve">
+  <data name="str_Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
-  <data name="wndDomains_lbl_PatternsExample" xml:space="preserve">
+  <data name="str_PatternsExample" xml:space="preserve">
     <value>Например:</value>
   </data>
-  <data name="wndDomains_lbl_PatternsExampleDef" xml:space="preserve">
+  <data name="str_PatternsExampleDefinition1" xml:space="preserve">
     <value>user-{{n}} = user-1 / user-2 / user-3 / user-100</value>
   </data>
-  <data name="wndDomains_lbl_Patterns_Computer" xml:space="preserve">
+  <data name="str_PatternsComputer" xml:space="preserve">
     <value>Компьютер (списком или через запятую)</value>
   </data>
-  <data name="wndDomains_lbl_Patterns_DefaultPassword" xml:space="preserve">
+  <data name="str_PatternsDefaultPassword" xml:space="preserve">
     <value>Стандарт. пароль</value>
   </data>
-  <data name="wndDomains_lbl_Patterns_Exchange" xml:space="preserve">
+  <data name="str_PatternsExchange" xml:space="preserve">
     <value>Шаблон именования почтового ящика в формате handlebars (см. вкладку "Шаблоны")</value>
   </data>
-  <data name="wndDomains_lbl_Patterns_PhoneNumbers" xml:space="preserve">
+  <data name="str_PatternsPhoneNumbers" xml:space="preserve">
     <value>Номера телефонов</value>
   </data>
-  <data name="wndDomains_lbl_Patterns_Username" xml:space="preserve">
+  <data name="str_PatternsUsername" xml:space="preserve">
     <value>Учетная запись (списком или через запятую)</value>
   </data>
-  <data name="wndDomains_lbl_SearchRoot" xml:space="preserve">
+  <data name="str_SearchRoot" xml:space="preserve">
     <value>Корень поиска</value>
   </data>
-  <data name="wndDomains_lbl_Username" xml:space="preserve">
+  <data name="str_Username" xml:space="preserve">
     <value>Имя входа</value>
   </data>
-  <data name="wndDomains_lvDomainProperties1" xml:space="preserve">
+  <data name="str_DomainPropertiesProperty" xml:space="preserve">
     <value>Параметр</value>
   </data>
-  <data name="wndDomains_lvDomainProperties2" xml:space="preserve">
+  <data name="str_DomainPropertiesValue" xml:space="preserve">
     <value>Значение</value>
   </data>
-  <data name="wndDomains_tabctlDomain_Exchange" xml:space="preserve">
+  <data name="str_Exchange" xml:space="preserve">
     <value>Exchange</value>
   </data>
-  <data name="wndDomains_tabctlDomain_Groups" xml:space="preserve">
-    <value>Группы</value>
-  </data>
-  <data name="wndDomains_tabctlDomain_Patterns" xml:space="preserve">
+  <data name="str_Patterns" xml:space="preserve">
     <value>Шаблоны</value>
   </data>
-  <data name="wndDomains_txt_Exchange" xml:space="preserve">
+  <data name="str_ExchangeDefinition" xml:space="preserve">
     <value>Если в вашей организации используется Microsoft Exchange Server, укажите имя сервера Exchange и список почтовых доменов.
 
 Данные сведения используются для управления почтовыми ящиками пользователей средствами PowerShell.</value>
   </data>
-  <data name="wndDomains_txt_Groups" xml:space="preserve">
+  <data name="str_GroupsDefinition" xml:space="preserve">
     <value>Выберите стандартные группы безопасности домена.
 
 Создаваемые пользователи будут автоматически добавляться в данные группы.</value>
   </data>
-  <data name="wndDomains_txt_Patterns" xml:space="preserve">
+  <data name="str_PatternsDefinition" xml:space="preserve">
     <value>Укажите формат именования объектов в формате handlebars, с указанием аргументов в двойных фигурных скобках, где аргументы:
 {{n}} - номер;
 {{displayname}} - отображаемое имя;</value>
   </data>
-  <data name="wndDomains_txt_SearchRoot" xml:space="preserve">
+  <data name="str_SearchRootDefinition" xml:space="preserve">
     <value>В следующем поле необходимо указать (выбрать) контейнер, в котором будет выполняться поиск объектов.
 
 В большинстве случаев пользовательские объекты расположены в конкретном контейнере. Поиск в таком контейнере сократит время поиска.
 
 Однако, вы можете указать и корень домена в качестве корня поиска.</value>
   </data>
-  <data name="wndDomains_txt_UseExchange" xml:space="preserve">
+  <data name="str_UseExchange" xml:space="preserve">
     <value>Использовать Exchange Server</value>
   </data>
-  <data name="wndMain_btnWindowClone" xml:space="preserve">
+  <data name="str_CloneWindow" xml:space="preserve">
     <value>Клонировать окно</value>
   </data>
-  <data name="lbl_ObjectsSelected" xml:space="preserve">
+  <data name="str_ObjectsSelected" xml:space="preserve">
     <value>Выделено:</value>
   </data>
-  <data name="lbl_ObjectsTotal" xml:space="preserve">
-    <value>Объектов:</value>
-  </data>
-  <data name="wndMain_lbl_SearchPattern" xml:space="preserve">
+  <data name="str_SearchPlaceholder" xml:space="preserve">
     <value>Поиск</value>
   </data>
-  <data name="wndMain_lbl_SearchResults" xml:space="preserve">
+  <data name="str_SearchResults" xml:space="preserve">
     <value>Результаты поиска: </value>
   </data>
-  <data name="wndMain_mnuEdit" xml:space="preserve">
-    <value>Правка</value>
-  </data>
-  <data name="wndMain_mnuEdit_CreateObject" xml:space="preserve">
-    <value>Создать объект</value>
-  </data>
-  <data name="wndMain_mnuFile" xml:space="preserve">
-    <value>Файл</value>
-  </data>
-  <data name="wndMain_mnuFile_Exit" xml:space="preserve">
+  <data name="ctxmnu_Exit" xml:space="preserve">
     <value>Выход</value>
   </data>
-  <data name="wndMain_mnuFile_Print" xml:space="preserve">
+  <data name="ctxmnu_Print" xml:space="preserve">
     <value>Печать</value>
   </data>
-  <data name="wndMain_mnuHelp" xml:space="preserve">
-    <value>Справка</value>
-  </data>
-  <data name="wndMain_mnuHelp_About" xml:space="preserve">
+  <data name="ctxmnu_About" xml:space="preserve">
     <value>О программе</value>
   </data>
-  <data name="wndMain_mnuSearch" xml:space="preserve">
+  <data name="str_Search" xml:space="preserve">
     <value>Поиск</value>
   </data>
-  <data name="wndMain_mnuSearchDomains" xml:space="preserve">
-    <value>Домены</value>
-  </data>
-  <data name="wndMain_mnuSearchMode" xml:space="preserve">
+  <data name="str_SearchMode" xml:space="preserve">
     <value>Режим</value>
   </data>
-  <data name="wndMain_mnuSearchMode_Advanced" xml:space="preserve">
+  <data name="str_SearchModeAdvanced" xml:space="preserve">
     <value>Расширенный</value>
   </data>
-  <data name="wndMain_mnuSearchMode_Default" xml:space="preserve">
+  <data name="str_SearchModeDefault" xml:space="preserve">
     <value>Стандартный</value>
   </data>
-  <data name="wndMain_mnuSearchObjectClasses" xml:space="preserve">
+  <data name="str_SearchObjectClasses" xml:space="preserve">
     <value>Классы</value>
   </data>
-  <data name="wndMain_mnuSearchSaveCurrentFilter" xml:space="preserve">
+  <data name="str_SearchSaveCurrentFilter" xml:space="preserve">
     <value>Сохранить текущий фильтр</value>
   </data>
-  <data name="wndMain_mnuService" xml:space="preserve">
-    <value>Сервис</value>
-  </data>
-  <data name="wndMain_mnuService_ErrorLog" xml:space="preserve">
+  <data name="str_ErrorLog" xml:space="preserve">
     <value>Журнал ошибок</value>
   </data>
-  <data name="wndMain_mnuService_Log" xml:space="preserve">
-    <value>Журнал</value>
-  </data>
-  <data name="wndMain_mnuService_Preferences" xml:space="preserve">
-    <value>Настройки приложения</value>
-  </data>
-  <data name="wndDomains_tabctlDomain1" xml:space="preserve">
-    <value>Домен</value>
-  </data>
-  <data name="wndDomains_tabctlDomain2" xml:space="preserve">
-    <value>Корень поиска</value>
-  </data>
-  <data name="wndMain_msg_CannotSaveCurrentFilter" xml:space="preserve">
+  <data name="str_CannotSaveCurrentFilter" xml:space="preserve">
     <value>Текущий фильтр пуст.</value>
   </data>
-  <data name="wndMain_msg_EnterFilterName" xml:space="preserve">
+  <data name="str_EnterFilterName" xml:space="preserve">
     <value>Введите имя фильтра:</value>
   </data>
-  <data name="wndMain_tviFavorites" xml:space="preserve">
+  <data name="str_Favorites" xml:space="preserve">
     <value>Избранное</value>
   </data>
-  <data name="wndMain_tviDomains" xml:space="preserve">
-    <value>Домены</value>
-  </data>
-  <data name="wndMain_tviFilters" xml:space="preserve">
+  <data name="str_Filters" xml:space="preserve">
     <value>Фильтры</value>
   </data>
-  <data name="wndMain_ctxmnutviFavoritesRemoveFromFavorites" xml:space="preserve">
+  <data name="ctxmnu_RemoveFromFavorites" xml:space="preserve">
     <value>Удалить из панели избранного</value>
   </data>
-  <data name="wndMain_ctxmnutviFavoritesProperties" xml:space="preserve">
-    <value>Свойства...</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsCreateObject" xml:space="preserve">
-    <value>Создать объект...</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsCopy" xml:space="preserve">
-    <value>Копировать</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsCut" xml:space="preserve">
-    <value>Вырезать</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsPaste" xml:space="preserve">
-    <value>Вставить</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsRename" xml:space="preserve">
-    <value>Переименовать...</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsRemove" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsAddToFavorites" xml:space="preserve">
+  <data name="ctxmnu_AddToFavorites" xml:space="preserve">
     <value>Добавить в избранное</value>
   </data>
-  <data name="wndMain_ctxmnutviFavoritesOpenObjectLocation" xml:space="preserve">
-    <value>Расположение объекта</value>
-  </data>
-  <data name="wndMain_ctxmnutviDomainsProperties" xml:space="preserve">
-    <value>Свойства...</value>
-  </data>
-  <data name="wndMain_tviFiltersRemoveFromFilters" xml:space="preserve">
+  <data name="ctxmnu_RemoveFromFilters" xml:space="preserve">
     <value>Удалить фильтр</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsExternalSoftware" xml:space="preserve">
+  <data name="ctxmnu_ExternalSoftware" xml:space="preserve">
     <value>Внешние приложения</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsSelectAll" xml:space="preserve">
+  <data name="ctxmnu_SelectAll" xml:space="preserve">
     <value>Выделить все</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsCreateObject" xml:space="preserve">
+  <data name="ctxmnu_CreateObject" xml:space="preserve">
     <value>Создать объект...</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsCopy" xml:space="preserve">
-    <value>Копировать</value>
-  </data>
-  <data name="wndMain_ctxmnuObjectsCut" xml:space="preserve">
+  <data name="ctxmnu_Cut" xml:space="preserve">
     <value>Вырезать</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsPaste" xml:space="preserve">
+  <data name="ctxmnu_Paste" xml:space="preserve">
     <value>Вставить</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsRename" xml:space="preserve">
+  <data name="ctxmnu_Rename" xml:space="preserve">
     <value>Переименовать...</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsRemove" xml:space="preserve">
+  <data name="ctxmnu_Remove" xml:space="preserve">
     <value>Удалить</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsAddToFavorites" xml:space="preserve">
+  <data name="str_AddToFavorites" xml:space="preserve">
     <value>Добавить в избранное</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsOpenObjectLocation" xml:space="preserve">
+  <data name="ctxmnu_OpenObjectLocation" xml:space="preserve">
     <value>Расположение объекта</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsResetPassword" xml:space="preserve">
+  <data name="ctxmnu_ResetPassword" xml:space="preserve">
     <value>Сбросить пароль на стандартный</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsDisableEnable" xml:space="preserve">
+  <data name="ctxmnu_DisableEnable" xml:space="preserve">
     <value>Заблокировать/разблокировать</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsExpirationDate" xml:space="preserve">
+  <data name="ctxmnu_SetExpirationDateMidnight" xml:space="preserve">
     <value>Установить срок действия на полночь...</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsProperties" xml:space="preserve">
+  <data name="ctxmnu_Properties" xml:space="preserve">
     <value>Свойства...</value>
   </data>
-  <data name="wndMain_msg_AreYouSure" xml:space="preserve">
+  <data name="str_AreYouSure" xml:space="preserve">
     <value>Вы уверены?</value>
   </data>
-  <data name="wndMain_msg_RemoveObject" xml:space="preserve">
+  <data name="str_RemoveObject" xml:space="preserve">
     <value>Удаление объекта</value>
   </data>
-  <data name="wndMain_msg_ThisIsOrganizationaUnit" xml:space="preserve">
+  <data name="str_ThisIsOrganizationaUnit" xml:space="preserve">
     <value>Это подразделение!</value>
   </data>
-  <data name="wndMain_msg_EnterObjectName" xml:space="preserve">
+  <data name="str_EnterObjectName" xml:space="preserve">
     <value>Введите новое имя объекта:</value>
   </data>
-  <data name="wndMain_msg_RenameObject" xml:space="preserve">
+  <data name="str_RenameObject" xml:space="preserve">
     <value>Переименование объекта</value>
   </data>
-  <data name="wndMain_msg_MovingIsProhibited" xml:space="preserve">
+  <data name="str_MovingIsProhibited" xml:space="preserve">
     <value>Перемещение в другие домены запрещено</value>
   </data>
-  <data name="wndMain_msg_MoveObject" xml:space="preserve">
+  <data name="str_MoveObject" xml:space="preserve">
     <value>Перемещение объектов</value>
   </data>
-  <data name="wndMain_msg_ObjectUnknownClass" xml:space="preserve">
+  <data name="str_UnknownObjectClass" xml:space="preserve">
     <value>Неизвестный класс копируемого объекта</value>
   </data>
-  <data name="wndMain_msg_CopyObject" xml:space="preserve">
+  <data name="str_CopyObject" xml:space="preserve">
     <value>Копирование объекта</value>
   </data>
-  <data name="wndMain_msg_MoveObjectToContainer" xml:space="preserve">
+  <data name="str_MoveObjectToContainer" xml:space="preserve">
     <value>Перемещение:
 {0}
 
 В контейнер:
 {1}</value>
   </data>
-  <data name="wndMain_msg_NObjects" xml:space="preserve">
+  <data name="str_nObjects" xml:space="preserve">
     <value>{0} объектов</value>
   </data>
-  <data name="wndMain_msg_PasteObject" xml:space="preserve">
-    <value>Вставить объект</value>
-  </data>
-  <data name="wndMain_msg_CopyOneObjectWithinDomain" xml:space="preserve">
+  <data name="str_CopyOneObjectWithinDomain" xml:space="preserve">
     <value>В пределах домена можно копировать только один объект</value>
   </data>
-  <data name="wndObject_lbl_BasicInformation" xml:space="preserve">
+  <data name="str_BasicInformation" xml:space="preserve">
     <value>Основные сведения</value>
   </data>
-  <data name="wndObject_lbl_SAMAccountName" xml:space="preserve">
-    <value>Имя входа (пред-Windows 2000)</value>
-  </data>
-  <data name="wndObject_lbl_DNSName" xml:space="preserve">
+  <data name="str_DNSName" xml:space="preserve">
     <value>DNS-имя</value>
   </data>
-  <data name="wndObject_lbl_Description" xml:space="preserve">
+  <data name="str_Description" xml:space="preserve">
     <value>Описание</value>
   </data>
-  <data name="wndObject_lbl_Location" xml:space="preserve">
+  <data name="str_Location" xml:space="preserve">
     <value>Местонахождение</value>
   </data>
-  <data name="wndObject_lbl_OS" xml:space="preserve">
+  <data name="str_OS" xml:space="preserve">
     <value>Операционная система</value>
   </data>
-  <data name="wndObject_lbl_Version" xml:space="preserve">
+  <data name="str_Version" xml:space="preserve">
     <value>Версия</value>
   </data>
-  <data name="wndObject_lbl_Object" xml:space="preserve">
+  <data name="str_Object" xml:space="preserve">
     <value>Объект</value>
   </data>
-  <data name="wndObject_tt_AccountExpires" xml:space="preserve">
+  <data name="str_AccountExpiresToolTip" xml:space="preserve">
     <value>Срок действия объекта</value>
   </data>
-  <data name="wndObject_tt_LastLogon" xml:space="preserve">
+  <data name="str_LastLogonToolTip" xml:space="preserve">
     <value>Последний вход</value>
   </data>
-  <data name="wndObject_tt_Created" xml:space="preserve">
+  <data name="str_CreatedToolTip" xml:space="preserve">
     <value>Создан</value>
   </data>
-  <data name="wndObject_lbl_MemberOf" xml:space="preserve">
+  <data name="str_MemberOf" xml:space="preserve">
     <value>Член групп</value>
   </data>
-  <data name="wndObject_lbl_Network" xml:space="preserve">
+  <data name="str_Network" xml:space="preserve">
     <value>Сеть</value>
   </data>
-  <data name="wndObject_LoginEventLog" xml:space="preserve">
+  <data name="str_LoginEventLog" xml:space="preserve">
     <value>Журнал входов</value>
   </data>
-  <data name="wndObject_msg_RetrievingLoginsWMI" xml:space="preserve">
+  <data name="str_RetrievingLogins" xml:space="preserve">
     <value>Получения данных журнала входов/выходов средствами WMI</value>
   </data>
-  <data name="wndObject_lbl_Period" xml:space="preserve">
+  <data name="str_Period" xml:space="preserve">
     <value>Период</value>
   </data>
-  <data name="wndObject_lbl_Search" xml:space="preserve">
-    <value>Поиск</value>
-  </data>
-  <data name="wndObject_lbl_Display" xml:space="preserve">
+  <data name="str_EventsToDisplay" xml:space="preserve">
     <value>Отображать:</value>
   </data>
-  <data name="wndObject_lbl_EventAll" xml:space="preserve">
+  <data name="str_EventAll" xml:space="preserve">
     <value>Все</value>
   </data>
-  <data name="wndObject_lbl_EventSuccess" xml:space="preserve">
+  <data name="str_EventSuccess" xml:space="preserve">
     <value>Успех</value>
   </data>
-  <data name="wndObject_lbl_EventFailure" xml:space="preserve">
+  <data name="str_EventFailure" xml:space="preserve">
     <value>Отказ</value>
   </data>
-  <data name="lbl_Objects" xml:space="preserve">
+  <data name="str_ObjectsTotal" xml:space="preserve">
     <value>Объектов:</value>
   </data>
-  <data name="ctlNetwork_lbl_NetworkAvailabilityICMP" xml:space="preserve">
+  <data name="str_NetworkAvailabilityICMP" xml:space="preserve">
     <value>Доступность (ICMP):</value>
   </data>
-  <data name="ctlNetwork_lbl_NetworkTraceRoute" xml:space="preserve">
+  <data name="str_NetworkTraceRoute" xml:space="preserve">
     <value>Трассировка маршрута:</value>
   </data>
-  <data name="ctlNetwork_lbl_NetworkAvailabilityTCP" xml:space="preserve">
+  <data name="str_NetworkAvailabilityTCP" xml:space="preserve">
     <value>Доступность портов (TCP):</value>
   </data>
-  <data name="wndObject_lbl_EventCategory" xml:space="preserve">
+  <data name="str_EventCategory" xml:space="preserve">
     <value>Категория</value>
   </data>
-  <data name="wndObject_lbl_EventCode" xml:space="preserve">
+  <data name="str_EventCode" xml:space="preserve">
     <value>Код</value>
   </data>
-  <data name="wndObject_lbl_EventAccountName" xml:space="preserve">
+  <data name="str_EventAccountName" xml:space="preserve">
     <value>Имя входа</value>
   </data>
-  <data name="wndObject_lbl_EventLogonType" xml:space="preserve">
+  <data name="str_EventLogonType" xml:space="preserve">
     <value>Тип входа</value>
   </data>
-  <data name="wndObject_lbl_EventSourceAddress" xml:space="preserve">
+  <data name="str_EventSourceAddress" xml:space="preserve">
     <value>Адрес источника</value>
   </data>
-  <data name="wndObject_lbl_EventTimeGenerated" xml:space="preserve">
+  <data name="str_EventTimeGenerated" xml:space="preserve">
     <value>Время</value>
   </data>
-  <data name="wndObject_lbl_AllAttributes" xml:space="preserve">
+  <data name="str_AllAttributes" xml:space="preserve">
     <value>Все атрибуты</value>
   </data>
-  <data name="wndObject_lbl_GivenName" xml:space="preserve">
+  <data name="str_GivenName" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="wndObject_Initials" xml:space="preserve">
+  <data name="str_Initials" xml:space="preserve">
     <value>Инициалы</value>
   </data>
-  <data name="wndObject_lbl_Surname" xml:space="preserve">
+  <data name="str_Surname" xml:space="preserve">
     <value>Фамилия</value>
   </data>
-  <data name="wndObject_lbl_DisplayName" xml:space="preserve">
-    <value>Отображаемое имя</value>
-  </data>
-  <data name="wndObject_lbl_OfficeName" xml:space="preserve">
+  <data name="str_OfficeName" xml:space="preserve">
     <value>Офис</value>
   </data>
-  <data name="wndObject_lbl_TelephoneNumber" xml:space="preserve">
+  <data name="str_TelephoneNumber" xml:space="preserve">
     <value>Основной номер</value>
   </data>
-  <data name="wndObject_lbl_HomePhone" xml:space="preserve">
+  <data name="str_HomePhone" xml:space="preserve">
     <value>Городской номер</value>
   </data>
-  <data name="wndObject_lbl_IpPhone" xml:space="preserve">
+  <data name="str_IpPhone" xml:space="preserve">
     <value>Дополнительный номер</value>
   </data>
-  <data name="wndObject_lbl_Mobile" xml:space="preserve">
+  <data name="str_Mobile" xml:space="preserve">
     <value>Мобильный номер</value>
   </data>
-  <data name="wndObject_lbl_Mail" xml:space="preserve">
+  <data name="str_Mail" xml:space="preserve">
     <value>Основной адрес</value>
   </data>
-  <data name="wndObject_lbl_Title" xml:space="preserve">
+  <data name="str_Title" xml:space="preserve">
     <value>Должность</value>
   </data>
-  <data name="wndObject_lbl_Department" xml:space="preserve">
+  <data name="str_Department" xml:space="preserve">
     <value>Подразделение</value>
   </data>
-  <data name="wndObject_lbl_Company" xml:space="preserve">
+  <data name="str_Company" xml:space="preserve">
     <value>Компания</value>
   </data>
-  <data name="wndObject_lbl_StreetAddress" xml:space="preserve">
+  <data name="str_StreetAddress" xml:space="preserve">
     <value>Расположение</value>
   </data>
-  <data name="wndObject_lbl_Manager" xml:space="preserve">
+  <data name="str_Manager" xml:space="preserve">
     <value>Руководитель</value>
   </data>
-  <data name="ctlMailbox_lbl_Add" xml:space="preserve">
+  <data name="str_AddAddress" xml:space="preserve">
     <value>&lt; Добавить адрес</value>
   </data>
-  <data name="wndCreateObject_lbl_CreateObject" xml:space="preserve">
+  <data name="str_CreateObject" xml:space="preserve">
     <value>Создание объекта</value>
   </data>
-  <data name="wndCreateObject_lbl_Domain" xml:space="preserve">
-    <value>Домен</value>
-  </data>
-  <data name="wndCreateObject_lbl_Container" xml:space="preserve">
+  <data name="str_Container" xml:space="preserve">
     <value>Контейнер</value>
   </data>
-  <data name="wndCreateObject_lbl_User" xml:space="preserve">
+  <data name="str_User" xml:space="preserve">
     <value>Пользователь</value>
   </data>
-  <data name="wndCreateObject_lbl_Computer" xml:space="preserve">
+  <data name="str_Computer" xml:space="preserve">
     <value>Компьютер</value>
   </data>
-  <data name="wndCreateObject_lbl_Group" xml:space="preserve">
+  <data name="str_Group" xml:space="preserve">
     <value>Группа</value>
   </data>
-  <data name="wndCreateObject_lbl_Contact" xml:space="preserve">
+  <data name="str_Contact" xml:space="preserve">
     <value>Контакт</value>
   </data>
-  <data name="wndCreateObject_lbl_OrganizationalUnit" xml:space="preserve">
+  <data name="str_OrganizationalUnit" xml:space="preserve">
     <value>Подразделение</value>
   </data>
-  <data name="wndCreateObject_lbl_DisplayName" xml:space="preserve">
+  <data name="str_DisplayName" xml:space="preserve">
     <value>Отображаемое имя</value>
   </data>
-  <data name="wndCreateObject_lbl_SharedMailbox" xml:space="preserve">
+  <data name="str_SharedMailbox" xml:space="preserve">
     <value>общий почтовый ящик</value>
   </data>
-  <data name="wndCreateObject_lbl_UserPrincipalName" xml:space="preserve">
+  <data name="str_UserPrincipalName" xml:space="preserve">
     <value>Имя входа</value>
   </data>
-  <data name="wndCreateObject_lbl_ObjectName" xml:space="preserve">
+  <data name="str_ObjectNameCN" xml:space="preserve">
     <value>Объект (CN)</value>
   </data>
-  <data name="wndCreateObject_lbl_SAMAccountName" xml:space="preserve">
+  <data name="str_SAMAccountName" xml:space="preserve">
     <value>Имя входа (пред-Windows 2000)</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupScope" xml:space="preserve">
+  <data name="str_GroupScope" xml:space="preserve">
     <value>Область действия группы</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupScopeDomainLocal" xml:space="preserve">
+  <data name="str_GroupScopeDomainLocal" xml:space="preserve">
     <value>Локальная в домене</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupScopeGlobal" xml:space="preserve">
+  <data name="str_GroupScopeGlobal" xml:space="preserve">
     <value>Глобальная</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupScopeUniversal" xml:space="preserve">
+  <data name="str_GroupScopeUniversal" xml:space="preserve">
     <value>Универсальная</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupType" xml:space="preserve">
+  <data name="str_GroupType" xml:space="preserve">
     <value>Тип группы</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupTypeSecurity" xml:space="preserve">
+  <data name="str_GroupTypeSecurity" xml:space="preserve">
     <value>Группа безопасности</value>
   </data>
-  <data name="wndCreateObject_lbl_GroupTypeDistribution" xml:space="preserve">
+  <data name="str_GroupTypeDistribution" xml:space="preserve">
     <value>Группа распространения</value>
   </data>
-  <data name="wndCreateObject_lbl_CloseWindowOnCreate" xml:space="preserve">
+  <data name="str_CloseWindowOnObjectCreate" xml:space="preserve">
     <value>Закрыть окно после создания</value>
   </data>
-  <data name="wndCreateObject_lbl_OpenObject" xml:space="preserve">
+  <data name="str_OpenObject" xml:space="preserve">
     <value>Открыть объект</value>
   </data>
-  <data name="wndCreateObject_lbl_Create" xml:space="preserve">
-    <value>Создать</value>
-  </data>
-  <data name="wndCreateObject_msg_MissedRequiredFields" xml:space="preserve">
+  <data name="str_MissedRequiredFields" xml:space="preserve">
     <value>Не заполнены необходимые поля</value>
   </data>
-  <data name="wndCreateObject_msg_DefaultPasswordIsNotSet" xml:space="preserve">
-    <value>Стандартный пароль не указан</value>
-  </data>
-  <data name="wndDomainBrowser_lbl_DomainBrowser" xml:space="preserve">
+  <data name="str_DomainBrowser" xml:space="preserve">
     <value>Обозреватель домена</value>
   </data>
-  <data name="wndDomainBrowser_lbl_OK" xml:space="preserve">
+  <data name="str_OK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="wndDomains_lbl_PatternsExampleDefinition" xml:space="preserve">
+  <data name="str_PatternsExampleDefinition2" xml:space="preserve">
     <value>Используемые переменные:
 {{n}} - номер;  
 {{displayname}} - отображаемое имя;
@@ -667,438 +577,345 @@
 Комбинации:
 {{fst 1 (trans (split 1 displayname))}}.{{trans (split 0 displayname)}}</value>
   </data>
-  <data name="wndDomains_lbl_PatternsExampleDefinitionHandlebars" xml:space="preserve">
+  <data name="str_PatternsExampleDefinitionHandlebars" xml:space="preserve">
     <value>Handlebars</value>
   </data>
-  <data name="wndErrorLog_lbl_Debug" xml:space="preserve">
+  <data name="str_Debug" xml:space="preserve">
     <value>Отладка</value>
   </data>
-  <data name="wndErrorLog_lbl_Timestamp" xml:space="preserve">
+  <data name="str_Timestamp" xml:space="preserve">
     <value>Время</value>
   </data>
-  <data name="wndErrorLog_lbl_Exception" xml:space="preserve">
-    <value>Описание ошибки</value>
+  <data name="str_Exception" xml:space="preserve">
+    <value>Исключение</value>
   </data>
-  <data name="wndErrorLog_ctxmnuErrorCopy" xml:space="preserve">
-    <value>Копировать</value>
-  </data>
-  <data name="wndObject_lbl_GroupScope" xml:space="preserve">
-    <value>Область действия группы</value>
-  </data>
-  <data name="wndObject_lbl_GroupScopeDomainLocal" xml:space="preserve">
-    <value>Локальная в домене</value>
-  </data>
-  <data name="wndObject_lbl_GroupScopeGlobal" xml:space="preserve">
-    <value>Глобальная</value>
-  </data>
-  <data name="wndObject_lbl_GroupScopeUniversal" xml:space="preserve">
-    <value>Универсальная</value>
-  </data>
-  <data name="wndObject_lbl_GroupType" xml:space="preserve">
-    <value>Тип группы</value>
-  </data>
-  <data name="wndObject_lbl_GroupTypeSecurity" xml:space="preserve">
-    <value>Группа безопасности</value>
-  </data>
-  <data name="wndObject_lbl_GroupTypeDistribution" xml:space="preserve">
-    <value>Группа распространения</value>
-  </data>
-  <data name="wndObject_lbl_Info" xml:space="preserve">
+  <data name="str_Info" xml:space="preserve">
     <value>Заметки</value>
   </data>
-  <data name="wndObject_lbl_Members" xml:space="preserve">
+  <data name="str_Members" xml:space="preserve">
     <value>Члены группы</value>
   </data>
-  <data name="ctlMailbox_lbl_Change" xml:space="preserve">
+  <data name="str_ChangeAddress" xml:space="preserve">
     <value>Изменить адрес</value>
   </data>
-  <data name="ctlMailbox_lbl_EmailAddress" xml:space="preserve">
-    <value>Почтовый адрес</value>
-  </data>
-  <data name="ctlMailbox_lbl_HiddenHide" xml:space="preserve">
+  <data name="str_EmailHide" xml:space="preserve">
     <value>Скрыть</value>
   </data>
-  <data name="ctlMailbox_lbl_HiddenShow" xml:space="preserve">
+  <data name="str_EmailShow" xml:space="preserve">
     <value>Показать</value>
   </data>
-  <data name="ctlMailbox_lbl_HiddenToolTip" xml:space="preserve">
+  <data name="str_EmailHiddenToolTip" xml:space="preserve">
     <value>Показать/скрыть адрес в адресной книге</value>
   </data>
-  <data name="ctlMailbox_lbl_Quotas" xml:space="preserve">
-    <value>Квоты...</value>
-  </data>
-  <data name="ctlMailbox_lbl_Remove" xml:space="preserve">
+  <data name="str_RemoveAddress" xml:space="preserve">
     <value>Удалить адрес &gt;</value>
   </data>
-  <data name="ctlMailbox_lbl_Server" xml:space="preserve">
+  <data name="str_ExchangeServer" xml:space="preserve">
     <value>Exchange Server</value>
   </data>
-  <data name="ctlMailbox_lbl_SetPrimary" xml:space="preserve">
+  <data name="str_SetPrimaryAddress" xml:space="preserve">
     <value>Сделать основным</value>
   </data>
-  <data name="ctlMailbox_lbl_Share" xml:space="preserve">
-    <value>Общий доступ...</value>
+  <data name="str_EmailShare" xml:space="preserve">
+    <value>Общий доступ</value>
   </data>
-  <data name="ctlMailbox_lbl_SizeBusy" xml:space="preserve">
+  <data name="str_SizeBusy" xml:space="preserve">
     <value>занято:</value>
   </data>
-  <data name="ctlMailbox_lbl_SizeQuota" xml:space="preserve">
+  <data name="str_SizeQuota" xml:space="preserve">
     <value>квота:</value>
   </data>
-  <data name="ctlMailbox_lbl_State" xml:space="preserve">
+  <data name="str_ConnectionState" xml:space="preserve">
     <value>Статус подключения: </value>
   </data>
-  <data name="ctlMailbox_lbl_TypeShared" xml:space="preserve">
+  <data name="str_TypeShared" xml:space="preserve">
     <value>Общий</value>
   </data>
-  <data name="ctlMailbox_lbl_TypeToolTip" xml:space="preserve">
+  <data name="str_TypeToolTip" xml:space="preserve">
     <value>Конвертировать ящик в пользовательской/общий</value>
   </data>
-  <data name="ctlMailbox_lbl_TypeUser" xml:space="preserve">
+  <data name="str_TypeUser" xml:space="preserve">
     <value>Пользоват.</value>
   </data>
-  <data name="wndObject_lbl_Exchange" xml:space="preserve">
-    <value>Exchange</value>
-  </data>
-  <data name="ctlGroupMember_lbl_SelectedObjects" xml:space="preserve">
-    <value>Выбранные объекты</value>
-  </data>
-  <data name="ctlGroupMember_lbl_ObjectsList" xml:space="preserve">
-    <value>Список объектов</value>
-  </data>
-  <data name="ctlGroupMember_lbl_Objects" xml:space="preserve">
-    <value>Объекты</value>
-  </data>
-  <data name="ctlGroupMember_msg_AnotherDomain" xml:space="preserve">
-    <value>Из другого домена нельзя же!</value>
-  </data>
-  <data name="ctlGroupMember_msg_AnotherDomainTitle" xml:space="preserve">
-    <value>Ну тычоваще :(</value>
-  </data>
-  <data name="ctlGroupMemberOf_lbl_SelectedGroups" xml:space="preserve">
+  <data name="str_SelectedGroups" xml:space="preserve">
     <value>Выбранные группы</value>
   </data>
-  <data name="ctlGroupMemberOf_lbl_GroupsList" xml:space="preserve">
+  <data name="str_GroupsList" xml:space="preserve">
     <value>Список групп</value>
   </data>
-  <data name="ctlGroupMemberOf_lbl_Groups" xml:space="preserve">
+  <data name="str_Groups" xml:space="preserve">
     <value>Группы</value>
   </data>
-  <data name="ctlNetwork_msg_Available" xml:space="preserve">
+  <data name="str_NetworkAvailable" xml:space="preserve">
     <value>Доступен</value>
   </data>
-  <data name="ctlNetwork_msg_NotAvailable" xml:space="preserve">
+  <data name="str_NetworkNotAvailable" xml:space="preserve">
     <value>Не доступен</value>
   </data>
-  <data name="ctlNetwork_msg_ReplyFrom" xml:space="preserve">
+  <data name="str_NetworkReplyFrom" xml:space="preserve">
     <value>Ответ от </value>
   </data>
-  <data name="ctlNetwork_msg_AddressUnknown" xml:space="preserve">
+  <data name="str_NetworkAddressUnknown" xml:space="preserve">
     <value>Адрес неизвестен</value>
   </data>
-  <data name="ctlNetwork_msg_Unknown" xml:space="preserve">
+  <data name="str_NetworkUnknown" xml:space="preserve">
     <value>Неизвестно</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_WithValue" xml:space="preserve">
+  <data name="str_AttributesWithValue" xml:space="preserve">
     <value>Имеющие значения</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_All" xml:space="preserve">
+  <data name="str_AttributesAll" xml:space="preserve">
     <value>Все</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_Changed" xml:space="preserve">
+  <data name="str_AttributesChanged" xml:space="preserve">
     <value>Измененные</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_Attribute" xml:space="preserve">
+  <data name="str_AttributesAttribute" xml:space="preserve">
     <value>Атрибут</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_Value" xml:space="preserve">
+  <data name="str_AttributesValue" xml:space="preserve">
     <value>Значение</value>
   </data>
-  <data name="ctlObjectAttributes_lbl_NewValue" xml:space="preserve">
+  <data name="str_AttributesNewValue" xml:space="preserve">
     <value>Новое значение</value>
   </data>
-  <data name="ctlObjectAttributes_ctxmnuCopy" xml:space="preserve">
+  <data name="ctxmnu_Copy" xml:space="preserve">
     <value>Копировать</value>
   </data>
-  <data name="ctlObjectAttributes_ctxmnuCopyValues" xml:space="preserve">
+  <data name="ctxmnu_CopyValues" xml:space="preserve">
     <value>Копировать значения</value>
   </data>
-  <data name="ctlMailbox_msg_RemovingPrimaryAddress" xml:space="preserve">
+  <data name="str_RemovingPrimaryAddress" xml:space="preserve">
     <value>Удаление основного адреса подразумевает полное удаление почтового ящика
 
 Вы уверены?</value>
   </data>
-  <data name="ctlMailbox_msg_RemovingPrimaryAddressTitle" xml:space="preserve">
+  <data name="str_RemovingPrimaryAddressTitle" xml:space="preserve">
     <value>Удаление почтового ящика</value>
   </data>
-  <data name="ctlMailbox_msg_ConnectionError" xml:space="preserve">
+  <data name="str_ConnectionError" xml:space="preserve">
     <value>Ошибка подключения</value>
   </data>
-  <data name="ctlUserWorkstations_lbl_SelectedWorkstations" xml:space="preserve">
+  <data name="str_SelectedWorkstations" xml:space="preserve">
     <value>Выбранные компьютеры</value>
   </data>
-  <data name="ctlUserWorkstations_lbl_WorkstationsList" xml:space="preserve">
+  <data name="str_WorkstationsList" xml:space="preserve">
     <value>Список компьютеров</value>
   </data>
-  <data name="ctlUserWorkstations_lbl_Workstations" xml:space="preserve">
-    <value>Компьютеры</value>
-  </data>
-  <data name="wndLog_lbl_Log" xml:space="preserve">
+  <data name="str_EventLog" xml:space="preserve">
     <value>Журнал событий</value>
   </data>
-  <data name="wndLog_lbl_Timestamp" xml:space="preserve">
-    <value>Время</value>
-  </data>
-  <data name="wndLog_lbl_Event" xml:space="preserve">
+  <data name="str_Event" xml:space="preserve">
     <value>Событие</value>
   </data>
-  <data name="wndLog_ctxmnuCopy" xml:space="preserve">
-    <value>Копировать</value>
-  </data>
-  <data name="wndMailboxQuota_lbl_Quotas" xml:space="preserve">
-    <value>Квоты</value>
-  </data>
-  <data name="wndMailboxQuota_lbl_StoreQuotas" xml:space="preserve">
-    <value>Квоты хранилища</value>
-  </data>
-  <data name="wndMailboxQuota_lbl_UseDatabaseDefaults" xml:space="preserve">
+  <data name="str_QuotasUseDatabaseDefaults" xml:space="preserve">
     <value>Использовать настройки по умолчанию базы данных почтовых ящиков</value>
   </data>
-  <data name="wndMailboxQuota_lbl_WhenExceeds" xml:space="preserve">
+  <data name="str_QuotasWhenExceeds" xml:space="preserve">
     <value>Когда размер почтового ящика превышает указанное значение:</value>
   </data>
-  <data name="wndMailboxQuota_lbl_Warning" xml:space="preserve">
+  <data name="str_QuotasWarning" xml:space="preserve">
     <value>Предупреждение о проблеме в (МБ)</value>
   </data>
-  <data name="wndMailboxQuota_lbl_ProhibitSend" xml:space="preserve">
+  <data name="str_ProhibitSend" xml:space="preserve">
     <value>Запретить отправку при (МБ)</value>
   </data>
-  <data name="wndMailboxQuota_lbl_ProhibitSendReceive" xml:space="preserve">
+  <data name="str_ProhibitSendReceive" xml:space="preserve">
     <value>Запретить отправку и получение при (МБ)</value>
   </data>
-  <data name="wndMailboxQuota_lbl_OK" xml:space="preserve">
-    <value>OK</value>
+  <data name="str_Apply" xml:space="preserve">
+    <value>Применить</value>
   </data>
-  <data name="wndMailboxShare_lbl_SharedMailbox" xml:space="preserve">
-    <value>Общий доступ к почтовому ящику</value>
-  </data>
-  <data name="wndMailboxShare_lbl_FullAccess" xml:space="preserve">
+  <data name="str_FullAccess" xml:space="preserve">
     <value>Полный доступ</value>
   </data>
-  <data name="wndMailboxShare_lbl_Name" xml:space="preserve">
+  <data name="str_Name" xml:space="preserve">
     <value>Имя</value>
   </data>
-  <data name="wndMailboxShare_lbl_UserPrincipalName" xml:space="preserve">
-    <value>Имя входа</value>
-  </data>
-  <data name="wndMailboxShare_lbl_SendAs" xml:space="preserve">
+  <data name="str_SendAs" xml:space="preserve">
     <value>Отправить </value>
   </data>
-  <data name="wndMailboxShare_lbl_SendOnBehalf" xml:space="preserve">
+  <data name="str_SendOnBehalf" xml:space="preserve">
     <value>Отправить от имени</value>
   </data>
-  <data name="wndMailboxShare_lbl_ObjectsList" xml:space="preserve">
-    <value>Список объектов</value>
-  </data>
-  <data name="wndMailboxShare_lbl_SendAsCopyToSent" xml:space="preserve">
+  <data name="str_SendAsCopyToSent" xml:space="preserve">
     <value>Помещать копии писем в папку Отправленные</value>
   </data>
-  <data name="wndMailboxShare_lbl_SendOnBehalfCopyToSent" xml:space="preserve">
+  <data name="str_SendOnBehalfCopyToSent" xml:space="preserve">
     <value>Помещать копии писем в папку Отправленные</value>
   </data>
-  <data name="wndMailboxShare_msg_SendAsCopyToSent" xml:space="preserve">
+  <data name="str_SendAsCopyToSentQuestion" xml:space="preserve">
     <value>Помещать копии писем в папку Отправленные?</value>
   </data>
-  <data name="wndMailboxShare_msg_SendAction" xml:space="preserve">
+  <data name="str_SendAction" xml:space="preserve">
     <value>Действие при отправке</value>
   </data>
-  <data name="wndMailboxShare_msg_SendOnBehalfCopyToSent" xml:space="preserve">
+  <data name="str_SendOnBehalfCopyToSentQuestion" xml:space="preserve">
     <value>Помещать копии писем в папку Отправленные?</value>
   </data>
-  <data name="wndObject_lbl_DepartmentResolve" xml:space="preserve">
+  <data name="str_DepartmentResolve" xml:space="preserve">
     <value>Получить из названия контейнера</value>
   </data>
-  <data name="wndObject_lbl_PasswordLastSet" xml:space="preserve">
+  <data name="str_PasswordLastSet" xml:space="preserve">
     <value>Пароль изменен</value>
   </data>
-  <data name="wndObject_lbl_PasswordExpires" xml:space="preserve">
+  <data name="str_PasswordExpires" xml:space="preserve">
     <value>Истекает</value>
   </data>
-  <data name="wndObject_lbl_Password" xml:space="preserve">
-    <value>Пароль</value>
-  </data>
-  <data name="wndObject_lbl_AccountDisabled" xml:space="preserve">
+  <data name="str_AccountDisabled" xml:space="preserve">
     <value>Учетная запись заблокирована</value>
   </data>
-  <data name="wndObject_lbl_MustChangePasswordNextLogon" xml:space="preserve">
+  <data name="str_MustChangePasswordNextLogon" xml:space="preserve">
     <value>Пользователь должен сменить пароль при следующем входе</value>
   </data>
-  <data name="wndObject_lbl_UserPrincipalName" xml:space="preserve">
-    <value>Имя входа</value>
-  </data>
-  <data name="wndObject_lbl_AccountExpires" xml:space="preserve">
+  <data name="str_AccountExpires" xml:space="preserve">
     <value>Срок действия объекта</value>
   </data>
-  <data name="wndObject_lbl_AccountExpiresAt" xml:space="preserve">
+  <data name="str_AccountExpiresAt" xml:space="preserve">
     <value>Истекает</value>
   </data>
-  <data name="wndObject_lbl_AccountNeverExpires" xml:space="preserve">
+  <data name="str_AccountNeverExpires" xml:space="preserve">
     <value>Не ограничен</value>
   </data>
-  <data name="wndObject_lbl_AllowedWorkstations" xml:space="preserve">
+  <data name="str_AllowedWorkstations" xml:space="preserve">
     <value>Разрешить вход на следующие рабочие станции</value>
   </data>
-  <data name="wndObject_lbl_PasswordNeverExpires" xml:space="preserve">
+  <data name="str_PasswordNeverExpires" xml:space="preserve">
     <value>Срок действия пароля не ограничен</value>
   </data>
-  <data name="wndObject_lbl_ResetPassword" xml:space="preserve">
+  <data name="str_PasswordReset" xml:space="preserve">
     <value>Сбросить пароль на стандартный</value>
   </data>
-  <data name="wndObject_lbl_SetPassword" xml:space="preserve">
+  <data name="str_PasswordSet" xml:space="preserve">
     <value>Задать пароль</value>
   </data>
-  <data name="wndObject_lbl_ClearPhoto" xml:space="preserve">
-    <value>Очистить</value>
-  </data>
-  <data name="wndObject_msg_AreYouSure" xml:space="preserve">
-    <value>Вы уверены?</value>
-  </data>
-  <data name="wndObject_msg_ResetPassword" xml:space="preserve">
-    <value>Сброс пароля</value>
-  </data>
-  <data name="wndObject_msg_EnterNewPassword" xml:space="preserve">
+  <data name="str_EnterNewPassword" xml:space="preserve">
     <value>Введите новый пароль:</value>
   </data>
-  <data name="wndObject_msg_ChangePassword" xml:space="preserve">
+  <data name="str_PasswordChange" xml:space="preserve">
     <value>Смена пароля</value>
   </data>
-  <data name="wndObject_msg_PasswordChanged" xml:space="preserve">
-    <value>Пароль изменен</value>
+  <data name="str_ClearPhoto" xml:space="preserve">
+    <value>Удаление фото</value>
   </data>
-  <data name="wndObject_msg_ClearPhoto" xml:space="preserve">
-    <value>Удалить фото</value>
-  </data>
-  <data name="cls_msg_SelectedAddressAlreadyPrimary" xml:space="preserve">
+  <data name="str_SelectedAddressAlreadyPrimary" xml:space="preserve">
     <value>Выбранный адрес уже используется как основной</value>
   </data>
-  <data name="cls_msg_Never" xml:space="preserve">
+  <data name="str_Never" xml:space="preserve">
     <value>никогда</value>
   </data>
-  <data name="cls_msg_Unknown" xml:space="preserve">
+  <data name="str_Unknown" xml:space="preserve">
     <value>неизвестно</value>
   </data>
-  <data name="cls_msg_PasswordExpiresUnknown" xml:space="preserve">
+  <data name="str_PasswordExpirationUnknown" xml:space="preserve">
     <value>Срок действия пароля неизвестен</value>
   </data>
-  <data name="cls_msg_PasswordExpired" xml:space="preserve">
+  <data name="str_PasswordExpired" xml:space="preserve">
     <value>Срок действия пароля истек</value>
   </data>
-  <data name="cls_msg_ObjectExpiresUnknown" xml:space="preserve">
+  <data name="str_ObjectExpirationUnknown" xml:space="preserve">
     <value>Срок действия объекта неизвестен</value>
   </data>
-  <data name="cls_msg_ObjectExpired" xml:space="preserve">
+  <data name="str_ObjectExpired" xml:space="preserve">
     <value>Срок действия объекта истек</value>
   </data>
-  <data name="cls_msg_ObjectStatusUnknown" xml:space="preserve">
+  <data name="str_ObjectStatusUnknown" xml:space="preserve">
     <value>Статус объекта неизвестен</value>
   </data>
-  <data name="cls_msg_ObjectDisabled" xml:space="preserve">
+  <data name="str_ObjectDisabled" xml:space="preserve">
     <value>Объект заблокирован</value>
   </data>
-  <data name="cls_msg_DefaultPasswordIsNotSet" xml:space="preserve">
-    <value>Стандартный пароль не указан</value>
-  </data>
-  <data name="cls_msg_PasswordChanged" xml:space="preserve">
+  <data name="str_PasswordChanged" xml:space="preserve">
     <value>Пароль изменен</value>
   </data>
-  <data name="cls_msg_Expired" xml:space="preserve">
+  <data name="str_Expired" xml:space="preserve">
     <value>истек</value>
   </data>
-  <data name="cls_msg_Disabled" xml:space="preserve">
+  <data name="str_Disabled" xml:space="preserve">
     <value>Заблокирован</value>
   </data>
-  <data name="cls_msg_Enabled" xml:space="preserve">
+  <data name="str_Enabled" xml:space="preserve">
     <value>Разблокирован</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutThreshold" xml:space="preserve">
+  <data name="str_LockoutThreshold" xml:space="preserve">
     <value>Пороговое значение блокировки</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutThresholdFormat" xml:space="preserve">
+  <data name="str_LockoutThresholdFormat" xml:space="preserve">
     <value>{0} ошибок входа</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutDuration" xml:space="preserve">
+  <data name="str_LockoutDuration" xml:space="preserve">
     <value>Время до сброса счетчика блокировки</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutDurationFormat" xml:space="preserve">
+  <data name="str_LockoutDurationFormat" xml:space="preserve">
     <value>{0} минут</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutObservationWindow" xml:space="preserve">
+  <data name="str_LockoutObservationWindow" xml:space="preserve">
     <value>Продолжительность блокировки учетной записи</value>
   </data>
-  <data name="clsDomain_msg_PropLockoutObservationWindowFormat" xml:space="preserve">
+  <data name="str_LockoutObservationWindowFormat" xml:space="preserve">
     <value>{0} минут</value>
   </data>
-  <data name="clsDomain_msg_PropMaximumPasswordAge" xml:space="preserve">
+  <data name="str_MaximumPasswordAge" xml:space="preserve">
     <value>Максимальный срок действия пароля</value>
   </data>
-  <data name="clsDomain_msg_PropMaximumPasswordAgeFormat" xml:space="preserve">
+  <data name="str_MaximumPasswordAgeFormat" xml:space="preserve">
     <value>{0} дней</value>
   </data>
-  <data name="clsDomain_msg_PropMinimumPasswordAge" xml:space="preserve">
+  <data name="str_MinimumPasswordAge" xml:space="preserve">
     <value>Минимальный срок действия пароля</value>
   </data>
-  <data name="clsDomain_msg_PropMinimumPasswordAgeFormat" xml:space="preserve">
+  <data name="str_MinimumPasswordAgeFormat" xml:space="preserve">
     <value>{0} дней</value>
   </data>
-  <data name="clsDomain_msg_PropMinimumPasswordLenght" xml:space="preserve">
+  <data name="str_MinimumPasswordLenght" xml:space="preserve">
     <value>Минимальная длина пароля</value>
   </data>
-  <data name="clsDomain_msg_PropMinimumPasswordLenghtFormat" xml:space="preserve">
+  <data name="str_MinimumPasswordLenghtFormat" xml:space="preserve">
     <value>{0} символов</value>
   </data>
-  <data name="clsDomain_msg_PropPasswordComplexityRequirements" xml:space="preserve">
+  <data name="str_PasswordComplexityRequirements" xml:space="preserve">
     <value>Пароль должен отвечать требованиям сложности</value>
   </data>
-  <data name="clsDomain_msg_PropPasswordComplexityRequirementsFormat" xml:space="preserve">
+  <data name="str_PasswordComplexityRequirementsFormat" xml:space="preserve">
     <value>{0}</value>
   </data>
-  <data name="clsDomain_msg_PropPasswordHistory" xml:space="preserve">
+  <data name="str_PasswordHistory" xml:space="preserve">
     <value>Вести журнал паролей</value>
   </data>
-  <data name="clsDomain_msg_PropPasswordHistoryFormat" xml:space="preserve">
+  <data name="str_PasswordHistoryFormat" xml:space="preserve">
     <value>{0} сохраненных паролей</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeInteractive" xml:space="preserve">
+  <data name="str_LogonTypeInteractive" xml:space="preserve">
     <value>Интерактивный</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeNetwork" xml:space="preserve">
+  <data name="str_LogonTypeNetwork" xml:space="preserve">
     <value>Сетевой</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeBatch" xml:space="preserve">
+  <data name="str_LogonTypeBatch" xml:space="preserve">
     <value>Пакет</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeService" xml:space="preserve">
+  <data name="str_LogonTypeService" xml:space="preserve">
     <value>Служба</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeUnlock" xml:space="preserve">
+  <data name="str_LogonTypeUnlock" xml:space="preserve">
     <value>Разблокировка</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeNetworkCleartext" xml:space="preserve">
+  <data name="str_LogonTypeNetworkCleartextPassword" xml:space="preserve">
     <value>Сетевой, открытый пароль</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeNewCredentials" xml:space="preserve">
+  <data name="str_LogonTypeNewCredentials" xml:space="preserve">
     <value>Другие реквизиты</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeRemoteInteractive" xml:space="preserve">
+  <data name="str_LogonTypeRemoteInteractive" xml:space="preserve">
     <value>Удаленный, интерактивный</value>
   </data>
-  <data name="clsEvent_msg_LogonTypeCachedInteractive" xml:space="preserve">
+  <data name="str_LogonTypeCachedInteractive" xml:space="preserve">
     <value>Кешированный, интерактивный</value>
   </data>
-  <data name="mdlMain_msg_UnhandledException" xml:space="preserve">
+  <data name="str_UnhandledException" xml:space="preserve">
     <value>Необработанное исключение</value>
   </data>
-  <data name="cls_msg_WrongGroupMember" xml:space="preserve">
+  <data name="str_WrongGroupMember" xml:space="preserve">
     <value>Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена.
 Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы.
 Локальная группа домена может быть членом только другой локальной группы домена.
@@ -1106,193 +923,166 @@
 Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы.
 Универсальная группа не может быть членом глобальной группы.</value>
   </data>
-  <data name="cls_msg_WrongGroupMemberTitle" xml:space="preserve">
+  <data name="str_WrongGroupMemberTitle" xml:space="preserve">
     <value>Неверный тип группы</value>
   </data>
-  <data name="hint_poptvObjects_1" xml:space="preserve">
-    <value>Для начала необходимо</value>
-  </data>
-  <data name="hint_poptvObjects_2" xml:space="preserve">
-    <value>добавить домены</value>
-  </data>
-  <data name="hint_poptvObjects_3" xml:space="preserve">
-    <value>, с которыми мы будет работать</value>
-  </data>
-  <data name="hint_poptbSearchPattern" xml:space="preserve">
-    <value>Воспользуйтесь поисковой строкой для поиска объектов</value>
-  </data>
-  <data name="wndPreferences_lbl_Basic" xml:space="preserve">
-    <value>Основные</value>
-  </data>
-  <data name="wndPreferences_lbl_MainWindow" xml:space="preserve">
+  <data name="str_MainWindow" xml:space="preserve">
     <value>Главное окно</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance" xml:space="preserve">
+  <data name="str_Appearance" xml:space="preserve">
     <value>Внешний вид</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior" xml:space="preserve">
+  <data name="str_Behavior" xml:space="preserve">
     <value>Поведение</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware" xml:space="preserve">
-    <value>Внешние приложения</value>
-  </data>
-  <data name="wndPreferences_lbl_Plugins" xml:space="preserve">
+  <data name="str_Plugins" xml:space="preserve">
     <value>Плагины</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ClipboardSource" xml:space="preserve">
+  <data name="str_ClipboardSource" xml:space="preserve">
     <value>Использовать буфер обмена</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ClipboardSourceDefinition" xml:space="preserve">
+  <data name="str_ClipboardSourceToolTip" xml:space="preserve">
     <value>При копировании в буфер обмена текстовых данных из других приложений ADViewer автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimit" xml:space="preserve">
+  <data name="str_ClipboardSourceLimit" xml:space="preserve">
     <value>Ограничить объем данных для поиска</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ClipboardSourceLimitDefinition" xml:space="preserve">
+  <data name="str_ClipboardSourceLimitToolTip" xml:space="preserve">
     <value>Поиск будет производится в случае, если количество слов в буфере обмена не превышает трех.</value>
   </data>
-  <data name="wndMain_lbl_SearchResultGrouping" xml:space="preserve">
+  <data name="str_SearchResultGrouping" xml:space="preserve">
     <value>Группировать результаты</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_SearchResultGroupingDefinition" xml:space="preserve">
+  <data name="str_SearchResultGroupingToolTip" xml:space="preserve">
     <value>Результаты поиска будут сгруппированы по имени домена.</value>
   </data>
-  <data name="wndAbout_lbl_ChangeHistory" xml:space="preserve">
+  <data name="str_ChangeHistory" xml:space="preserve">
     <value>История изменений:</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_AttributesDefault" xml:space="preserve">
+  <data name="str_AttributesDefault" xml:space="preserve">
     <value>Основные атрибуты</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_AttributesExtended" xml:space="preserve">
+  <data name="str_AttributesExtended" xml:space="preserve">
     <value>Дополнительные атрибуты</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_AttributesForSearch" xml:space="preserve">
-    <value>Атрибуты для поиска</value>
-  </data>
-  <data name="wndPreferences_lbl_MainWindow_Layout" xml:space="preserve">
+  <data name="str_Layout" xml:space="preserve">
     <value>Макет главного окна</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_LayoutDefault" xml:space="preserve">
+  <data name="str_LayoutDefault" xml:space="preserve">
     <value>По умолчанию</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_LayoutRemoveLastColumn" xml:space="preserve">
+  <data name="str_LayoutRemoveLastColumn" xml:space="preserve">
     <value>Удалить последний столбец</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_LayoutAddColumn" xml:space="preserve">
+  <data name="str_LayoutAddColumn" xml:space="preserve">
     <value>Добавить столбец в конец</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_AttributesExtendedGet" xml:space="preserve">
-    <value>Получить дополнительные атрибуты из доменов</value>
-  </data>
-  <data name="wndPreferences_lbl_MainWindow_AttributesForSearchDefault" xml:space="preserve">
+  <data name="str_AttributesForSearchDefault" xml:space="preserve">
     <value>По умолчанию</value>
   </data>
-  <data name="wndPreferences_lbl_MainWindow_Attributes_Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="wndPreferences_lbl_MainWindow_Attributes_LdapName" xml:space="preserve">
+  <data name="str_LdapName" xml:space="preserve">
     <value>LDAP-имя</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_StartOnLogon" xml:space="preserve">
+  <data name="str_StartOnLogon" xml:space="preserve">
     <value>Запускать при входе в систему</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_StartOnLogonDefinition" xml:space="preserve">
+  <data name="str_StartOnLogonDefinition" xml:space="preserve">
     <value>Приложение будет запущено при входе в систему.</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimized" xml:space="preserve">
+  <data name="str_StartOnLogonMinimized" xml:space="preserve">
     <value>Запускать свернутым</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_StartOnLogonMinimizedDefinition" xml:space="preserve">
+  <data name="str_StartOnLogonMinimizedDefinition" xml:space="preserve">
     <value>В случае автозапуска приложение будет запущено в свернутом виде.</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_CloseOnXButtonDefinition" xml:space="preserve">
+  <data name="str_CloseOnXButtonDefinition" xml:space="preserve">
     <value>При нажатии на [✖] в последнем экземпляре главного окна работа приложения будет завершена.</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_CloseOnXButton" xml:space="preserve">
+  <data name="str_CloseOnXButton" xml:space="preserve">
     <value>Закрывать при нажатии на [✖]</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme" xml:space="preserve">
+  <data name="str_MainTheme" xml:space="preserve">
     <value>Основная тема приложения</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGray" xml:space="preserve">
+  <data name="str_MainTheme_LightGray" xml:space="preserve">
     <value>Светло-серая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_LightBlue" xml:space="preserve">
+  <data name="str_MainTheme_LightBlue" xml:space="preserve">
     <value>Светло-голубая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_LightGreen" xml:space="preserve">
+  <data name="str_MainTheme_LightGreen" xml:space="preserve">
     <value>Светло-зеленая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGray" xml:space="preserve">
+  <data name="str_MainTheme_DarkGray" xml:space="preserve">
     <value>Темно-серая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkBlue" xml:space="preserve">
+  <data name="str_MainTheme_DarkBlue" xml:space="preserve">
     <value>Темно-синяя</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkGreen" xml:space="preserve">
+  <data name="str_MainTheme_DarkGreen" xml:space="preserve">
     <value>Темно-зеленая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_MainTheme_DarkOrange" xml:space="preserve">
+  <data name="str_MainTheme_DarkOrange" xml:space="preserve">
     <value>Темно-оранжевая</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_Colors" xml:space="preserve">
+  <data name="str_Colors" xml:space="preserve">
     <value>Цвета:</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorText" xml:space="preserve">
+  <data name="str_ColorText" xml:space="preserve">
     <value>Текст</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorWindowBackground" xml:space="preserve">
+  <data name="str_ColorWindowBackground" xml:space="preserve">
     <value>Фон окон</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorElementBackground" xml:space="preserve">
+  <data name="str_ColorElementBackground" xml:space="preserve">
     <value>Фон элементов</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorMenuBackground" xml:space="preserve">
+  <data name="str_ColorMenuBackground" xml:space="preserve">
     <value>Пункты меню</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorButtonBackground" xml:space="preserve">
+  <data name="str_ColorButtonBackground" xml:space="preserve">
     <value>Элементы управления</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorButtonInactiveBackground" xml:space="preserve">
+  <data name="str_ColorButtonInactiveBackground" xml:space="preserve">
     <value>Элементы управления (не активные)</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorListviewRow" xml:space="preserve">
+  <data name="str_ColorListviewRow" xml:space="preserve">
     <value>Фон списков</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorListviewAlternationRow" xml:space="preserve">
+  <data name="str_ColorListviewAlternationRow" xml:space="preserve">
     <value>Фон списков (альтернативный)</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorPicker_AvailableColors" xml:space="preserve">
+  <data name="str_ColorPicker_AvailableColors" xml:space="preserve">
     <value>Доступные цвета</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartColors" xml:space="preserve">
+  <data name="str_ColorPicker_StandartColors" xml:space="preserve">
     <value>Стандартные цвета</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorPicker_AdvancedButton" xml:space="preserve">
+  <data name="str_ColorPicker_AdvancedButton" xml:space="preserve">
     <value>Дополнительно</value>
   </data>
-  <data name="wndPreferences_lbl_Appearance_ColorPicker_StandartButton" xml:space="preserve">
+  <data name="str_ColorPicker_StandartButton" xml:space="preserve">
     <value>Стандарт</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_ArgumentPatterns" xml:space="preserve">
+  <data name="str_ExternalSoftwareArgumentPatterns" xml:space="preserve">
     <value>Шаблоны аргументов</value>
   </data>
-  <data name="wndPreferences_tt_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+  <data name="str_CurrentCredentialsToolTip" xml:space="preserve">
     <value>Использовать текущие реквизиты при запуске</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_CurrentCredentials" xml:space="preserve">
+  <data name="str_ExternalSoftwareCurrentCredentials" xml:space="preserve">
     <value>Тек. рек.</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_Arguments" xml:space="preserve">
+  <data name="str_ExternalSoftwareArguments" xml:space="preserve">
     <value>Агрументы</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_Path" xml:space="preserve">
+  <data name="str_ExternalSoftwarePath" xml:space="preserve">
     <value>Путь</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_Label" xml:space="preserve">
+  <data name="str_ExternalSoftwareLabel" xml:space="preserve">
     <value>Название</value>
   </data>
-  <data name="wndPreferences_lbl_Plugins_TelegramBot_Instructions" xml:space="preserve">
+  <data name="str_PluginsTelegramBot_Instructions" xml:space="preserve">
     <value>Вы можете создать Telegram бота и управлять учетными записями пользователей через мессенджер Telegram.
 Для этого вам необходимо иметь @Username мессенджера и API ключ бота.
 
@@ -1305,166 +1095,148 @@
 6) если @username бота уникальное, BotFather выдаст вам API ключ
 7) найдите в контактах вашего нового бота по имени.</value>
   </data>
-  <data name="wndPreferences_lbl_Plugins_TelegramBot_StartOnLogon" xml:space="preserve">
+  <data name="str_PluginsTelegramBot_StartOnLogon" xml:space="preserve">
     <value>Запускать Telegram бота при входе в систему</value>
   </data>
-  <data name="wndPreferences_lbl_Plugins_TelegramBot_Start" xml:space="preserve">
+  <data name="str_PluginsTelegramBot_Start" xml:space="preserve">
     <value>Запустить Telegram бота</value>
   </data>
-  <data name="wndPreferences_lbl_Plugins_TelegramBot_Stop" xml:space="preserve">
+  <data name="str_PluginsTelegramBot_Stop" xml:space="preserve">
     <value>Остановить Telegram бота</value>
   </data>
-  <data name="wndPreferences_lbl_Preferences" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
-  <data name="wndPreferences_msg_MainWindow_AttributesForSearch" xml:space="preserve">
+  <data name="str_AttributesForSearch" xml:space="preserve">
     <value>Атрибуты для поиска</value>
   </data>
-  <data name="wndPreferences_msg_MainWindow_AttributesAtLeastOne" xml:space="preserve">
+  <data name="str_AttributesAtLeastOne" xml:space="preserve">
     <value>Необходимо выбрать хотя бы один атрибут</value>
   </data>
-  <data name="wndPreferences_lbl_ExternalSoftware_DialogFilter" xml:space="preserve">
+  <data name="str_ExternalSoftwareDialogFilter" xml:space="preserve">
     <value>Приложение</value>
   </data>
-  <data name="wndObject_msg_Enable" xml:space="preserve">
+  <data name="str_Enable" xml:space="preserve">
     <value>Разблокировать объект</value>
   </data>
-  <data name="wndObject_msg_Disable" xml:space="preserve">
+  <data name="str_Disable" xml:space="preserve">
     <value>Заблокировать объект</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsOpenObjectTree" xml:space="preserve">
+  <data name="ctxmnu_OpenObjectTree" xml:space="preserve">
     <value>Расположение в дереве</value>
   </data>
-  <data name="hint_popF1Hint" xml:space="preserve">
-    <value>Нажмите F1 в любом окне для получения подсказок</value>
-  </data>
-  <data name="wndObject_lbl_Organization" xml:space="preserve">
+  <data name="str_Organization" xml:space="preserve">
     <value>Организация</value>
   </data>
-  <data name="wndObject_lbl_Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="ctlManagedObjects_lbl_SelectedObjects" xml:space="preserve">
-    <value>Выбранные объекты</value>
-  </data>
-  <data name="ctlManagedObjects_lbl_Objects" xml:space="preserve">
-    <value>Объекты</value>
-  </data>
-  <data name="ctlManagedObjects_lbl_ObjectsList" xml:space="preserve">
-    <value>Список объектов</value>
-  </data>
-  <data name="wndObject_lbl_ManagedBy" xml:space="preserve">
+  <data name="str_ManagedBy" xml:space="preserve">
     <value>Управляется</value>
   </data>
-  <data name="ctlManagedObjects_msg_AnotherDomain" xml:space="preserve">
-    <value>Из другого домена нельзя же!</value>
-  </data>
-  <data name="ctlManagedObjects_msg_AnotherDomainTitle" xml:space="preserve">
-    <value>Ну тычоваще :(</value>
-  </data>
-  <data name="wndObject_lbl_ManagedObjects" xml:space="preserve">
+  <data name="str_ManagedObjects" xml:space="preserve">
     <value>Управляет</value>
   </data>
-  <data name="ctlDirectReports_lbl_Objects" xml:space="preserve">
-    <value>Объекты</value>
-  </data>
-  <data name="ctlDirectReports_lbl_ObjectsList" xml:space="preserve">
+  <data name="str_ObjectsList" xml:space="preserve">
     <value>Список объектов</value>
   </data>
-  <data name="ctlDirectReports_lbl_SelectedObjects" xml:space="preserve">
+  <data name="str_SelectedObjects" xml:space="preserve">
     <value>Выбранные объекты</value>
   </data>
-  <data name="ctlDirectReports_msg_AnotherDomain" xml:space="preserve">
+  <data name="str_AnotherDomain" xml:space="preserve">
     <value>Из другого домена нельзя же!</value>
   </data>
-  <data name="ctlDirectReports_msg_AnotherDomainTitle" xml:space="preserve">
+  <data name="str_AnotherDomainTitle" xml:space="preserve">
     <value>Ну тычоваще :(</value>
   </data>
-  <data name="wndObject_lbl_DirectReports" xml:space="preserve">
+  <data name="str_DirectReports" xml:space="preserve">
     <value>Непосредственные подчиненные</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsCopyDataBasicAttributes" xml:space="preserve">
+  <data name="ctxmnu_CopyDataBasicAttributes" xml:space="preserve">
     <value>Основные атрибуты</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsCopyDataDisplayName" xml:space="preserve">
+  <data name="ctxmnu_CopyDataDisplayName" xml:space="preserve">
     <value>Отображаемое имя</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsCopyData" xml:space="preserve">
+  <data name="ctxmnu_CopyData" xml:space="preserve">
     <value>Копировать данные</value>
   </data>
-  <data name="wndMain_lbl_tbSearchFilter" xml:space="preserve">
-    <value>Фильтр в найденном</value>
-  </data>
-  <data name="lbl_ObjectsFilter" xml:space="preserve">
-    <value>Фильтр:</value>
-  </data>
-  <data name="wndMain_ctxmnuObjectsFilterData" xml:space="preserve">
+  <data name="ctxmnu_PostfilterByValue" xml:space="preserve">
     <value>Постфильтр по значению</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsFilterDataClear" xml:space="preserve">
+  <data name="ctxmnu_PostfilterClear" xml:space="preserve">
     <value>Очистить</value>
   </data>
-  <data name="wndDomains_lbl_Server" xml:space="preserve">
+  <data name="str_ServerOptional" xml:space="preserve">
     <value>Сервер (опционально)</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ShowDeletedObjects" xml:space="preserve">
+  <data name="str_ShowDeletedObjects" xml:space="preserve">
     <value>Показывать удаленные объекты</value>
   </data>
-  <data name="wndPreferences_lbl_Basic_ShowDeletedObjectsDefinition" xml:space="preserve">
+  <data name="str_ShowDeletedObjectsToolTip" xml:space="preserve">
     <value>Результаты поиска будут включать удаленные объекты (если доступно)</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsRestore" xml:space="preserve">
+  <data name="ctxmnu_Restore" xml:space="preserve">
     <value>Восстановить</value>
   </data>
-  <data name="wndMain_ctxmnuObjectsRestoreToContainer" xml:space="preserve">
+  <data name="ctxmnu_RestoreToContainer" xml:space="preserve">
     <value>Восстановить в контейнер...</value>
   </data>
-  <data name="wndDomains_lbl_EnableWatcher" xml:space="preserve">
+  <data name="str_EnableWatcher" xml:space="preserve">
     <value>Отслеживать изменения объектов</value>
   </data>
-  <data name="wndDomains_lbl_EnableWatcherDefinition" xml:space="preserve">
+  <data name="str_EnableWatcherDefinition" xml:space="preserve">
     <value>Обновлять атрибуты объектов при их изменении на сервере</value>
   </data>
-  <data name="wndMain_mnuView" xml:space="preserve">
+  <data name="str_View" xml:space="preserve">
     <value>Вид</value>
   </data>
-  <data name="wndMain_lbl_ViewNavigationPane" xml:space="preserve">
+  <data name="str_ViewNavigationPane" xml:space="preserve">
     <value>Область навигации</value>
   </data>
-  <data name="wndMain_lbl_ViewPreviewPane" xml:space="preserve">
+  <data name="str_ViewPreviewPane" xml:space="preserve">
     <value>Область просмотра</value>
   </data>
-  <data name="wndMain_lbl_ViewTiles" xml:space="preserve">
+  <data name="str_ViewTiles" xml:space="preserve">
     <value>Плитка</value>
   </data>
-  <data name="wndMain_lbl_ViewMediumIcons" xml:space="preserve">
+  <data name="str_ViewMediumIcons" xml:space="preserve">
     <value>Обычные значки</value>
   </data>
-  <data name="wndMain_lbl_ViewList" xml:space="preserve">
+  <data name="str_ViewList" xml:space="preserve">
     <value>Список</value>
   </data>
-  <data name="wndMain_lbl_ViewDetails" xml:space="preserve">
+  <data name="str_ViewDetails" xml:space="preserve">
     <value>Таблица</value>
   </data>
-  <data name="wndMain_lbl_ViewPreferences" xml:space="preserve">
+  <data name="str_ApplicationOptions" xml:space="preserve">
     <value>Параметры</value>
   </data>
-  <data name="wndMain_mnuMain" xml:space="preserve">
+  <data name="str_Main" xml:space="preserve">
     <value>Главная</value>
   </data>
-  <data name="wndMain_tt_SetAsDefaultView" xml:space="preserve">
-    <value>Задать как вид по умолчанию</value>
-  </data>
-  <data name="wndMain_mnuService_DomainOptions" xml:space="preserve">
+  <data name="str_DomainOptions" xml:space="preserve">
     <value>Настройки доменов</value>
   </data>
-  <data name="wndMain_lbl_Clipboard" xml:space="preserve">
+  <data name="str_Clipboard" xml:space="preserve">
     <value>Буфер обмена</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_PageInterface" xml:space="preserve">
+  <data name="str_PageInterface" xml:space="preserve">
     <value>Страничный интерфейс</value>
   </data>
-  <data name="wndPreferences_lbl_Behavior_PageInterfaceDefinition" xml:space="preserve">
+  <data name="str_PageInterfaceDefinition" xml:space="preserve">
     <value>Интерфейс оптимизирован для работы мобильных устройств</value>
+  </data>
+  <data name="str_Addresses" xml:space="preserve">
+    <value>Адреса</value>
+  </data>
+  <data name="str_FontSizePage" xml:space="preserve">
+    <value>Размер шрифта</value>
+  </data>
+  <data name="str_DefaultPasswordIsNotSet" xml:space="preserve">
+    <value>Стандартный пароль не указан</value>
+  </data>
+  <data name="str_Domain" xml:space="preserve">
+    <value>Домен</value>
+  </data>
+  <data name="str_Quotas" xml:space="preserve">
+    <value>Квоты</value>
+  </data>
+  <data name="str_ExternalSoftware" xml:space="preserve">
+    <value>Внешние приложения</value>
   </data>
 </root>

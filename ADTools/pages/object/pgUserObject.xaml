@@ -8,7 +8,7 @@
       xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_Object}"
+      Title="{x:Static r:Resources.str_Object}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
     
@@ -52,13 +52,13 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     
-                    <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.wndObject_lbl_UserPrincipalName}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.str_UserPrincipalName}"/>
                     <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True">
                         <ComboBox x:Name="cmboUserPrincipalNameDomain" Width="150" Text="{Binding userPrincipalNameDomain}" ItemsSource="{Binding Domain.Suffixes}" DockPanel.Dock="Right" IsEditable="True" IsEnabled="{Binding CanWrite[userPrincipalName]}"/>
                         <TextBox x:Name="tbUserPrincipalNameName" Text="{Binding userPrincipalNameName}" MaxLength="256" BorderThickness="1,1,0,1" IsReadOnly="{Binding IsReadOnly[userPrincipalName]}"/>
                     </DockPanel>
 
-                    <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.wndObject_lbl_SAMAccountName}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.str_SAMAccountName}"/>
                     <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
                         <TextBox x:Name="tbSAMAccountName" Text="{Binding sAMAccountName}" MaxLength="20" IsReadOnly="{Binding IsReadOnly[sAMAccountName]}"/>
                     </DockPanel>
@@ -70,23 +70,23 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <CheckBox x:Name="chbMustChangePasswordNextLogon" Content="{x:Static r:Resources.wndObject_lbl_MustChangePasswordNextLogon}" IsChecked="{Binding userMustChangePasswordNextLogon}" IsEnabled="{Binding CanWrite[pwdLastSet]}"/>
-                        <CheckBox x:Name="chbPasswordNeverExpires" Content="{x:Static r:Resources.wndObject_lbl_PasswordNeverExpires}" IsChecked="{Binding passwordNeverExpires}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
-                        <CheckBox x:Name="chbAccountDisabled" Content="{x:Static r:Resources.wndObject_lbl_AccountDisabled}" IsChecked="{Binding disabled}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
+                        <CheckBox x:Name="chbMustChangePasswordNextLogon" Content="{x:Static r:Resources.str_MustChangePasswordNextLogon}" IsChecked="{Binding userMustChangePasswordNextLogon}" IsEnabled="{Binding CanWrite[pwdLastSet]}"/>
+                        <CheckBox x:Name="chbPasswordNeverExpires" Content="{x:Static r:Resources.str_PasswordNeverExpires}" IsChecked="{Binding passwordNeverExpires}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
+                        <CheckBox x:Name="chbAccountDisabled" Content="{x:Static r:Resources.str_AccountDisabled}" IsChecked="{Binding disabled}" IsEnabled="{Binding CanWrite[userAccountControl]}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <Button x:Name="btnResetPassword" Style="{StaticResource LightButton}" Content="🔑" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.wndObject_lbl_ResetPassword}" Margin="10,5,10,5"/>
-                        <Button x:Name="btnSetPassword" Style="{StaticResource LightButton}" Content="🖊" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.wndObject_lbl_SetPassword}" Margin="10,5,10,5"/>
+                        <Button x:Name="btnResetPassword" Style="{StaticResource LightButton}" Content="🔑" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.str_PasswordReset}" Margin="10,5,10,5"/>
+                        <Button x:Name="btnSetPassword" Style="{StaticResource LightButton}" Content="🖊" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.str_PasswordSet}" Margin="10,5,10,5"/>
                     </StackPanel>
 
                 </Grid>
-                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AccountExpires}" Margin="10,20,10,0"/>
+                <TextBlock Text="{x:Static r:Resources.str_AccountExpires}" Margin="10,20,10,0"/>
                 <WrapPanel IsEnabled="{Binding CanWrite[accountExpires]}">
-                    <RadioButton x:Name="rbAccountNeverExpires" Content="{x:Static r:Resources.wndObject_lbl_AccountNeverExpires}" IsChecked="{Binding accountNeverExpires}"/>
-                    <RadioButton x:Name="rbAccountExpiresAt" Content="{x:Static r:Resources.wndObject_lbl_AccountExpiresAt}" IsChecked="{Binding accountExpiresAt, Mode=OneWay}"/>
+                    <RadioButton x:Name="rbAccountNeverExpires" Content="{x:Static r:Resources.str_AccountNeverExpires}" IsChecked="{Binding accountNeverExpires}"/>
+                    <RadioButton x:Name="rbAccountExpiresAt" Content="{x:Static r:Resources.str_AccountExpiresAt}" IsChecked="{Binding accountExpiresAt, Mode=OneWay}"/>
                     <xctk:DateTimePicker x:Name="dtpStartTime" FormatString="dd.MM.yyyy HH:mm:ss dddd" IsEnabled="{Binding ElementName=rbAccountExpiresAt, Path=IsChecked}" Value="{Binding accountExpiresDate}" AutoCloseCalendar="True" Format="Custom" TimeFormat="LongTime" AllowTextInput="False" TextAlignment="Left" MinWidth="200" Margin="10,5,10,5"/>
                 </WrapPanel>
-                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AllowedWorkstations}" Margin="10,20,10,0"/>
+                <TextBlock Text="{x:Static r:Resources.str_AllowedWorkstations}" Margin="10,20,10,0"/>
             </StackPanel>
             <Border IsEnabled="{Binding CanWrite[userWorkstations]}" MinHeight="250" Margin="0,5,0,5">
                 <local:ctlUserWorkstations x:Name="ctlUserWorkstations" CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}}}"/>

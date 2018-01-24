@@ -11,6 +11,16 @@ Imports System.Net
 Imports System.Net.Sockets
 Imports System.Net.NetworkInformation
 
+Public Enum enmSearchMode
+    [Default] = 0
+    Advanced = 1
+End Enum
+
+Public Enum enmClipboardAction
+    Copy = 0
+    Cut = 1
+End Enum
+
 Module mdlTools
 
     Public regApplication As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\" & My.Application.Info.AssemblyName)
@@ -22,15 +32,10 @@ Module mdlTools
 
     Public applicationdeactivating As Boolean = False
 
-    Public Enum enmClipboardAction
-        Copy
-        Cut
-    End Enum
-
     Public ClipboardBuffer As clsDirectoryObject()
     Public ClipboardAction As enmClipboardAction
 
-    Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 600
+    Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 610
 
     Public Const ADS_UF_SCRIPT = 1 '0x1
     Public Const ADS_UF_ACCOUNTDISABLE = 2 '0x2
@@ -247,11 +252,17 @@ Module mdlTools
 
             If owner Is Nothing Then
                 w = New NavigationWindow
+                w.WindowStartupLocation = WindowStartupLocation.CenterScreen
             Else
                 w = owner
             End If
 
+            p.WindowWidth = Double.NaN
+            p.WindowHeight = Double.NaN
             w.Navigate(p)
+
+            w.Show()
+
             Return w
 
         Else
@@ -274,8 +285,8 @@ Module mdlTools
 
             Else
 
-                For Each wnd As NavigationWindow In owner.OwnedWindows
-                    If p.GetType Is wnd.Content.GetType AndAlso TypeOf p Is pgObject AndAlso wnd.Content.CurrentObject Is CType(p, Object).CurrentObject Then
+                For Each wnd As Window In owner.OwnedWindows
+                    If TypeOf wnd Is NavigationWindow AndAlso p.GetType Is wnd.Content.GetType AndAlso TypeOf p Is pgObject AndAlso wnd.Content.CurrentObject Is CType(p, Object).CurrentObject Then
                         w = wnd
                         w.Show() : w.Activate()
                         If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Normal
@@ -287,8 +298,10 @@ Module mdlTools
                 w.Owner = owner
                 w.WindowStartupLocation = WindowStartupLocation.CenterOwner
                 w.ShowInTaskbar = False
+
+                If TypeOf p Is pgObject Then w.Width = 900 : w.Height = 620
+
                 w.Navigate(p)
-                w.UpdateLayout()
 
                 If modal Then
                     w.ShowDialog()
@@ -303,17 +316,6 @@ Module mdlTools
         End If
 
     End Function
-
-    Public Sub ClearWindowHistory(w As NavigationWindow)
-        If Not w.CanGoBack AndAlso Not w.CanGoForward Then Exit Sub
-
-        Dim entry = w.RemoveBackEntry()
-        While entry IsNot Nothing
-            entry = w.RemoveBackEntry()
-        End While
-
-        w.Navigate(New PageFunction(Of String)() With {.RemoveFromJournal = True})
-    End Sub
 
     Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As NavigationWindow
         Dim p As Page
@@ -476,7 +478,7 @@ Module mdlTools
     End Sub
 
     Public Sub ShowWrongMemberMessage()
-        IMsgBox(My.Resources.cls_msg_WrongGroupMember, vbOKOnly + vbExclamation, My.Resources.cls_msg_WrongGroupMemberTitle)
+        IMsgBox(My.Resources.str_WrongGroupMember, vbOKOnly + vbExclamation, My.Resources.str_WrongGroupMemberTitle)
     End Sub
 
     Public Sub Log(message As String)
@@ -770,10 +772,10 @@ Module mdlTools
     End Function
 
     Public Sub ApplicationDeactivate()
-        'Dim w As New wndAboutDonate
-        'ShowPage(w, True, Nothing, True)
-        'applicationdeactivating = True
-        Application.Current.Shutdown()
+        Dim w As New wndAboutDonate
+        w.Show()
+        applicationdeactivating = True
+        'Application.Current.Shutdown()
     End Sub
 
     Public Sub Donate()

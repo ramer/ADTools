@@ -7,7 +7,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="550" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_BasicInformation}"
+      Title="{x:Static r:Resources.str_BasicInformation}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
 
@@ -54,39 +54,39 @@
             </Grid.RowDefinitions>
 
             <!--GivenName and Initials-->
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.wndObject_lbl_GivenName}" />
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.str_GivenName}" />
             <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True">
                 <TextBox x:Name="tbInitials" Width="50" Text="{Binding initials}" DockPanel.Dock="Right" MaxLength="6" IsReadOnly="{Binding IsReadOnly[initials]}"/>
-                <TextBlock Text="{x:Static r:Resources.wndObject_Initials}" DockPanel.Dock="Right" Margin="5,0,5,0"/>
+                <TextBlock Text="{x:Static r:Resources.str_Initials}" DockPanel.Dock="Right" Margin="5,0,5,0"/>
                 <TextBox x:Name="tbGivenName" Text="{Binding givenName}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[givenName]}"/>
             </DockPanel>
 
             <!--Surname-->
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.wndObject_lbl_Surname}"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.str_Surname}"/>
             <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
                 <TextBox x:Name="tbSN" Text="{Binding sn}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[sn]}"/>
             </DockPanel>
 
             <!--DisplayName-->
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.wndObject_lbl_DisplayName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.str_DisplayName}"/>
             <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="True">
                 <TextBox x:Name="tbDisplayName" Text="{Binding displayName}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[displayName]}"/>
             </DockPanel>
 
             <!--Description-->
-            <TextBlock Grid.Column="0" Grid.Row="3" Text="{x:Static r:Resources.wndObject_lbl_Description}"/>
+            <TextBlock Grid.Column="0" Grid.Row="3" Text="{x:Static r:Resources.str_Description}"/>
             <DockPanel Grid.Column="1" Grid.Row="3" LastChildFill="True">
                 <TextBox x:Name="tbDescription" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
             </DockPanel>
 
             <!--OfficeName-->
-            <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static r:Resources.wndObject_lbl_OfficeName}"/>
+            <TextBlock Grid.Column="0" Grid.Row="4" Text="{x:Static r:Resources.str_OfficeName}"/>
             <DockPanel Grid.Column="1" Grid.Row="4" LastChildFill="True">
                 <TextBox x:Name="tbPhysicalDeliveryOfficeName" Text="{Binding physicalDeliveryOfficeName}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[physicalDeliveryOfficeName]}"/>
             </DockPanel>
 
             <!--TelephoneNumber-->
-            <TextBlock Grid.Column="0" Grid.Row="5" Text="{x:Static r:Resources.wndObject_lbl_TelephoneNumber}"/>
+            <TextBlock Grid.Column="0" Grid.Row="5" Text="{x:Static r:Resources.str_TelephoneNumber}"/>
             <DockPanel Grid.Column="1" Grid.Row="5" LastChildFill="True">
                 <ComboBox x:Name="cmboTelephoneNumber" Grid.Column="1" Grid.Row="5" Text="{Binding telephoneNumber, UpdateSourceTrigger=LostFocus}" DisplayMemberPath="TelephoneNumber" IsEditable="True" IsDropDownOpen="False" IsEnabled="{Binding CanWrite[telephoneNumber]}">
                     <ComboBox.ItemContainerStyle>
@@ -125,60 +125,60 @@
             </DockPanel>
 
             <!--HomePhone-->
-            <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static r:Resources.wndObject_lbl_HomePhone}"/>
+            <TextBlock Grid.Column="0" Grid.Row="6" Text="{x:Static r:Resources.str_HomePhone}"/>
             <DockPanel Grid.Column="1" Grid.Row="6" LastChildFill="True">
                 <TextBox x:Name="tbHomePhone" Text="{Binding homePhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[homePhone]}"/>
             </DockPanel>
 
             <!--IpPhone-->
-            <TextBlock Grid.Column="0" Grid.Row="7" Text="{x:Static r:Resources.wndObject_lbl_IpPhone}"/>
+            <TextBlock Grid.Column="0" Grid.Row="7" Text="{x:Static r:Resources.str_IpPhone}"/>
             <DockPanel Grid.Column="1" Grid.Row="7" LastChildFill="True">
                 <TextBox x:Name="tbIpPhone" Text="{Binding ipPhone}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[ipPhone]}"/>
             </DockPanel>
 
             <!--Mobile-->
-            <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static r:Resources.wndObject_lbl_Mobile}"/>
+            <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static r:Resources.str_Mobile}"/>
             <DockPanel Grid.Column="1" Grid.Row="8" LastChildFill="True">
                 <TextBox x:Name="tbMobile" Text="{Binding mobile}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[mobile]}"/>
             </DockPanel>
 
             <!--Mail-->
-            <TextBlock Grid.Column="0" Grid.Row="9" Text="{x:Static r:Resources.wndObject_lbl_Mail}"/>
+            <TextBlock Grid.Column="0" Grid.Row="9" Text="{x:Static r:Resources.str_Mail}"/>
             <DockPanel Grid.Column="1" Grid.Row="9" LastChildFill="True">
                 <TextBox x:Name="tbMail" Text="{Binding mail}" MaxLength="256" IsReadOnly="{Binding IsReadOnly[mail]}"/>
             </DockPanel>
 
             <!--Title-->
-            <TextBlock Grid.Column="0" Grid.Row="10" Text="{x:Static r:Resources.wndObject_lbl_Title}"/>
+            <TextBlock Grid.Column="0" Grid.Row="10" Text="{x:Static r:Resources.str_Title}"/>
             <DockPanel Grid.Column="1" Grid.Row="10" LastChildFill="True">
                 <TextBox x:Name="tbTitle" Text="{Binding title}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[title]}"/>
             </DockPanel>
 
             <!--Department-->
-            <TextBlock Grid.Column="0" Grid.Row="11" Text="{x:Static r:Resources.wndObject_lbl_Department}"/>
+            <TextBlock Grid.Column="0" Grid.Row="11" Text="{x:Static r:Resources.str_Department}"/>
             <DockPanel Grid.Column="1" Grid.Row="11" LastChildFill="True">
                 <TextBox x:Name="tbDepartment" Text="{Binding department}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[department]}"/>
             </DockPanel>
 
             <!--Company-->
-            <TextBlock Grid.Column="0" Grid.Row="12" Text="{x:Static r:Resources.wndObject_lbl_Company}"/>
+            <TextBlock Grid.Column="0" Grid.Row="12" Text="{x:Static r:Resources.str_Company}"/>
             <DockPanel Grid.Column="1" Grid.Row="12" LastChildFill="True">
                 <TextBox x:Name="tbCompany" Text="{Binding company}" MaxLength="64" IsReadOnly="{Binding IsReadOnly[company]}"/>
             </DockPanel>
 
             <!--StreetAddress-->
-            <TextBlock Grid.Column="0" Grid.Row="13" Text="{x:Static r:Resources.wndObject_lbl_StreetAddress}"/>
+            <TextBlock Grid.Column="0" Grid.Row="13" Text="{x:Static r:Resources.str_StreetAddress}"/>
             <DockPanel Grid.Column="1" Grid.Row="13" LastChildFill="True">
                 <TextBox x:Name="tbStreetAddress" Text="{Binding streetAddress}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[streetAddress]}"/>
             </DockPanel>
             
             <!--Object-->
-            <TextBlock Grid.Column="0" Grid.Row="14" Text="{x:Static r:Resources.wndObject_lbl_Object}"/>
+            <TextBlock Grid.Column="0" Grid.Row="14" Text="{x:Static r:Resources.str_Object}"/>
             <DockPanel Grid.Column="1" Grid.Row="14" LastChildFill="True">
                 <UniformGrid Columns="3">
-                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0"/>
-                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_LastLogon}" Margin="0"/>
-                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_AccountExpires}" Margin="0"/>
+                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.str_CreatedToolTip}" Margin="0"/>
+                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.str_LastLogonToolTip}" Margin="0"/>
+                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.str_AccountExpiresToolTip}" Margin="0"/>
                 </UniformGrid>
             </DockPanel>
 

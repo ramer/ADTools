@@ -7,6 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="300"
       Title="{Binding name, Mode=OneWay}"
+      WindowWidth="900" WindowHeight="620"
       MinWidth="220"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
@@ -22,58 +23,58 @@
                 </Border>
 
                 <RadioButton x:Name="rbUserBasicInformation" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=User}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_BasicInformation}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_BasicInformation}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbContactBasicInformation" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Contact}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_BasicInformation}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_BasicInformation}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbComputerBasicInformation" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Computer}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_BasicInformation}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_BasicInformation}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbGroupBasicInformation" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Group}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_BasicInformation}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_BasicInformation}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbOrganizationalUnitBasicInformation" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=OrganizationalUnit}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_BasicInformation}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_BasicInformation}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbObject" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=User}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Object}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Object}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbMember" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Group}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Members}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Members}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbUserMemberOf" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=User}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_MemberOf}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_MemberOf}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbContactMemberOf" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Contact}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_MemberOf}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_MemberOf}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbComputerMemberOf" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Computer}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_MemberOf}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_MemberOf}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbGroupMemberOf" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Group}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_MemberOf}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_MemberOf}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbComputerNetwork" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Computer}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Network}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Network}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbComputerLoginEventLog" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Computer}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_LoginEventLog}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_LoginEventLog}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbUserOrganization" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=User}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Organization}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Organization}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbGroupOrganization" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Group}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Organization}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Organization}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbUserExchange" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=User}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Exchange}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Exchange}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbContactExchange" Style="{StaticResource ToggleRadioButton}" Visibility="{Binding Path=SchemaClass, Converter={StaticResource ConverterEnumToVisibility}, ConverterParameter=Contact}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Exchange}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Exchange}" Margin="10,0,10,0"/>
                 </RadioButton>
                 <RadioButton x:Name="rbAllAttributes" Style="{StaticResource ToggleRadioButton}" Height="32" Margin="0,5,0,0">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_AllAttributes}" Margin="10,0,10,0"/>
+                    <TextBlock Text="{x:Static r:Resources.str_AllAttributes}" Margin="10,0,10,0"/>
                 </RadioButton>
             </StackPanel>
             <!--Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>-->

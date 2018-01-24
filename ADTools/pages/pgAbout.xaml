@@ -8,8 +8,7 @@
         mc:Ignorable="d"
         d:DesignHeight="420" d:DesignWidth="550"
         Title="{Binding AppName, Mode=OneWay, FallbackValue='AppName'}" 
-        WindowHeight="420"
-        WindowWidth="550"
+        WindowWidth="550" WindowHeight="420"
         Background="{DynamicResource ColorElementBackground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
@@ -37,12 +36,14 @@
                         <TextBlock Text="{Binding Version, Mode=OneWay, FallbackValue='Version'}" Margin="0,10,0,0"/>
                         <TextBlock Text="{Binding Company, Mode=OneWay, FallbackValue='Company'}" Margin="0,10,0,0"/>
                         <TextBlock Text="{Binding Copyright, Mode=OneWay, FallbackValue='Copyright'}" Margin="0,10,0,0"/>
-                        <TextBlock Text="{x:Static r:Resources.wndAbout_lbl_ChangeHistory}" Margin="0,100,0,5" />
+                        <TextBlock Text="{x:Static r:Resources.str_ChangeHistory}" Margin="0,100,0,5" />
                     </StackPanel>
                 </DockPanel>
                 <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" >
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <TextBlock TextWrapping="Wrap">
+                            *** 2.0 *** <LineBreak/>
+                            - added page view<LineBreak/><LineBreak/>
                             *** 1.0 *** <LineBreak/>
                             - WPF-version <LineBreak/>
                         </TextBlock>

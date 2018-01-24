@@ -24,11 +24,11 @@ Public Class clsSearchObjectClasses
     End Sub
 
     Sub New(user As Boolean, contact As Boolean, computer As Boolean, group As Boolean, organizationalunit As Boolean)
-        _user = user
-        _contact = contact
-        _computer = computer
-        _group = group
-        _organizationalunit = organizationalunit
+        Me.User = user
+        Me.Contact = contact
+        Me.Computer = computer
+        Me.Group = group
+        Me.OrganizationalUnit = organizationalunit
     End Sub
 
     Public Property User As Boolean
@@ -80,4 +80,5 @@ Public Class clsSearchObjectClasses
             NotifyPropertyChanged("OrganizationalUnit")
         End Set
     End Property
+
 End Class

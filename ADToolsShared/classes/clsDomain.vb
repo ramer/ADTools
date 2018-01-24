@@ -186,14 +186,14 @@ Public Class clsDomain
                     MaxPwdAge = -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days
 
                     Dim p As New ObservableCollection(Of clsDomainProperty)
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutThreshold, String.Format(My.Resources.clsDomain_msg_PropLockoutThresholdFormat, response.Entries(0).Attributes("lockoutThreshold")(0))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutDuration, String.Format(My.Resources.clsDomain_msg_PropLockoutDurationFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockoutDuration")(0))).Minutes)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropLockoutObservationWindow, String.Format(My.Resources.clsDomain_msg_PropLockoutObservationWindowFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockOutObservationWindow")(0))).Minutes)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMaximumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMaximumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordAge, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("minPwdAge")(0))).Days)))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropMinimumPasswordLenght, String.Format(My.Resources.clsDomain_msg_PropMinimumPasswordLenghtFormat, response.Entries(0).Attributes("minPwdLength")(0))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordComplexityRequirements, String.Format(My.Resources.clsDomain_msg_PropPasswordComplexityRequirementsFormat, CBool(response.Entries(0).Attributes("pwdProperties")(0)))))
-                    p.Add(New clsDomainProperty(My.Resources.clsDomain_msg_PropPasswordHistory, String.Format(My.Resources.clsDomain_msg_PropPasswordHistoryFormat, response.Entries(0).Attributes("pwdHistoryLength")(0))))
+                    p.Add(New clsDomainProperty(My.Resources.str_LockoutThreshold, String.Format(My.Resources.str_LockoutThresholdFormat, response.Entries(0).Attributes("lockoutThreshold")(0))))
+                    p.Add(New clsDomainProperty(My.Resources.str_LockoutDuration, String.Format(My.Resources.str_LockoutDurationFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockoutDuration")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.str_LockoutObservationWindow, String.Format(My.Resources.str_LockoutObservationWindowFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockOutObservationWindow")(0))).Minutes)))
+                    p.Add(New clsDomainProperty(My.Resources.str_MaximumPasswordAge, String.Format(My.Resources.str_MaximumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.str_MinimumPasswordAge, String.Format(My.Resources.str_MinimumPasswordAgeFormat, -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("minPwdAge")(0))).Days)))
+                    p.Add(New clsDomainProperty(My.Resources.str_MinimumPasswordLenght, String.Format(My.Resources.str_MinimumPasswordLenghtFormat, response.Entries(0).Attributes("minPwdLength")(0))))
+                    p.Add(New clsDomainProperty(My.Resources.str_PasswordComplexityRequirements, String.Format(My.Resources.str_PasswordComplexityRequirementsFormat, CBool(response.Entries(0).Attributes("pwdProperties")(0)))))
+                    p.Add(New clsDomainProperty(My.Resources.str_PasswordHistory, String.Format(My.Resources.str_PasswordHistoryFormat, response.Entries(0).Attributes("pwdHistoryLength")(0))))
 
                     Properties = p
                     Return True

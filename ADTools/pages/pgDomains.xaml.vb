@@ -5,7 +5,7 @@ Public Class pgDomains
 
     Private passwordchanged As Boolean
 
-    Private Sub wndDomains_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    Private Sub str_Domains_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         lvDomains.ItemsSource = domains
     End Sub
 
@@ -55,7 +55,7 @@ Public Class pgDomains
         cap.Visibility = Visibility.Hidden
     End Sub
 
-    Private Sub wndDomains_Unloaded() Handles Me.Unloaded
+    Private Sub str_Domains_Unloaded() Handles Me.Unloaded
         Array.ForEach(Of String)(regDomains.GetSubKeyNames, New Action(Of String)(Sub(p) regDomains.DeleteSubKeyTree(p, False)))
         IRegistrySerializer.Serialize(domains, regDomains)
     End Sub
@@ -63,19 +63,19 @@ Public Class pgDomains
     Private Sub btnSearchRootBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnSearchRootBrowse.Click
         If lvDomains.SelectedItem Is Nothing Then Exit Sub
 
-        Dim domainbrowser As New pgDomainBrowser
         Dim domain As clsDomain = CType(lvDomains.SelectedItem, clsDomain)
+        Dim domainbrowser As New pgDomainBrowser(New clsDirectoryObject(domain.DefaultNamingContext, domain))
+        AddHandler domainbrowser.Return, AddressOf domainbrowserReturn
 
-        domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
-        ShowPage(domainbrowser, True, Window.GetWindow(Me), True)
+        NavigationService.Navigate(domainbrowser)
+    End Sub
 
-        'TODO If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
-        domain.SearchRoot = domainbrowser.currentobject.distinguishedName
-        'End If
+    Public Sub domainbrowserReturn(sender As Object, e As ReturnEventArgs(Of clsDirectoryObject))
+        If e.Result IsNot Nothing Then CType(lvDomains.SelectedItem, clsDomain).SearchRoot = e.Result.distinguishedName
     End Sub
 
     Private Sub hlTemplateHelp_Click(sender As Object, e As RoutedEventArgs) Handles hlTemplateHelp.Click
-        IMsgBox(My.Resources.wndDomains_lbl_PatternsExampleDefinition, vbOKOnly + vbInformation, My.Resources.wndDomains_lbl_PatternsExampleDefinitionHandlebars)
+        IMsgBox(My.Resources.str_PatternsExampleDefinition2, vbOKOnly + vbInformation, My.Resources.str_PatternsExampleDefinitionHandlebars)
     End Sub
 
     Private Sub tabctlDomain_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabctlDomain.SelectionChanged

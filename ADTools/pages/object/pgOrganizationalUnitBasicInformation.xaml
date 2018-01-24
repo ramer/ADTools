@@ -7,7 +7,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_BasicInformation}"
+      Title="{x:Static r:Resources.str_BasicInformation}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
 
@@ -42,13 +42,13 @@
             </Grid.RowDefinitions>
 
             <!--Description-->
-            <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.wndObject_lbl_Description}"/>
+            <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.str_Description}"/>
             <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True">
                 <TextBox x:Name="tbDescription" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
             </DockPanel>
 
             <!--ManagedBy-->
-            <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.wndObject_lbl_ManagedBy}"/>
+            <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.str_ManagedBy}"/>
             <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
                 <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
                     <TextBlock Margin="2,0,2,0" MinHeight="24">
@@ -60,12 +60,12 @@
             </DockPanel>
 
             <!--Object-->
-            <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.wndObject_lbl_Object}"/>
+            <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.str_Object}"/>
             <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="True">
                 <UniformGrid Columns="3">
-                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0"/>
-                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_LastLogon}" Margin="0"/>
-                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_AccountExpires}" Margin="0"/>
+                    <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.str_CreatedToolTip}" Margin="0"/>
+                    <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.str_LastLogonToolTip}" Margin="0"/>
+                    <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.str_AccountExpiresToolTip}" Margin="0"/>
                 </UniformGrid>
             </DockPanel>
 

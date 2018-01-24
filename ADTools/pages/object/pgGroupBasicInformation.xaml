@@ -7,7 +7,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="400" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_BasicInformation}"
+      Title="{x:Static r:Resources.str_BasicInformation}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
 
@@ -49,30 +49,30 @@
                     </Grid.RowDefinitions>
 
                     <!--SAMAccountName-->
-                    <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.wndObject_lbl_SAMAccountName}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="{x:Static r:Resources.str_SAMAccountName}"/>
                     <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True">
                         <TextBox x:Name="tbSAMAccountName" Text="{Binding sAMAccountName, Mode=OneWay}" IsReadOnly="True"/>
                     </DockPanel>
 
                     <!--Description-->
-                    <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.wndObject_lbl_Description}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="{x:Static r:Resources.str_Description}"/>
                     <DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True">
                         <TextBox x:Name="tbDescription" Text="{Binding description}" MaxLength="1024" IsReadOnly="{Binding IsReadOnly[description]}"/>
                     </DockPanel>
                     
                     <!--Mail-->
-                    <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.wndObject_lbl_Mail}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="2" Text="{x:Static r:Resources.str_Mail}"/>
                     <DockPanel Grid.Column="1" Grid.Row="2" LastChildFill="True">
                         <TextBox x:Name="tbMail" Text="{Binding mail}" MaxLength="128" IsReadOnly="{Binding IsReadOnly[mail]}"/>
                     </DockPanel>
 
                     <!--Object-->
-                    <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static r:Resources.wndObject_lbl_Object}"/>
+                    <TextBlock Grid.Column="0" Grid.Row="8" Text="{x:Static r:Resources.str_Object}"/>
                     <DockPanel Grid.Column="1" Grid.Row="8" LastChildFill="True">
                         <UniformGrid Columns="3">
-                            <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_Created}" Margin="0"/>
-                            <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_LastLogon}" Margin="0"/>
-                            <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.wndObject_tt_AccountExpires}" Margin="0"/>
+                            <TextBlock Text="{Binding whenCreatedFormated}" ToolTip="{x:Static r:Resources.str_CreatedToolTip}" Margin="0"/>
+                            <TextBlock Text="{Binding lastLogonFormated}" ToolTip="{x:Static r:Resources.str_LastLogonToolTip}" Margin="0"/>
+                            <TextBlock Text="{Binding accountExpiresFormated}" ToolTip="{x:Static r:Resources.str_AccountExpiresToolTip}" Margin="0"/>
                         </UniformGrid>
                     </DockPanel>
                 </Grid>
@@ -83,21 +83,21 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <StackPanel Margin="0,10,0,0" Grid.Column="0">
-                        <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GroupScope}"/>
-                        <RadioButton x:Name="rbGroupScopeDomainLocal" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeDomainLocal}" IsChecked="{Binding groupTypeScopeDomainLocal}"/>
-                        <RadioButton x:Name="rbGroupScopeGlobal" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeGlobal}" IsChecked="{Binding groupTypeScopeGlobal}"/>
-                        <RadioButton x:Name="rbGroupScopeUniversal" Content="{x:Static r:Resources.wndObject_lbl_GroupScopeUniversal}" IsChecked="{Binding groupTypeScopeUniversal}"/>
+                        <TextBlock Text="{x:Static r:Resources.str_GroupScope}"/>
+                        <RadioButton x:Name="rbGroupScopeDomainLocal" Content="{x:Static r:Resources.str_GroupScopeDomainLocal}" IsChecked="{Binding groupTypeScopeDomainLocal}"/>
+                        <RadioButton x:Name="rbGroupScopeGlobal" Content="{x:Static r:Resources.str_GroupScopeGlobal}" IsChecked="{Binding groupTypeScopeGlobal}"/>
+                        <RadioButton x:Name="rbGroupScopeUniversal" Content="{x:Static r:Resources.str_GroupScopeUniversal}" IsChecked="{Binding groupTypeScopeUniversal}"/>
                     </StackPanel>
                     <StackPanel Margin="0,10,0,0" Grid.Column="1">
-                        <TextBlock Text="{x:Static r:Resources.wndObject_lbl_GroupType}"/>
-                        <RadioButton x:Name="rbGroupTypeSecurity" Content="{x:Static r:Resources.wndObject_lbl_GroupTypeSecurity}" IsChecked="{Binding groupTypeSecurity}"/>
-                        <RadioButton x:Name="rbGroupTypeDistribution" Content="{x:Static r:Resources.wndObject_lbl_GroupTypeDistribution}" IsChecked="{Binding groupTypeDistribution, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Static r:Resources.str_GroupType}"/>
+                        <RadioButton x:Name="rbGroupTypeSecurity" Content="{x:Static r:Resources.str_GroupTypeSecurity}" IsChecked="{Binding groupTypeSecurity}"/>
+                        <RadioButton x:Name="rbGroupTypeDistribution" Content="{x:Static r:Resources.str_GroupTypeDistribution}" IsChecked="{Binding groupTypeDistribution, Mode=OneWay}"/>
                     </StackPanel>
                 </Grid>
 
             </StackPanel>
             <DockPanel Margin="0">
-                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Info}" DockPanel.Dock="Top"/>
+                <TextBlock Text="{x:Static r:Resources.str_Info}" DockPanel.Dock="Top"/>
                 <TextBox Name="tbInfo" Text="{Binding info}" Margin="10,5,10,5" AcceptsReturn="True" MinHeight="24" IsReadOnly="{Binding IsReadOnly[info]}" VerticalContentAlignment="Top"/>
             </DockPanel>
         </DockPanel>

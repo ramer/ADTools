@@ -1,5 +1,4 @@
-﻿Imports System.ComponentModel
-Imports System.DirectoryServices.Protocols
+﻿Imports System.DirectoryServices.Protocols
 Imports IPrompt.VisualBasic
 
 Public Class pgCreateObject
@@ -14,9 +13,16 @@ Public Class pgCreateObject
     Private Property newobjectname As String
     Private Property newobjectsamaccountname As String
 
+    Sub New(destinationcontainer, destinationdomain)
+        InitializeComponent()
+
+        Me.destinationcontainer = destinationcontainer
+        Me.destinationdomain = destinationdomain
+    End Sub
+
     Private Sub wndCreateObject_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-        DataContext = Me
         cmboDomain.ItemsSource = domains
+        chbCloseWindow.IsEnabled = Not preferences.PageInterface
 
         cmboDomain.SelectedItem = destinationdomain
         tbContainer.Text = If(destinationcontainer IsNot Nothing, destinationcontainer.distinguishedNameFormated, "")
@@ -25,18 +31,19 @@ Public Class pgCreateObject
     Private Sub btnContainerBrowse_Click(sender As Object, e As RoutedEventArgs) Handles btnContainerBrowse.Click
         If cmboDomain.SelectedItem Is Nothing Then Exit Sub
 
-        Dim domainbrowser As New pgDomainBrowser
         Dim domain As clsDomain = CType(cmboDomain.SelectedItem, clsDomain)
+        Dim domainbrowser As New pgDomainBrowser(New clsDirectoryObject(domain.DefaultNamingContext, domain))
+        AddHandler domainbrowser.Return, AddressOf domainbrowserReturn
 
-        domainbrowser.rootobject = New clsDirectoryObject(domain.DefaultNamingContext, domain)
-        ShowPage(domainbrowser, True, Window.GetWindow(Me), True)
+        NavigationService.Navigate(domainbrowser)
+    End Sub
 
-        'TODO If domainbrowser.DialogResult = True AndAlso domainbrowser.currentobject IsNot Nothing Then
-        domain.SearchRoot = domainbrowser.currentobject.distinguishedName
+    Public Sub domainbrowserReturn(snd As Object, ea As ReturnEventArgs(Of clsDirectoryObject))
+        If ea.Result IsNot Nothing Then
+            destinationcontainer = ea.Result
             destinationdomain = CType(cmboDomain.SelectedItem, clsDomain)
-            destinationcontainer = domainbrowser.currentobject
             tbContainer.Text = destinationcontainer.distinguishedNameFormated
-        'End If
+        End If
     End Sub
 
     Private Sub cmboUserUserPrincipalName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboUserUserPrincipalName.DropDownOpened
@@ -71,13 +78,12 @@ Public Class pgCreateObject
         cap.Visibility = Visibility.Hidden
 
         If obj IsNot Nothing Then
-            If TypeOf Window.GetWindow(Me) Is wndMain Then
-                ' TODO 
-                'If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then CType(Me.Owner, wndMain).RefreshDomainTree()
-                'CType(Me.Owner, wndMain).RefreshSearchResults()
+            If preferences.PageInterface Then
+                If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Window.GetWindow(Me))
+            Else
+                If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Window.GetWindow(Me).Owner)
+                If chbCloseWindow.IsChecked Then Window.GetWindow(Me).Close()
             End If
-            If chbOpenObject.IsChecked Then ShowDirectoryObjectProperties(obj, Window.GetWindow(Me))
-            'TODO If chbCloseWindow.IsChecked = True Then NavigationService.GoBack()
         End If
     End Sub
 
@@ -97,13 +103,13 @@ Public Class pgCreateObject
            newobjectuserprincipalnamedomain = "" Or
            newobjectname = "" Or
         newobjectsamaccountname = "" Then
-            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
+            IMsgBox(My.Resources.str_MissedRequiredFields, vbOK + vbExclamation, My.Resources.str_CreateObject)
             Return Nothing
         End If
 
         newobjectissharedmailbox = chbUserSharedMailbox.IsChecked
 
-        If destinationdomain.DefaultPassword = "" Then IMsgBox(My.Resources.wndCreateObject_msg_DefaultPasswordIsNotSet, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject) : Return Nothing
+        If destinationdomain.DefaultPassword = "" Then IMsgBox(My.Resources.str_DefaultPasswordIsNotSet, vbOK + vbExclamation, My.Resources.str_CreateObject) : Return Nothing
 
         Await Task.Run(
             Sub()
@@ -171,7 +177,7 @@ Public Class pgCreateObject
            destinationcontainer Is Nothing Or
            newobjectname = "" Or
            newobjectsamaccountname = "" Then
-            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
+            IMsgBox(My.Resources.str_MissedRequiredFields, vbOK + vbExclamation, My.Resources.str_CreateObject)
             Return Nothing
         End If
 
@@ -222,7 +228,7 @@ Public Class pgCreateObject
            destinationcontainer Is Nothing Or
            newobjectname = "" Or
            newobjectsamaccountname = "" Then
-            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
+            IMsgBox(My.Resources.str_MissedRequiredFields, vbOK + vbExclamation, My.Resources.str_CreateObject)
             Return Nothing
         End If
 
@@ -280,7 +286,7 @@ Public Class pgCreateObject
            destinationcontainer Is Nothing Or
            newobjectdisplayname = "" Or
            newobjectname = "" Then
-            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
+            IMsgBox(My.Resources.str_MissedRequiredFields, vbOK + vbExclamation, My.Resources.str_CreateObject)
             Return Nothing
         End If
 
@@ -320,7 +326,7 @@ Public Class pgCreateObject
         If destinationdomain Is Nothing Or
            destinationcontainer Is Nothing Or
            newobjectname = "" Then
-            IMsgBox(My.Resources.wndCreateObject_msg_MissedRequiredFields, vbOK + vbExclamation, My.Resources.wndCreateObject_lbl_CreateObject)
+            IMsgBox(My.Resources.str_MissedRequiredFields, vbOK + vbExclamation, My.Resources.str_CreateObject)
             Return Nothing
         End If
 

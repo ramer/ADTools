@@ -7,7 +7,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_AllAttributes}"
+      Title="{x:Static r:Resources.str_AllAttributes}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
     <Grid>

@@ -72,7 +72,7 @@ Public Class clsMailbox
 
     Public Sub Close()
         If _exchangeconnection IsNot Nothing Then
-            _exchangeconnection.Dispose()
+            _exchangeconnection.Close()
             _exchangeconnection = Nothing
             _mailbox = Nothing
         End If
@@ -725,7 +725,7 @@ Public Class clsMailbox
 
         If mail.IsPrimary Then
 
-            ThrowCustomException(My.Resources.cls_msg_SelectedAddressAlreadyPrimary)
+            ThrowCustomException(My.Resources.str_SelectedAddressAlreadyPrimary)
 
         Else
 

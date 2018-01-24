@@ -38,7 +38,7 @@
 
     Private Sub btnResolveDepartment_Click(sender As Object, e As RoutedEventArgs) Handles btnResolveDepartment.Click
         If CurrentObject Is Nothing Then Exit Sub
-        tbDepartment.Text = Replace(CurrentObject.Parent.name, "OU=", "")
+        CurrentObject.department = Replace(CurrentObject.Parent.name, "OU=", "")
     End Sub
 
 End Class

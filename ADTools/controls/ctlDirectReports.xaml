@@ -19,7 +19,7 @@
 
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
         <DockPanel LastChildFill="True" Grid.Column="0">
-            <TextBlock Margin="0,0,3,0" MinHeight="24" Text="{x:Static r:Resources.ctlDirectReports_lbl_SelectedObjects}" DockPanel.Dock="Top"/>
+            <TextBlock Margin="0,0,3,0" MinHeight="24" Text="{x:Static r:Resources.str_SelectedObjects}" DockPanel.Dock="Top"/>
             <Grid>
                 <local:ctlTrash x:Name="trashSelectedObjects" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
                 <local:ListViewExtended x:Name="lvSelectedObjects"
@@ -41,10 +41,10 @@
             </Grid>
         </DockPanel>
         <DockPanel LastChildFill="True" Grid.Column="1">
-            <TextBlock Margin="3,0,0,0" MinHeight="24" Text="{x:Static r:Resources.ctlDirectReports_lbl_ObjectsList}" DockPanel.Dock="Top"/>
+            <TextBlock Margin="3,0,0,0" MinHeight="24" Text="{x:Static r:Resources.str_ObjectsList}" DockPanel.Dock="Top"/>
             <Grid DockPanel.Dock="Bottom" Margin="3,5,0,0" MinHeight="24">
                 <TextBox x:Name="tbDomainObjectsFilter"/>
-                <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.wndMain_lbl_SearchPattern}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
+                <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.str_SearchPlaceholder}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="Visibility" Value="Collapsed"/>

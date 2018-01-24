@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       xmlns:r="clr-namespace:ADTools.My.Resources"
       d:DesignHeight="700" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_MemberOf}"
+      Title="{x:Static r:Resources.str_MemberOf}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
     

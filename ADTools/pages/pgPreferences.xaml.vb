@@ -41,9 +41,9 @@ Public Class pgPreferences
         Next
 
         If PluginProcessTelegramBot Is Nothing Then
-            btnPluginTelegramBotStartStop.Content = My.Resources.wndPreferences_lbl_Plugins_TelegramBot_Start
+            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Start
         Else
-            btnPluginTelegramBotStartStop.Content = My.Resources.wndPreferences_lbl_Plugins_TelegramBot_Stop
+            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Stop
         End If
 
     End Sub
@@ -173,7 +173,7 @@ Public Class pgPreferences
                 End If
             ElseIf sender Is trashAttributesForSearch Then
                 If preferences.AttributesForSearch.Contains(obj) Then
-                    If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.wndPreferences_msg_MainWindow_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.wndPreferences_msg_MainWindow_AttributesForSearch) : Exit Sub
+                    If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.str_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
                     preferences.AttributesForSearch.Remove(obj)
                     preferences.AttributesForSearch = preferences.AttributesForSearch
                 End If
@@ -389,7 +389,7 @@ Public Class pgPreferences
         Try
             Dim es As clsExternalSoftware = CType(sender, FrameworkElement).DataContext
             Dim dlg As New Forms.OpenFileDialog
-            dlg.Filter = My.Resources.wndPreferences_lbl_ExternalSoftware_DialogFilter & "|*.exe"
+            dlg.Filter = My.Resources.str_ExternalSoftwareDialogFilter & "|*.exe"
             If dlg.ShowDialog = Forms.DialogResult.OK Then
                 es.Path = dlg.FileName
             End If

@@ -63,11 +63,12 @@ Public Class ConverterDataToUIElement
                     AddHandler hl.Click,
                     Sub()
                         Dim w As Window = Window.GetWindow(hl)
-                        If w Is Nothing Then Exit Sub
-                        If TypeOf w Is wndMain Then
-                            ' TODO 
-                            'Dim wm = CType(w, wndMain)
-                            'wm.StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, wm.searchobjectclasses))
+                        If w IsNot Nothing AndAlso
+                        TypeOf w Is NavigationWindow AndAlso
+                        CType(w, NavigationWindow).Content IsNot Nothing AndAlso
+                        TypeOf CType(w, NavigationWindow).Content Is pgMain AndAlso
+                        TypeOf CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content Is pgObjects Then
+                            CType(CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content, pgObjects).StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, preferences.SearchObjectClasses))
                         End If
                     End Sub
                     tblck.Inlines.Add(hl)
@@ -84,39 +85,7 @@ Public Class ConverterDataToUIElement
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.ConvertBack
-        Throw New NotSupportedException("ConverterToInlinesWithHyperlink is a OneWay converter.")
+        Throw New NotSupportedException("ConverterDataToUIElement is a OneWay converter.")
     End Function
 
 End Class
-
-
-
-'"
-
-'            If attr.Name <> "Image" Then
-
-'                Dim text As New FrameworkElementFactory(GetType(CustomTextBlock))
-'                If first Then
-'                    text.SetValue(TextBlock.FontWeightProperty, FontWeights.Bold)
-'                    first = False
-'                    column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-'                End If
-'                bind.Converter = New ConverterToInlinesWithHyperlink
-'                text.SetBinding(CustomTextBlock.InlineCollectionProperty, bind)
-'                text.SetValue(TextBlock.ToolTipProperty, attr.Label)
-'                panel.AppendChild(text)
-
-'            Else
-
-'                Dim ttbind As New System.Windows.Data.Binding("Status")
-'                ttbind.Mode = BindingMode.OneWay
-'                Dim img As New FrameworkElementFactory(GetType(Image))
-'                column.SetValue(clsSorter.PropertyNameProperty, "Image")
-'                img.SetBinding(Image.SourceProperty, bind)
-'                img.SetValue(Image.WidthProperty, 32.0)
-'                img.SetValue(Image.HeightProperty, 32.0)
-'                img.SetBinding(Image.ToolTipProperty, ttbind)
-'                panel.AppendChild(img)
-
-'            End If
-'"

@@ -15,24 +15,28 @@ Public Class clsPreferences
     ' basic
     Private _clipboardsource As Boolean = False
     Private _clipboardsourcelimit As Boolean = True
+
+    ' view 
+    Private _pageinterface As Boolean
     Private _viewshowtoolbarpanel As Boolean = False
     Private _viewshownavigation As Boolean = True
     Private _viewshowpreview As Boolean = True
+    Private _currentview As ListViewExtended.Views
     Private _viewresultgrouping As Boolean = False
     Private _viewshowdeletedobjects As Boolean = False
 
     ' layout
     Private _columns As New ObservableCollection(Of clsViewColumnInfo)
-    Private _defaultview As ListViewExtended.Views
 
     ' search attributes
     Private _attributesforsearch As New ObservableCollection(Of clsAttribute)
+    Private _searchmode As enmSearchMode
+    Private _searchobjectclasses As clsSearchObjectClasses
 
     ' behavior
     Private _startwithwindows As Boolean?
     Private _startwithwindowsminimized As Boolean?
     Private _closeonxbutton As Boolean?
-    Private _pageinterface As Boolean
 
     ' appearance
     Private _colortext As Color
@@ -43,6 +47,7 @@ Public Class clsPreferences
     Private _colorbuttoninactivebackground As Color
     Private _colorlistviewrow As Color
     Private _colorlistviewalternationrow As Color
+    Private _fontsizepage As Double
 
     ' externalsoftware
     Private _externalsoftware As New ObservableCollection(Of clsExternalSoftware)
@@ -171,23 +176,23 @@ Public Class clsPreferences
         End Set
     End Property
 
-    Public Property ViewValue As Integer
+    Public Property CurrentViewValue As Integer
         Get
-            Return _defaultview
+            Return _currentview
         End Get
         Set(value As Integer)
-            _defaultview = value
+            _currentview = value
         End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public Property DefaultView As ListViewExtended.Views
+    Public Property CurrentView As ListViewExtended.Views
         Get
-            Return _defaultview
+            Return _currentview
         End Get
         Set(value As ListViewExtended.Views)
-            _defaultview = value
-            NotifyPropertyChanged("DefaultView")
+            _currentview = value
+            NotifyPropertyChanged("CurrentView")
         End Set
     End Property
 
@@ -198,6 +203,36 @@ Public Class clsPreferences
         Set(value As ObservableCollection(Of clsAttribute))
             _attributesforsearch = If(value, attributesForSearchDefault)
             NotifyPropertyChanged("AttributesForSearch")
+        End Set
+    End Property
+
+    Public Property SearchModeValue As Integer
+        Get
+            Return _searchmode
+        End Get
+        Set(value As Integer)
+            _searchmode = value
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property SearchMode As enmSearchMode
+        Get
+            Return _searchmode
+        End Get
+        Set(value As enmSearchMode)
+            _searchmode = value
+            NotifyPropertyChanged("SearchMode")
+        End Set
+    End Property
+
+    Public Property SearchObjectClasses() As clsSearchObjectClasses
+        Get
+            Return _searchobjectclasses
+        End Get
+        Set(ByVal value As clsSearchObjectClasses)
+            _searchobjectclasses = If(value, New clsSearchObjectClasses(True, True, True, True, False))
+            NotifyPropertyChanged("SearchObjectClasses")
         End Set
     End Property
 
@@ -422,6 +457,18 @@ Public Class clsPreferences
         Set(value As String)
             ColorListviewAlternationRow = ColorConverter.ConvertFromString(If(String.IsNullOrEmpty(value), Colors.AliceBlue.ToString, value))
             NotifyPropertyChanged("ColorListviewAlternationRowValue")
+        End Set
+    End Property
+
+    <RegistrySerializerAlias("FontSizePage")>
+    Public Property FontSizePage As Double
+        Get
+            Return _fontsizepage
+        End Get
+        Set(value As Double)
+            _fontsizepage = If(value < 12, 12, Int(value))
+            Application.Current.Resources("FontSizePage") = _fontsizepage
+            NotifyPropertyChanged("FontSizePage")
         End Set
     End Property
 

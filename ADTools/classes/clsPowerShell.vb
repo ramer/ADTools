@@ -89,7 +89,7 @@ Public Class clsPowerShell
         Return psResult
     End Function
 
-    Public Sub Dispose()
+    Public Sub Close()
         Try
 
             _rspace.Close()

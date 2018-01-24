@@ -15,13 +15,13 @@
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top">
-                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkAvailabilityICMP}" Margin="0,0,0,5"/>
+                <TextBlock Text="{x:Static r:Resources.str_NetworkAvailabilityICMP}" Margin="0,0,0,5"/>
                 <WrapPanel x:Name="wpPing"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Top">
-                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkTraceRoute}" Margin="0,10,0,5"/>
+                <TextBlock Text="{x:Static r:Resources.str_NetworkTraceRoute}" Margin="0,10,0,5"/>
                 <WrapPanel x:Name="wpTrace"/>
-                <TextBlock Text="{x:Static r:Resources.ctlNetwork_lbl_NetworkAvailabilityTCP}" Margin="0,10,0,5"/>
+                <TextBlock Text="{x:Static r:Resources.str_NetworkAvailabilityTCP}" Margin="0,10,0,5"/>
             </StackPanel>
             <WrapPanel x:Name="wpPorts" Orientation="Vertical" VerticalAlignment="Stretch"/>
         </DockPanel>

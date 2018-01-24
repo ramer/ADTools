@@ -232,8 +232,8 @@
     <Compile Include="pages\pgAbout.xaml.vb">
       <DependentUpon>pgAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="pages\pgAboutDonate.xaml.vb">
-      <DependentUpon>pgAboutDonate.xaml</DependentUpon>
+    <Compile Include="windows\wndAboutDonate.xaml.vb">
+      <DependentUpon>wndAboutDonate.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgCreateObject.xaml.vb">
       <DependentUpon>pgCreateObject.xaml</DependentUpon>
@@ -246,12 +246,6 @@
     </Compile>
     <Compile Include="windows\wndLog.xaml.vb">
       <DependentUpon>wndLog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="pages\pgMailboxQuota.xaml.vb">
-      <DependentUpon>pgMailboxQuota.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="pages\pgMailboxShare.xaml.vb">
-      <DependentUpon>pgMailboxShare.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgPreferences.xaml.vb">
       <DependentUpon>pgPreferences.xaml</DependentUpon>
@@ -387,7 +381,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgAboutDonate.xaml">
+    <Page Include="windows\wndAboutDonate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -407,18 +401,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="pages\pgMailboxQuota.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="pages\pgMailboxShare.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="windows\wndMain.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -430,10 +412,6 @@
     </Compile>
     <Compile Include="mdlMain.vb" />
     <Compile Include="mdlTools.vb" />
-    <Compile Include="windows\wndMain.xaml.vb">
-      <DependentUpon>wndMain.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="pages\pgPreferences.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -479,8 +457,11 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="My Project\Resources.ru.resx" />
+    <EmbeddedResource Include="My Project\Resources.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -547,6 +528,9 @@
     <Resource Include="images\grouping.png" />
     <Resource Include="images\clipboard.png" />
     <Resource Include="images\clipboard_limit.png" />
+    <Resource Include="images\filter_advanced.png" />
+    <Resource Include="images\filter_regular.png" />
+    <Resource Include="images\error_log.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Resource Include="images\view_pageinterface.png" />

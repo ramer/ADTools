@@ -7,7 +7,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="600"
-      Title="{x:Static r:Resources.wndObject_lbl_Organization}"
+      Title="{x:Static r:Resources.str_Organization}"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
       >
     
@@ -30,7 +30,7 @@
 
             <DockPanel Grid.Row="0">
                 <DockPanel LastChildFill="True" DockPanel.Dock="Top">
-                    <TextBlock Text="{x:Static r:Resources.wndObject_lbl_Manager}" Width="140"/>
+                    <TextBlock Text="{x:Static r:Resources.str_Manager}" Width="140"/>
                     <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
                         <TextBlock Height="23" Margin="2,0,2,0">
                             <Hyperlink x:Name="hlManager">
@@ -39,12 +39,12 @@
                         </TextBlock>
                     </Border>
                 </DockPanel>
-                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_DirectReports}" DockPanel.Dock="Top" Height="24"/>
+                <TextBlock Text="{x:Static r:Resources.str_DirectReports}" DockPanel.Dock="Top" Height="24"/>
                 <local:ctlDirectReports CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}}}" Margin="10,5,10,5" MinHeight="250"/>
             </DockPanel>
 
             <DockPanel Grid.Row="1">
-                <TextBlock Text="{x:Static r:Resources.wndObject_lbl_ManagedObjects}" DockPanel.Dock="Top" Height="24"/>
+                <TextBlock Text="{x:Static r:Resources.str_ManagedObjects}" DockPanel.Dock="Top" Height="24"/>
                 <local:ctlManagedObjects CurrentObject="{Binding Path=CurrentObject, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Page}}}" Margin="10,5,10,5" MinHeight="250"/>
             </DockPanel>
         </Grid>

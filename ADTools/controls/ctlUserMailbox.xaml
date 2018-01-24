@@ -7,260 +7,477 @@
              xmlns:r="clr-namespace:ADTools.My.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518">
+    
     <UserControl.DataContext>
         <local:clsMailbox/>
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <local:ConverterBooleanAnd x:Key="ConverterBooleanAnd" />
-    </UserControl.Resources>
-
+    
     <Grid>
         <local:ctlCap x:Name="capexchange" Panel.ZIndex="1" Visibility="Hidden"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <TabControl>
+            <TabItem Header="{x:Static r:Resources.str_Addresses}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-            <DockPanel LastChildFill="True">
+                    <DockPanel Margin="5">
 
-                <DockPanel DockPanel.Dock="Right" Margin="10,0,0,0">
-                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
-                        <Run Text="{Binding VersionFormatted, Mode=OneWay}"/>
-                    </TextBlock>
-                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
-                        <Run Text="{x:Static r:Resources.ctlMailbox_lbl_State}"/>
-                        <Hyperlink x:Name="hlState"><Run Text="{Binding State, Mode=OneWay}"/></Hyperlink>
-                    </TextBlock>
-                    <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="{x:Static r:Resources.ctlMailbox_lbl_Server}"></TextBlock>
-                    <StackPanel Width="250" IsEnabled="{Binding Connected}">
-                        <Button x:Name="btnMailboxAdd" Content="{x:Static r:Resources.ctlMailbox_lbl_Add}" MinHeight="24" Margin="0,0,0,10">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
-                                    <Binding ElementName="tbMailbox" Path="Text.Length" />
-                                    <Binding ElementName="cmboMailboxDomain" Path="SelectedItems.Count" />
-                                </MultiBinding>
-                            </Button.IsEnabled>
-                        </Button>
-                        <Button x:Name="btnMailboxEdit" Content="{x:Static r:Resources.ctlMailbox_lbl_Change}" MinHeight="24" Margin="0,0,0,10">
-                            <Button.IsEnabled>
-                                <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
-                                    <Binding ElementName="tbMailbox" Path="Text.Length" />
-                                    <Binding ElementName="cmboMailboxDomain" Path="SelectedItems.Count" />
-                                    <Binding ElementName="lvEmailAddresses" Path="SelectedItems.Count"  />
-                                </MultiBinding>
-                            </Button.IsEnabled>
-                        </Button>
-                        <Button x:Name="btnMailboxRemove" Content="{x:Static r:Resources.ctlMailbox_lbl_Remove}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnMailboxSetPrimary" Content="{x:Static r:Resources.ctlMailbox_lbl_SetPrimary}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
-                        <Button x:Name="btnMailboxQuota" Content="{x:Static r:Resources.ctlMailbox_lbl_Quotas}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding Exist}"></Button>
-                        <CheckBox x:Name="chbMailboxHidden" MinHeight="24" Margin="0,0,0,10" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_HiddenToolTip}">
-                            <CheckBox.Style>
-                                <Style TargetType="{x:Type CheckBox}">
-                                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type CheckBox}">
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="OnChecking">
-                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="OnUnchecking">
-                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-
-                                                <DockPanel x:Name="dockPanel">
-                                                    <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                                        <Grid Background="{DynamicResource ColorElementBackground}">
-                                                            <Border HorizontalAlignment="Left" x:Name="slider" Width="90" BorderThickness="1,1,1,1" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource ColorButtonBackground}" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                                                <Border.RenderTransform>
-                                                                    <TransformGroup>
-                                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
-                                                                        <SkewTransform AngleX="0" AngleY="0"/>
-                                                                        <RotateTransform Angle="0"/>
-                                                                        <TranslateTransform X="0" Y="0"/>
-                                                                    </TransformGroup>
-                                                                </Border.RenderTransform>
-                                                            </Border>
-
-                                                            <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
-
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_HiddenHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                        </Grid>
-                                                    </Border>
-
-                                                    <VisualStateManager.VisualStateGroups>
-                                                        <VisualStateGroup x:Name="CommonStates">
-                                                            <VisualStateGroup.Transitions>
-                                                                <VisualTransition GeneratedDuration="0:0:0.2" />
-                                                                <VisualTransition GeneratedDuration="0" To="Pressed" />
-                                                            </VisualStateGroup.Transitions>
-                                                            <VisualState x:Name="Normal" />
-                                                            <VisualState x:Name="MouseOver">
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
-                                                                </Storyboard>
-                                                            </VisualState>
-                                                        </VisualStateGroup>
-                                                    </VisualStateManager.VisualStateGroups>
-                                                </DockPanel>
-
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsChecked" Value="True">
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
-                                                        </Trigger.ExitActions>
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
-                                                        </Trigger.EnterActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsEnabled" Value="False">
-                                                        <Setter TargetName="slider" Property="Background" Value="{DynamicResource ColorElementBackground}"/>
-                                                        <Setter TargetName="slider" Property="BorderThickness" Value="0"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </CheckBox.Style>
-                        </CheckBox>
-                        <CheckBox x:Name="chbMailboxType" MinHeight="24" Margin="0,0,0,10" IsChecked="{Binding Type}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.ctlMailbox_lbl_TypeToolTip}">
-                            <CheckBox.Style>
-                                <Style TargetType="{x:Type CheckBox}">
-                                    <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type CheckBox}">
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="OnChecking">
-                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="OnUnchecking">
-                                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
-                                                        </DoubleAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-
-                                                <DockPanel x:Name="dockPanel">
-                                                    <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                                        <Grid Background="{DynamicResource ColorElementBackground}">
-                                                            <Border HorizontalAlignment="Left" x:Name="slider" Width="90" BorderThickness="1,1,1,1" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource ColorButtonBackground}" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                                                <Border.RenderTransform>
-                                                                    <TransformGroup>
-                                                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
-                                                                        <SkewTransform AngleX="0" AngleY="0"/>
-                                                                        <RotateTransform Angle="0"/>
-                                                                        <TranslateTransform X="0" Y="0"/>
-                                                                    </TransformGroup>
-                                                                </Border.RenderTransform>
-                                                            </Border>
-
-                                                            <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
-
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_TypeUser}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                                            <TextBlock Text="{x:Static r:Resources.ctlMailbox_lbl_TypeShared}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                        </Grid>
-                                                    </Border>
-
-                                                    <VisualStateManager.VisualStateGroups>
-                                                        <VisualStateGroup x:Name="CommonStates">
-                                                            <VisualStateGroup.Transitions>
-                                                                <VisualTransition GeneratedDuration="0:0:0.2" />
-                                                                <VisualTransition GeneratedDuration="0" To="Pressed" />
-                                                            </VisualStateGroup.Transitions>
-                                                            <VisualState x:Name="Normal" />
-                                                            <VisualState x:Name="MouseOver">
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
-                                                                </Storyboard>
-                                                            </VisualState>
-                                                        </VisualStateGroup>
-                                                    </VisualStateManager.VisualStateGroups>
-                                                </DockPanel>
-
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsChecked" Value="True">
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
-                                                        </Trigger.ExitActions>
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
-                                                        </Trigger.EnterActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsEnabled" Value="False">
-                                                        <Setter TargetName="slider" Property="Background" Value="{DynamicResource ColorElementBackground}"/>
-                                                        <Setter TargetName="slider" Property="BorderThickness" Value="0"/>
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </CheckBox.Style>
-                        </CheckBox>
-                        <Button x:Name="btnMailboxShare" Content="{x:Static r:Resources.ctlMailbox_lbl_Share}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding Exist}"></Button>
-                    </StackPanel>
-                </DockPanel>
-                <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
-                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
-                        <ComboBox x:Name="cmboMailboxDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" Height="23" Width="150" DockPanel.Dock="Right"/>
-                        <TextBox x:Name="tbMailbox" Height="23" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />
-                    </DockPanel>
-                    <DockPanel DockPanel.Dock="Bottom">
-                        <Grid MinHeight="24">
-                            <ProgressBar x:Name="pbMailboxSpace" Value="{Binding Size, Mode=OneWay}" Maximum="{Binding CurrentProhibitSendQuota, Mode=OneWay}"  Background="{x:Null}" ToolTip="size"></ProgressBar>
-                            <TextBlock x:Name="tblckMailboxSpace" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
-                                <Run Text="{x:Static r:Resources.ctlMailbox_lbl_SizeBusy}"/>
-                                <Run Text="{Binding SizeFormatted, Mode=OneWay}"/>,
-                                <Run Text="{x:Static r:Resources.ctlMailbox_lbl_SizeQuota}"/>
-                                <Run Text="{Binding CurrentProhibitSendQuotaFormatted, Mode=OneWay}"/>
+                        <DockPanel DockPanel.Dock="Right" Margin="10,0,0,0">
+                            <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                            <Run Text="{Binding VersionFormatted, Mode=OneWay}"/>
                             </TextBlock>
-                        </Grid>
+                            <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center">
+                            <Run Text="{x:Static r:Resources.str_ConnectionState}"/>
+                            <Hyperlink x:Name="hlState"><Run Text="{Binding State, Mode=OneWay}"/></Hyperlink>
+                            </TextBlock>
+                            <TextBlock DockPanel.Dock="Bottom" TextAlignment="Center" Text="{x:Static r:Resources.str_ExchangeServer}"></TextBlock>
+                            <StackPanel Width="250" IsEnabled="{Binding Connected}">
+                                <Button x:Name="btnMailboxAdd" Content="{x:Static r:Resources.str_AddAddress}" MinHeight="24" Margin="0,0,0,10">
+                                    <Button.IsEnabled>
+                                        <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
+                                            <Binding ElementName="tbMailbox" Path="Text.Length" />
+                                            <Binding ElementName="cmboMailboxDomain" Path="SelectedItems.Count" />
+                                        </MultiBinding>
+                                    </Button.IsEnabled>
+                                </Button>
+                                <Button x:Name="btnMailboxEdit" Content="{x:Static r:Resources.str_ChangeAddress}" MinHeight="24" Margin="0,0,0,10">
+                                    <Button.IsEnabled>
+                                        <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
+                                            <Binding ElementName="tbMailbox" Path="Text.Length" />
+                                            <Binding ElementName="cmboMailboxDomain" Path="SelectedItems.Count" />
+                                            <Binding ElementName="lvEmailAddresses" Path="SelectedItems.Count"  />
+                                        </MultiBinding>
+                                    </Button.IsEnabled>
+                                </Button>
+                                <Button x:Name="btnMailboxRemove" Content="{x:Static r:Resources.str_RemoveAddress}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                                <Button x:Name="btnMailboxSetPrimary" Content="{x:Static r:Resources.str_SetPrimaryAddress}" MinHeight="24" Margin="0,0,0,10" IsEnabled="{Binding ElementName=lvEmailAddresses, Path=SelectedItems.Count}"></Button>
+                                <CheckBox x:Name="chbMailboxHidden" MinHeight="24" Margin="0,0,0,10" IsChecked="{Binding HiddenFromAddressListsEnabled}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.str_EmailHiddenToolTip}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="{x:Type CheckBox}">
+                                            <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                        <ControlTemplate.Resources>
+                                                            <Storyboard x:Key="OnChecking">
+                                                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                            <Storyboard x:Key="OnUnchecking">
+                                                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </ControlTemplate.Resources>
+
+                                                        <DockPanel x:Name="dockPanel">
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                                <Grid Background="{DynamicResource ColorElementBackground}">
+                                                                    <Border HorizontalAlignment="Left" x:Name="slider" Width="90" BorderThickness="1,1,1,1" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource ColorButtonBackground}" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                                        <Border.RenderTransform>
+                                                                            <TransformGroup>
+                                                                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                                                <SkewTransform AngleX="0" AngleY="0"/>
+                                                                                <RotateTransform Angle="0"/>
+                                                                                <TranslateTransform X="0" Y="0"/>
+                                                                            </TransformGroup>
+                                                                        </Border.RenderTransform>
+                                                                    </Border>
+
+                                                                    <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
+
+                                                                    <TextBlock Text="{x:Static r:Resources.str_EmailShow}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                                    <TextBlock Text="{x:Static r:Resources.str_EmailHide}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <VisualStateManager.VisualStateGroups>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualStateGroup.Transitions>
+                                                                        <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                                    </VisualStateGroup.Transitions>
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="MouseOver">
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                                                        </Storyboard>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateManager.VisualStateGroups>
+                                                        </DockPanel>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
+                                                                </Trigger.ExitActions>
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
+                                                                </Trigger.EnterActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="slider" Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+                                                                <Setter TargetName="slider" Property="BorderThickness" Value="0"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                                <CheckBox x:Name="chbMailboxType" MinHeight="24" Margin="0,0,0,10" IsChecked="{Binding Type}" IsEnabled="{Binding Exist, Mode=OneWay}" ToolTip="{x:Static r:Resources.str_TypeToolTip}">
+                                    <CheckBox.Style>
+                                        <Style TargetType="{x:Type CheckBox}">
+                                            <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                                        <ControlTemplate.Resources>
+                                                            <Storyboard x:Key="OnChecking">
+                                                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="90"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                            <Storyboard x:Key="OnUnchecking">
+                                                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                                                    <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0"/>
+                                                                </DoubleAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </ControlTemplate.Resources>
+
+                                                        <DockPanel x:Name="dockPanel">
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                                <Grid Background="{DynamicResource ColorElementBackground}">
+                                                                    <Border HorizontalAlignment="Left" x:Name="slider" Width="90" BorderThickness="1,1,1,1" RenderTransformOrigin="0.5,0.5" Background="{DynamicResource ColorButtonBackground}" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                                        <Border.RenderTransform>
+                                                                            <TransformGroup>
+                                                                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                                                                <SkewTransform AngleX="0" AngleY="0"/>
+                                                                                <RotateTransform Angle="0"/>
+                                                                                <TranslateTransform X="0" Y="0"/>
+                                                                            </TransformGroup>
+                                                                        </Border.RenderTransform>
+                                                                    </Border>
+
+                                                                    <Grid x:Name="Overlay" Background="{DynamicResource ColorElementBackground}" Opacity="0"/>
+
+                                                                    <TextBlock Text="{x:Static r:Resources.str_TypeUser}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" />
+                                                                    <TextBlock Text="{x:Static r:Resources.str_TypeShared}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <VisualStateManager.VisualStateGroups>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualStateGroup.Transitions>
+                                                                        <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                        <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                                    </VisualStateGroup.Transitions>
+                                                                    <VisualState x:Name="Normal" />
+                                                                    <VisualState x:Name="MouseOver">
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                                                        </Storyboard>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateManager.VisualStateGroups>
+                                                        </DockPanel>
+
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
+                                                                </Trigger.ExitActions>
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
+                                                                </Trigger.EnterActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter TargetName="slider" Property="Background" Value="{DynamicResource ColorElementBackground}"/>
+                                                                <Setter TargetName="slider" Property="BorderThickness" Value="0"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </CheckBox.Style>
+                                </CheckBox>
+                            </StackPanel>
+                        </DockPanel>
+                        <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
+                                <ComboBox x:Name="cmboMailboxDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" Height="23" Width="150" DockPanel.Dock="Right"/>
+                                <TextBox x:Name="tbMailbox" Height="23" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />
+                            </DockPanel>
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <Grid MinHeight="24">
+                                    <ProgressBar x:Name="pbMailboxSpace" Value="{Binding Size, Mode=OneWay}" Maximum="{Binding CurrentProhibitSendQuota, Mode=OneWay}"  Background="{x:Null}" ToolTip="size"></ProgressBar>
+                                    <TextBlock x:Name="tblckMailboxSpace" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
+                                    <Run Text="{x:Static r:Resources.str_SizeBusy}"/>
+                                    <Run Text="{Binding SizeFormatted, Mode=OneWay}"/>,
+                                    <Run Text="{x:Static r:Resources.str_SizeQuota}"/>
+                                    <Run Text="{Binding CurrentProhibitSendQuotaFormatted, Mode=OneWay}"/>
+                                    </TextBlock>
+                                </Grid>
+                            </DockPanel>
+                            <ListBox x:Name="lvEmailAddresses" Margin="0,0,0,5" ItemsSource="{Binding EmailAddresses}">
+                                <ListBox.Style>
+                                    <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
+                                        <Setter Property="ItemTemplate">
+                                            <Setter.Value>
+                                                <DataTemplate>
+                                                    <VirtualizingStackPanel Orientation="Horizontal" MinHeight="24">
+                                                        <TextBlock TextWrapping="Wrap" Text="{Binding Address}" Margin="5,0,5,0">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsPrimary}" Value="True">
+                                                                            <Setter Property="FontWeight" Value="Bold"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </VirtualizingStackPanel>
+                                                </DataTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="ItemsPanel">
+                                            <Setter.Value>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel Orientation="Vertical"/>
+                                                </ItemsPanelTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.Style>
+                            </ListBox>
+
+                        </DockPanel>
+
                     </DockPanel>
-                    <ListBox x:Name="lvEmailAddresses" Margin="0,0,0,5" ItemsSource="{Binding EmailAddresses}">
-                        <ListBox.Style>
-                            <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
-                                <Setter Property="ItemTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <VirtualizingStackPanel Orientation="Horizontal" MinHeight="24">
-                                                <TextBlock TextWrapping="Wrap" Text="{Binding Address}">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsPrimary}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="Bold"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </VirtualizingStackPanel>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="ItemsPanel">
-                                    <Setter.Value>
-                                        <ItemsPanelTemplate>
-                                            <VirtualizingStackPanel Orientation="Vertical"/>
-                                        </ItemsPanelTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListBox.Style>
-                    </ListBox>
+                    
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{x:Static r:Resources.str_EmailShare}" IsEnabled="{Binding Exist}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-                </DockPanel>
+                    <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
+                        <TextBlock Text="{x:Static r:Resources.str_FullAccess}" DockPanel.Dock="Top"/>
+                        <ListView x:Name="lvFullAccess" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionFullAccess, Mode=OneWay}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="250">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_UserPrincipalName}" Width="120">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding userPrincipalName}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1">
+                        <TextBlock Text="{x:Static r:Resources.str_SendAs}" DockPanel.Dock="Top"/>
+                        <CheckBox x:Name="chbSentItemsConfigurationSendAs" DockPanel.Dock="Bottom" Margin="5,5,5,5" IsChecked="{Binding SentItemsConfigurationSendAs}" Content="{x:Static r:Resources.str_SendAsCopyToSent}"/>
+                        <ListView x:Name="lvSendAs" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendAs, Mode=OneWay}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="250">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_UserPrincipalName}" Width="120">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding userPrincipalName}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="2">
+                        <TextBlock Text="{x:Static r:Resources.str_SendOnBehalf}" DockPanel.Dock="Top"/>
+                        <CheckBox x:Name="chbSentItemsConfigurationSendOnBehalf" DockPanel.Dock="Bottom" Margin="5,8,5,5" IsChecked="{Binding SentItemsConfigurationSendOnBehalf}" Content="{x:Static r:Resources.str_SendOnBehalfCopyToSent}"/>
+                        <ListView x:Name="lvSendOnBehalf" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendOnBehalf, Mode=OneWay}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="250">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_UserPrincipalName}" Width="120">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding userPrincipalName}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                    <DockPanel LastChildFill="True" Grid.Column="1" Grid.RowSpan="3" Margin="5,0,0,0">
+                        <TextBlock Text="{x:Static r:Resources.str_ObjectsList}" DockPanel.Dock="Top"/>
+                        <TextBox x:Name="tbSearchPattern" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
+                        <ListView x:Name="lvUsers" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding users}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="250">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{Binding name}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="{x:Static r:Resources.str_UserPrincipalName}" Width="120">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <DockPanel>
+                                                        <TextBlock Text="{Binding userPrincipalName}"/>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                </Grid>
+                    
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{x:Static r:Resources.str_Quotas}" IsEnabled="{Binding Exist}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-            </DockPanel>
-        </ScrollViewer>
+                    <StackPanel Margin="5">
+                        <CheckBox x:Name="chbUseDatabaseQuotaDefaults" Content="{x:Static r:Resources.str_QuotasUseDatabaseDefaults}" Margin="0,5,0,5" />
+                        <Grid IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+                                    <Setter Property="Margin" Value="0,5,5,5"/>
+                                    <Setter Property="MinHeight" Value="24"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                                <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                                    <Setter Property="Margin" Value="0,5,0,5"/>
+                                    <Setter Property="MinHeight" Value="24"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ToolbarButton}">
+                                    <Setter Property="Margin" Value="0,5,0,5"/>
+                                    <Setter Property="MinHeight" Value="24"/>
+                                    <Setter Property="MinWidth" Value="24"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </Grid.Resources>
+
+
+                                <DockPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                                        <Button x:Name="btnDecreaseAll" Content="➖"/>
+                                        <Button x:Name="btnIncreaseAll" Content="✚"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{x:Static r:Resources.str_QuotasWhenExceeds}" Margin="0,5,0,5" MinHeight="24" VerticalAlignment="Center"/>
+                                </DockPanel>
+
+                                <CheckBox x:Name="chbIssueWarningQuota" Grid.Column="0" Grid.Row="1" Content="{x:Static r:Resources.str_QuotasWarning}"/>
+                            <DockPanel Grid.Column="1" Grid.Row="1" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbIssueWarningQuota, Path=IsChecked}">
+                                    <Button x:Name="btnIssueWarningQuotaDecrease" Content="➖"/>
+                                    <Button x:Name="btnIssueWarningQuotaIncrease" Content="✚"/>
+                                </StackPanel>
+                                <TextBox x:Name="tbIssueWarningQuota"/>
+                            </DockPanel>
+
+                            <CheckBox x:Name="chbProhibitSendQuota" Grid.Column="0" Grid.Row="2" Content="{x:Static r:Resources.str_ProhibitSend}"/>
+                            <DockPanel Grid.Column="1" Grid.Row="2" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbProhibitSendQuota, Path=IsChecked}">
+                                    <Button x:Name="btnProhibitSendQuotaDecrease" Content="➖"/>
+                                    <Button x:Name="btnProhibitSendQuotaIncrease" Content="✚"/>
+                                </StackPanel>
+                                <TextBox x:Name="tbProhibitSendQuota"/>
+                            </DockPanel>
+
+                            <CheckBox x:Name="chbProhibitSendReceiveQuota" Grid.Column="0" Grid.Row="3" Content="{x:Static r:Resources.str_ProhibitSendReceive}"/>
+                            <DockPanel Grid.Column="1" Grid.Row="3" IsEnabled="{Binding ElementName=chbUseDatabaseQuotaDefaults, Path=IsChecked, Converter={StaticResource ConverterBooleanInverted}}" >
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=chbProhibitSendReceiveQuota, Path=IsChecked}">
+                                    <Button x:Name="btnProhibitSendReceiveQuotaDecrease" Content="➖"/>
+                                    <Button x:Name="btnProhibitSendReceiveQuotaIncrease" Content="✚"/>
+                                </StackPanel>
+                                <TextBox x:Name="tbProhibitSendReceiveQuota"/>
+                            </DockPanel>
+                        </Grid>
+                        <Button x:Name="btnApply" Content="{x:Static r:Resources.str_Apply}" MinHeight="24" HorizontalAlignment="Right" Style="{StaticResource {x:Type Button}}" Margin="0,5,0,5"/>
+                    </StackPanel>
+                    
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
     </Grid>
 
 </UserControl>

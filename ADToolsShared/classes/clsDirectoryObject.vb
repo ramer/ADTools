@@ -633,25 +633,25 @@ Public Class clsDirectoryObject
 
             If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
-                    _status &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
+                    _status &= My.Resources.str_PasswordExpirationUnknown & vbCr
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate() = Nothing Then
-                        _status &= My.Resources.cls_msg_PasswordExpiresUnknown & vbCr
+                        _status &= My.Resources.str_PasswordExpirationUnknown & vbCr
                     ElseIf passwordExpiresDate() <= Now Then
-                        _status &= My.Resources.cls_msg_PasswordExpired & vbCr
+                        _status &= My.Resources.str_PasswordExpired & vbCr
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _status &= My.Resources.cls_msg_ObjectExpiresUnknown & vbCr
+                    _status &= My.Resources.str_ObjectExpirationUnknown & vbCr
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _status &= My.Resources.cls_msg_ObjectExpired & vbCr
+                    _status &= My.Resources.str_ObjectExpired & vbCr
                 End If
 
                 If disabled Is Nothing Then
-                    _status &= My.Resources.cls_msg_ObjectStatusUnknown & vbCr
+                    _status &= My.Resources.str_ObjectStatusUnknown & vbCr
                 ElseIf disabled Then
-                    _status &= My.Resources.cls_msg_ObjectDisabled & vbCr
+                    _status &= My.Resources.str_ObjectDisabled & vbCr
                 End If
                 If _status.Length > 1 Then _status = _status.Remove(_status.Length - 1)
             End If
@@ -765,7 +765,7 @@ Public Class clsDirectoryObject
     End Property
 
     Public Sub ResetPassword()
-        If String.IsNullOrEmpty(Domain.DefaultPassword) Then Throw New Exception(My.Resources.cls_msg_DefaultPasswordIsNotSet)
+        If String.IsNullOrEmpty(Domain.DefaultPassword) Then Throw New Exception(My.Resources.str_DefaultPasswordIsNotSet)
 
         Dim path = "LDAP://" & If(String.IsNullOrEmpty(Domain.Server), Domain.Name, Domain.Server) & "/" & distinguishedName
         Using de As New DirectoryEntry(path, Domain.Username, Domain.Password)
@@ -774,7 +774,7 @@ Public Class clsDirectoryObject
         End Using
 
         pwdLastSet = 0
-        description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+        description = String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
     Public Sub SetPassword(password As String)
@@ -787,7 +787,7 @@ Public Class clsDirectoryObject
         End Using
 
         pwdLastSet = -1
-        description = String.Format("{0} {1} ({2})", My.Resources.cls_msg_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+        description = String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
     End Sub
 
 
@@ -1290,12 +1290,12 @@ Public Class clsDirectoryObject
         Get
             If accountExpires IsNot Nothing Then
                 If accountExpires = 0 Or accountExpires = 9223372036854775807 Then
-                    Return My.Resources.cls_msg_Never
+                    Return My.Resources.str_Never
                 Else
                     Return Date.FromFileTime(accountExpires).ToString
                 End If
             Else
-                Return My.Resources.cls_msg_Unknown
+                Return My.Resources.str_Unknown
             End If
         End Get
     End Property
@@ -1368,9 +1368,9 @@ Public Class clsDirectoryObject
     Public ReadOnly Property lastLogonFormated() As String
         Get
             If lastLogon IsNot Nothing Then
-                Return If(lastLogon <= 0, My.Resources.cls_msg_Never, Date.FromFileTime(lastLogon).ToString)
+                Return If(lastLogon <= 0, My.Resources.str_Never, Date.FromFileTime(lastLogon).ToString)
             Else
-                Return My.Resources.cls_msg_Unknown
+                Return My.Resources.str_Unknown
             End If
         End Get
     End Property
@@ -1438,7 +1438,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property pwdLastSetFormated() As String
         Get
-            Return If(pwdLastSet Is Nothing, My.Resources.cls_msg_Unknown, If(pwdLastSet = 0, My.Resources.cls_msg_Expired, Date.FromFileTime(pwdLastSet).ToString))
+            Return If(pwdLastSet Is Nothing, My.Resources.str_Unknown, If(pwdLastSet = 0, My.Resources.str_Expired, Date.FromFileTime(pwdLastSet).ToString))
         End Get
     End Property
 
@@ -1457,9 +1457,9 @@ Public Class clsDirectoryObject
     Public ReadOnly Property passwordExpiresFormated() As String
         Get
             If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
-                Return My.Resources.cls_msg_Never
+                Return My.Resources.str_Never
             Else
-                Return If(pwdLastSet Is Nothing, My.Resources.cls_msg_Unknown, If(pwdLastSet = 0, My.Resources.cls_msg_Expired, Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge).ToString))
+                Return If(pwdLastSet Is Nothing, My.Resources.str_Unknown, If(pwdLastSet = 0, My.Resources.str_Expired, Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge).ToString))
             End If
         End Get
     End Property
@@ -1543,7 +1543,7 @@ Public Class clsDirectoryObject
                     userAccountControl = userAccountControl - ADS_UF_ACCOUNTDISABLE
                 End If
             End If
-            description = String.Format("{0} {1} ({2})", If(value, My.Resources.cls_msg_Disabled, My.Resources.cls_msg_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+            description = String.Format("{0} {1} ({2})", If(value, My.Resources.str_Disabled, My.Resources.str_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
         End Set
     End Property
 
@@ -1557,7 +1557,7 @@ Public Class clsDirectoryObject
                     Return ""
                 End If
             Else
-                Return My.Resources.cls_msg_Unknown
+                Return My.Resources.str_Unknown
             End If
         End Get
     End Property
@@ -1591,7 +1591,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreatedFormated() As String
         Get
-            Return If(whenCreated = Nothing, My.Resources.cls_msg_Unknown, whenCreated.ToString)
+            Return If(whenCreated = Nothing, My.Resources.str_Unknown, whenCreated.ToString)
         End Get
     End Property
 

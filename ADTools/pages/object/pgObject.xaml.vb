@@ -2,8 +2,9 @@
 
 Class pgObject
 
-    Private DualPanelMode As Boolean
-    Private frmNav As Frame
+    Public Property DualPanelMode As Boolean
+    Public Property FirstPage As Page
+    Public Property frmNav As Frame
 
     Public Shared ReadOnly CurrentObjectProperty As DependencyProperty = DependencyProperty.Register("CurrentObject",
                                                             GetType(clsDirectoryObject),
@@ -51,6 +52,7 @@ Class pgObject
             If dpWrapper.Children.Count = 2 Then
                 dpWrapper.Children.Remove(frmNav)
             End If
+            If FirstPage IsNot Nothing Then NavigateFirst()
         End If
     End Sub
 
@@ -122,31 +124,36 @@ Class pgObject
         If DualPanelMode Then
             frmNav.Navigate(pg)
         Else
-            NavigationService.Navigate(pg)
+            If NavigationService IsNot Nothing Then NavigationService.Navigate(pg)
         End If
     End Sub
 
     Public Sub NavigateFirst()
         Dim pg As Page = Nothing
-        Select Case CurrentObject.SchemaClass
-            Case clsDirectoryObject.enmSchemaClass.User
-                pg = New pgUserBasicInformation(CurrentObject)
-            Case clsDirectoryObject.enmSchemaClass.Computer
-                pg = New pgComputerBasicInformation(CurrentObject)
-            Case clsDirectoryObject.enmSchemaClass.Group
-                pg = New pgGroupBasicInformation(CurrentObject)
-            Case clsDirectoryObject.enmSchemaClass.Contact
-                pg = New pgContactBasicInformation(CurrentObject)
-            Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
-                pg = New pgOrganizationalUnitBasicInformation(CurrentObject)
-            Case Else
-                pg = New pgObjectAllAttributes(CurrentObject)
-        End Select
+        If FirstPage Is Nothing Then
+            Select Case CurrentObject.SchemaClass
+                Case clsDirectoryObject.enmSchemaClass.User
+                    pg = New pgUserBasicInformation(CurrentObject)
+                Case clsDirectoryObject.enmSchemaClass.Computer
+                    pg = New pgComputerBasicInformation(CurrentObject)
+                Case clsDirectoryObject.enmSchemaClass.Group
+                    pg = New pgGroupBasicInformation(CurrentObject)
+                Case clsDirectoryObject.enmSchemaClass.Contact
+                    pg = New pgContactBasicInformation(CurrentObject)
+                Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                    pg = New pgOrganizationalUnitBasicInformation(CurrentObject)
+                Case Else
+                    pg = New pgObjectAllAttributes(CurrentObject)
+            End Select
+        Else
+            pg = FirstPage
+        End If
+
         Navigate(pg)
     End Sub
 
     Private Sub btnClearPhoto_Click(sender As Object, e As RoutedEventArgs) Handles btnClearPhoto.Click
-        If IMsgBox(My.Resources.wndObject_msg_AreYouSure, vbYesNo + vbQuestion, My.Resources.wndObject_msg_ClearPhoto, Window.GetWindow(Me)) = MsgBoxResult.Yes Then CurrentObject.thumbnailPhoto = Nothing
+        If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_ClearPhoto, Window.GetWindow(Me)) = MsgBoxResult.Yes Then CurrentObject.thumbnailPhoto = Nothing
     End Sub
 
 End Class

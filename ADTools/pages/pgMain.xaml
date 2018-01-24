@@ -9,41 +9,20 @@
         d:DesignWidth="1258"
         d:DesignHeight="368"
         KeepAlive="True"
-        Title="{Binding ActualWidth}"
+        Title="{Binding ElementName=frmObjects, Path=Content.Title}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
-    <!--Title="{Binding ElementName=frmObjects, Path=Content.Title}"-->
+    
     <Grid>
-        <!--<Popup x:Name="poptvObjects" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tvObjects}" Placement="Right" HorizontalOffset="-50" VerticalOffset="50">
-            <Grid Width="200" Height="70">
-                <Border CornerRadius="0,10,10,10" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
-
-                <TextBlock Margin="10" TextAlignment="Justify">
-                    <Run Text="{x:Static r:Resources.hint_poptvObjects_1}"/>
-                    <Hyperlink x:Name="hlpoptvObjects"><Run Text="{x:Static r:Resources.hint_poptvObjects_2}"/></Hyperlink>
-                    <Run Text="{x:Static r:Resources.hint_poptvObjects_3}"/>
-                </TextBlock>
-            </Grid>
-        </Popup>
-        <Popup x:Name="poptbSearchPattern" Style="{StaticResource PopupHint}" PlacementTarget="{Binding ElementName=tbSearchPattern}" Placement="Top" HorizontalOffset="80" VerticalOffset="12">
-            <Grid Width="200" Height="55">
-                <Border CornerRadius="10,10,10,0" Background="{DynamicResource ColorElementBackground}" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="2"/>
-
-                <TextBlock Margin="10" TextAlignment="Justify">
-                    <Run Text="{x:Static r:Resources.hint_poptbSearchPattern}"/>
-                </TextBlock>
-            </Grid>
-        </Popup>-->
-
         <DockPanel LastChildFill="True">
             <DockPanel x:Name="dpToolbar" DockPanel.Dock="Top" Background="{DynamicResource ColorWindowBackground}">
                 <Grid>
-                    <local:TabControlExtended x:Name="tabctlMain" Margin="5,0,5,5" Height="115" MinHeight="34" Visible="{Binding ElementName=togbToolbarExpander, Path=IsChecked, Mode=TwoWay}">
-                        <TabItem Header="{x:Static r:Resources.wndMain_mnuMain}">
+                    <local:TabControlExtended x:Name="tabctlMain" Margin="5,0,5,5" Height="120" MinHeight="34" Visible="{Binding ElementName=togbToolbarExpander, Path=IsChecked, Mode=TwoWay}">
+                        <TabItem Header="{x:Static r:Resources.str_Main}">
                             <StackPanel Orientation="Horizontal">
                                 <Button x:Name="mnuFilePrint" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuFile_Print}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=430}"/>
+                                        <TextBlock Text="{x:Static r:Resources.ctxmnu_Print}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=430}"/>
                                         <Image Source="/images/print_preview.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
@@ -52,7 +31,7 @@
 
                                 <Button x:Name="mnuEditCreateObject" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuEdit_CreateObject}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=500}"/>
+                                        <TextBlock Text="{x:Static r:Resources.ctxmnu_CreateObject}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=500}"/>
                                         <Image Source="/images/Folder_add.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
@@ -61,13 +40,13 @@
 
                                 <Button x:Name="mnuServiceDomainOptions" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_DomainOptions}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=750}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_DomainOptions}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=750}"/>
                                         <Image Source="/images/domain_options.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
                                 <Button x:Name="mnuServicePreferences" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_Preferences}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=750}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_ApplicationOptions}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=750}"/>
                                         <Image Source="/images/preferences.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
@@ -76,14 +55,14 @@
 
                                 <Button x:Name="mnuServiceLog" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_Log}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_EventLog}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
                                         <Image Source="/images/log.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
                                 <Button x:Name="mnuServiceErrorLog" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuService_ErrorLog}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
-                                        <Image Source="/images/log.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_ErrorLog}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
+                                        <Image Source="/images/error_log.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
 
@@ -91,7 +70,7 @@
 
                                 <Button x:Name="mnuHelpAbout" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuHelp_About}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=910}"/>
+                                        <TextBlock Text="{x:Static r:Resources.ctxmnu_About}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=910}"/>
                                         <Image Source="/images/app.ico" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
                                 </Button>
@@ -100,24 +79,24 @@
 
                             </StackPanel>
                         </TabItem>
-                        <TabItem x:Name="mnuView" Header="{x:Static r:Resources.wndMain_mnuView}">
+                        <TabItem x:Name="mnuView" Header="{x:Static r:Resources.str_View}">
                             <StackPanel Orientation="Horizontal">
                                 <DockPanel>
                                     <ToggleButton x:Name="togbViewPageInterface" Margin="3" IsChecked="{Binding Path=PageInterface}">
                                         <DockPanel>
-                                            <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Behavior_PageInterface}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=500}"/>
+                                            <TextBlock Text="{x:Static r:Resources.str_PageInterface}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=500}"/>
                                             <Image Source="/images/view_pageinterface.png" Stretch="Uniform" MaxHeight="48"/>
                                         </DockPanel>
                                     </ToggleButton>
                                     <ToggleButton x:Name="togbViewShowNavigation" Margin="3" IsChecked="{Binding Path=ViewShowNavigation}">
                                         <DockPanel>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewNavigationPane}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=600}"/>
+                                            <TextBlock Text="{x:Static r:Resources.str_ViewNavigationPane}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=600}"/>
                                             <Image Source="/images/view_navigation.png" Stretch="Uniform" MaxHeight="48"/>
                                         </DockPanel>
                                     </ToggleButton>
                                     <ToggleButton x:Name="togbViewShowPreview" Margin="3" IsChecked="{Binding Path=ViewShowPreview}">
                                         <DockPanel>
-                                            <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewPreviewPane}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=710}"/>
+                                            <TextBlock Text="{x:Static r:Resources.str_ViewPreviewPane}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=710}"/>
                                             <Image Source="/images/view_preview.png" Stretch="Uniform" MaxHeight="48"/>
                                         </DockPanel>
                                     </ToggleButton>
@@ -126,33 +105,30 @@
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
                                 <DockPanel>
-                                    <DockPanel DockPanel.Dock="Bottom">
-                                        <Button x:Name="btnViewSetDefaultView" Style="{StaticResource ToolbarButton}" Content="⌗" ToolTip="{x:Static r:Resources.wndMain_tt_SetAsDefaultView}" DockPanel.Dock="Right" Width="16" SnapsToDevicePixels="True"/>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuView}" HorizontalAlignment="Center" FontWeight="Light"/>
-                                    </DockPanel>
+                                    <TextBlock Text="{x:Static r:Resources.str_View}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
                                     <UniformGrid Columns="2">
-                                        <ToggleButton x:Name="rbViewMediumIcons" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=MediumIcons}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <ToggleButton x:Name="rbViewMediumIcons" IsChecked="{Binding Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=MediumIcons}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/view_mediumicons.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewMediumIcons}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ViewMediumIcons}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton x:Name="rbViewList" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=List}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <ToggleButton x:Name="rbViewList" IsChecked="{Binding Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=List}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/view_list.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewList}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ViewList}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton x:Name="rbViewTiles" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Tiles}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <ToggleButton x:Name="rbViewTiles" IsChecked="{Binding Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Tiles}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/view_tiles.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewTiles}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ViewTiles}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton x:Name="rbViewDetails" IsChecked="{Binding ElementName=lvObjects, Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Details}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <ToggleButton x:Name="rbViewDetails" IsChecked="{Binding Path=CurrentView, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Details}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/view_details.png" Stretch="Uniform" DockPanel.Dock="Left" MaxHeight="24"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_lbl_ViewDetails}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ViewDetails}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
                                     </UniformGrid>
@@ -160,18 +136,18 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <ToggleButton x:Name="togbViewResultGrouping" Margin="3" IsChecked="{Binding Path=ViewResultGrouping}">
+                                <ToggleButton x:Name="togbViewResultGrouping" Margin="3" IsChecked="{Binding Path=ViewResultGrouping}" ToolTip="{x:Static r:Resources.str_SearchResultGroupingToolTip}">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_lbl_SearchResultGrouping}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1130}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_SearchResultGrouping}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1130}"/>
                                         <Image Source="/images/grouping.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </ToggleButton>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <ToggleButton x:Name="togbViewShowDeletedObjects" Margin="3" IsChecked="{Binding Path=ViewShowDeletedObjects}">
+                                <ToggleButton x:Name="togbViewShowDeletedObjects" Margin="3" IsChecked="{Binding Path=ViewShowDeletedObjects}" ToolTip="{x:Static r:Resources.str_ShowDeletedObjectsToolTip}">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ShowDeletedObjects}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1330}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_ShowDeletedObjects}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1330}"/>
                                         <Image Source="/images/trash.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </ToggleButton>
@@ -180,21 +156,21 @@
 
                             </StackPanel>
                         </TabItem>
-                        <TabItem x:Name="mnuMain" Header="{x:Static r:Resources.wndMain_mnuSearch}">
+                        <TabItem x:Name="mnuMain" Header="{x:Static r:Resources.str_Search}">
                             <StackPanel Orientation="Horizontal">
                                 <DockPanel>
-                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_SearchMode}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
                                     <UniformGrid Rows="2">
-                                        <RadioButton x:Name="mnuSearchModeDefault" Style="{StaticResource ToggleRadioButton}" IsChecked="True" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <RadioButton x:Name="mnuSearchModeDefault" Margin="3" IsChecked="{Binding Path=SearchMode, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Default}" Style="{StaticResource ToggleRadioButton}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" MinHeight="24">
                                             <DockPanel>
-                                                <Image Source="/images/property.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode_Default}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
+                                                <Image Source="/images/filter_regular.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_SearchModeDefault}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
                                             </DockPanel>
                                         </RadioButton>
-                                        <RadioButton x:Name="mnuSearchModeAdvanced" Style="{StaticResource ToggleRadioButton}" Margin="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch">
+                                        <RadioButton x:Name="mnuSearchModeAdvanced" Margin="3" IsChecked="{Binding Path=SearchMode, Converter={StaticResource ConverterBooleanToEnum}, ConverterParameter=Advanced}" Style="{StaticResource ToggleRadioButton}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" MinHeight="24">
                                             <DockPanel VerticalAlignment="Center">
-                                                <Image Source="/images/property.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchMode_Advanced}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
+                                                <Image Source="/images/filter_advanced.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_SearchModeAdvanced}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
                                             </DockPanel>
                                         </RadioButton>
                                     </UniformGrid>
@@ -202,34 +178,34 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <DockPanel x:Name="dockpSearchObjectClasses">
-                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchObjectClasses}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                <DockPanel x:Name="dpSearchObjectClasses">
+                                    <TextBlock Text="{x:Static r:Resources.str_SearchObjectClasses}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
                                     <UniformGrid Rows="2">
-                                        <ToggleButton IsChecked="{Binding User}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton IsChecked="{Binding SearchObjectClasses.User}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/user_unknown.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
                                                 <TextBlock Text="User" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton IsChecked="{Binding Contact}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton IsChecked="{Binding SearchObjectClasses.Contact}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/contact.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
                                                 <TextBlock Text="Contact" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton IsChecked="{Binding Computer}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton IsChecked="{Binding SearchObjectClasses.Computer}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/computer_unknown.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
                                                 <TextBlock Text="Computer" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton IsChecked="{Binding Group}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton IsChecked="{Binding SearchObjectClasses.Group}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/group.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
                                                 <TextBlock Text="Group" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton IsChecked="{Binding OrganizationalUnit}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton IsChecked="{Binding SearchObjectClasses.OrganizationalUnit}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
                                             <DockPanel>
                                                 <Image Source="/images/folder.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
                                                 <TextBlock Text="OrganizationalUnit" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=980}"/>
@@ -241,7 +217,7 @@
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
                                 <DockPanel>
-                                    <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchDomains}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_Domains}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
                                     <ItemsControl x:Name="mnuSearchDomains">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
@@ -265,7 +241,7 @@
 
                                 <Button x:Name="mnuSearchSaveCurrentFilter" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
-                                        <TextBlock Text="{x:Static r:Resources.wndMain_mnuSearchSaveCurrentFilter}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1140}"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_SearchSaveCurrentFilter}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1140}"/>
                                         <Image Source="/images/filter_add.png" Stretch="Uniform" MaxHeight="48"/>
                                     </DockPanel>
                                 </Button>
@@ -273,18 +249,18 @@
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
                                 <DockPanel>
-                                    <TextBlock Text="{x:Static r:Resources.wndMain_lbl_Clipboard}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1210}"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_Clipboard}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1210}"/>
                                     <UniformGrid Rows="2">
-                                        <ToggleButton x:Name="togbClipboardSource" IsChecked="{Binding ClipboardSource}" HorizontalContentAlignment="Left" Margin="3">
+                                        <ToggleButton x:Name="togbClipboardSource" IsChecked="{Binding ClipboardSource}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24" ToolTip="{x:Static r:Resources.str_ClipboardSourceToolTip}">
                                             <DockPanel>
                                                 <Image Source="/images/clipboard.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSource}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1430}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ClipboardSource}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1430}"/>
                                             </DockPanel>
                                         </ToggleButton>
-                                        <ToggleButton IsChecked="{Binding ClipboardSourceLimit}" HorizontalContentAlignment="Left" IsEnabled="{Binding ElementName=togbClipboardSource, Path=IsChecked}" Margin="3">
+                                        <ToggleButton IsChecked="{Binding ClipboardSourceLimit}" HorizontalContentAlignment="Left" IsEnabled="{Binding ElementName=togbClipboardSource, Path=IsChecked}" Margin="3" MinHeight="24" ToolTip="{x:Static r:Resources.str_ClipboardSourceLimitToolTip}">
                                             <DockPanel>
                                                 <Image Source="/images/clipboard_limit.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
-                                                <TextBlock Text="{x:Static r:Resources.wndPreferences_lbl_Basic_ClipboardSourceLimit}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1430}"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_ClipboardSourceLimit}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=1430}"/>
                                             </DockPanel>
                                         </ToggleButton>
                                     </UniformGrid>
@@ -301,11 +277,11 @@
                         <ToggleButton x:Name="togbToolbarExpander" Style="{StaticResource ToolbarExpanderToggleButton}" IsChecked="{Binding ViewShowToolbarPanel}" Width="23" Height="23" Margin="0,5,5,0">
 
                         </ToggleButton>
-                        <Button x:Name="btnWindowClone" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.wndMain_btnWindowClone}"/>
+                        <Button x:Name="btnWindowClone" Style="{StaticResource ToolbarButton}" Width="23" Height="23" Margin="0,5,5,0" Content="⧉" ToolTip="{x:Static r:Resources.str_CloneWindow}"/>
                     </DockPanel>
                 </Grid>
             </DockPanel>
-            <Frame x:Name="frmObjects" Source="/pages/pgObjects.xaml"/>
+            <Frame x:Name="frmObjects" Source="/pages/pgObjects.xaml" NavigationUIVisibility="Hidden"/>
         </DockPanel>
     </Grid>
 

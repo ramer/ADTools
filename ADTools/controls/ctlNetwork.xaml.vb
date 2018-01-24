@@ -47,12 +47,12 @@ Public Class ctlNetwork
         Dim pingaddress As String
         Dim pingtriptime As String
         If pingresult IsNot Nothing Then
-            pingstatus = If(pingresult.Status = IPStatus.Success, My.Resources.ctlNetwork_msg_Available, My.Resources.ctlNetwork_msg_NotAvailable)
-            pingaddress = If(pingresult.Address IsNot Nothing, My.Resources.ctlNetwork_msg_ReplyFrom & pingresult.Address.ToString & ": ", "")
+            pingstatus = If(pingresult.Status = IPStatus.Success, My.Resources.str_NetworkAvailable, My.Resources.str_NetworkNotAvailable)
+            pingaddress = If(pingresult.Address IsNot Nothing, My.Resources.str_NetworkReplyFrom & pingresult.Address.ToString & ": ", "")
             pingtriptime = If(pingresult.Status = IPStatus.Success, pingresult.RoundtripTime & " ms", pingresult.Status.ToString)
         Else
-            pingstatus = My.Resources.ctlNetwork_msg_NotAvailable
-            pingaddress = My.Resources.ctlNetwork_msg_AddressUnknown
+            pingstatus = My.Resources.str_NetworkNotAvailable
+            pingaddress = My.Resources.str_NetworkAddressUnknown
             pingtriptime = ""
         End If
         Dim pingsp As New StackPanel
@@ -81,7 +81,7 @@ Public Class ctlNetwork
             traceimg.Width = 16.0
             traceimg.Height = 16.0
             tracesp.Children.Add(traceimg)
-            Dim tracetb As New TextBlock(New Run(String.Format("{0} ({1} ms)", If(trc.Address IsNot Nothing, trc.Address.ToString, My.Resources.ctlNetwork_msg_Unknown), trc.RoundtripTime)))
+            Dim tracetb As New TextBlock(New Run(String.Format("{0} ({1} ms)", If(trc.Address IsNot Nothing, trc.Address.ToString, My.Resources.str_NetworkUnknown), trc.RoundtripTime)))
             tracetb.Margin = New Thickness(5, 0, 10, 5)
             tracetb.VerticalAlignment = VerticalAlignment.Center
             tracesp.Children.Add(tracetb)
