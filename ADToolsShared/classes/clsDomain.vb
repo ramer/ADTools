@@ -78,7 +78,7 @@ Public Class clsDomain
         If String.IsNullOrEmpty(Name) Then Return False
 
         Try
-            Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
+            Dim cred As New Credential("", "", "ADTools: " & Name, CredentialType.Generic)
             cred.PersistanceType = PersistanceType.Enterprise
             cred.Load()
             Username = cred.Username
@@ -93,7 +93,7 @@ Public Class clsDomain
         If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
         Try
-            Dim cred As New Credential("", "", My.Application.Info.AssemblyName & ": " & Name, CredentialType.Generic)
+            Dim cred As New Credential("", "", "ADTools: " & Name, CredentialType.Generic)
             cred.PersistanceType = PersistanceType.Enterprise
             cred.Username = _username
             cred.Password = _password

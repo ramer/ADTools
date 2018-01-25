@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,96 +112,96 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="str_DefaultPasswordIsNotSet" xml:space="preserve">
-    <value>Default password is not set</value>
+    <value>Стандартный пароль не указан</value>
   </data>
   <data name="str_Disabled" xml:space="preserve">
-    <value>Disabled</value>
+    <value>Заблокирован</value>
   </data>
   <data name="str_Enabled" xml:space="preserve">
-    <value>Enabled</value>
+    <value>Разблокирован</value>
   </data>
   <data name="str_Expired" xml:space="preserve">
-    <value>expired</value>
+    <value>истек</value>
   </data>
   <data name="str_LockoutDuration" xml:space="preserve">
-    <value>Account lockout duration</value>
+    <value>Время до сброса счетчика блокировки</value>
   </data>
   <data name="str_LockoutDurationFormat" xml:space="preserve">
-    <value>{0} minutes</value>
+    <value>{0} минут</value>
   </data>
   <data name="str_LockoutObservationWindow" xml:space="preserve">
-    <value>Reset account lockout counter after</value>
+    <value>Продолжительность блокировки учетной записи</value>
   </data>
   <data name="str_LockoutObservationWindowFormat" xml:space="preserve">
-    <value>{0} minutes</value>
+    <value>{0} минут</value>
   </data>
   <data name="str_LockoutThreshold" xml:space="preserve">
-    <value>Account lockout threshold</value>
+    <value>Пороговое значение блокировки</value>
   </data>
   <data name="str_LockoutThresholdFormat" xml:space="preserve">
-    <value>{0} invalid logon attempts</value>
+    <value>{0} ошибок входа</value>
   </data>
   <data name="str_MaximumPasswordAge" xml:space="preserve">
-    <value>Maximum password age</value>
+    <value>Максимальный срок действия пароля</value>
   </data>
   <data name="str_MaximumPasswordAgeFormat" xml:space="preserve">
-    <value>{0} days</value>
+    <value>{0} дней</value>
   </data>
   <data name="str_MinimumPasswordAge" xml:space="preserve">
-    <value>Minimum password age</value>
+    <value>Минимальный срок действия пароля</value>
   </data>
   <data name="str_MinimumPasswordAgeFormat" xml:space="preserve">
-    <value>{0} days</value>
+    <value>{0} дней</value>
   </data>
   <data name="str_MinimumPasswordLenght" xml:space="preserve">
-    <value>Minimum password lenght</value>
+    <value>Минимальная длина пароля</value>
   </data>
   <data name="str_MinimumPasswordLenghtFormat" xml:space="preserve">
-    <value>{0} characters</value>
+    <value>{0} символов</value>
   </data>
   <data name="str_Never" xml:space="preserve">
-    <value>never</value>
+    <value>никогда</value>
   </data>
   <data name="str_ObjectDisabled" xml:space="preserve">
-    <value>Object disabled</value>
+    <value>Объект заблокирован</value>
   </data>
   <data name="str_ObjectExpirationUnknown" xml:space="preserve">
-    <value>Object expiration is unknown</value>
+    <value>Срок действия объекта неизвестен</value>
   </data>
   <data name="str_ObjectExpired" xml:space="preserve">
-    <value>Object expired</value>
+    <value>Срок действия объекта истек</value>
   </data>
   <data name="str_ObjectStatusUnknown" xml:space="preserve">
-    <value>Object status is unknown</value>
+    <value>Статус объекта неизвестен</value>
   </data>
   <data name="str_PasswordChanged" xml:space="preserve">
-    <value>Password changed</value>
+    <value>Пароль изменен</value>
   </data>
   <data name="str_PasswordComplexityRequirements" xml:space="preserve">
-    <value>Password must meet complexity requirements</value>
+    <value>Пароль должен отвечать требованиям сложности</value>
   </data>
   <data name="str_PasswordComplexityRequirementsFormat" xml:space="preserve">
     <value>{0}</value>
   </data>
   <data name="str_PasswordExpirationUnknown" xml:space="preserve">
-    <value>Password expiration is unknown</value>
+    <value>Срок действия пароля неизвестен</value>
   </data>
   <data name="str_PasswordExpired" xml:space="preserve">
-    <value>Password expired</value>
+    <value>Срок действия пароля истек</value>
   </data>
   <data name="str_PasswordHistory" xml:space="preserve">
-    <value>Enforce password history</value>
+    <value>Вести журнал паролей</value>
   </data>
   <data name="str_PasswordHistoryFormat" xml:space="preserve">
-    <value>{0} passwords remembered</value>
+    <value>{0} сохраненных паролей</value>
   </data>
   <data name="str_Unknown" xml:space="preserve">
-    <value>unknown</value>
+    <value>неизвестно</value>
   </data>
 </root>

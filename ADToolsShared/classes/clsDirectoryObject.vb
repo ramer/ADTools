@@ -1,10 +1,8 @@
-﻿Imports System
-Imports System.Collections.ObjectModel
+﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.DirectoryServices
 Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
-Imports ADTools
 Imports IRegisty
 
 Public Class clsDirectoryObject
@@ -421,7 +419,7 @@ Public Class clsDirectoryObject
 
             _childcontainers = searcher.SearchChildContainersSync(
                 Me,
-                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, preferences.ViewShowDeletedObjects)
+                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"))
 
             Return _childcontainers
         End Get
@@ -1034,7 +1032,7 @@ Public Class clsDirectoryObject
                 Try
                     SetAttribute("thumbnailPhoto", Nothing)
                 Catch ex As Exception
-                    ThrowException(ex, "Clear thumbnailPhoto")
+                    Throw ex
                 End Try
             Else
                 Try
@@ -1042,7 +1040,7 @@ Public Class clsDirectoryObject
                     value.CopyPixels(bytes, 0, 0)
                     SetAttribute("thumbnailPhoto", bytes)
                 Catch ex As Exception
-                    ThrowException(ex, "Set thumbnailPhoto")
+                    Throw ex
                 End Try
             End If
 
@@ -1621,7 +1619,7 @@ Public Class clsDirectoryObject
                 Try
                     SetAttribute("manager", Nothing)
                 Catch ex As Exception
-                    ThrowException(ex, "Clear manager")
+                    Throw ex
                 End Try
             Else
                 SetAttribute("manager", value.distinguishedName)
@@ -1667,7 +1665,7 @@ Public Class clsDirectoryObject
                 Try
                     SetAttribute("managedBy", Nothing)
                 Catch ex As Exception
-                    ThrowException(ex, "Clear managedBy")
+                    Throw ex
                 End Try
             Else
                 SetAttribute("managedBy", value.distinguishedName)

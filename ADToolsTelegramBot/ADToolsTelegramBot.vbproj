@@ -52,6 +52,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\CredentialManagement.dll</HintPath>
     </Reference>
+    <Reference Include="Handlebars, Version=1.8.1.0, Culture=neutral, PublicKeyToken=22225d0bf33cd661, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\Handlebars.dll</HintPath>
+    </Reference>
     <Reference Include="IRegisty, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\IRegisty.dll</HintPath>
@@ -135,6 +139,7 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
     </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.ru.resx" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
@@ -151,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="libraries\CredentialManagement.dll" />
+    <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\IRegisty.dll" />
   </ItemGroup>
   <Import Project="..\ADToolsShared\ADToolsShared.projitems" Label="Shared" />

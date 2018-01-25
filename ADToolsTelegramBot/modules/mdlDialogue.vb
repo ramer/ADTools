@@ -211,7 +211,7 @@ Module mdlDialogue
                     If Not responceguid = Nothing Then
                         Dim guidresults As New List(Of clsDirectoryObject)
                         For Each dmn In domains
-                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
                         Next
                         Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
@@ -230,7 +230,7 @@ Module mdlDialogue
 
                     Dim results As New List(Of clsDirectoryObject)
                     For Each dmn In domains
-                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
+                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter("*" & responce.Message.Text & "*", attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
                     Next
 
                     SendRequestStageSearchListObjects(responce, results)
@@ -430,9 +430,9 @@ Module mdlDialogue
             Else
                 currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Delete, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Remove(currentgroup)
-                'For Each group As clsDirectoryObject In currentuser.memberOf
-                '    If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
-                'Next
+                For Each group As clsDirectoryObject In currentuser.memberOf
+                    If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
+                Next
                 msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
             End If
 

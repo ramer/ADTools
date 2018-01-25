@@ -595,6 +595,8 @@ Class pgObjects
 
         spPath.Children.Clear()
 
+        btnUp.IsEnabled = container IsNot Nothing AndAlso (container.Parent IsNot Nothing And Not container.distinguishedName = container.Domain.DefaultNamingContext)
+
         If container IsNot Nothing Then
 
             Dim buttons As New List(Of Button)
@@ -1010,6 +1012,9 @@ Class pgObjects
 
     Public Sub Search(Optional root As clsDirectoryObject = Nothing, Optional filter As clsFilter = Nothing)
         If root Is Nothing And filter Is Nothing Then Exit Sub
+
+        If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Pattern) Then tbSearchPattern.Text = filter.Pattern
+        If root IsNot Nothing Then ShowInTree(root)
 
         tbSearchPattern.SelectAll()
         ApplyPostfilter(Nothing, Nothing)

@@ -176,7 +176,7 @@
 
                 <DockPanel Grid.Column="2" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorElementBackground}" Margin="0,0,0,5" Height="23">
-                        <Button DockPanel.Dock="Right" x:Name="btnUp" Width="23">
+                        <Button x:Name="btnUp" DockPanel.Dock="Right" Width="23" IsEnabled="False">
                             <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
                         </Button>
                         <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" Margin="0,0,5,0">
