@@ -16,7 +16,7 @@ Class pgMain
         RefreshDomainTree()
     End Sub
 
-    Private Function CurrentObjectsPage() As pgObjects
+    Public Function CurrentObjectsPage() As pgObjects
         If frmObjects IsNot Nothing AndAlso frmObjects.Content IsNot Nothing AndAlso TypeOf frmObjects.Content Is pgObjects Then
             Return CType(frmObjects.Content, pgObjects)
         Else
@@ -510,7 +510,7 @@ Class pgMain
 #Region "Events"
 
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
-        ADToolsApplication.ShowMainWindow()
+        ADToolsApplication.CreateMainWindow()
     End Sub
 
     Private Sub btnDummy_Click(sender As Object, e As RoutedEventArgs) Handles btnDummy.Click

@@ -1,65 +1,39 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Collections.Specialized
 Imports System.Drawing
-Imports System.Windows.Forms
 Imports System.Windows.Threading
 Imports Microsoft.VisualBasic.ApplicationServices
 Imports IPrompt.VisualBasic
 
 Module mdlMain
+    Private app As ADToolsApplication
+    Private Const Unique As String = "ADToolsApplication_ZWvxuwLF7Xx3T8eZ"
 
     <STAThread>
     Sub Main()
-        Try
-            Dim manager As New ADToolsApplicationInstanceManager()
-            manager.Run({""})
-        Catch ex As Exception
-            IMsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Sub Main()")
-        End Try
+        If SingleInstance(Of ADToolsApplication).InitializeAsFirstInstance(Unique) Then
+            app = New ADToolsApplication()
+            app.Run()
+            SingleInstance(Of ADToolsApplication).Cleanup()
+        End If
     End Sub
 
 End Module
 
-Public Class ADToolsApplicationInstanceManager
-    Inherits WindowsFormsApplicationBase
-    Private app As ADToolsApplication
-
-    Public Sub New()
-        Me.IsSingleInstance = True
-    End Sub
-
-    Protected Overrides Function OnStartup(e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) As Boolean
-        ' First time app is launched
-        Try
-            app = New ADToolsApplication()
-            app.Run()
-            Return False
-        Catch ex As Exception
-            IMsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "OnStartup")
-            Return False
-        End Try
-    End Function
-
-    Protected Overrides Sub OnStartupNextInstance(eventArgs As StartupNextInstanceEventArgs)
-        Try
-            MyBase.OnStartupNextInstance(eventArgs)
-            Dim asd() = Environment.GetCommandLineArgs()
-
-            app.Activate()
-        Catch ex As Exception
-            IMsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "OnStartupNextInstance")
-        End Try
-    End Sub
-End Class
-
 Public Class ADToolsApplication
     Inherits Application
+    Implements ISingleInstanceApp
 
-    Public Shared WithEvents nicon As New NotifyIcon
-    Public Shared ctxmenu As New ContextMenu({New MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
+    Public Shared WithEvents nicon As New Forms.NotifyIcon
+    Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
 
     Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
+
+    Public Function SignalExternalCommandLineArgs(args As IList(Of String)) As Boolean Implements ISingleInstanceApp.SignalExternalCommandLineArgs
+        ProcessCommandLineArgs(args.ToArray)
+        Return True
+    End Function
 
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)
@@ -74,21 +48,6 @@ Public Class ADToolsApplication
             nicon.ContextMenu = ctxmenu
             nicon.Visible = True
 
-            ' command line args
-            Dim commandlineargs() As String = Environment.GetCommandLineArgs()
-            Dim minimizedstart As Boolean = False
-            For Each cl In commandlineargs
-                If cl = "-minimized" Or cl = "/minimized" Then
-                    minimizedstart = True
-                End If
-            Next
-
-            If Not minimizedstart Then
-                ' loading splash screen
-                Dim splash As New SplashScreen("images/splash.png")
-                splash.Show(True, True)
-            End If
-
             ' global parameters
             initializeGlobalParameters()
 
@@ -98,18 +57,62 @@ Public Class ADToolsApplication
             ' preferences setup
             initializePreferences()
 
-            If Not minimizedstart Then
-                ' loading main form
-                ActivateMainWindow()
-            End If
+            ' command line arguments AND Show Main Window
+            ProcessCommandLineArgs(Environment.GetCommandLineArgs())
 
         Catch ex As Exception
             IMsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")
         End Try
     End Sub
 
-    Public Sub Activate()
-        ActivateMainWindow()
+    Public Sub ProcessCommandLineArgs(commandlineargs() As String)
+        Dim startminimized As Boolean = False
+        Dim startwithsearch As Boolean = False
+        Dim startsearchstring As String = Nothing
+
+        For i = 0 To commandlineargs.Count - 1
+            If commandlineargs(i) = "-minimized" Or commandlineargs(i) = "/minimized" Then startminimized = True
+            If (commandlineargs(i) = "-search" Or commandlineargs(i) = "/search") AndAlso i + 1 <= commandlineargs.Count - 1 Then
+                startwithsearch = True
+                startsearchstring = commandlineargs(i + 1)
+            End If
+        Next
+
+        ' splash screen
+        If Not startminimized And Not startwithsearch Then
+            Dim splash As New SplashScreen("images/splash.png")
+            splash.Show(True, True)
+        End If
+
+        ' main window
+        If Not startminimized Then
+            Dim w As NavigationWindow
+            w = ActivateMainWindow()
+
+            If w IsNot Nothing Then
+                If startwithsearch Then
+                    If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                        Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                        Dim pgo = pgm.CurrentObjectsPage
+                        If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                    End If
+                End If
+            Else
+                w = CreateMainWindow()
+                If startwithsearch Then
+                    Dim neh As NavigatedEventHandler
+                    neh = Sub()
+                              If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                                  Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                                  Dim pgo = pgm.CurrentObjectsPage
+                                  If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                              End If
+                              RemoveHandler w.Navigated, neh
+                          End Sub
+                    AddHandler w.Navigated, neh
+                End If
+            End If
+        End If
     End Sub
 
     Protected Overrides Sub OnExit(e As ExitEventArgs)
@@ -140,11 +143,25 @@ Public Class ADToolsApplication
 
     Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
         If e.Button = Forms.MouseButtons.Left Then
-            ActivateMainWindow()
+            If ActivateMainWindow() Is Nothing Then CreateMainWindow()
         End If
     End Sub
 
-    Public Shared Sub ShowMainWindow()
+    Public Shared Function ActivateMainWindow() As NavigationWindow
+        For Each w As Window In Current.Windows
+            If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Maximized
+                w.Show()
+                w.Activate()
+                w.Topmost = True : w.Topmost = False
+                Return w
+            End If
+        Next
+        ' no window found
+        Return Nothing
+    End Function
+
+    Public Shared Function CreateMainWindow() As NavigationWindow
         Dim w As NavigationWindow = ShowPage(New pgMain)
         If w IsNot Nothing Then
             w.WindowState = WindowState.Maximized
@@ -161,21 +178,8 @@ Public Class ADToolsApplication
                     If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
                 End Sub
         End If
-    End Sub
-
-    Public Shared Sub ActivateMainWindow()
-        For Each w As Window In Current.Windows
-            If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
-                If w.WindowState = WindowState.Minimized Then w.WindowState = WindowState.Maximized
-                w.Show()
-                w.Activate()
-                w.Topmost = True : w.Topmost = False
-                Exit Sub
-            End If
-        Next
-
-        ShowMainWindow()
-    End Sub
+        Return w
+    End Function
 
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)
         ThrowException(e.Exception, My.Resources.str_UnhandledException)
