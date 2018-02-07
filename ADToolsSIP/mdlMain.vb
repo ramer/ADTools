@@ -12,7 +12,7 @@ Module mdlMain
     <STAThread>
     Sub Main()
         Try
-            Dim manager As New ADToolsTelegramBotApplicationInstanceManager()
+            Dim manager As New ADToolsSIPApplicationInstanceManager()
             manager.Run({""})
         Catch ex As Exception
             MsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Sub Main()")
@@ -21,9 +21,9 @@ Module mdlMain
 
 End Module
 
-Public Class ADToolsTelegramBotApplicationInstanceManager
+Public Class ADToolsSIPApplicationInstanceManager
     Inherits WindowsFormsApplicationBase
-    Private app As ADToolsTelegramBotApplication
+    Private app As ADToolsSIPApplication
 
     Public Sub New()
         Me.IsSingleInstance = True
@@ -32,7 +32,7 @@ Public Class ADToolsTelegramBotApplicationInstanceManager
     Protected Overrides Function OnStartup(e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) As Boolean
         ' First time app is launched
         Try
-            app = New ADToolsTelegramBotApplication()
+            app = New ADToolsSIPApplication()
             app.Run()
             Return False
         Catch ex As Exception
@@ -51,7 +51,7 @@ Public Class ADToolsTelegramBotApplicationInstanceManager
     End Sub
 End Class
 
-Public Class ADToolsTelegramBotApplication
+Public Class ADToolsSIPApplication
     Inherits Application
 
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
@@ -64,14 +64,11 @@ Public Class ADToolsTelegramBotApplication
             ' setting localization
             FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 
-            ' get credentials from windows storage
-            initializeCredentials
-
             ' domains setup
             initializeDomains()
 
-            ' telegram update timer
-            initializeTimer()
+            ' SIP 
+            initializeSIP()
 
         Catch ex As Exception
             MsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")

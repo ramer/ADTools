@@ -31,150 +31,13 @@
             </StatusBar>
             <Grid Margin="5,0,5,0">
                 <Grid.ColumnDefinitions>
-                    <local:ColumnDefinitionExtended x:Name="gcdNavigation" Width="250" Visible="{Binding ViewShowNavigation, Mode=TwoWay}"/>
-                    <local:ColumnDefinitionExtended Width="Auto"/>
                     <local:ColumnDefinitionExtended/>
                     <local:ColumnDefinitionExtended Width="Auto"/>
                     <local:ColumnDefinitionExtended x:Name="gcdPreview" Width="250" Visible="{Binding ViewShowPreview, Mode=TwoWay}"/>
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Column="1" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
-                <GridSplitter Grid.Column="3" Width="10" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="{DynamicResource ColorWindowBackground}"/>
 
-                <TreeView Grid.Column="0" 
-                        x:Name="tvObjects" 
-                        VirtualizingStackPanel.IsVirtualizing="True"
-                        VirtualizingStackPanel.VirtualizationMode="Recycling"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                        SnapsToDevicePixels="True">
-
-                    <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
-                        <TreeViewItem.Header>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
-                                <Image Source="/images/folder_favorites.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.str_Favorites}"/>
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                        <TreeViewItem.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening">
-                                    <StackPanel.ContextMenu>
-                                        <ContextMenu x:Name="ctxmnutviFavorites">
-                                            <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.ctxmnu_RemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/favorites_remove.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem x:Name="ctxmnutviFavoritesOpenObjectLocation" Header="{x:Static r:Resources.ctxmnu_OpenObjectLocation}" Click="ctxmnuSharedOpenObjectLocation_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/location.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <MenuItem x:Name="ctxmnutviFavoritesProperties" Header="{x:Static r:Resources.ctxmnu_Properties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/property.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </StackPanel.ContextMenu>
-                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}" Margin="0,0,5,0"/>
-                                    <TextBlock Style="{StaticResource FadeOutTextBlock}" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="8">(<Run Text="{Binding DomainName}"/>)</TextBlock>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>
-                    </TreeViewItem>
-                    <TreeViewItem x:Name="tviDomains" IsExpanded="True">
-                        <TreeViewItem.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="ctxmnutviDomainsDomainOptions" Header="{x:Static r:Resources.str_DomainOptions}">
-                                    <MenuItem.Icon>
-                                        <Image Source="/images/domain_options.png"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            </ContextMenu>
-                        </TreeViewItem.ContextMenu>
-                        <TreeViewItem.Header>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23">
-                                <Image Source="/images/folder_domain.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.str_Domains}"/>
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                        <TreeViewItem.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers, IsAsync=True}">
-                                <StackPanel Background="Transparent"
-                                                Orientation="Horizontal"
-                                                Height="23"
-                                                Tag="{Binding}"
-                                                AllowDrop="True"
-                                                MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown"
-                                                ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening"
-                                                DragEnter="tviDomains_TreeViewItem_DragEnterDragOver"
-                                                DragOver="tviDomains_TreeViewItem_DragEnterDragOver"
-                                                Drop="tviDomains_TreeViewItem_Drop">
-
-                                    <StackPanel.ContextMenu>
-                                        <ContextMenu x:Name="ctxmnutviDomains">
-                                            <MenuItem x:Name="ctxmnutviDomainsCreateObject" Header="{x:Static r:Resources.ctxmnu_CreateObject}" Click="ctxmnuSharedCreateObject_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/folder_add.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsCopy" Header="{x:Static r:Resources.ctxmnu_Copy}" Click="ctxmnuSharedCopy_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsCut" Header="{x:Static r:Resources.ctxmnu_Cut}" Click="ctxmnuSharedCut_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsPaste" Header="{x:Static r:Resources.ctxmnu_Paste}" Click="ctxmnuSharedPaste_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsRename" Header="{x:Static r:Resources.ctxmnu_Rename}" Click="ctxmnuSharedRename_Click"/>
-                                            <MenuItem x:Name="ctxmnutviDomainsRemove" Header="{x:Static r:Resources.ctxmnu_Remove}" Click="ctxmnuSharedRemove_Click"/>
-                                            <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsAddToFavorites" Header="{x:Static r:Resources.ctxmnu_AddToFavorites}" Click="ctxmnuSharedAddToFavorites_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/favorites_add.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                            <Separator/>
-                                            <MenuItem x:Name="ctxmnutviDomainsProperties" Header="{x:Static r:Resources.ctxmnu_Properties}" FontWeight="Bold" Click="ctxmnuSharedProperties_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/property.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </StackPanel.ContextMenu>
-                                    <Image Source="{Binding ClassImage}" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding name}"/>
-                                </StackPanel>
-                            </HierarchicalDataTemplate>
-                        </TreeViewItem.ItemTemplate>
-                    </TreeViewItem>
-                    <TreeViewItem x:Name="tviFilters" IsExpanded="True">
-                        <TreeViewItem.Header>
-                            <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}">
-                                <Image Source="/images/filter.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{x:Static r:Resources.str_Filters}"/>
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                        <TreeViewItem.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviFilters_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviFilters_TreeViewItem_ContextMenuOpening">
-                                    <StackPanel.ContextMenu>
-                                        <ContextMenu x:Name="ctxmnutviFilters">
-                                            <MenuItem x:Name="tviFiltersRemoveFromFilters" Header="{x:Static r:Resources.ctxmnu_RemoveFromFilters}" Click="ctxmnutviFiltersRemoveFromFilters_Click">
-                                                <MenuItem.Icon>
-                                                    <Image Source="/images/filter_remove.png"/>
-                                                </MenuItem.Icon>
-                                            </MenuItem>
-                                        </ContextMenu>
-                                    </StackPanel.ContextMenu>
-                                    <Image Source="/images/filter.png" Width="16" Height="16" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Name}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </TreeViewItem.ItemTemplate>
-                    </TreeViewItem>
-                </TreeView>
-
-                <DockPanel Grid.Column="2" LastChildFill="True">
+                <DockPanel Grid.Column="0" LastChildFill="True">
                     <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{DynamicResource ColorElementBackground}" Margin="0,0,0,5" Height="23">
                         <Button x:Name="btnUp" DockPanel.Dock="Right" Width="23" IsEnabled="False">
                             <TextBlock Text="↑" FontSize="25" VerticalAlignment="Center" Margin="1,-11,0,0" Height="20"/>
@@ -278,7 +141,7 @@
                     </Grid>
                 </DockPanel>
 
-                <DockPanel Grid.Column="4">
+                <DockPanel Grid.Column="2">
                     <Border BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Background="{DynamicResource ColorElementBackground}">
                         <StackPanel Orientation="Vertical" DataContext="{Binding ElementName=lvObjects, Path=SelectedItem}" Visibility="{Binding ElementName=lvObjects, Path=SelectedItems.Count, Converter={StaticResource ConverterIntegerToVisibility}}">
                             <ContentControl Content="{Binding StatusImage, Converter={StaticResource ConverterDataToUIElement}}" MaxWidth="128" MaxHeight="128" HorizontalAlignment="Center" Margin="20"/>

@@ -272,10 +272,10 @@ Module mdlDialogue
         Dim msg As String = ""
 
         For Each obj In objects
-            msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & obj.name & vbCrLf
+            msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & "*" & obj.name & "*" & vbCrLf
             msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "📲 " & obj.userPrincipalNameName & vbCrLf)
             msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & vbCrLf)
-            msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & vbCrLf & vbCrLf
+            msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & vbCrLf
         Next
 
         If Stage = DialogueStage.SearchUser Then
@@ -293,7 +293,7 @@ Module mdlDialogue
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Выбранный юзер:" & vbCrLf & vbCrLf
-        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & vbCrLf
+        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & "*" & currentuser.name & "*" & vbCrLf
         msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalNameName), "", "📲 " & currentuser.userPrincipalNameName & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.physicalDeliveryOfficeName), "", "🏢 " & currentuser.physicalDeliveryOfficeName & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.telephoneNumber), "", "📞 " & currentuser.telephoneNumber & vbCrLf)
@@ -309,7 +309,7 @@ Module mdlDialogue
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Юзер выбран:" & vbCrLf & vbCrLf
-        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & vbCrLf
+        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & "*" & currentuser.name & "*" & vbCrLf
         msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & vbCrLf)
         msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "🔑 " & currentuser.userPrincipalName & vbCrLf)
 
@@ -319,7 +319,7 @@ Module mdlDialogue
     Private Sub SendRequestStageUserConfirmResetPassword(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
         If currentuser Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Сброс пароля:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "Чо серьезно?", currentuser.name)
+        Dim msg As String = String.Format("Сброс пароля:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "Чо серьезно?", currentuser.name)
 
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
@@ -330,9 +330,9 @@ Module mdlDialogue
         Dim msg As String = ""
 
         If currentuser.disabled = True Then
-            msg &= String.Format("Разблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
+            msg &= String.Format("Разблочить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
         Else
-            msg &= String.Format("Заблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
+            msg &= String.Format("Заблочить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "А надо?", currentuser.name)
         End If
 
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
@@ -346,9 +346,9 @@ Module mdlDialogue
         Try
             currentuser.ResetPassword()
             currentuser.passwordNeverExpires = False
-            msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "Пароль сброшен", currentuser.name)
+            msg &= String.Format("👤 *{0}*" & vbCrLf & vbCrLf & "Пароль сброшен", currentuser.name)
         Catch ex As Exception
-            msg = String.Format("Не получилось сбросить пароль:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
+            msg = String.Format("Не получилось сбросить пароль:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
         End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
@@ -362,14 +362,14 @@ Module mdlDialogue
         Try
             If currentuser.disabled Then
                 currentuser.disabled = False
-                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "разблокирован", currentuser.name)
+                msg &= String.Format("👤 *{0}*" & vbCrLf & vbCrLf & "разблокирован", currentuser.name)
             Else
                 currentuser.disabled = True
-                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "заблокирован", currentuser.name)
+                msg &= String.Format("👤 *{0}*" & vbCrLf & vbCrLf & "заблокирован", currentuser.name)
             End If
 
         Catch ex As Exception
-            msg = String.Format("Не получилось заблочить/разблочить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
+            msg = String.Format("Не получилось заблочить/разблочить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "{1}", currentuser.name, ex.Message)
         End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
@@ -383,7 +383,7 @@ Module mdlDialogue
         If currentuser.memberOf.Count > 0 Then
             msg &= "Текущие группы:" & vbCrLf & vbCrLf
             For Each group As clsDirectoryObject In currentuser.memberOf
-                msg &= "👥 " & group.name & vbCrLf
+                msg &= "👥 " & "*" & group.name & "*" & vbCrLf
                 msg &= "/" & Encode58(group.objectGUID.ToByteArray) & vbCrLf & vbCrLf
             Next
         End If
@@ -404,9 +404,9 @@ Module mdlDialogue
         Next
 
         If newgroup Then
-            msg &= String.Format("Добавить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в группу" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
+            msg &= String.Format("Добавить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "в группу" & vbCrLf & vbCrLf & "👥 *{1}*" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
         Else
-            msg &= String.Format("Удалить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "из группы" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
+            msg &= String.Format("Удалить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "из группы" & vbCrLf & vbCrLf & "👥 *{1}*" & vbCrLf & vbCrLf & "ммм?", currentuser.name, currentgroup.name)
         End If
 
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
@@ -426,18 +426,18 @@ Module mdlDialogue
             If newgroup Then
                 currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Add, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Add(currentgroup)
-                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+                msg &= String.Format("👤 *{0}*" & vbCrLf & vbCrLf & "добавлен в группу" & vbCrLf & vbCrLf & "👥 *{1}*", currentuser.name, currentgroup.name)
             Else
                 currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Delete, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Remove(currentgroup)
                 For Each group As clsDirectoryObject In currentuser.memberOf
                     If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
                 Next
-                msg &= String.Format("👤 {0}" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 {1}", currentuser.name, currentgroup.name)
+                msg &= String.Format("👤 *{0}*" & vbCrLf & vbCrLf & "удален из группы" & vbCrLf & vbCrLf & "👥 *{1}*", currentuser.name, currentgroup.name)
             End If
 
         Catch ex As Exception
-            msg = String.Format("Не получилось добавить/удалить:" & vbCrLf & vbCrLf & "👤 {0}" & vbCrLf & vbCrLf & "в/из группы" & vbCrLf & vbCrLf & "👥 {1}" & vbCrLf & vbCrLf & "{2}", currentuser.name, currentgroup.name, ex.Message)
+            msg = String.Format("Не получилось добавить/удалить:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "в/из группы" & vbCrLf & vbCrLf & "👥 *{1}*" & vbCrLf & vbCrLf & "{2}", currentuser.name, currentgroup.name, ex.Message)
         End Try
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)

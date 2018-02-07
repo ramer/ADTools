@@ -2987,6 +2987,96 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Realm.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Domain() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Domain", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Allows ADTools to connect to a SIP server and search for objects using the phone number of incoming call..
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Instructions() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Instructions", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Password() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Password", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Protocol.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Protocol() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Protocol", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Registration name.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_RegistrationName() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_RegistrationName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Server.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Server() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Server", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start SIP-plugin.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Start() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Start", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Start SIP-plugin on logon.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_StartOnLogon() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_StartOnLogon", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Stop SIP-plugin.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Stop() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Stop", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Username.
+        '''</summary>
+        Public ReadOnly Property str_PluginsSIP_Username() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsSIP_Username", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на You can create a Telegram-bot and manage user accounts via the Telegram messenger.
         '''You must have messenger @Username and bot API key.
         '''

@@ -4,11 +4,13 @@ Imports System.Reflection
 Imports System.Threading.Tasks
 Imports CredentialManagement
 Imports IPrompt.VisualBasic
+Imports Microsoft.Win32
 
 Public Class pgPreferences
 
     Private attributesExtended As New ObservableCollection(Of clsAttribute)
     Private Property PluginProcessTelegramBot As Process
+    Private Property PluginProcessSIP As Process
 
     Private Async Sub wndPreferences_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         'grid gridlines style (magic)
@@ -21,31 +23,30 @@ Public Class pgPreferences
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch
         RebuildLayout()
 
-        Dim cred As New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
+        ' get TelegramBot settings
+        Dim cred As Credential
+        cred = New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
         cred.PersistanceType = PersistanceType.Enterprise
         cred.Load()
         tbPluginTelegramBotUsername.Text = cred.Username
         tbPluginTelegramBotAPIKey.Text = cred.Password
 
+        ' get SIP settings
+        cred = New Credential("", "", "ADToolsSIP", CredentialType.Generic)
+        cred.PersistanceType = PersistanceType.Enterprise
+        cred.Load()
+        tbPluginSIPUsername.Text = cred.Username
+        tbPluginSIPPassword.Text = cred.Password
+        Dim regADToolsSIP As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADToolsSIP")
+        tbPluginSIPServer.Text = regADToolsSIP.GetValue("Server", "")
+        cmboPluginSIPProtocol.Text = regADToolsSIP.GetValue("Protocol", "UDP")
+        tbPluginSIPRegistrationName.Text = regADToolsSIP.GetValue("RegistrationName", "")
+        tbPluginSIPDomain.Text = regADToolsSIP.GetValue("Domain", "")
+
         UpdatePluginsStatus()
 
         Await Task.Run(Sub() attributesExtended = New ObservableCollection(Of clsAttribute)(GetAttributesExtended()))
         lvAttributesExtended.ItemsSource = attributesExtended
-    End Sub
-
-    Private Sub UpdatePluginsStatus()
-        PluginProcessTelegramBot = Nothing
-
-        For Each p In Process.GetProcesses
-            If LCase(p.ProcessName) = "adtoolstelegrambot" Then PluginProcessTelegramBot = p
-        Next
-
-        If PluginProcessTelegramBot Is Nothing Then
-            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Start
-        Else
-            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Stop
-        End If
-
     End Sub
 
     Private Sub RebuildLayout()
@@ -397,7 +398,35 @@ Public Class pgPreferences
         End Try
     End Sub
 
-    Private Sub tbPluginTelegramBotUsername_LostFocus(sender As Object, e As RoutedEventArgs) Handles tbPluginTelegramBotUsername.LostFocus, tbPluginTelegramBotAPIKey.LostFocus
+
+#Region "Plugins"
+
+    Private Sub UpdatePluginsStatus()
+        PluginProcessTelegramBot = Nothing
+        PluginProcessSIP = Nothing
+
+        For Each p In Process.GetProcesses
+            If LCase(p.ProcessName) = "adtoolstelegrambot" Then PluginProcessTelegramBot = p
+            If LCase(p.ProcessName) = "adtoolssip" Then PluginProcessSIP = p
+        Next
+
+        If PluginProcessTelegramBot Is Nothing Then
+            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Start
+        Else
+            btnPluginTelegramBotStartStop.Content = My.Resources.str_PluginsTelegramBot_Stop
+        End If
+
+        If PluginProcessSIP Is Nothing Then
+            btnPluginSIPStartStop.Content = My.Resources.str_PluginsSIP_Start
+        Else
+            btnPluginSIPStartStop.Content = My.Resources.str_PluginsSIP_Stop
+        End If
+    End Sub
+
+    Private Sub tbPluginTelegramBot_LostFocus(sender As Object, e As RoutedEventArgs) Handles tbPluginTelegramBotUsername.LostFocus,
+                                                                                              tbPluginTelegramBotAPIKey.LostFocus
+        If String.IsNullOrEmpty(tbPluginTelegramBotUsername.Text) Or String.IsNullOrEmpty(tbPluginTelegramBotAPIKey.Text) Then Exit Sub
+
         Dim cred As New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
         cred.PersistanceType = PersistanceType.Enterprise
         cred.Username = tbPluginTelegramBotUsername.Text
@@ -408,7 +437,7 @@ Public Class pgPreferences
     Private Sub btnPluginTelegramBotStartStop_Click(sender As Object, e As RoutedEventArgs) Handles btnPluginTelegramBotStartStop.Click
         If PluginProcessTelegramBot Is Nothing Then
             Try
-                Process.Start(IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot.exe"))
+                Process.Start(IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot\ADToolsTelegramBot.exe"))
             Catch ex As Exception
                 IMsgBox(ex.Message, vbOKOnly + vbExclamation,, Window.GetWindow(Me))
             End Try
@@ -422,10 +451,56 @@ Public Class pgPreferences
 
     Private Sub chbPluginTelegramBotStartOnLogon_Checked(sender As Object, e As RoutedEventArgs) Handles chbPluginTelegramBotStartOnLogon.Checked, chbPluginTelegramBotStartOnLogon.Unchecked
         If chbPluginTelegramBotStartOnLogon.IsChecked Then
-            My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue("ADToolsTelegramBot", IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot.exe"))
+            My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue("ADToolsTelegramBot", IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot\ADToolsTelegramBot.exe"))
         Else
             My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).DeleteValue("ADToolsTelegramBot", False)
         End If
     End Sub
+
+    Private Sub tbPluginSIP_LostFocus(sender As Object, e As RoutedEventArgs) Handles tbPluginSIPUsername.LostFocus,
+                                                                                      tbPluginSIPPassword.LostFocus,
+                                                                                      tbPluginSIPServer.LostFocus,
+                                                                                      cmboPluginSIPProtocol.LostFocus,
+                                                                                      tbPluginSIPRegistrationName.LostFocus,
+                                                                                      tbPluginSIPDomain.LostFocus
+
+        If String.IsNullOrEmpty(tbPluginSIPUsername.Text) Or String.IsNullOrEmpty(tbPluginSIPPassword.Text) Then Exit Sub
+
+        Dim cred As New Credential("", "", "ADToolsSIP", CredentialType.Generic)
+        cred.PersistanceType = PersistanceType.Enterprise
+        cred.Username = tbPluginSIPUsername.Text
+        cred.Password = tbPluginSIPPassword.Text
+        cred.Save()
+
+        Dim regADToolsSIP As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADToolsSIP")
+        regADToolsSIP.SetValue("Server", tbPluginSIPServer.Text)
+        regADToolsSIP.SetValue("Protocol", cmboPluginSIPProtocol.Text)
+        regADToolsSIP.SetValue("RegistrationName", tbPluginSIPRegistrationName.Text)
+        regADToolsSIP.SetValue("Domain", tbPluginSIPDomain.Text)
+    End Sub
+
+    Private Sub btnPluginSIPStartStop_Click(sender As Object, e As RoutedEventArgs) Handles btnPluginSIPStartStop.Click
+        If PluginProcessSIP Is Nothing Then
+            Try
+                Process.Start(IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsSIP\ADToolsSIP.exe"))
+            Catch ex As Exception
+                IMsgBox(ex.Message, vbOKOnly + vbExclamation,, Window.GetWindow(Me))
+            End Try
+        Else
+            PluginProcessSIP.Kill()
+            PluginProcessSIP.WaitForExit()
+        End If
+
+        UpdatePluginsStatus()
+    End Sub
+
+    Private Sub chbPluginSIPStartOnLogon_Checked(sender As Object, e As RoutedEventArgs) Handles chbPluginSIPStartOnLogon.Checked, chbPluginSIPStartOnLogon.Unchecked
+        If chbPluginTelegramBotStartOnLogon.IsChecked Then
+            My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue("ADToolsSIP", IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsSIP\ADToolsSIP.exe"))
+        Else
+            My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).DeleteValue("ADToolsSIP", False)
+        End If
+    End Sub
+#End Region
 
 End Class

@@ -322,74 +322,60 @@
                                 <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.str_PluginsTelegramBot_Instructions}"/>
                                 <StackPanel HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                        <TextBlock Text="@Username" Width="100"/>
-                                        <TextBox x:Name="tbPluginTelegramBotUsername" Width="400"/>
+                                        <TextBlock Text="@Username" Width="100" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="tbPluginTelegramBotUsername" Width="400" MinHeight="24"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                        <TextBlock Text="API" Width="100"/>
-                                        <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400"/>
+                                        <TextBlock Text="API" Width="100" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400" MinHeight="24"/>
                                     </StackPanel>
                                     <Button x:Name="btnPluginTelegramBotStartStop" Content="{x:Static r:Resources.str_PluginsTelegramBot_Start}" Width="200" Height="24" Margin="0,0,0,20"/>
                                     <CheckBox x:Name="chbPluginTelegramBotStartOnLogon" Content="{x:Static r:Resources.str_PluginsTelegramBot_StartOnLogon}" Margin="0,0,0,10"/>
                                 </StackPanel>
                             </StackPanel>
                         </TabItem>
-                        <!--<TabItem Header="SIP">
+                        <TabItem Header="SIP">
                             <DockPanel LastChildFill="True">
                                 <StackPanel DockPanel.Dock="Top" Margin="5">
-                                    <CheckBox x:Name="chbSipUse" Content="Использовать SIP" Margin="0,0,0,10" IsChecked="{Binding SipUse}"/>
-                                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,10">Позволяет ADViewer подключиться к SIP-серверу, при входящем вызове ADViewer автоматически произведет поиск объектов, используя данные о номере телефона в качестве шаблона поиска.</TextBlock>
+                                    <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.str_PluginsSIP_Instructions}"/>
 
-                                    <StackPanel IsEnabled="{Binding ElementName=chbSipUse, Path=IsChecked}">
+                                    <StackPanel HorizontalAlignment="Left">
 
-                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
-                                            <TextBlock Text="Сервер" Width="130"/>
-                                            <ComboBox x:Name="cmboSipProtocol" Width="50" Height="23" DockPanel.Dock="Right" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SipProtocol}" />
-                                            <TextBlock Text="Протокол" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-                                            <TextBox Height="23" Text="{Binding SipServer}" MaxLength="256"/>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_Server}" Width="130"/>
+                                            <ComboBox x:Name="cmboPluginSIPProtocol" Width="50" Height="23" DockPanel.Dock="Right">
+                                                <ComboBoxItem Name="cmboSipProtocolTCP">TCP</ComboBoxItem>
+                                                <ComboBoxItem Name="cmboSipProtocolUDP">UDP</ComboBoxItem>
+                                            </ComboBox>
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_Protocol}" Width="100" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                            <TextBox x:Name="tbPluginSIPServer" MinHeight="24" MaxLength="256"/>
                                         </DockPanel>
-                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
-                                            <TextBlock Text="Имя регистрации" Width="130"/>
-                                            <TextBox Height="24" Text="{Binding SipRegistrationName}" MaxLength="256"/>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_RegistrationName}" Width="130"/>
+                                            <TextBox x:Name="tbPluginSIPRegistrationName" Width="400" MinHeight="24" MaxLength="256"/>
                                         </DockPanel>
-                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
-                                            <TextBlock Text="Имя входа" Width="130"/>
-                                            <TextBox Height="23" Text="{Binding SipUsername}" MaxLength="256"/>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_Username}" Width="130"/>
+                                            <TextBox x:Name="tbPluginSIPUsername" Width="400" MinHeight="23" MaxLength="256"/>
                                         </DockPanel>
-                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
-                                            <TextBlock Text="Пароль" Width="130"/>
-                                            <PasswordBox x:Name="tbSipPassword" Height="23" MaxLength="256"/>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,10">
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_Password}" Width="130"/>
+                                            <TextBox x:Name="tbPluginSIPPassword" Width="400" MinHeight="23" MaxLength="256"/>
                                         </DockPanel>
-                                        <DockPanel LastChildFill="True" Margin="0,5,5,0">
-                                            <TextBlock Text="Домен (Realm)" Width="130"/>
-                                            <TextBox Height="23" Text="{Binding SipDomain}" MaxLength="64"/>
+                                        <DockPanel LastChildFill="True" Margin="0,0,0,20">
+                                            <TextBlock Text="{x:Static r:Resources.str_PluginsSIP_Domain}" Width="130"/>
+                                            <TextBox x:Name="tbPluginSIPDomain" Width="400" MinHeight="23" MaxLength="64"/>
                                         </DockPanel>
 
-                                        <DockPanel x:Name="dpSipState" LastChildFill="True" Margin="0,30,5,0">
-                                            <TextBlock Text="Статус" Width="130"/>
-                                            <Button x:Name="btnSipConnect" DockPanel.Dock="Right" Width="130" Height="23" Content="Обновить"/>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                                    <TextBlock Text="Stack: "/>
-                                                    <TextBlock Text="{Binding StackState}"/>
-                                                </StackPanel>
-                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                    <TextBlock Text="Registration: "/>
-                                                    <TextBlock Text="{Binding RegistrationState}"/>
-                                                </StackPanel>
-                                            </Grid>
-                                        </DockPanel>
+                                        <Button x:Name="btnPluginSIPStartStop" Content="{x:Static r:Resources.str_PluginsSIP_Start}" Width="200" Height="24" Margin="0,0,0,20"/>
+                                        <CheckBox x:Name="chbPluginSIPStartOnLogon" Content="{x:Static r:Resources.str_PluginsSIP_StartOnLogon}" Margin="0,0,0,10"/>
 
                                     </StackPanel>
 
                                 </StackPanel>
                             </DockPanel>
                         </TabItem>
-                        <TabItem Header="Redmine">
+                        <!--<TabItem Header="Redmine">
                             <DockPanel LastChildFill="True">
                                 <StackPanel DockPanel.Dock="Top" Margin="5">
                                     <CheckBox x:Name="chbRedminUse" Content="Использовать Redmine" Margin="0,0,0,10" IsChecked="{Binding RedmineUse}"/>

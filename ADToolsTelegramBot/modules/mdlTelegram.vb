@@ -13,6 +13,7 @@ Module mdlTelegram
         Dim sendMsgRequest As New SendMessageRequest
         sendMsgRequest.Text = Message
         sendMsgRequest.ChatId = ChatId
+        sendMsgRequest.ParseMode = Requests.Types.ParseMode.Markdown
 
         If keyboard IsNot Nothing Then
             sendMsgRequest.ReplyMarkup = New Requests.Types.ReplyMarkupRequest With {

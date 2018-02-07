@@ -1,16 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A5B5AA70-8BA4-439F-B045-EEA32084C431}</ProjectGuid>
+    <ProjectGuid>{A79D5276-B183-417F-86EF-AF1AB1290531}</ProjectGuid>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ADToolsTelegramBot</RootNamespace>
-    <AssemblyName>ADToolsTelegramBot</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>ADToolsSIP</RootNamespace>
+    <AssemblyName>ADToolsSIP</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MyType>Custom</MyType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -19,8 +19,8 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>true</IncrementalBuild>
-    <OutputPath>..\ADTools\bin\Debug\Plugins\ADToolsTelegramBot\</OutputPath>
-    <DocumentationFile>ADToolsTelegramBot.xml</DocumentationFile>
+    <OutputPath>..\ADTools\bin\Debug\Plugins\ADToolsSIP\</OutputPath>
+    <DocumentationFile>ADToolsSIP.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,8 +31,8 @@
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
-    <OutputPath>..\ADTools\bin\Debug\Plugins\</OutputPath>
-    <DocumentationFile>ADToolsTelegramBot.xml</DocumentationFile>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>ADToolsSIP.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -60,10 +60,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\IRegisty.dll</HintPath>
     </Reference>
+    <Reference Include="LumiSoft.Net, Version=2.0.6382.20662, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libraries\LumiSoft.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.Protocols" />
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -72,10 +76,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="TeleBotDotNet, Version=2016.2.14.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\TeleBotDotNet.2016.02.14.3\lib\net45\TeleBotDotNet.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -112,11 +112,9 @@
     <Import Include="System.Windows.Navigation" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="mdlMail.vb" />
+    <Compile Include="clsSIP.vb" />
+    <Compile Include="mdlMain.vb" />
     <Compile Include="mdlTools.vb" />
-    <Compile Include="modules\mdlDialogue.vb" />
-    <Compile Include="modules\mdlSearcher.vb" />
-    <Compile Include="modules\mdlTelegram.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -144,20 +142,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <AppDesigner Include="My Project\" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\" />
-    <Folder Include="images\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="images\phone.png" />
     <Content Include="libraries\CredentialManagement.dll" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\IRegisty.dll" />
+    <Content Include="libraries\LumiSoft.Net.dll" />
   </ItemGroup>
   <Import Project="..\ADToolsShared\ADToolsShared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

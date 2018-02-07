@@ -43,6 +43,8 @@ Public Class ADToolsApplicationInstanceManager
     Protected Overrides Sub OnStartupNextInstance(eventArgs As StartupNextInstanceEventArgs)
         Try
             MyBase.OnStartupNextInstance(eventArgs)
+            Dim asd() = Environment.GetCommandLineArgs()
+
             app.Activate()
         Catch ex As Exception
             IMsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "OnStartupNextInstance")

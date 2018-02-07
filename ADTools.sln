@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ADTools", "ADTools\ADTools.vbproj", "{ACEA8A09-9E83-4BFD-BB5B-3E2DDED1CFFE}"
 EndProject
@@ -9,9 +9,12 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ADToolsTelegramBot", "ADToo
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ADToolsShared", "ADToolsShared\ADToolsShared.shproj", "{E4C0BFC5-C981-41E5-B5F0-9C673303E5BD}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ADToolsSIP", "ADToolsSIP\ADToolsSIP.vbproj", "{A79D5276-B183-417F-86EF-AF1AB1290531}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ADToolsShared\ADToolsShared.projitems*{a5b5aa70-8ba4-439f-b045-eea32084c431}*SharedItemsImports = 4
+		ADToolsShared\ADToolsShared.projitems*{a79d5276-b183-417f-86ef-af1ab1290531}*SharedItemsImports = 4
 		ADToolsShared\ADToolsShared.projitems*{acea8a09-9e83-4bfd-bb5b-3e2dded1cffe}*SharedItemsImports = 4
 		ADToolsShared\ADToolsShared.projitems*{e4c0bfc5-c981-41e5-b5f0-9c673303e5bd}*SharedItemsImports = 13
 	EndGlobalSection
@@ -28,8 +31,15 @@ Global
 		{A5B5AA70-8BA4-439F-B045-EEA32084C431}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5B5AA70-8BA4-439F-B045-EEA32084C431}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5B5AA70-8BA4-439F-B045-EEA32084C431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A79D5276-B183-417F-86EF-AF1AB1290531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A79D5276-B183-417F-86EF-AF1AB1290531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A79D5276-B183-417F-86EF-AF1AB1290531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A79D5276-B183-417F-86EF-AF1AB1290531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D30B8A3-A159-4C00-B9E6-D700BE5F3040}
 	EndGlobalSection
 EndGlobal

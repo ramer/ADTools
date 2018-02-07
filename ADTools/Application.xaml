@@ -1962,24 +1962,6 @@
             </Setter>
         </Style>
 
-        <Style x:Key="PopupHint" TargetType="Popup">
-            <Setter Property="StaysOpen" Value="True" />
-            <Setter Property="PopupAnimation" Value="Fade" />
-            <Setter Property="AllowsTransparency" Value="True" />
-           
-            <!--<Style.Triggers>
-                <EventTrigger RoutedEvent="MouseLeftButtonDown">
-                    <BeginStoryboard>
-                        <Storyboard Storyboard.TargetProperty="(Popup.IsOpen)" FillBehavior="HoldEnd">
-                            <BooleanAnimationUsingKeyFrames>
-                                <DiscreteBooleanKeyFrame KeyTime="00:00:00.0" Value="False" />
-                            </BooleanAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Style.Triggers>-->
-        </Style>
-
         <Style x:Key="FadeOutTextBlock" TargetType="{x:Type TextBlock}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=StackPanel,AncestorLevel=1}, Path=IsMouseOver}" Value="True" >

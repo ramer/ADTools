@@ -1403,4 +1403,34 @@ To obtain the API key:
   <data name="str_ExternalSoftware" xml:space="preserve">
     <value>External software</value>
   </data>
+  <data name="str_PluginsSIP_Instructions" xml:space="preserve">
+    <value>Allows ADTools to connect to a SIP server and search for objects using the phone number of incoming call.</value>
+  </data>
+  <data name="str_PluginsSIP_Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="str_PluginsSIP_Protocol" xml:space="preserve">
+    <value>Protocol</value>
+  </data>
+  <data name="str_PluginsSIP_RegistrationName" xml:space="preserve">
+    <value>Registration name</value>
+  </data>
+  <data name="str_PluginsSIP_Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="str_PluginsSIP_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="str_PluginsSIP_Domain" xml:space="preserve">
+    <value>Realm</value>
+  </data>
+  <data name="str_PluginsSIP_StartOnLogon" xml:space="preserve">
+    <value>Start SIP-plugin on logon</value>
+  </data>
+  <data name="str_PluginsSIP_Stop" xml:space="preserve">
+    <value>Stop SIP-plugin</value>
+  </data>
+  <data name="str_PluginsSIP_Start" xml:space="preserve">
+    <value>Start SIP-plugin</value>
+  </data>
 </root>

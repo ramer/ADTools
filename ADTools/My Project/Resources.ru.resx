@@ -1239,4 +1239,34 @@
   <data name="str_ExternalSoftware" xml:space="preserve">
     <value>Внешние приложения</value>
   </data>
+  <data name="str_PluginsSIP_Instructions" xml:space="preserve">
+    <value>Позволяет ADTools подключиться к SIP-серверу и производить поиск объектов используя номер телефона входящего звонка.</value>
+  </data>
+  <data name="str_PluginsSIP_Server" xml:space="preserve">
+    <value>Сервер</value>
+  </data>
+  <data name="str_PluginsSIP_Protocol" xml:space="preserve">
+    <value>Протокол</value>
+  </data>
+  <data name="str_PluginsSIP_RegistrationName" xml:space="preserve">
+    <value>Имя регистрации</value>
+  </data>
+  <data name="str_PluginsSIP_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="str_PluginsSIP_Username" xml:space="preserve">
+    <value>Имя входа</value>
+  </data>
+  <data name="str_PluginsSIP_Domain" xml:space="preserve">
+    <value>Домен (Realm)</value>
+  </data>
+  <data name="str_PluginsSIP_StartOnLogon" xml:space="preserve">
+    <value>Запускать SIP-плагин при входе в систему</value>
+  </data>
+  <data name="str_PluginsSIP_Stop" xml:space="preserve">
+    <value>Остановить SIP-плагин</value>
+  </data>
+  <data name="str_PluginsSIP_Start" xml:space="preserve">
+    <value>Запустить SIP-плагин</value>
+  </data>
 </root>

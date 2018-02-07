@@ -33,15 +33,9 @@ Class pgObjects
     End Sub
 
     Private Sub InitializeObject()
-        RefreshDomainTree()
-
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
         tbSearchPattern.Focus()
 
-        tviFavorites.ItemsSource = preferences.Favorites
-        tviFilters.ItemsSource = preferences.Filters
-
-        gcdNavigation.DataContext = preferences
         gcdPreview.DataContext = preferences
 
         hkEsc.InputGestures.Add(New KeyGesture(Key.Escape))
@@ -58,24 +52,13 @@ Class pgObjects
 
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
         lvObjects.ViewStyleDetails = GetViewDetailsStyle()
+
         ' mega-crutch - lvObjects binded to local cvcurrentobjects property and remote preferences properties
-        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "ViewResultGrouping" Then lvObjects.EnableGrouping = preferences.ViewResultGrouping
         AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "CurrentView" Then lvObjects.CurrentView = preferences.CurrentView
         lvObjects.CurrentView = preferences.CurrentView
-        lvObjects.EnableGrouping = preferences.ViewResultGrouping
     End Sub
 
-#Region "ContextMenu"
-
-    Private Sub tviDomainstviFavorites_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
-        Dim obj As clsDirectoryObject = Nothing
-        If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
-        If obj Is Nothing Then Exit Sub
-
-        If obj.IsDeleted Then e.Handled = True : Exit Sub
-
-        CType(sender, StackPanel).ContextMenu.Tag = {obj}
-    End Sub
+#Region "Context Menu Shared"
 
     Private Sub tviFilters_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
         Dim flt As clsFilter = Nothing
@@ -194,7 +177,8 @@ Class pgObjects
                 End If
 
                 'RefreshSearchResults()
-                If organizationalunitaffected Then RefreshDomainTree()
+                'TODO
+                'If organizationalunitaffected Then RefreshDomainTree()
             End If
         Catch ex As Exception
             ThrowException(ex, "ctxmnuSharedRename_Click")
@@ -224,7 +208,8 @@ Class pgObjects
 
             If currentcontaineraffected Then
                 OpenObjectParent()
-                RefreshDomainTree()
+                'TODO
+                'RefreshDomainTree()
             Else
                 'RefreshSearchResults()
             End If
@@ -249,7 +234,10 @@ Class pgObjects
     Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then ShowInTree(objects(0).Parent)
+        If objects.Count = 1 Then
+            Dim w As NavigationWindow = CType(Window.GetWindow(Me), NavigationWindow)
+            If TypeOf w.Content Is pgMain Then CType(w.Content, pgMain).ShowInTree(objects(0).Parent)
+        End If
     End Sub
 
     Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
@@ -308,17 +296,9 @@ Class pgObjects
         If objects.Count = 1 Then ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
     End Sub
 
-    Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 AndAlso preferences.Favorites.Contains(objects(0)) Then preferences.Favorites.Remove(objects(0))
-    End Sub
+#End Region
 
-    Private Sub ctxmnutviFiltersRemoveFromFilters_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsFilter Then Exit Sub
-        Dim current As clsFilter = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If preferences.Filters.Contains(current) Then preferences.Filters.Remove(current)
-    End Sub
+#Region "Context Menu"
 
     Private Sub lvObjects_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs) Handles lvObjects.ContextMenuOpening
         Dim objects As New List(Of clsDirectoryObject)
@@ -445,11 +425,6 @@ Class pgObjects
         lvObjects.ContextMenu.Tag = objects.ToArray
     End Sub
 
-    Private Sub ctxmnutviDomainsDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnutviDomainsDomainOptions.Click
-        ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
-        RefreshDomainTree()
-    End Sub
-
     Private Sub ctxmnuObjectsRestore_Click(sender As Object, e As RoutedEventArgs)
         'TODO
         IMsgBox("Не допилено :/", vbOKOnly, "ADTools", Window.GetWindow(Me))
@@ -508,7 +483,7 @@ Class pgObjects
         If cdmnu Is Nothing Then Exit Sub
         Try
             If Not String.IsNullOrEmpty(cdmnu.Tag) AndAlso cdmnu.Tag = "basicAttributes" Then
-                Clipboard.SetDataObject(Join(objects.Select(Function(o) o.displayName & vbTab & o.userPrincipalName & vbTab & o.mail & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
+                Clipboard.SetDataObject(Join(objects.Select(Function(o) o.name & vbTab & o.displayName & vbTab & o.userPrincipalName & vbTab & o.mail & vbTab & o.telephoneNumber).ToArray, vbCrLf), True)
             Else
                 Clipboard.SetDataObject(Join(objects.Select(Function(o) o.GetType().GetProperty(cdmnu.Tag).GetValue(o).ToString).ToArray, vbCrLf), True)
             End If
@@ -578,10 +553,6 @@ Class pgObjects
         preferences.Filters.Add(currentfilter)
     End Sub
 
-    Public Sub RefreshDomainTree()
-        tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
-    End Sub
-
     Public Sub OpenObjectParent()
         If currentcontainer Is Nothing OrElse (currentcontainer.Parent Is Nothing OrElse currentcontainer.distinguishedName = currentcontainer.Domain.DefaultNamingContext) Then Exit Sub
         StartSearch(currentcontainer.Parent, Nothing)
@@ -643,55 +614,6 @@ Class pgObjects
             Title = tblck.Text
 
         End If
-    End Sub
-
-    Private Async Sub ShowInTree(container As clsDirectoryObject)
-        If container Is Nothing Then Exit Sub
-
-        Dim containerDN As String = container.distinguishedName
-
-        Dim treepath As New List(Of String)
-
-        Do ' find all parents to the root
-            treepath.Add(containerDN)
-
-            If containerDN.StartsWith("DC=", StringComparison.OrdinalIgnoreCase) Then
-                Exit Do
-            Else
-                containerDN = GetParentDNFromDN(containerDN)
-            End If
-        Loop
-
-        treepath.Reverse()
-
-        Dim currentparentnode = tviDomains
-        For I = 0 To treepath.Count - 1
-            For j = 0 To currentparentnode.Items.Count - 1
-                If CType(currentparentnode.Items(j), clsDirectoryObject).distinguishedName <> treepath(I) Then Continue For
-
-                If currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated Then
-                    Await Task.Run(
-                        Sub()
-                            Dim timeout As Integer
-                            Do While currentparentnode.ItemContainerGenerator.Status <> GeneratorStatus.ContainersGenerated And timeout < 100 ' 10 sec
-                                Threading.Thread.Sleep(100)
-                                timeout += 1
-                            Loop
-                        End Sub)
-                End If
-
-                Dim st = currentparentnode.ItemContainerGenerator.Status
-                Dim childnode As TreeViewItem = currentparentnode.ItemContainerGenerator.ContainerFromIndex(j)
-                If childnode Is Nothing Then Exit Sub
-
-                childnode.SetValue(TreeViewItem.IsExpandedProperty, True)
-                childnode.ApplyTemplate()
-                childnode.UpdateLayout()
-
-                currentparentnode = childnode
-                Exit For
-            Next
-        Next
     End Sub
 
     Public Function CreateColumn(columninfo As clsViewColumnInfo) As DataGridTemplateColumn
@@ -807,7 +729,8 @@ Class pgObjects
         End Try
 
         'RefreshSearchResults()
-        If organizationalunitaffected Then RefreshDomainTree()
+        'TODO
+        'If organizationalunitaffected Then RefreshDomainTree()
     End Sub
 
 #End Region
@@ -863,75 +786,6 @@ Class pgObjects
                 End If
             Next
         Next
-    End Sub
-
-    Private Sub tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-
-        If TypeOf sp.Tag Is clsDirectoryObject Then
-            OpenObject(CType(sp.Tag, clsDirectoryObject))
-        End If
-    End Sub
-
-    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        If TypeOf sp.Tag Is clsFilter Then
-            StartSearch(Nothing, CType(sp.Tag, clsFilter))
-        End If
-    End Sub
-
-    Private Sub tviDomains_TreeViewItem_DragEnterDragOver(sender As Object, e As DragEventArgs)
-        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
-            If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
-                e.Effects = DragDropEffects.Copy
-            Else
-                e.Effects = DragDropEffects.Move
-            End If
-
-            For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
-            Next
-        Else
-            e.Effects = DragDropEffects.None
-        End If
-
-        e.Handled = True
-    End Sub
-
-    Private Sub tviDomains_TreeViewItem_Drop(sender As Object, e As DragEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        If TypeOf sp.Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim destination As clsDirectoryObject = sp.Tag
-
-        If Not (destination.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then Exit Sub
-
-        If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
-            Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
-            For Each obj As clsDirectoryObject In dropped
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then Exit Sub
-            Next
-
-            If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
-
-                ObjectsCopy(destination, dropped)
-
-            Else
-
-                ObjectsMove(destination, dropped)
-
-            End If
-
-        End If
     End Sub
 
     Private Sub btnUp_Click(sender As Object, e As RoutedEventArgs) Handles btnUp.Click
@@ -1014,7 +868,8 @@ Class pgObjects
         If root Is Nothing And filter Is Nothing Then Exit Sub
 
         If filter IsNot Nothing AndAlso Not String.IsNullOrEmpty(filter.Pattern) Then tbSearchPattern.Text = filter.Pattern
-        If root IsNot Nothing Then ShowInTree(root)
+
+        lvObjects.EnableGrouping = If(root Is Nothing, preferences.ViewResultGrouping, False)
 
         tbSearchPattern.SelectAll()
         ApplyPostfilter(Nothing, Nothing)
