@@ -246,7 +246,7 @@ Module mdlTools
             Sub(sender As Object, e As MouseButtonEventArgs)
                 Dim obj = FindVisualParent(Of ListBoxItem)(e.OriginalSource)
                 If obj Is Nothing OrElse TypeOf obj.DataContext IsNot clsDirectoryObject Then Exit Sub
-                Process.Start("..\..\ADTools.exe", """" & CType(obj.DataContext, clsDirectoryObject).objectGUIDFormated & """")
+                Process.Start("..\..\ADTools.exe", "-search """ & CType(obj.DataContext, clsDirectoryObject).objectGUIDFormated & """")
             End Sub
 
         Dim pop = New Popup With {.Style = Windows.Application.Current.FindResource("PopupStyle"), .HorizontalOffset = Forms.Screen.PrimaryScreen.WorkingArea.Right - 5, .VerticalOffset = Forms.Screen.PrimaryScreen.WorkingArea.Bottom - 5}
