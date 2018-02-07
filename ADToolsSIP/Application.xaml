@@ -18,6 +18,8 @@
             <Setter Property="Foreground" Value="{x:Static SystemColors.WindowTextBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
 
         <Style x:Key="PopupListBoxItemStyle" TargetType="ListBoxItem">
@@ -80,8 +82,8 @@
                                 </Grid.RowDefinitions>
 
                                 <Image Grid.Column="0" Grid.RowSpan="2" Source="/images/phone.png" Margin="10" Width="48" Height="48" VerticalAlignment="Top"/>
-                                <ContentPresenter Grid.Column="1" Grid.Row="0" Content="{TemplateBinding HeaderedContentControl.Header}" Margin="5,10,5,10"/>
-                                <ContentPresenter Content="{TemplateBinding ContentControl.Content}" Grid.Column="1" Grid.Row="1" Margin="0,0,10,10" MaxHeight="500"/>
+                                <ContentPresenter Grid.Column="1" Grid.Row="0" Content="{TemplateBinding HeaderedContentControl.Header}" Margin="5,10,5,5"/>
+                                <ContentPresenter Content="{TemplateBinding ContentControl.Content}" Grid.Column="1" Grid.Row="1" Margin="5,0,5,5" MaxHeight="500"/>
                             </Grid>
                         </Border>
                     </ControlTemplate>

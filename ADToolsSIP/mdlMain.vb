@@ -64,11 +64,9 @@ Public Class ADToolsSIPApplication
             ' setting localization
             FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 
-            ' domains setup
-            initializeDomains()
-
             ' SIP 
             initializeSIP()
+            'ShowPopup("Сороковиков", "3200")
 
         Catch ex As Exception
             MsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")

@@ -153,6 +153,5 @@
     <Content Include="libraries\IRegisty.dll" />
     <Content Include="libraries\LumiSoft.Net.dll" />
   </ItemGroup>
-  <Import Project="..\ADToolsShared\ADToolsShared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
