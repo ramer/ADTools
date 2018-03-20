@@ -63,48 +63,17 @@ Module mdlTools
     Public Sub ThrowSIPInformation(request As LumiSoft.Net.SIP.Stack.SIP_Request)
         Dim displayName As String = Encoding.UTF8.GetString(Encoding.GetEncoding(1251).GetBytes(request.From.Address.DisplayName))
         Dim telephoneNumber As String = request.From.Address.Uri.Value.Split({"@"}, StringSplitOptions.RemoveEmptyEntries).First
+        Dim data As String = Encoding.UTF8.GetString(request.Data)
 
-        ShowPopup(displayName, telephoneNumber)
-    End Sub
+        Dim w As wndPopup = Nothing
+        For Each wnd In Application.Current.Windows
+            If TypeOf wnd Is wndPopup Then w = wnd : Exit For
+        Next
+        If w Is Nothing Then w = New wndPopup
 
-    Public Sub ShowPopup(displayName As String, telephoneNumber As String)
-        Dim popHeaderText = New TextBlock With {.Style = Windows.Application.Current.FindResource("PopupHeaderTextStyle")}
-        popHeaderText.Text = "ADToolsSIP"
-
-        Dim popContentText As New TextBlock With {.Style = Windows.Application.Current.FindResource("PopupContentTextStyle")}
-        popContentText.Text = String.Format("{0} ({1})", displayName, telephoneNumber)
-
-        Dim pop = New Popup With {.Style = Windows.Application.Current.FindResource("PopupStyle"), .HorizontalOffset = Forms.Screen.PrimaryScreen.WorkingArea.Right - 5, .VerticalOffset = Forms.Screen.PrimaryScreen.WorkingArea.Bottom - 5}
-        pop.Child = New HeaderedContentControl With {.Style = Windows.Application.Current.FindResource("PopupContentStyle"), .Content = popContentText, .Header = popHeaderText}
-
-        Dim popTimer As New DispatcherTimer With {.Interval = TimeSpan.FromSeconds(5)}
-
-        AddHandler pop.Opened,
-            Sub()
-                popTimer.Start()
-                AddHandler popTimer.Tick,
-                Sub()
-                    pop.IsOpen = False
-                    popTimer.Stop()
-                    popTimer = Nothing
-                    pop = Nothing
-                End Sub
-            End Sub
-
-        AddHandler pop.MouseMove, Sub() If popTimer IsNot Nothing Then popTimer.Stop() : popTimer.Start()
-
-        AddHandler pop.MouseLeftButtonDown,
-            Sub(sender As Object, e As MouseButtonEventArgs)
-                Debug.Print("..\..\ADTools.exe", "-search """ & displayName & "* / *" & telephoneNumber & """")
-                Process.Start("..\..\ADTools.exe", "-search """ & displayName & "* / *" & telephoneNumber & """")
-
-                pop.IsOpen = False
-                popTimer.Stop()
-                popTimer = Nothing
-                pop = Nothing
-            End Sub
-
-        pop.IsOpen = True
+        w.lbCalls.Items.Add(New clsCall(displayName, telephoneNumber, data))
+        w.Show()
+        w.Activate()
     End Sub
 
     Public Function FindVisualParent(Of T As DependencyObject)(ByVal child As Object) As T

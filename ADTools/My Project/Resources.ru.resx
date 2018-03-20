@@ -1269,4 +1269,10 @@
   <data name="str_PluginsSIP_Start" xml:space="preserve">
     <value>Запустить SIP-плагин</value>
   </data>
+  <data name="str_PluginsTelegramBot_YourUsername" xml:space="preserve">
+    <value>Ваш @Username</value>
+  </data>
+  <data name="str_PluginsTelegramBot_APIKey" xml:space="preserve">
+    <value>API-ключ</value>
+  </data>
 </root>

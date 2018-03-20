@@ -322,11 +322,11 @@
                                 <TextBlock Margin="0,0,0,10" Text="{x:Static r:Resources.str_PluginsTelegramBot_Instructions}"/>
                                 <StackPanel HorizontalAlignment="Left">
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                        <TextBlock Text="@Username" Width="100" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_PluginsTelegramBot_YourUsername}" Width="130" VerticalAlignment="Center"/>
                                         <TextBox x:Name="tbPluginTelegramBotUsername" Width="400" MinHeight="24"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                                        <TextBlock Text="API" Width="100" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Static r:Resources.str_PluginsTelegramBot_APIKey}" Width="130" VerticalAlignment="Center"/>
                                         <TextBox x:Name="tbPluginTelegramBotAPIKey" Width="400" MinHeight="24"/>
                                     </StackPanel>
                                     <Button x:Name="btnPluginTelegramBotStartStop" Content="{x:Static r:Resources.str_PluginsTelegramBot_Start}" Width="200" Height="24" Margin="0,0,0,20"/>

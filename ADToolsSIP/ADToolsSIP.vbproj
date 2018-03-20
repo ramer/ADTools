@@ -83,6 +83,11 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\clsCall.vb" />
+    <Compile Include="converters\ConverterBooleanToVisibility.vb" />
+    <Compile Include="windows\wndPopup.xaml.vb">
+      <DependentUpon>wndPopup.xaml</DependentUpon>
+    </Compile>
     <Page Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -91,6 +96,10 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="windows\wndPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Import Include="System.Threading.Tasks" />
@@ -112,7 +121,7 @@
     <Import Include="System.Windows.Navigation" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clsSIP.vb" />
+    <Compile Include="classes\clsSIP.vb" />
     <Compile Include="mdlMain.vb" />
     <Compile Include="mdlTools.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">

@@ -42,7 +42,7 @@ Public Class clsMailbox
         _exchangeconnection = New clsPowerShell(_currentobject.Domain.Username, _currentobject.Domain.Password, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)
         NotifyPropertyChanged("State")
         NotifyPropertyChanged("ExchangeConnection")
-        NotifyPropertyChanged("Conncected")
+        NotifyPropertyChanged("Connected")
 
         GetExchangeInfo()
     End Sub
@@ -305,7 +305,7 @@ Public Class clsMailbox
         Get
             If _mailboxstatistics Is Nothing Then Return 0
 
-            Dim obj As String = _mailboxstatistics.Properties("TotalitemSize").Value
+            Dim obj As Object = _mailboxstatistics.Properties("TotalitemSize").Value
 
             Return GetSizeFromString(obj.ToString)
         End Get
@@ -325,9 +325,16 @@ Public Class clsMailbox
 
     Public Function GetSizeFromString(str As String) As Long
         '2.011 GB (2,159,225,856 bytes)
+        '28.63 MB (30,025,145 bytes)
         Try
-            Return Long.Parse(str.Split({"(", ")"}, StringSplitOptions.RemoveEmptyEntries)(1).Replace(",", "").Split({" "}, StringSplitOptions.RemoveEmptyEntries)(0))
-        Catch
+            Dim a() As String = str.Split({"(", ")"}, StringSplitOptions.RemoveEmptyEntries)
+            If a.Count < 2 Then Return 0
+            Dim b As String = a(1).Replace(",", "")
+            Dim c() As String = b.Split({" "}, StringSplitOptions.RemoveEmptyEntries)
+            If c.Count < 1 Then Return 0
+            Return Long.Parse(c(0))
+        Catch ex As Exception
+            ThrowException(ex, "GetSizeFromString")
             Return 0
         End Try
     End Function

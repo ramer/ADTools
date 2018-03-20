@@ -3077,6 +3077,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на API-key.
+        '''</summary>
+        Public ReadOnly Property str_PluginsTelegramBot_APIKey() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsTelegramBot_APIKey", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на You can create a Telegram-bot and manage user accounts via the Telegram messenger.
         '''You must have messenger @Username and bot API key.
         '''
@@ -3117,6 +3126,15 @@ Namespace My.Resources
         Public ReadOnly Property str_PluginsTelegramBot_Stop() As String
             Get
                 Return ResourceManager.GetString("str_PluginsTelegramBot_Stop", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Your @Username.
+        '''</summary>
+        Public ReadOnly Property str_PluginsTelegramBot_YourUsername() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsTelegramBot_YourUsername", resourceCulture)
             End Get
         End Property
         

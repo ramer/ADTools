@@ -1433,4 +1433,10 @@ To obtain the API key:
   <data name="str_PluginsSIP_Start" xml:space="preserve">
     <value>Start SIP-plugin</value>
   </data>
+  <data name="str_PluginsTelegramBot_YourUsername" xml:space="preserve">
+    <value>Your @Username</value>
+  </data>
+  <data name="str_PluginsTelegramBot_APIKey" xml:space="preserve">
+    <value>API-key</value>
+  </data>
 </root>

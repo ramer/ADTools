@@ -66,7 +66,6 @@ Public Class ADToolsSIPApplication
 
             ' SIP 
             initializeSIP()
-            'ShowPopup("Сороковиков", "3200")
 
         Catch ex As Exception
             MsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")

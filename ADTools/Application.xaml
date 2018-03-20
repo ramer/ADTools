@@ -97,7 +97,7 @@
                     <ControlTemplate TargetType="NavigationWindow">
 
                         <!--If there is no wrap container for DockPanel it's margin take no effect-->
-                        <Grid>
+                        <Border BorderThickness="1" BorderBrush="{x:Static SystemColors.ActiveBorderBrush}">
 
                             <DockPanel>
                                 <!--Main DockPanel Margin depends on WindowState-->
@@ -119,7 +119,7 @@
                                     <!--Background="{x:Static SystemParameters.WindowGlassBrush}"-->
                                     <!--Foreground="{x:Static SystemColors.HighlightTextBrush}"-->
                                     <!--Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"-->
-                                    <Button Focusable="False"  Command="NavigationCommands.BrowseBack" Width="31" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
+                                    <Button Focusable="False" Command="NavigationCommands.BrowseBack" Width="31" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
                                         <Button.ContextMenu>
                                             <ContextMenu ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BackStack}">
                                                 <ContextMenu.ItemTemplate>
@@ -148,7 +148,7 @@
                                         </Button.Style>
                                         <Path Data="M 5 0 L 0 5 L 5 10 L 0 5 L 11 5 L 0 5 Z" Stroke="{DynamicResource ColorText}" VerticalAlignment="Center" Height="11" Width="12"/>
                                     </Button>
-                                    
+
                                     <!--Forward Button-->
                                     <Button Focusable="False" Command="NavigationCommands.BrowseForward" Width="31" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
                                         <Button.ContextMenu>
@@ -186,7 +186,7 @@
                                     <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type NavigationWindow}}, Path=Content.Title}" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{x:Static SystemColors.ActiveCaptionTextBrush}"/>
 
                                 </DockPanel>
-                                
+
                                 <!--Window Content-->
                                 <AdornerDecorator>
                                     <Border>
@@ -199,7 +199,7 @@
 
                             </DockPanel>
 
-                        </Grid>
+                        </Border>
 
                     </ControlTemplate>
                 </Setter.Value>
