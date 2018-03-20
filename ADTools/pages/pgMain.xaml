@@ -307,7 +307,18 @@
                         </TreeViewItem.Header>
                         <TreeViewItem.ItemTemplate>
                             <HierarchicalDataTemplate ItemsSource="{Binding ChildContainers}">
-                                <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}" MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown" ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening">
+                                <StackPanel 
+                                    Background="Transparent" 
+                                    Orientation="Horizontal" 
+                                    Height="23" 
+                                    Tag="{Binding}" 
+                                    MouseLeftButtonDown="tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown" 
+                                    ContextMenuOpening="tviDomainstviFavorites_TreeViewItem_ContextMenuOpening"
+                                    AllowDrop="True"
+                                    DragEnter="tviDomains_TreeViewItem_DragEnterDragOver"
+                                    DragOver="tviDomains_TreeViewItem_DragEnterDragOver"
+                                    Drop="tviDomains_TreeViewItem_Drop">
+                                    
                                     <StackPanel.ContextMenu>
                                         <ContextMenu x:Name="ctxmnutviFavorites">
                                             <MenuItem x:Name="ctxmnutviFavoritesRemoveFromFavorites" Header="{x:Static r:Resources.ctxmnu_RemoveFromFavorites}" Click="ctxmnutviFavoritesRemoveFromFavorites_Click">
