@@ -5,6 +5,9 @@ Imports IPrompt.VisualBasic
 
 Class pgMain
 
+    Public WithEvents clipboardTimer As Threading.DispatcherTimer
+    Public Property clipboardlastdata As String
+
     Private Sub pgMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         dpToolbar.DataContext = preferences
         mnuSearchDomains.ItemsSource = domains
@@ -12,6 +15,10 @@ Class pgMain
         tviFavorites.ItemsSource = preferences.Favorites
         tviFilters.ItemsSource = preferences.Filters
         gcdNavigation.DataContext = preferences
+
+        clipboardTimer = New Threading.DispatcherTimer
+        clipboardTimer.Interval = New TimeSpan(0, 0, 1)
+        clipboardTimer.Start()
 
         RefreshDomainTree()
     End Sub
@@ -508,6 +515,22 @@ Class pgMain
 #End Region
 
 #Region "Events"
+
+    Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
+        If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
+        Dim newclipboarddata As String = Clipboard.GetText
+        If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
+        If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
+
+        If clipboardlastdata <> newclipboarddata Then
+            clipboardlastdata = newclipboarddata
+
+            Dim pg = CurrentObjectsPage()
+            If pg Is Nothing Then Exit Sub
+
+            pg.StartSearch(Nothing, New clsFilter(newclipboarddata.Replace(vbNewLine, " / "), preferences.AttributesForSearch, preferences.SearchObjectClasses))
+        End If
+    End Sub
 
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
         ADToolsApplication.CreateMainWindow()

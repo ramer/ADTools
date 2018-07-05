@@ -1,6 +1,5 @@
-﻿Imports System.Collections.ObjectModel
-Imports TeleBotDotNet.Requests.Methods
-Imports TeleBotDotNet.Responses.Methods
+﻿Imports Telegram
+Imports Telegram.Bot.Types
 
 Module mdlDialogue
 
@@ -36,15 +35,15 @@ Module mdlDialogue
 
     'Const DIALOGUE_WARNING = "❗️"
 
-    Private confimkeyboard As New List(Of List(Of String)) From {
-                        {{DIALOGUE_BUTTON_YES, DIALOGUE_BUTTON_NO}.ToList}}
+    Private confimkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
+                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_YES), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_NO)}.ToList}}
 
-    Private userkeyboard As New List(Of List(Of String)) From {
-                        {{DIALOGUE_BUTTON_USERDETAILS, DIALOGUE_BUTTON_BACK}.ToList},
-                        {{DIALOGUE_BUTTON_USERRESETPASSWORD, DIALOGUE_BUTTON_USERENABLEDISABLE, DIALOGUE_BUTTON_USERMEMBEROF}.ToList}}
+    Private userkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
+                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERDETAILS), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_BACK)}.ToList},
+                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERRESETPASSWORD), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERENABLEDISABLE), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERMEMBEROF)}.ToList}}
 
-    Private searchgroupkeyboard As New List(Of List(Of String)) From {
-                        {{DIALOGUE_BUTTON_BACK}.ToList}}
+    Private searchgroupkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
+                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_BACK)}.ToList}}
 
     Private _stage As DialogueStage = DialogueStage.SearchUser
 
@@ -57,7 +56,7 @@ Module mdlDialogue
         End Set
     End Property
 
-    Public Sub ProcessDialogue(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Public Sub ProcessDialogue(responce As Telegram.Bot.Types.Update)
 
         If responce.Message.Text = "/start" Then
 
@@ -245,30 +244,30 @@ Module mdlDialogue
 
     End Sub
 
-    Private Sub SendRequestUnexpected(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestUnexpected(responce As Telegram.Bot.Types.Update)
         SendTelegramMessage(responce.Message.From.Id, "ВТФ??? нажми на кнопку!",)
     End Sub
 
-    Private Sub SendRequestUnexpectedUser(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestUnexpectedUser(responce As Telegram.Bot.Types.Update)
         SendTelegramMessage(responce.Message.From.Id, "Чойта??? Надо юзера выбрать!",)
     End Sub
 
-    Private Sub SendRequestUnexpectedGroup(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestUnexpectedGroup(responce As Telegram.Bot.Types.Update)
         SendTelegramMessage(responce.Message.From.Id, "Нутычо??? Тут надо группу выбрать!",)
     End Sub
 
-    Private Sub SendRequestStageGreeting(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageGreeting(responce As Telegram.Bot.Types.Update)
         SendTelegramMessage(responce.Message.From.Id, String.Format(
         "Привет, {0}!" & vbCrLf &
         "Я бот ADTools." & vbCrLf &
-        "Кого ищем?", responce.Message.From.UserName), , True)
+        "Кого ищем?", responce.Message.From.Username), , True)
     End Sub
 
-    Private Sub SendRequestStageSearchUser(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageSearchUser(responce As Telegram.Bot.Types.Update)
         SendTelegramMessage(responce.Message.From.Id, "Кого ищем?", , True)
     End Sub
 
-    Private Sub SendRequestStageSearchListObjects(responce As TeleBotDotNet.Responses.Types.UpdateResponse, objects As List(Of clsDirectoryObject))
+    Private Sub SendRequestStageSearchListObjects(responce As Telegram.Bot.Types.Update, objects As List(Of clsDirectoryObject))
         Dim msg As String = ""
 
         For Each obj In objects
@@ -289,7 +288,7 @@ Module mdlDialogue
         End If
     End Sub
 
-    Private Sub SendRequestStageUserDetails(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserDetails(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Выбранный юзер:" & vbCrLf & vbCrLf
@@ -305,7 +304,7 @@ Module mdlDialogue
     End Sub
 
 
-    Private Sub SendRequestStageUserMenu(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserMenu(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Юзер выбран:" & vbCrLf & vbCrLf
@@ -316,7 +315,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
 
-    Private Sub SendRequestStageUserConfirmResetPassword(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserConfirmResetPassword(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = String.Format("Сброс пароля:" & vbCrLf & vbCrLf & "👤 *{0}*" & vbCrLf & vbCrLf & "Чо серьезно?", currentuser.name)
@@ -324,7 +323,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
 
-    Private Sub SendRequestStageUserConfirmEnableDisable(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserConfirmEnableDisable(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -338,7 +337,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
 
-    Private Sub SendRequestStageUserResetPasswordCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserResetPasswordCompleted(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -354,7 +353,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
 
-    Private Sub SendRequestStageUserEnableDisableCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageUserEnableDisableCompleted(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -375,7 +374,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub
 
-    Private Sub SendRequestStageSearchGroup(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageSearchGroup(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -393,7 +392,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, searchgroupkeyboard)
     End Sub
 
-    Private Sub SendRequestStageGroupConfirmMemberOf(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageGroupConfirmMemberOf(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -412,7 +411,7 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
     End Sub
 
-    Private Sub SendRequestStageGroupMemberOfCompleted(responce As TeleBotDotNet.Responses.Types.UpdateResponse)
+    Private Sub SendRequestStageGroupMemberOfCompleted(responce As Telegram.Bot.Types.Update)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""

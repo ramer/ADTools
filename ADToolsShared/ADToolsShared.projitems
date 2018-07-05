@@ -18,6 +18,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsSearchObjectClasses.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsTelephoneNumberPattern.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsThreadSafeObservableCollection.vb" />
-    <Compile Include="$(MSBuildThisFileDirectory)clsWatcher.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsWatcher.vb" />
   </ItemGroup>
 </Project>

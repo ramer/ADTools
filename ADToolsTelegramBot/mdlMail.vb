@@ -71,7 +71,7 @@ Public Class ADToolsTelegramBotApplication
             initializeDomains()
 
             ' telegram update timer
-            initializeTimer()
+            StartTelegramUpdater()
 
         Catch ex As Exception
             MsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")

@@ -64,6 +64,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libraries\IRegisty.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.Protocols" />
@@ -77,9 +80,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="TeleBotDotNet, Version=2016.2.14.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\TeleBotDotNet.2016.02.14.3\lib\net45\TeleBotDotNet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Telegram.Bot, Version=14.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.14.6.0\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -119,7 +121,6 @@
     <Compile Include="mdlMail.vb" />
     <Compile Include="mdlTools.vb" />
     <Compile Include="modules\mdlDialogue.vb" />
-    <Compile Include="modules\mdlSearcher.vb" />
     <Compile Include="modules\mdlTelegram.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>

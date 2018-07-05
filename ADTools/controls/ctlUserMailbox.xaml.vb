@@ -46,7 +46,7 @@ Public Class ctlUserMailbox
     Public Async Sub InitializeAsync()
         If _currentobject Is Nothing Then Exit Sub
 
-        If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso _currentobject.Domain.ExchangeServer IsNot Nothing Then
+        If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso Not String.IsNullOrEmpty(_currentobject.Domain.ExchangeServer) Then
             capexchange.Visibility = Visibility.Visible
 
             tbMailbox.Text = GetNextUserMailbox(_currentobject)

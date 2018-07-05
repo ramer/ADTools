@@ -419,7 +419,7 @@ Public Class clsDirectoryObject
 
             _childcontainers = searcher.SearchChildContainersSync(
                 Me,
-                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"))
+                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
 
             Return _childcontainers
         End Get

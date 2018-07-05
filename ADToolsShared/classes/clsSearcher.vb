@@ -91,6 +91,7 @@ Public Class clsSearcher
                                               Optional showdeletedobjects As Boolean = False) As ObservableCollection(Of clsDirectoryObject)
 
         If root Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
+        If root.IsDeleted AndAlso showdeletedobjects = False Then Return New ObservableCollection(Of clsDirectoryObject)
 
         Dim results As New ObservableCollection(Of clsDirectoryObject)
 
@@ -161,6 +162,8 @@ Public Class clsSearcher
         End If
 
         For Each root In roots
+            If root.IsDeleted AndAlso showdeletedobjects = False Then NotifySearchAsyncCompleted() : Continue For
+
             Try
                 Dim searchRequest As New SearchRequest()
                 searchRequest.DistinguishedName = root.distinguishedName

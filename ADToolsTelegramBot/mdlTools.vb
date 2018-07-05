@@ -151,22 +151,23 @@ Module mdlTools
 
         If String.IsNullOrEmpty(TelegramUsername) Or String.IsNullOrEmpty(TelegramAPIKey) Then Application.Current.Shutdown()
 
-        Bot = New TeleBotDotNet.TeleBot(TelegramAPIKey, False)
+        Dim BotWebProxy As New Net.WebProxy("178.62.76.18", 84)
+        Bot = New Telegram.Bot.TelegramBotClient(TelegramAPIKey, BotWebProxy)
     End Sub
 
-    Public Sub initializeTimer()
-        dispatcherTimer = New Threading.DispatcherTimer()
-        AddHandler dispatcherTimer.Tick, AddressOf dispatcherTimer_Tick
-        dispatcherTimer.Interval = New TimeSpan(0, 0, 1)
-        dispatcherTimer.Start()
+    Public Sub StartTelegramUpdater()
+        Do
+            Try
+                GetTelegramMessages()
+                Threading.Thread.Sleep(1000)
+            Catch ex As Exception
+                Debug.WriteLine("ERROR: {0}", ex.Message)
+            End Try
+        Loop
     End Sub
 
     Public Sub initializeDomains()
         domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
-    End Sub
-
-    Private Sub dispatcherTimer_Tick(ByVal sender As Object, ByVal e As EventArgs)
-        GetTelegramMessages()
     End Sub
 
     Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)

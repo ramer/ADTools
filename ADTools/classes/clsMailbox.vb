@@ -48,7 +48,7 @@ Public Class clsMailbox
     End Sub
 
     Public Sub GetExchangeInfo()
-        If Not _exchangeconnection.State.State = RunspaceState.Opened Then Exit Sub
+        If _exchangeconnection Is Nothing OrElse _exchangeconnection.State Is Nothing OrElse Not _exchangeconnection.State.State = RunspaceState.Opened Then Exit Sub
 
         Try
             _exchangeserver = GetExchangeServer(_exchangeconnection, _currentobject.Domain.ExchangeServer & "." & _currentobject.Domain.Name)

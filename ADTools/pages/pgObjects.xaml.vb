@@ -9,9 +9,6 @@ Class pgObjects
     Public Shared hkF5 As New RoutedCommand
     Public Shared hkEsc As New RoutedCommand
 
-    Public WithEvents clipboardTimer As New Threading.DispatcherTimer()
-    Private clipboardlastdata As String
-
     Public WithEvents searcher As New clsSearcher
 
     Public Property currentcontainer As clsDirectoryObject
@@ -42,9 +39,6 @@ Class pgObjects
         Me.CommandBindings.Add(New CommandBinding(hkEsc, Sub() StopSearch()))
         hkF5.InputGestures.Add(New KeyGesture(Key.F5))
         Me.CommandBindings.Add(New CommandBinding(hkF5, Sub() Search(currentcontainer, currentfilter)))
-
-        clipboardTimer.Interval = New TimeSpan(0, 0, 1)
-        clipboardTimer.Start()
 
         cvscurrentobjects = New CollectionViewSource() With {.Source = currentobjects}
         cvcurrentobjects = cvscurrentobjects.View
@@ -736,18 +730,6 @@ Class pgObjects
 #End Region
 
 #Region "Events"
-
-    Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
-        If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
-        Dim newclipboarddata As String = Clipboard.GetText
-        If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
-        If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
-
-        If clipboardlastdata <> newclipboarddata Then
-            clipboardlastdata = newclipboarddata
-            StartSearch(Nothing, New clsFilter(clipboardlastdata, preferences.AttributesForSearch, preferences.SearchObjectClasses))
-        End If
-    End Sub
 
     Private Sub lvObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles lvObjects.PreviewKeyDown
         Select Case e.Key
