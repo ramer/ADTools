@@ -14,16 +14,17 @@ Module mdlTelegram
 
         If keyboard IsNot Nothing Then
             response = Bot.SendTextMessageAsync(
-                ChatId, Message, Enums.ParseMode.Markdown, True, False, 0,
+                ChatId, Message, Enums.ParseMode.Default, True, False, 0,
                 New ReplyMarkups.ReplyKeyboardMarkup With {.Keyboard = keyboard, .ResizeKeyboard = True},
                 Nothing).Result
         Else
             response = Bot.SendTextMessageAsync(
-                ChatId, Message, Enums.ParseMode.Markdown, True, False, 0,
+                ChatId, Message, Enums.ParseMode.Default, True, False, 0,
                 New ReplyMarkups.ReplyKeyboardRemove,
                 Nothing).Result
         End If
 
+        Log("[To   " & ChatId & " / " & response.From.Username & "] : " & Message)
     End Sub
 
     Public Sub GetTelegramMessages()
@@ -37,12 +38,12 @@ Module mdlTelegram
             If lastupdateid < update.Id Then lastupdateid = update.Id 'записываем номер последнего сообщения чтобы избежать повторного чтения
 
             If update.Message Is Nothing Then Continue For
-            Log("[" & update.Id & "] " & update.Message.From.Username & ": " & update.Message.Text)
+            Log("[From " & update.Message.From.Id & " / " & update.Message.From.Username & "] : " & update.Message.Text)
 
             If TelegramUsername = update.Message.From.Username Then
                 ' Если это свои тогда обработать запрос и ответить
+                If Bot IsNot Nothing Then Bot.SendChatActionAsync(update.Message.From.Id, Enums.ChatAction.Typing)
                 ProcessDialogue(update)
-
             Else
                 ' Если это не понятно кто тогда приподпослать
                 SendTelegramMessage(update.Message.From.Id, "Sorry, I don't know you...")

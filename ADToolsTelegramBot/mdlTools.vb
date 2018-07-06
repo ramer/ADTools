@@ -5,14 +5,18 @@ Imports System.Windows.Forms
 Imports System.DirectoryServices
 Imports IRegisty
 Imports CredentialManagement
+Imports System.IO
 
 Module mdlTools
 
     Public regADToolsApplication As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADTools")
     Public regDomains As RegistryKey = regADToolsApplication.CreateSubKey("Domains")
-    Public dispatcherTimer As Windows.Threading.DispatcherTimer
 
     Public domains As New ObservableCollection(Of clsDomain)
+
+    Public LogFile As String = "ADToolsTelegramBot.log"
+    Public nl As String = Environment.NewLine
+    Public dnl As String = Environment.NewLine & Environment.NewLine
 
     Public TelegramUsername As String
     Public TelegramAPIKey As String
@@ -176,14 +180,7 @@ Module mdlTools
                 GetTelegramMessages()
                 Threading.Thread.Sleep(1000)
             Catch ex As Exception
-                Dim message As String = ""
-                Dim ie As Exception = ex
-
-                Do While ie IsNot Nothing
-                    message &= ie.Message & vbCrLf
-                    ie = ie.InnerException
-                Loop
-                MsgBox(message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "TelegramUpdater")
+                ThrowException(ex, "TelegramUpdater")
             End Try
         Loop
     End Sub
@@ -231,30 +228,38 @@ Module mdlTools
         Return result
     End Function
 
-    Public Sub UnhandledException(sender As Object, e As UnhandledExceptionEventArgs)
-        Dim ex As Exception = DirectCast(e.ExceptionObject, Exception)
-        ThrowException(ex, "Необработанное исключение")
-    End Sub
-
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
-        MsgBox(ex.Message, vbExclamation, Procedure)
+        Dim st As String = ex.StackTrace
+        Do While ex IsNot Nothing
+            Log(Procedure & " - " & ex.Message)
+            ex = ex.InnerException
+        Loop
+        Log(st)
     End Sub
 
-    Public Sub ThrowCustomException(Message As String)
-        MsgBox(Message, vbExclamation, "ADToolsTelegramBot")
+    Public Sub ThrowCustomException(msg As String)
+        Log(msg)
+    End Sub
+
+    Public Sub Log(msg As String)
+        msg = msg.Replace(Environment.NewLine, " /n ")
+        Try
+            Using sw As StreamWriter = File.AppendText(Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), LogFile))
+                sw.WriteLine(Now() & " " & msg)
+                Debug.Print(Now() & " " & msg)
+            End Using
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
     End Sub
 
     Public Sub ShowWrongMemberMessage()
-        MsgBox("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." & vbCrLf &
-               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." & vbCrLf &
-               "Локальная группа домена может быть членом только другой локальной группы домена." & vbCrLf & vbCrLf &
-               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." & vbCrLf &
-               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." & vbCrLf &
-               "Универсальная группа не может быть членом глобальной группы.", vbOKOnly + vbExclamation, "Неверный тип группы")
-    End Sub
-
-    Public Sub Log(Text As String)
-        Debug.Print(Text)
+        ThrowCustomException("Глобальная группа может быть членом другой глобальной группы, универсальной группы или локальной группы домена." &
+               "Универсальная группа может быть членом другой универсальной группы или локальной группы домена, но не может быть членом глобальной группы." &
+               "Локальная группа домена может быть членом только другой локальной группы домена." &
+               "Локальную группу домена можно преобразовать в универсальную группу лишь в том случае, если эта локальная группа домена не содержит других членов локальной группы домена. Локальная группа домена не может быть членом универсальной группы." &
+               "Глобальную группу можно преобразовать в универсальную лишь в том случае, если эта глобальная группа не входит в состав другой глобальной группы." &
+               "Универсальная группа не может быть членом глобальной группы.")
     End Sub
 
     Public Function Encode58(data As Byte()) As String

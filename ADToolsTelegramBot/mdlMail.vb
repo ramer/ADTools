@@ -15,7 +15,7 @@ Module mdlMain
             Dim manager As New ADToolsTelegramBotApplicationInstanceManager()
             manager.Run({""})
         Catch ex As Exception
-            MsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Sub Main()")
+            ThrowException(ex, "Sub Main()")
         End Try
     End Sub
 
@@ -36,7 +36,7 @@ Public Class ADToolsTelegramBotApplicationInstanceManager
             app.Run()
             Return False
         Catch ex As Exception
-            MsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "OnStartup")
+            ThrowException(ex, "OnStartup")
             Return False
         End Try
     End Function
@@ -46,7 +46,7 @@ Public Class ADToolsTelegramBotApplicationInstanceManager
             MyBase.OnStartupNextInstance(eventArgs)
             'app.Activate()
         Catch ex As Exception
-            MsgBox(ex.Message & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "OnStartupNextInstance")
+            ThrowException(ex, "OnStartupNextInstance")
         End Try
     End Sub
 End Class
@@ -74,7 +74,7 @@ Public Class ADToolsTelegramBotApplication
             StartTelegramUpdater()
 
         Catch ex As Exception
-            MsgBox(ex.Message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "Application.OnStartup")
+            ThrowException(ex, "Application.OnStartup")
         End Try
     End Sub
 
