@@ -10,6 +10,7 @@
         d:DesignHeight="368"
         KeepAlive="True"
         Title="{Binding ElementName=frmObjects, Path=Content.Title}"
+        Background="{DynamicResource ColorWindowBackground}"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         >
     
@@ -282,7 +283,7 @@
                 </Grid>
             </DockPanel>
 
-            <Grid Margin="5,0,5,0">
+            <Grid Margin="5,0,5,5">
                 <Grid.ColumnDefinitions>
                     <local:ColumnDefinitionExtended x:Name="gcdNavigation" Width="250" Visible="{Binding ViewShowNavigation, Mode=TwoWay}"/>
                     <local:ColumnDefinitionExtended Width="Auto"/>

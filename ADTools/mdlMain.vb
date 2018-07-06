@@ -165,6 +165,7 @@ Public Class ADToolsApplication
         Dim w As NavigationWindow = ShowPage(New pgMain)
         If w IsNot Nothing Then
             w.WindowState = WindowState.Maximized
+            w.Icon = New BitmapImage(New Uri("pack://application:,,,/images/app.ico"))
             w.ShowInTaskbar = True
             w.Title = My.Application.Info.AssemblyName
             AddHandler w.Closing,

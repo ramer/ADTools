@@ -271,7 +271,6 @@ Module mdlTools
 
                 w = New NavigationWindow
                 w.WindowStartupLocation = WindowStartupLocation.CenterScreen
-                w.ShowInTaskbar = False
                 w.Navigate(p)
                 w.UpdateLayout()
 

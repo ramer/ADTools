@@ -8,6 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="800"
       Title="ADTools"
+      Background="{DynamicResource ColorWindowBackground}"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       >
     
@@ -29,7 +30,7 @@
                     </StackPanel>
                 </StatusBarItem>
             </StatusBar>
-            <Grid Margin="5,0,5,0">
+            <Grid Margin="5,0,0,0">
                 <Grid.ColumnDefinitions>
                     <local:ColumnDefinitionExtended/>
                     <local:ColumnDefinitionExtended Width="Auto"/>

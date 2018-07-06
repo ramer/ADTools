@@ -117,17 +117,25 @@
                                     <DockPanel LastChildFill="True" DockPanel.Dock="Top" Height="32">
 
                                         <!--App icon-->
-                                        <Image Source="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type NavigationWindow}}, Path=Icon}" Margin="3" RenderOptions.BitmapScalingMode="HighQuality">
+                                        <Image Source="/images/app.ico" Margin="3" RenderOptions.BitmapScalingMode="HighQuality">
                                             <Image.Style>
                                                 <Style TargetType="Image">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Setter Property="Visibility" Value="Visible"/>
                                                     <Style.Triggers>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding ElementName=btnBack, Path=IsEnabled}" Value="False"/>
-                                                                <Condition Binding="{Binding ElementName=btnForward, Path=IsEnabled}" Value="False"/>
+                                                                <Condition Value="False">
+                                                                    <Condition.Binding>
+                                                                        <MultiBinding Converter="{StaticResource ConverterBooleanAnd}">
+                                                                            <Binding ElementName="btnBack" Path="IsEnabled"/>
+                                                                            <Binding ElementName="btnForward" Path="IsEnabled" />
+                                                                        </MultiBinding>
+                                                                    </Condition.Binding>
+                                                                </Condition>
                                                             </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <MultiDataTrigger.Setters>
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </MultiDataTrigger.Setters>
                                                         </MultiDataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -135,7 +143,7 @@
                                         </Image>
                                         
                                         <!--Back Button-->
-                                        <Button x:Name="btnBack" Focusable="False" Command="NavigationCommands.BrowseBack" Width="32" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
+                                        <Button x:Name="btnBack" Focusable="False" Command="NavigationCommands.BrowseBack" Width="31" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
                                             <Button.ContextMenu>
                                                 <ContextMenu ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BackStack}">
                                                     <ContextMenu.ItemTemplate>
@@ -166,7 +174,7 @@
                                         </Button>
 
                                         <!--Forward Button-->
-                                        <Button x:Name="btnForward" Focusable="False" Command="NavigationCommands.BrowseForward" Width="32" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
+                                        <Button x:Name="btnForward" Focusable="False" Command="NavigationCommands.BrowseForward" Width="31" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True">
                                             <Button.ContextMenu>
                                                 <ContextMenu ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ForwardStack}">
                                                     <ContextMenu.ItemTemplate>
@@ -204,13 +212,12 @@
                                                 <Button.Style>
                                                     <Style TargetType="Button">
                                                         <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}"/>
-                                                        <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type Button}">
                                                                     <Border Background="{TemplateBinding Background}">
                                                                         <Path Data="M 0 20 L 20 20 Z"
-                                                                            Stroke="{TemplateBinding Foreground}"
+                                                                            Stroke="{DynamicResource ColorText}"
                                                                             VerticalAlignment="Center"
                                                                             StrokeThickness="2"
                                                                             StrokeMiterLimit="0"
@@ -229,77 +236,16 @@
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
-                                            <Button Focusable="False" Width="47" SnapsToDevicePixels="True" Click="btnMaximize_Click">
-                                                <Button.Style>
-                                                    <Style TargetType="Button">
-                                                        <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}"/>
-                                                        <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="{x:Type Button}">
-                                                                    <Border Background="{TemplateBinding Background}">
-                                                                        <Grid>
-                                                                            <Path Data="M 5 0 L 20 0 L 20 15 L 15 15 L 15 5 L 5 5 Z M 5 1 L 20 1 Z M 0 5 L 15 5 L 15 20 L 0 20 Z M 0 6 L 15 6 Z"
-                                                                                Stroke="{TemplateBinding Foreground}"
-                                                                                VerticalAlignment="Center"
-                                                                                StrokeThickness="1"
-                                                                                StrokeMiterLimit="0"
-                                                                                Stretch="Uniform"
-                                                                                Width="10" Height="10">
-                                                                                <Path.Style>
-                                                                                    <Style TargetType="Path">
-                                                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                                                        <Style.Triggers>
-                                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type NavigationWindow}}, Path=WindowState}" Value="Maximized">
-                                                                                                <Setter Property="Visibility" Value="Visible" />
-                                                                                            </DataTrigger>
-                                                                                        </Style.Triggers>
-                                                                                    </Style>
-                                                                                </Path.Style>
-                                                                            </Path>
-                                                                            <Path Data="M 0 0 L 20 0 L 20 20 L 0 20 Z M 0 2 L 20 2 Z"
-                                                                                Stroke="{DynamicResource ColorText}"
-                                                                                VerticalAlignment="Center"
-                                                                                StrokeThickness="1"
-                                                                                StrokeMiterLimit="0"
-                                                                                Stretch="Uniform"
-                                                                                Width="10" Height="10">
-                                                                                <Path.Style>
-                                                                                    <Style TargetType="Path">
-                                                                                        <Setter Property="Visibility" Value="Visible" />
-                                                                                        <Style.Triggers>
-                                                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type NavigationWindow}}, Path=WindowState}" Value="Maximized">
-                                                                                                <Setter Property="Visibility" Value="Collapsed" />
-                                                                                            </DataTrigger>
-                                                                                        </Style.Triggers>
-                                                                                    </Style>
-                                                                                </Path.Style>
-                                                                            </Path>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-
-                                                    </Style>
-                                                </Button.Style>
-                                            </Button>
                                             <Button Focusable="False" Width="47" SnapsToDevicePixels="True" Click="btnClose_Click">
                                                 <Button.Style>
                                                     <Style TargetType="{x:Type Button}">
                                                         <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}"/>
-                                                        <Setter Property="Foreground" Value="{DynamicResource ColorText}"/>
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type Button}">
                                                                     <Border Background="{TemplateBinding Background}">
                                                                         <Path Data="M 0 0 L 20 20 Z M 0 20 L 20 0 Z"
-                                                                            Stroke="{TemplateBinding Foreground}"
+                                                                            Stroke="{DynamicResource ColorText}"
                                                                             VerticalAlignment="Center"
                                                                             StrokeMiterLimit="0"
                                                                             Stretch="Uniform"
@@ -311,7 +257,6 @@
                                                         <Style.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
                                                                 <Setter Property="Background" Value="#ffe81123"/>
-                                                                <Setter Property="Foreground" Value="{DynamicResource ColorWindowBackground}"/>
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -1646,14 +1591,10 @@
         </ControlTemplate>
 
         <Style x:Key="ToolbarExpanderToggleButton" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ColorButtonBackground}" />
-            <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Grid Background="{TemplateBinding Background}">
+                        <Grid Background="Transparent">
                             <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
                             <Path x:Name="CollapsedArrow"
                                 HorizontalAlignment="Center"

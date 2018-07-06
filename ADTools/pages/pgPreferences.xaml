@@ -8,7 +8,7 @@
         xmlns:r="clr-namespace:ADTools.My.Resources"
         mc:Ignorable="d"
         d:DesignHeight="600" d:DesignWidth="1064"
-        WindowTitle="{x:Static r:Resources.str_ApplicationOptions}"
+        Title="{x:Static r:Resources.str_ApplicationOptions}"
         WindowHeight="600"
         WindowWidth="1064"
         >
