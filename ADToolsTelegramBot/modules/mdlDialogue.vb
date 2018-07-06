@@ -260,30 +260,36 @@ Module mdlDialogue
         SendTelegramMessage(responce.Message.From.Id, String.Format(
         "Привет, {0}!" & vbCrLf &
         "Я бот ADTools." & vbCrLf &
-        "Кого ищем?", responce.Message.From.Username), , True)
+        "Кого ищем?", responce.Message.From.Username))
     End Sub
 
     Private Sub SendRequestStageSearchUser(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, "Кого ищем?", , True)
+        SendTelegramMessage(responce.Message.From.Id, "Кого ищем?")
     End Sub
 
     Private Sub SendRequestStageSearchListObjects(responce As Telegram.Bot.Types.Update, objects As List(Of clsDirectoryObject))
-        Dim msg As String = ""
 
-        For Each obj In objects
-            msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & "*" & obj.name & "*" & vbCrLf
-            msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "📲 " & obj.userPrincipalNameName & vbCrLf)
-            msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & vbCrLf)
-            msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & vbCrLf
-        Next
+        If objects.Count = 0 Then
+            If Stage = DialogueStage.SearchUser Then
+                SendTelegramMessage(responce.Message.From.Id, "Никого не найдено")
+            ElseIf Stage = DialogueStage.SearchGroup Then
+                SendTelegramMessage(responce.Message.From.Id, "Группа не найдена", searchgroupkeyboard)
+            End If
 
-        If Stage = DialogueStage.SearchUser Then
-            If objects.Count = 0 Then msg = "Никого не найдено"
-            SendTelegramMessage(responce.Message.From.Id, msg)
-        ElseIf Stage = DialogueStage.SearchGroup Then
-            If objects.Count = 0 Then msg = "Группа не найдена"
-            SendTelegramMessage(responce.Message.From.Id, msg, searchgroupkeyboard)
+        ElseIf objects.Count > 50 Then
+
+            SendTelegramMessage(responce.Message.From.Id, "Найдено больше 50 объектов")
+
         Else
+
+            Dim msg As String = ""
+            For Each obj In objects
+                msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & "*" & obj.name & "*" & vbCrLf
+                msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "📲 " & obj.userPrincipalNameName & vbCrLf)
+                msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & vbCrLf)
+                msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & vbCrLf & vbCrLf
+            Next
+            SendTelegramMessage(responce.Message.From.Id, msg)
 
         End If
     End Sub
@@ -310,7 +316,7 @@ Module mdlDialogue
         Dim msg As String = "Юзер выбран:" & vbCrLf & vbCrLf
         msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & "*" & currentuser.name & "*" & vbCrLf
         msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & vbCrLf)
-        msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "🔑 " & currentuser.userPrincipalName & vbCrLf)
+        msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "📲 " & currentuser.userPrincipalName & vbCrLf)
 
         SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
     End Sub

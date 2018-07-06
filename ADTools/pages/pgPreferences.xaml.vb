@@ -24,14 +24,25 @@ Public Class pgPreferences
         RebuildLayout()
 
         ' get TelegramBot settings
+        chbPluginTelegramBotStartOnLogon.IsChecked = (My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).GetValue("ADToolsTelegramBot", "") = IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsTelegramBot\ADToolsTelegramBot.exe"))
+
         Dim cred As Credential
         cred = New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
         cred.PersistanceType = PersistanceType.Enterprise
         cred.Load()
         tbPluginTelegramBotUsername.Text = cred.Username
         tbPluginTelegramBotAPIKey.Text = cred.Password
+        Dim regADToolsTelegramBot As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADToolsTelegramBot")
+        Try
+            chbPluginTelegramBotUseProxy.IsChecked = Convert.ToBoolean(regADToolsTelegramBot.GetValue("UseProxy", False))
+        Catch
+        End Try
+        tbPluginTelegramBotProxyAddress.Text = regADToolsTelegramBot.GetValue("ProxyAddress", "")
+        tbPluginTelegramBotProxyPort.Text = regADToolsTelegramBot.GetValue("ProxyPort", "")
 
         ' get SIP settings
+        chbPluginSIPStartOnLogon.IsChecked = (My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).GetValue("ADToolsSIP", "") = IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsSIP\ADToolsSIP.exe"))
+
         cred = New Credential("", "", "ADToolsSIP", CredentialType.Generic)
         cred.PersistanceType = PersistanceType.Enterprise
         cred.Load()
@@ -424,7 +435,11 @@ Public Class pgPreferences
     End Sub
 
     Private Sub tbPluginTelegramBot_LostFocus(sender As Object, e As RoutedEventArgs) Handles tbPluginTelegramBotUsername.LostFocus,
-                                                                                              tbPluginTelegramBotAPIKey.LostFocus
+                                                                                              tbPluginTelegramBotAPIKey.LostFocus,
+                                                                                              chbPluginTelegramBotUseProxy.Click,
+                                                                                              tbPluginTelegramBotProxyPort.LostFocus,
+                                                                                              tbPluginTelegramBotProxyAddress.LostFocus
+
         If String.IsNullOrEmpty(tbPluginTelegramBotUsername.Text) Or String.IsNullOrEmpty(tbPluginTelegramBotAPIKey.Text) Then Exit Sub
 
         Dim cred As New Credential("", "", "ADToolsTelegramBot", CredentialType.Generic)
@@ -432,6 +447,12 @@ Public Class pgPreferences
         cred.Username = tbPluginTelegramBotUsername.Text
         cred.Password = tbPluginTelegramBotAPIKey.Text
         cred.Save()
+
+        Dim regADToolsTelegramBot As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADToolsTelegramBot")
+        regADToolsTelegramBot.SetValue("UseProxy", chbPluginTelegramBotUseProxy.IsChecked)
+        regADToolsTelegramBot.SetValue("ProxyAddress", tbPluginTelegramBotProxyAddress.Text)
+        regADToolsTelegramBot.SetValue("ProxyPort", tbPluginTelegramBotProxyPort.Text)
+
     End Sub
 
     Private Sub btnPluginTelegramBotStartStop_Click(sender As Object, e As RoutedEventArgs) Handles btnPluginTelegramBotStartStop.Click
@@ -477,6 +498,7 @@ Public Class pgPreferences
         regADToolsSIP.SetValue("Protocol", cmboPluginSIPProtocol.Text)
         regADToolsSIP.SetValue("RegistrationName", tbPluginSIPRegistrationName.Text)
         regADToolsSIP.SetValue("Domain", tbPluginSIPDomain.Text)
+
     End Sub
 
     Private Sub btnPluginSIPStartStop_Click(sender As Object, e As RoutedEventArgs) Handles btnPluginSIPStartStop.Click
@@ -495,7 +517,7 @@ Public Class pgPreferences
     End Sub
 
     Private Sub chbPluginSIPStartOnLogon_Checked(sender As Object, e As RoutedEventArgs) Handles chbPluginSIPStartOnLogon.Checked, chbPluginSIPStartOnLogon.Unchecked
-        If chbPluginTelegramBotStartOnLogon.IsChecked Then
+        If chbPluginSIPStartOnLogon.IsChecked Then
             My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).SetValue("ADToolsSIP", IO.Path.Combine(IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Plugins\ADToolsSIP\ADToolsSIP.exe"))
         Else
             My.Computer.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).DeleteValue("ADToolsSIP", False)

@@ -1439,4 +1439,13 @@ To obtain the API key:
   <data name="str_PluginsTelegramBot_APIKey" xml:space="preserve">
     <value>API-key</value>
   </data>
+  <data name="str_PluginsTelegramBot_ProxyAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="str_PluginsTelegramBot_ProxyPort" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="str_PluginsTelegramBot_UseProxy" xml:space="preserve">
+    <value>Use HTTP-proxy</value>
+  </data>
 </root>

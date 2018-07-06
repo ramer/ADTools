@@ -16,6 +16,9 @@ Module mdlTools
 
     Public TelegramUsername As String
     Public TelegramAPIKey As String
+    Public TelegramUseProxy As Boolean
+    Public TelegramProxyAddress As String
+    Public TelegramProxyPort As Integer
 
     Public Const ADS_UF_SCRIPT = 1 '0x1
     Public Const ADS_UF_ACCOUNTDISABLE = 2 '0x2
@@ -149,10 +152,22 @@ Module mdlTools
         TelegramUsername = cred.Username
         TelegramAPIKey = cred.Password
 
+        Dim regADToolsTelegramBot As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\ADToolsTelegramBot")
+        Try
+            TelegramUseProxy = Convert.ToBoolean(regADToolsTelegramBot.GetValue("UseProxy", False))
+        Catch
+        End Try
+        TelegramProxyAddress = regADToolsTelegramBot.GetValue("ProxyAddress", "")
+        TelegramProxyPort = Convert.ToInt32(regADToolsTelegramBot.GetValue("ProxyPort", 0))
+
         If String.IsNullOrEmpty(TelegramUsername) Or String.IsNullOrEmpty(TelegramAPIKey) Then Application.Current.Shutdown()
 
-        Dim BotWebProxy As New Net.WebProxy("178.62.76.18", 84)
-        Bot = New Telegram.Bot.TelegramBotClient(TelegramAPIKey, BotWebProxy)
+        If TelegramUseProxy Then
+            Dim BotWebProxy As New Net.WebProxy(TelegramProxyAddress, TelegramProxyPort)
+            Bot = New Telegram.Bot.TelegramBotClient(TelegramAPIKey, BotWebProxy)
+        Else
+            Bot = New Telegram.Bot.TelegramBotClient(TelegramAPIKey)
+        End If
     End Sub
 
     Public Sub StartTelegramUpdater()
@@ -161,7 +176,14 @@ Module mdlTools
                 GetTelegramMessages()
                 Threading.Thread.Sleep(1000)
             Catch ex As Exception
-                Debug.WriteLine("ERROR: {0}", ex.Message)
+                Dim message As String = ""
+                Dim ie As Exception = ex
+
+                Do While ie IsNot Nothing
+                    message &= ie.Message & vbCrLf
+                    ie = ie.InnerException
+                Loop
+                MsgBox(message & vbCrLf & vbCrLf & ex.StackTrace, vbOKOnly + vbExclamation, "TelegramUpdater")
             End Try
         Loop
     End Sub
@@ -233,7 +255,6 @@ Module mdlTools
 
     Public Sub Log(Text As String)
         Debug.Print(Text)
-        'MyLog.WriteEntry("ROInventoryTelegramService", Text, EventLogEntryType.Information)
     End Sub
 
     Public Function Encode58(data As Byte()) As String

@@ -7,7 +7,7 @@ Module mdlTelegram
     Public Bot As Bot.TelegramBotClient
     Public lastupdateid As Integer
 
-    Public Sub SendTelegramMessage(ChatId As Integer, Message As String, Optional keyboard As IEnumerable(Of IEnumerable(Of ReplyMarkups.KeyboardButton)) = Nothing, Optional hidekeyboard As Boolean = False)
+    Public Sub SendTelegramMessage(ChatId As Integer, Message As String, Optional keyboard As IEnumerable(Of IEnumerable(Of ReplyMarkups.KeyboardButton)) = Nothing)
         If Bot Is Nothing Then Exit Sub
 
         Dim response As Message = Nothing
@@ -17,19 +17,13 @@ Module mdlTelegram
                 ChatId, Message, Enums.ParseMode.Markdown, True, False, 0,
                 New ReplyMarkups.ReplyKeyboardMarkup With {.Keyboard = keyboard, .ResizeKeyboard = True},
                 Nothing).Result
-        ElseIf hidekeyboard = True Then
+        Else
             response = Bot.SendTextMessageAsync(
                 ChatId, Message, Enums.ParseMode.Markdown, True, False, 0,
                 New ReplyMarkups.ReplyKeyboardRemove,
                 Nothing).Result
         End If
 
-        'resp.
-        'If sendMsgResponce.Ok = True Then
-        '    Log("Answer: " & Message)
-        'Else
-        '    Log("Error while sending message: " & Message)
-        'End If
     End Sub
 
     Public Sub GetTelegramMessages()

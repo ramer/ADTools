@@ -1275,4 +1275,13 @@
   <data name="str_PluginsTelegramBot_APIKey" xml:space="preserve">
     <value>API-ключ</value>
   </data>
+  <data name="str_PluginsTelegramBot_ProxyAddress" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="str_PluginsTelegramBot_ProxyPort" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="str_PluginsTelegramBot_UseProxy" xml:space="preserve">
+    <value>Использовать HTTP-proxy</value>
+  </data>
 </root>

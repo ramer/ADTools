@@ -3103,6 +3103,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Address.
+        '''</summary>
+        Public ReadOnly Property str_PluginsTelegramBot_ProxyAddress() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsTelegramBot_ProxyAddress", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Port.
+        '''</summary>
+        Public ReadOnly Property str_PluginsTelegramBot_ProxyPort() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsTelegramBot_ProxyPort", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Start Telegram bot.
         '''</summary>
         Public ReadOnly Property str_PluginsTelegramBot_Start() As String
@@ -3126,6 +3144,15 @@ Namespace My.Resources
         Public ReadOnly Property str_PluginsTelegramBot_Stop() As String
             Get
                 Return ResourceManager.GetString("str_PluginsTelegramBot_Stop", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Use HTTP-proxy.
+        '''</summary>
+        Public ReadOnly Property str_PluginsTelegramBot_UseProxy() As String
+            Get
+                Return ResourceManager.GetString("str_PluginsTelegramBot_UseProxy", resourceCulture)
             End Get
         End Property
         
