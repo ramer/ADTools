@@ -10,6 +10,7 @@ Imports System.Security
 Imports System.Net
 Imports System.Net.Sockets
 Imports System.Net.NetworkInformation
+Imports Squirrel
 
 Public Enum enmSearchMode
     [Default] = 0
@@ -182,6 +183,16 @@ Module mdlTools
         {4899, "Radmin"},
         {5900, "VNC"},
         {6129, "DameWare RC"}}
+
+    Public Sub checkApplicationUpdates()
+        Try
+            Using mgr = New UpdateManager("")
+                Dim release As ReleaseEntry = mgr.UpdateApp().Result
+            End Using
+        Catch ex As Exception
+            ThrowException(ex, "checkApplicationUpdates")
+        End Try
+    End Sub
 
     Public Sub initializePreferences()
         preferences = IRegistrySerializer.Deserialize(GetType(clsPreferences), regPreferences)

@@ -209,23 +209,40 @@
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type Button}">
                                                                     <Border Background="{TemplateBinding Background}">
-                                                                        <Path Data="M 0 20 L 20 20 Z"
-                                                                            Stroke="{TemplateBinding Foreground}"
-                                                                            VerticalAlignment="Center"
-                                                                            StrokeThickness="2"
-                                                                            StrokeMiterLimit="0"
-                                                                            Stretch="Uniform"
-                                                                            Width="10" Height="10"/>
+                                                                        <Grid>
+                                                                            <Grid x:Name="Overlay" Background="{DynamicResource ColorText}" Opacity="0"/>
+                                                                            <Path Data="M 0 20 L 20 20 Z"
+                                                                                Stroke="{TemplateBinding Foreground}"
+                                                                                VerticalAlignment="Center"
+                                                                                StrokeThickness="1"
+                                                                                StrokeMiterLimit="0"
+                                                                                Stretch="Uniform"
+                                                                                Width="10" Height="10"/>
+                                                                        </Grid>
+
+                                                                        <VisualStateManager.VisualStateGroups>
+                                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                                <VisualStateGroup.Transitions>
+                                                                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                                                </VisualStateGroup.Transitions>
+                                                                                <VisualState x:Name="Normal" />
+                                                                                <VisualState x:Name="MouseOver">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.1"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                                <VisualState x:Name="Pressed">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.2" Duration="0"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                            </VisualStateGroup>
+                                                                        </VisualStateManager.VisualStateGroups>
                                                                     </Border>
                                                                 </ControlTemplate>
                                                             </Setter.Value>
                                                         </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
@@ -239,6 +256,7 @@
                                                                 <ControlTemplate TargetType="{x:Type Button}">
                                                                     <Border Background="{TemplateBinding Background}">
                                                                         <Grid>
+                                                                            <Grid x:Name="Overlay" Background="{DynamicResource ColorText}" Opacity="0"/>
                                                                             <Path Data="M 5 0 L 20 0 L 20 15 L 15 15 L 15 5 L 5 5 Z M 5 1 L 20 1 Z M 0 5 L 15 5 L 15 20 L 0 20 Z M 0 6 L 15 6 Z"
                                                                                 Stroke="{TemplateBinding Foreground}"
                                                                                 VerticalAlignment="Center"
@@ -275,17 +293,32 @@
                                                                                     </Style>
                                                                                 </Path.Style>
                                                                             </Path>
+
                                                                         </Grid>
+
+                                                                        <VisualStateManager.VisualStateGroups>
+                                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                                <VisualStateGroup.Transitions>
+                                                                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                                                </VisualStateGroup.Transitions>
+                                                                                <VisualState x:Name="Normal" />
+                                                                                <VisualState x:Name="MouseOver">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.1"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                                <VisualState x:Name="Pressed">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.2" Duration="0"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                            </VisualStateGroup>
+                                                                        </VisualStateManager.VisualStateGroups>
                                                                     </Border>
                                                                 </ControlTemplate>
                                                             </Setter.Value>
                                                         </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
-
                                                     </Style>
                                                 </Button.Style>
                                             </Button>
@@ -298,24 +331,42 @@
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="{x:Type Button}">
                                                                     <Border Background="{TemplateBinding Background}">
-                                                                        <Path Data="M 0 0 L 20 20 Z M 0 20 L 20 0 Z"
-                                                                            Stroke="{TemplateBinding Foreground}"
-                                                                            VerticalAlignment="Center"
-                                                                            StrokeMiterLimit="0"
-                                                                            Stretch="Uniform"
-                                                                            Width="10" Height="10"/>
+                                                                        <Grid>
+                                                                            <Grid x:Name="Overlay" Background="#ffe81123" Opacity="0"/>
+                                                                            <Path x:Name="Cross" Data="M 0 0 L 20 20 Z M 0 20 L 20 0 Z"
+                                                                                Stroke="{TemplateBinding Foreground}"
+                                                                                VerticalAlignment="Center"
+                                                                                StrokeMiterLimit="0"
+                                                                                Stretch="Uniform"
+                                                                                Width="10" Height="10"/>
+                                                                        </Grid>
+
+                                                                        <VisualStateManager.VisualStateGroups>
+                                                                            <VisualStateGroup x:Name="CommonStates">
+                                                                                <VisualStateGroup.Transitions>
+                                                                                    <VisualTransition GeneratedDuration="0:0:0.2" />
+                                                                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                                                                </VisualStateGroup.Transitions>
+                                                                                <VisualState x:Name="Normal" />
+                                                                                <VisualState x:Name="MouseOver">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="1"/>
+                                                                                        <ColorAnimation Storyboard.TargetName="Cross" Storyboard.TargetProperty="(Path.Stroke).(SolidColorBrush.Color)" To="White"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                                <VisualState x:Name="Pressed">
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.7" Duration="0"/>
+                                                                                        <ColorAnimation Storyboard.TargetName="Cross" Storyboard.TargetProperty="(Path.Stroke).(SolidColorBrush.Color)" To="White"/>
+                                                                                    </Storyboard>
+                                                                                </VisualState>
+                                                                            </VisualStateGroup>
+                                                                        </VisualStateManager.VisualStateGroups>
                                                                     </Border>
                                                                 </ControlTemplate>
                                                             </Setter.Value>
                                                         </Setter>
-                                                        <Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#ffe81123"/>
-                                                                <Setter Property="Foreground" Value="{DynamicResource ColorWindowBackground}"/>
-                                                            </Trigger>
-                                                        </Style.Triggers>
                                                     </Style>
-
                                                 </Button.Style>
                                             </Button>
                                         </StackPanel>

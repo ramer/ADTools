@@ -15,7 +15,7 @@ Imports System.Windows
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("Vitaliy Sorokovikov")>
 <Assembly: AssemblyProduct("ADTools")>
-<Assembly: AssemblyCopyright("© 2017")>
+<Assembly: AssemblyCopyright("© 2018")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 
@@ -55,5 +55,5 @@ Imports System.Windows
 ' используя "*", как показано ниже:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2.0.0.0")>
-<Assembly: AssemblyFileVersion("2.0.0.0")>
+<Assembly: AssemblyVersion("2.0.3.0")>
+<Assembly: AssemblyFileVersion("2.0.3.0")>

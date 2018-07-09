@@ -48,6 +48,9 @@ Public Class ADToolsApplication
             nicon.ContextMenu = ctxmenu
             nicon.Visible = True
 
+            ' check for application updates
+            checkApplicationUpdates()
+
             ' global parameters
             initializeGlobalParameters()
 

@@ -33,7 +33,7 @@
     <DefineTrace>true</DefineTrace>
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
-    <OutputPath>..\ADTools\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>..\ADTools\bin\Release\Plugins\ADToolsTelegramBot\</OutputPath>
     <DocumentationFile>ADToolsTelegramBot.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <WarningsAsErrors>
