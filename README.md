@@ -9,7 +9,7 @@
 - [Features](#features)
 - [Interface](#interface)
 - [Feedback](#feedback)
-- [Setup and Update](#setup)
+- [Setup and Update](#setup-and-update)
 
 
 ## Introduction
