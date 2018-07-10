@@ -497,6 +497,8 @@
     <EmbeddedResource Include="My Project\Resources.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="images\README.md" />
+    <None Include="libraries\README.md" />
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
