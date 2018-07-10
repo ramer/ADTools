@@ -530,7 +530,6 @@
     <Resource Include="images\group.png" />
     <Resource Include="images\group_distribution.png" />
     <Resource Include="images\log.png" />
-    <Resource Include="images\magnifier.png" />
     <Resource Include="images\ok.png" />
     <Resource Include="images\property.png" />
     <Resource Include="images\puzzle.png" />

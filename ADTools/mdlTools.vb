@@ -28,6 +28,8 @@ Module mdlTools
     Public regDomains As RegistryKey = regApplication.CreateSubKey("Domains")
     Public regPreferences As RegistryKey = regApplication.CreateSubKey("Preferences")
 
+    Public updateUrl As String = ""
+
     Public preferences As clsPreferences
     Public domains As New ObservableCollection(Of clsDomain)
 
@@ -185,13 +187,34 @@ Module mdlTools
         {6129, "DameWare RC"}}
 
     Public Sub checkApplicationUpdates()
-        Try
-            Using mgr = New UpdateManager("")
-                Dim release As ReleaseEntry = mgr.UpdateApp().Result
-            End Using
-        Catch ex As Exception
-            ThrowException(ex, "checkApplicationUpdates")
-        End Try
+        Task.Run(
+            Async Function()
+                ServicePointManager.Expect100Continue = True
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+
+                Dim gitHubManager As UpdateManager = Nothing
+                Try
+                    gitHubManager = Await UpdateManager.GitHubUpdateManager("https://github.com/ramer/ADTools")
+                Catch ex As Exception
+
+                End Try
+
+                If gitHubManager Is Nothing Then Return Nothing
+
+                Try
+                    Dim release = Await gitHubManager.UpdateApp()
+                    If release IsNot Nothing Then
+                        Debug.WriteLine(release.Version)
+                    End If
+                Catch ex As Exception
+
+                Finally
+                    gitHubManager.Dispose()
+                End Try
+
+                Return Nothing
+            End Function
+        )
     End Sub
 
     Public Sub initializePreferences()

@@ -42,14 +42,14 @@ Public Class ADToolsApplication
             AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
             AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
+            ' check for application updates
+            checkApplicationUpdates()
+
             ' notify icon initialization
             nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
             nicon.Text = My.Application.Info.AssemblyName
             nicon.ContextMenu = ctxmenu
             nicon.Visible = True
-
-            ' check for application updates
-            checkApplicationUpdates()
 
             ' global parameters
             initializeGlobalParameters()
