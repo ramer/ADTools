@@ -12,16 +12,6 @@ Imports System.Net.Sockets
 Imports System.Net.NetworkInformation
 Imports Squirrel
 
-Public Enum enmSearchMode
-    [Default] = 0
-    Advanced = 1
-End Enum
-
-Public Enum enmClipboardAction
-    Copy = 0
-    Cut = 1
-End Enum
-
 Module mdlTools
 
     Public regApplication As RegistryKey = Registry.CurrentUser.CreateSubKey("Software\" & My.Application.Info.AssemblyName)
@@ -40,107 +30,14 @@ Module mdlTools
 
     Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 610
 
-    Public Const ADS_UF_SCRIPT = 1 '0x1
-    Public Const ADS_UF_ACCOUNTDISABLE = 2 '0x2
-    Public Const ADS_UF_HOMEDIR_REQUIRED = 8 '0x8
-    Public Const ADS_UF_LOCKOUT = 16 '0x10
-    Public Const ADS_UF_PASSWD_NOTREQD = 32 '0x20
-    Public Const ADS_UF_PASSWD_CANT_CHANGE = 64 '0x40
-    Public Const ADS_UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED = 128 '0x80
-    Public Const ADS_UF_TEMP_DUPLICATE_ACCOUNT = 256 '0x100
-    Public Const ADS_UF_NORMAL_ACCOUNT = 512 '0x200
-    Public Const ADS_UF_INTERDOMAIN_TRUST_ACCOUNT = 2048 '0x800
-    Public Const ADS_UF_WORKSTATION_TRUST_ACCOUNT = 4096 '0x1000
-    Public Const ADS_UF_SERVER_TRUST_ACCOUNT = 8192 '0x2000
-    Public Const ADS_UF_DONT_EXPIRE_PASSWD = 65536 '0x10000
-    Public Const ADS_UF_MNS_LOGON_ACCOUNT = 131072 '0x20000
-    Public Const ADS_UF_SMARTCARD_REQUIRED = 262144 '0x40000
-    Public Const ADS_UF_TRUSTED_FOR_DELEGATION = 524288 '0x80000
-    Public Const ADS_UF_NOT_DELEGATED = 1048576 '0x100000
-    Public Const ADS_UF_USE_DES_KEY_ONLY = 2097152 '0x200000
-    Public Const ADS_UF_DONT_REQUIRE_PREAUTH = 4194304 '0x400000
-    Public Const ADS_UF_PASSWORD_EXPIRED = 8388608 '0x800000
-    Public Const ADS_UF_TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION = 16777216 '0x1000000
-
-    Public Const ADS_GROUP_TYPE_GLOBAL_GROUP = 2 '0x00000002
-    Public Const ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP = 4 '0x00000004
-    Public Const ADS_GROUP_TYPE_UNIVERSAL_GROUP = 8 '0x00000008
-    Public Const ADS_GROUP_TYPE_SECURITY_ENABLED = -2147483648 '0x80000000
-
-
     Public columnsDefault As New ObservableCollection(Of clsViewColumnInfo) From {
-        New clsViewColumnInfo("Статус", New List(Of clsAttribute) From {New clsAttribute("StatusImage", "Статус ⬕")}, 0, 51),
-        New clsViewColumnInfo("Имя", New List(Of clsAttribute) From {New clsAttribute("name", "Имя объекта"), New clsAttribute("description", "Описание")}, 1, 220),
-        New clsViewColumnInfo("Имя входа", New List(Of clsAttribute) From {New clsAttribute("userPrincipalName", "Имя входа"), New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")}, 2, 450),
-        New clsViewColumnInfo("Телефон", New List(Of clsAttribute) From {New clsAttribute("telephoneNumber", "Телефон"), New clsAttribute("physicalDeliveryOfficeName", "Офис")}, 3, 100),
-        New clsViewColumnInfo("Место работы", New List(Of clsAttribute) From {New clsAttribute("title", "Должность"), New clsAttribute("department", "Подразделение"), New clsAttribute("company", "Компания")}, 4, 300),
-        New clsViewColumnInfo("Основной адрес", New List(Of clsAttribute) From {New clsAttribute("mail", "Основной адрес")}, 5, 170),
-        New clsViewColumnInfo("Объект", New List(Of clsAttribute) From {New clsAttribute("whenCreatedFormated", "Создан (формат)"), New clsAttribute("lastLogonFormated", "Последний вход (формат)"), New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")}, 6, 150),
-        New clsViewColumnInfo("Пароль", New List(Of clsAttribute) From {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)"), New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")}, 7, 150)}
-
-    Public attributesDefault As New ObservableCollection(Of clsAttribute) From {
-        {New clsAttribute("accountExpires", "Объект истекает")},
-        {New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")},
-        {New clsAttribute("badPwdCount", "Ошибок ввода пароля")},
-        {New clsAttribute("company", "Компания")},
-        {New clsAttribute("department", "Подразделение")},
-        {New clsAttribute("description", "Описание")},
-        {New clsAttribute("disabled", "Заблокирован")},
-        {New clsAttribute("disabledFormated", "Заблокирован (формат)")},
-        {New clsAttribute("displayName", "Отображаемое имя")},
-        {New clsAttribute("distinguishedName", "LDAP-путь")},
-        {New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")},
-        {New clsAttribute("givenName", "Имя")},
-        {New clsAttribute("Image", "Картинка ⬕")},
-        {New clsAttribute("initials", "Инициалы")},
-        {New clsAttribute("lastLogonDate", "Последний вход")},
-        {New clsAttribute("lastLogonFormated", "Последний вход (формат)")},
-        {New clsAttribute("location", "Местонахождение")},
-        {New clsAttribute("logonCount", "Входов")},
-        {New clsAttribute("mail", "Основной адрес")},
-        {New clsAttribute("manager", "Руководитель")},
-        {New clsAttribute("managedBy", "Управляется")},
-        {New clsAttribute("name", "Имя объекта")},
-        {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
-        {New clsAttribute("objectGUIDFormated", "Уникальный идентификатор (GUID) (формат)")},
-        {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},
-        {New clsAttribute("passwordExpiresDate", "Пароль истекает")},
-        {New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")},
-        {New clsAttribute("physicalDeliveryOfficeName", "Офис")},
-        {New clsAttribute("pwdLastSetDate", "Пароль изменен")},
-        {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)")},
-        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")},
-        {New clsAttribute("SchemaClassName", "Класс")},
-        {New clsAttribute("sn", "Фамилия")},
-        {New clsAttribute("StatusImage", "Статус ⬕")},
-        {New clsAttribute("StatusFormatted", "Статус (формат)")},
-        {New clsAttribute("telephoneNumber", "Телефон")},
-        {New clsAttribute("thumbnailPhoto", "Фото ⬕")},
-        {New clsAttribute("title", "Должность")},
-        {New clsAttribute("userPrincipalName", "Имя входа")},
-        {New clsAttribute("whenCreated", "Создан")},
-        {New clsAttribute("whenCreatedFormated", "Создан (формат)")}
-    }
-    Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
-        {New clsAttribute("name", "Имя объекта")},
-        {New clsAttribute("displayName", "Отображаемое имя")},
-        {New clsAttribute("userPrincipalName", "Имя входа")},
-        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    }
-    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From { ' 
-        {New clsAttribute("name", "Имя объекта")},
-        {New clsAttribute("displayName", "Отображаемое имя")},
-        {New clsAttribute("userPrincipalName", "Имя входа")}
-    }
-    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
-        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    }
-    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
-        {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    }
-    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
-        {New clsAttribute("name", "Имя объекта")}
-    }
+        New clsViewColumnInfo("Имя", New List(Of String) From {"name", "description"}, 1, 220),
+        New clsViewColumnInfo("Имя входа", New List(Of String) From {"userPrincipalName", "distinguishedNameFormated"}, 2, 450),
+        New clsViewColumnInfo("Телефон", New List(Of String) From {"telephoneNumber", "physicalDeliveryOfficeName"}, 3, 100),
+        New clsViewColumnInfo("Место работы", New List(Of String) From {"title", "department", "company"}, 4, 300),
+        New clsViewColumnInfo("Основной адрес", New List(Of String) From {"mail"}, 5, 170),
+        New clsViewColumnInfo("Объект", New List(Of String) From {"whenCreatedFormated", "lastLogonFormated", "accountExpiresFormated"}, 6, 150),
+        New clsViewColumnInfo("Пароль", New List(Of String) From {"pwdLastSetFormated", "passwordExpiresFormated"}, 7, 150)}
 
     Public attributesToLoadDefault As String() =
         {"accountExpires",
@@ -394,14 +291,6 @@ Module mdlTools
         End Try
     End Function
 
-    Public Function GetDefaultColumns()
-        Dim results As New ObservableCollection(Of clsViewColumnInfo)
-        For Each c In columnsDefault
-            results.Add(c)
-        Next
-        Return results
-    End Function
-
     Public Function GetViewDetailsStyle() As Style
 
         Dim newstyle As New Style
@@ -414,44 +303,14 @@ Module mdlTools
         newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
         newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
         newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
+        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel))
         newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
 
         Dim gridview As New GridView
 
+        gridview.Columns.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"StatusImage"}, 0, 60)))
         For Each columninfo As clsViewColumnInfo In preferences.Columns
-            Dim column As New GridViewColumn()
-            column.Header = columninfo.Header
-            'column.SetValue(DataGridColumn.CanUserSortProperty, True)
-            'If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
-            column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
-            'column.MinWidth = 58
-            Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-            panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
-            panel.SetValue(FrameworkElement.MarginProperty, New Thickness(5, 0, 5, 0))
-
-            Dim first As Boolean = True
-            For Each attr As clsAttribute In columninfo.Attributes
-                Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr.Name}
-
-                Dim container As New FrameworkElementFactory(GetType(ContentControl))
-                If first Then
-                    first = False
-                    container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
-                    'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-                Else
-                    container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
-                End If
-
-                container.SetBinding(ContentControl.ContentProperty, bind)
-                container.SetValue(FrameworkElement.ToolTipProperty, attr.Label)
-                container.SetValue(FrameworkElement.MaxHeightProperty, 48.0)
-                panel.AppendChild(container)
-            Next
-
-            Dim template As New DataTemplate()
-            template.VisualTree = panel
-            column.CellTemplate = template
-            gridview.Columns.Add(column)
+            gridview.Columns.Add(CreateViewDetailsStyleColumn(columninfo))
         Next
 
         newstyle.Setters.Add(New Setter(ListView.ViewProperty, gridview))
@@ -459,36 +318,41 @@ Module mdlTools
         Return newstyle
     End Function
 
-    Public Function GetAttributesExtended() As clsAttribute()
-        Dim attributes As New HashSet(Of String)
-        Dim filters As New List(Of String) From
-            {"(&(objectCategory=person)(objectClass=user)(!(objectClass=inetOrgPerson)))",
-            "(&(objectCategory=person)(objectClass=contact))",
-            "(objectClass=computer)",
-            "(objectClass=group)",
-            "(objectClass=organizationalunit)"}
+    Public Function CreateViewDetailsStyleColumn(columninfo As clsViewColumnInfo) As GridViewColumn
+        Dim column As New GridViewColumn()
+        column.Header = columninfo.Header
+        If columninfo.Attributes.Count > 0 Then column.SetValue(clsSorter.PropertyNameProperty, columninfo.Attributes(0))
+        column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
+        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+        panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
+        panel.SetValue(FrameworkElement.MarginProperty, New Thickness(0))
 
-        For Each domain In domains
-            Try
-                For Each f In filters
-                    Dim searchRequest As SearchRequest = New SearchRequest(domain.DefaultNamingContext, f, SearchScope.Subtree, Nothing)
-                    searchRequest.Controls.Add(New PageResultRequestControl(1))
-                    searchRequest.Controls.Add(New SearchOptionsControl(SearchOption.DomainScope))
-                    Dim response As SearchResponse = domain.Connection.SendRequest(searchRequest)
-                    If response.Entries.Count = 1 Then
-                        Dim sampleobject As New clsDirectoryObject(response.Entries(0), domain)
-                        For Each a As String In sampleobject.AllowedAttributes
-                            attributes.Add(a)
-                        Next
-                    End If
-                Next
-            Catch ex As Exception
+        Dim firstline As Boolean = True
+        For Each attr As String In columninfo.Attributes
+            Dim bind As New Binding(attr) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr}
 
-            End Try
+            Dim container As New FrameworkElementFactory(GetType(ContentControl))
+            If firstline Then
+                firstline = False
+                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
+                'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+            Else
+                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
+            End If
+
+            container.SetBinding(ContentControl.ContentProperty, bind)
+            container.SetValue(FrameworkElement.ToolTipProperty, attr)
+            container.SetValue(FrameworkElement.MaxHeightProperty, 48.0)
+            panel.AppendChild(container)
         Next
 
-        Return attributes.ToArray.OrderBy(Function(x As String) x).Select(Function(x As String) New clsAttribute(x, x)).ToArray
+        Dim template As New DataTemplate()
+        template.VisualTree = panel
+        column.CellTemplate = template
+
+        Return column
     End Function
+
 
     Public Sub ThrowException(ByVal ex As Exception, ByVal Procedure As String)
         ADToolsApplication.tsocErrorLog.Add(New clsErrorLog(Procedure,, ex))

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttribute.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttributeSchema.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDirectoryObject.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomain.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomainProperty.vb" />
@@ -19,5 +20,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsTelephoneNumberPattern.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsThreadSafeObservableCollection.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsWatcher.vb" />
+    <Compile Include="$(MSBuildThisFileDirectory)modules\mdlVariables.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)modules\" />
   </ItemGroup>
 </Project>

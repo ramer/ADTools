@@ -202,7 +202,7 @@ Public Class ListViewExtended
         _selecteditems.AddRange(SelectedItems.Cast(Of Object))
     End Sub
 
-    Private Sub DragSource_PreviewMouseLeftButtonDown(ByVal sender As Object, ByVal e As TouchEventArgs) Handles Me.PreviewTouchDown
+    Private Sub DragSource_PreviewTouchDown(ByVal sender As Object, ByVal e As TouchEventArgs) Handles Me.PreviewTouchDown
         _startpoint = e.GetTouchPoint(Me).Position
     End Sub
 

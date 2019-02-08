@@ -26,6 +26,7 @@ Public Class clsDomain
     Private _searchroot As String
 
     Private _properties As New ObservableCollection(Of clsDomainProperty)
+    Private _attributesschema As New Dictionary(Of String, clsAttributeSchema)
     Private _maxpwdage As Integer
     Private _suffixes As New ObservableCollection(Of String)
 
@@ -203,6 +204,39 @@ Public Class clsDomain
             End Function)
     End Function
 
+    Private Async Function UpdateAttributesSchemaAsync() As Task(Of Boolean)
+        'attributes
+
+        Return Await Task.Run(
+            Function()
+                Try
+                    Dim a As New Dictionary(Of String, clsAttributeSchema)
+                    Dim pageRequestControl As New PageResultRequestControl(1000)
+                    Dim pageResponseControl As PageResultResponseControl
+                    Dim searchRequest = New SearchRequest(SchemaNamingContext, "(objectClass=attributeSchema)", SearchScope.Subtree, {"adminDisplayName", "isSingleValued", "searchFlags", "attributeSyntax", "lDAPDisplayName"})
+                    searchRequest.Controls.Add(pageRequestControl)
+
+                    Do
+                        Dim response As SearchResponse = Connection.SendRequest(searchRequest)
+
+                        For Each attr As SearchResultEntry In response.Entries
+                            a.Add(attr.Attributes("lDAPDisplayName")(0), New clsAttributeSchema(attr.Attributes("adminDisplayName")(0), attr.Attributes("isSingleValued")(0), attr.Attributes("searchFlags")(0), attr.Attributes("attributeSyntax")(0), attr.Attributes("lDAPDisplayName")(0)))
+                        Next attr
+
+                        pageResponseControl = response.Controls(0)
+                        If pageResponseControl.Cookie.Length = 0 Then Exit Do
+
+                        pageRequestControl.Cookie = pageResponseControl.Cookie
+                    Loop
+
+                    AttributesSchema = a
+                    Return True
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function)
+    End Function
+
     Private Async Function UpdateExchangeServersAsync() As Task(Of Boolean)
         'exchange servers
 
@@ -283,11 +317,15 @@ Public Class clsDomain
             If Not Await UpdateNamingContextsAsync() Then Exit Sub
         End If
 
+        Await UpdatePropertiesAsync()
+        Await UpdateAttributesSchemaAsync()
+        Await UpdateSuffixesAsync()
+        Await UpdateExchangeServersAsync()
+        Await UpdateDefaultGroupsAsync()
+
         If EnableWatcher Then StartWatcher()
 
         If String.IsNullOrEmpty(SearchRoot) Then SearchRoot = DefaultNamingContext
-
-        Await UpdateDefaultGroupsAsync()
 
         Validated = True
     End Sub
@@ -301,6 +339,7 @@ Public Class clsDomain
         If EnableWatcher Then StartWatcher()
 
         Await UpdatePropertiesAsync()
+        Await UpdateAttributesSchemaAsync()
         Await UpdateSuffixesAsync()
         Await UpdateExchangeServersAsync()
 
@@ -398,7 +437,7 @@ Public Class clsDomain
         End Set
     End Property
 
-    <RegistrySerializerAlias("ConfigurationNamingContext")>
+    <RegistrySerializerAlias("SchemaNamingContext")>
     Public Property SchemaNamingContext() As String
         Get
             Return _schemanamingcontext
@@ -431,6 +470,17 @@ Public Class clsDomain
         Set(value As ObservableCollection(Of clsDomainProperty))
             _properties = value
             NotifyPropertyChanged("Properties")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property AttributesSchema() As Dictionary(Of String, clsAttributeSchema)
+        Get
+            Return _attributesschema
+        End Get
+        Set(value As Dictionary(Of String, clsAttributeSchema))
+            _attributesschema = value
+            NotifyPropertyChanged("AttributesSchema")
         End Set
     End Property
 

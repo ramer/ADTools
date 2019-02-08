@@ -295,6 +295,7 @@
                         x:Name="tvObjects" 
                         VirtualizingStackPanel.IsVirtualizing="True"
                         VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        VirtualizingStackPanel.ScrollUnit="Pixel"
                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                         SnapsToDevicePixels="True">

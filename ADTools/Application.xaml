@@ -1199,25 +1199,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GridViewColumnHeader">
-                        <DockPanel LastChildFill="True">
-                            <Thumb x:Name="PART_HeaderGripper"
-                                    DockPanel.Dock="Right"
-                                    BorderBrush="{DynamicResource ColorElementBackground}"
-                                    HorizontalAlignment="Center"
-                                    Width="3" 
-                                    BorderThickness="2"
-                                    Cursor="SizeWE"
-                                    />
-                            <Border x:Name="Bd" BorderThickness="1,0,1,1" BorderBrush="{DynamicResource ColorButtonBackground}" Margin="1,0,1,0">
+                        <Border BorderThickness="0,0,0.5,0" BorderBrush="{DynamicResource ColorButtonBackground}">
+                            <Grid Margin="{TemplateBinding Padding}">
                                 <TextBlock Text="{TemplateBinding Content}" Padding="5" />
-                            </Border>
-                        </DockPanel>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource ColorWindowBackground}"/>
-                                <Setter Property="BorderBrush" TargetName="PART_HeaderGripper" Value="{DynamicResource ColorWindowBackground}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                                <Thumb x:Name="PART_HeaderGripper"
+                                    HorizontalAlignment="Right"
+                                    Width="5"
+                                    BorderThickness="3"
+                                    BorderBrush="Transparent"
+                                    Cursor="SizeWE">
+                                </Thumb>
+                            </Grid>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -1245,10 +1238,11 @@
         <Style TargetType="ListViewItem">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListViewItem">
-                        <Grid Name="Panel">
+                        <Grid Name="Panel" Background="{TemplateBinding Background}">
                             <Grid>
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
                                 <GridViewRowPresenter  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
@@ -1274,9 +1268,9 @@
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorButtonBackground}" />
                             </Trigger>
-                            <Trigger Property="IsSelected" Value="False">
+                            <!--<Trigger Property="IsSelected" Value="False">
                                 <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorElementBackground}" />
-                            </Trigger>
+                            </Trigger>-->
                         </ControlTemplate.Triggers>
                         
                     </ControlTemplate>
@@ -1546,19 +1540,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="DataGridColumnHeader">
-                        <DockPanel LastChildFill="True">
-                            <Thumb x:Name="PART_RightHeaderGripper"
-                                    DockPanel.Dock="Right"
-                                    BorderBrush="{DynamicResource ColorElementBackground}"
-                                    HorizontalAlignment="Center"
-                                    Width="3" 
-                                    BorderThickness="2"
-                                    Cursor="SizeWE"
-                                    />
-                            <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}" Margin="1,0,1,0">
+                        <Border BorderThickness="0,0,0.5,0" BorderBrush="{DynamicResource ColorButtonBackground}">
+                            <Grid Margin="{TemplateBinding Padding}">
                                 <TextBlock Text="{TemplateBinding Content}" Padding="5" />
-                            </Border>
-                        </DockPanel>
+                                <Thumb x:Name="PART_RightHeaderGripper"
+                                    HorizontalAlignment="Right"
+                                    Width="5"
+                                    BorderThickness="3"
+                                    BorderBrush="Transparent"
+                                    Cursor="SizeWE">
+                                </Thumb>
+                            </Grid>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

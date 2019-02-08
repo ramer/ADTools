@@ -50,17 +50,19 @@ Public Class ConverterDataToUIElement
                     Next
                 Next
 
-                Dim regexMatchSearcher As New Regex("(" & Join(regexpatterns.ToArray, ")|(") & ")", RegexOptions.IgnoreCase)
-                Dim matches As MatchCollection = regexMatchSearcher.Matches(value.ToString)
-                Dim lastindex As Integer = 0
-                For Each match As Match In matches
-                    tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex, match.Index - lastindex)))
-                    lastindex = match.Index + match.Length
-                    Dim rn = New Run(match.Value)
-                    rn.Background = Brushes.Transparent
-                    rn.TextDecorations = TextDecorations.Underline
-                    Dim hl As New Hyperlink(rn)
-                    AddHandler hl.Click,
+                If regexpatterns.Count > 0 Then
+
+                    Dim regexMatchSearcher As New Regex("(" & Join(regexpatterns.ToArray, ")|(") & ")", RegexOptions.IgnoreCase)
+                    Dim matches As MatchCollection = regexMatchSearcher.Matches(value.ToString)
+                    Dim lastindex As Integer = 0
+                    For Each match As Match In matches
+                        tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex, match.Index - lastindex)))
+                        lastindex = match.Index + match.Length
+                        Dim rn = New Run(match.Value)
+                        rn.Background = Brushes.Transparent
+                        rn.TextDecorations = TextDecorations.Underline
+                        Dim hl As New Hyperlink(rn)
+                        AddHandler hl.Click,
                     Sub()
                         Dim w As Window = Window.GetWindow(hl)
                         If w IsNot Nothing AndAlso
@@ -71,11 +73,19 @@ Public Class ConverterDataToUIElement
                             CType(CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content, pgObjects).StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, preferences.SearchObjectClasses))
                         End If
                     End Sub
-                    tblck.Inlines.Add(hl)
-                Next
-                tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex)))
-                tblck.TextWrapping = TextWrapping.Wrap
-                content = tblck
+                        tblck.Inlines.Add(hl)
+                    Next
+                    tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex)))
+                    tblck.TextWrapping = TextWrapping.Wrap
+                    content = tblck
+
+                Else
+
+                    tblck.Text = value
+                    tblck.TextWrapping = TextWrapping.Wrap
+                    content = tblck
+
+                End If
 
             Case Else
                 content = Nothing

@@ -1656,6 +1656,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Display for user:.
+        '''</summary>
+        Public ReadOnly Property str_EventsToDisplayForUser() As String
+            Get
+                Return ResourceManager.GetString("str_EventsToDisplayForUser", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Success.
         '''</summary>
         Public ReadOnly Property str_EventSuccess() As String
@@ -1670,6 +1679,42 @@ Namespace My.Resources
         Public ReadOnly Property str_EventTimeGenerated() As String
             Get
                 Return ResourceManager.GetString("str_EventTimeGenerated", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Date.
+        '''</summary>
+        Public ReadOnly Property str_EventTotalDate() As String
+            Get
+                Return ResourceManager.GetString("str_EventTotalDate", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Difference.
+        '''</summary>
+        Public ReadOnly Property str_EventTotalDiff() As String
+            Get
+                Return ResourceManager.GetString("str_EventTotalDiff", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на First.
+        '''</summary>
+        Public ReadOnly Property str_EventTotalFirst() As String
+            Get
+                Return ResourceManager.GetString("str_EventTotalFirst", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Last.
+        '''</summary>
+        Public ReadOnly Property str_EventTotalLast() As String
+            Get
+                Return ResourceManager.GetString("str_EventTotalLast", resourceCulture)
             End Get
         End Property
         
@@ -2000,11 +2045,11 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Remove last column.
+        '''  Ищет локализованную строку, похожую на Remove column.
         '''</summary>
-        Public ReadOnly Property str_LayoutRemoveLastColumn() As String
+        Public ReadOnly Property str_LayoutRemoveColumn() As String
             Get
-                Return ResourceManager.GetString("str_LayoutRemoveLastColumn", resourceCulture)
+                Return ResourceManager.GetString("str_LayoutRemoveColumn", resourceCulture)
             End Get
         End Property
         

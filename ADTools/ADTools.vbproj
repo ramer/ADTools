@@ -142,10 +142,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\clsContact.vb" />
-    <Compile Include="classes\clsDataGridColumnInfo.vb" />
+    <Compile Include="classes\clsViewColumnInfo.vb" />
     <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
     <Compile Include="classes\clsEvent.vb" />
+    <Compile Include="classes\clsEventTotal.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
     <Compile Include="classes\clsLog.vb" />
     <Compile Include="classes\clsMailbox.vb" />
@@ -195,6 +196,7 @@
     <Compile Include="classes\clsPreferences.vb" />
     <Compile Include="converters\ConverterBooleanToEnum.vb" />
     <Compile Include="converters\ConverterBooleanToWidthStar.vb" />
+    <Compile Include="converters\ConverterDataRowViewToDataContext.vb" />
     <Compile Include="converters\ConverterDataToUIElement.vb" />
     <Compile Include="converters\ConverterDesiredWidthToVisibility.vb" />
     <Compile Include="converters\ConverterEnumToVisibility.vb" />

@@ -390,7 +390,7 @@
     <value>Журнал входов</value>
   </data>
   <data name="str_RetrievingLogins" xml:space="preserve">
-    <value>Получения данных журнала входов/выходов средствами WMI</value>
+    <value>Получение данных журнала входов/выходов средствами WMI</value>
   </data>
   <data name="str_Period" xml:space="preserve">
     <value>Период</value>
@@ -971,11 +971,11 @@
   <data name="str_LayoutDefault" xml:space="preserve">
     <value>По умолчанию</value>
   </data>
-  <data name="str_LayoutRemoveLastColumn" xml:space="preserve">
-    <value>Удалить последний столбец</value>
+  <data name="str_LayoutRemoveColumn" xml:space="preserve">
+    <value>Удалить столбец</value>
   </data>
   <data name="str_LayoutAddColumn" xml:space="preserve">
-    <value>Добавить столбец в конец</value>
+    <value>Добавить столбец</value>
   </data>
   <data name="str_AttributesForSearchDefault" xml:space="preserve">
     <value>По умолчанию</value>
@@ -1283,5 +1283,20 @@
   </data>
   <data name="str_PluginsTelegramBot_UseProxy" xml:space="preserve">
     <value>Использовать HTTP-proxy</value>
+  </data>
+  <data name="str_EventsToDisplayForUser" xml:space="preserve">
+    <value>Отображать для пользователя:</value>
+  </data>
+  <data name="str_EventTotalDate" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="str_EventTotalFirst" xml:space="preserve">
+    <value>Первый</value>
+  </data>
+  <data name="str_EventTotalLast" xml:space="preserve">
+    <value>Последний</value>
+  </data>
+  <data name="str_EventTotalDiff" xml:space="preserve">
+    <value>Разница</value>
   </data>
 </root>

@@ -1,4 +1,6 @@
-﻿Imports System.Reflection
+﻿Imports System.Collections.Specialized
+Imports System.ComponentModel
+Imports System.Reflection
 Imports System.Windows.Controls.Primitives
 Imports IPrint
 Imports IPrompt.VisualBasic
@@ -20,8 +22,14 @@ Class pgMain
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
         clipboardTimer.Start()
 
-        RefreshDomainTree()
+        AddHandler domains.CollectionChanged, AddressOf DomainsChangedHandler
+        For Each domain As clsDomain In domains
+            AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+        Next
+        DomainRefreshHandler()
     End Sub
+
+
 
     Public Function CurrentObjectsPage() As pgObjects
         If frmObjects IsNot Nothing AndAlso frmObjects.Content IsNot Nothing AndAlso TypeOf frmObjects.Content Is pgObjects Then
@@ -84,7 +92,7 @@ Class pgMain
                     Dim pic() As PropertyInfo = t.GetProperties()
 
                     For Each pi In pic
-                        If pi.Name = attr.Name Then
+                        If pi.Name = attr Then
                             Dim value = pi.GetValue(obj)
 
                             If TypeOf value Is String Then
@@ -123,13 +131,11 @@ Class pgMain
     End Sub
 
     Private Sub mnuServiceDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceDomainOptions.Click
-        ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
-        RefreshDomainTree()
+        ShowPage(New pgDomains, True, Window.GetWindow(Me), False)
     End Sub
 
     Private Sub mnuServicePreferences_Click(sender As Object, e As RoutedEventArgs) Handles mnuServicePreferences.Click
-        ShowPage(New pgPreferences, True, Window.GetWindow(Me), True)
-        RefreshDomainTree()
+        ShowPage(New pgPreferences, True, Window.GetWindow(Me), False)
     End Sub
 
     Private Sub mnuServiceLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceLog.Click
@@ -251,7 +257,6 @@ Class pgMain
 
     Private Sub ctxmnutviDomainsDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnutviDomainsDomainOptions.Click
         ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
-        RefreshDomainTree()
     End Sub
 
     Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
@@ -518,18 +523,24 @@ Class pgMain
 
     Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
         If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
-        Dim newclipboarddata As String = Clipboard.GetText
-        If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
-        If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
+        If Not Clipboard.ContainsText(TextDataFormat.Text) Then Exit Sub
+        Dim newclipboarddata As String
 
-        If clipboardlastdata <> newclipboarddata Then
-            clipboardlastdata = newclipboarddata
+        Try
+            newclipboarddata = Clipboard.GetText(TextDataFormat.Text)
+            If String.IsNullOrEmpty(newclipboarddata) Then Exit Sub
+            If preferences.ClipboardSourceLimit AndAlso CountWords(newclipboarddata) > 3 Then Exit Sub ' only three words
 
-            Dim pg = CurrentObjectsPage()
-            If pg Is Nothing Then Exit Sub
+            If clipboardlastdata <> newclipboarddata Then
+                clipboardlastdata = newclipboarddata
 
-            pg.StartSearch(Nothing, New clsFilter(newclipboarddata.Replace(vbNewLine, " / "), preferences.AttributesForSearch, preferences.SearchObjectClasses))
-        End If
+                Dim pg = CurrentObjectsPage()
+                If pg Is Nothing Then Exit Sub
+
+                pg.StartSearch(Nothing, New clsFilter(newclipboarddata.Replace(vbNewLine, " / "), preferences.AttributesForSearch, preferences.SearchObjectClasses))
+            End If
+        Catch
+        End Try
     End Sub
 
     Private Sub btnWindowClone_Click(sender As Object, e As RoutedEventArgs) Handles btnWindowClone.Click
@@ -544,7 +555,25 @@ Class pgMain
 
 #Region "Subs"
 
-    Public Sub RefreshDomainTree()
+    Public Sub DomainsChangedHandler(sender As Object, e As NotifyCollectionChangedEventArgs)
+        If e.OldItems IsNot Nothing Then
+            For Each domain As clsDomain In e.OldItems
+                RemoveHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+            Next
+        End If
+        If e.NewItems IsNot Nothing Then
+            For Each domain As clsDomain In e.NewItems
+                AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+            Next
+        End If
+        DomainRefreshHandler()
+    End Sub
+
+    Public Sub DomainValidatedHandler(sender As Object, e As PropertyChangedEventArgs)
+        If e.PropertyName = "Validated" Then DomainRefreshHandler()
+    End Sub
+
+    Public Sub DomainRefreshHandler()
         tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
     End Sub
 

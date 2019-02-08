@@ -24,114 +24,220 @@
         </Style>
     </Page.Resources>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <DockPanel LastChildFill="True" Margin="10,5,10,5">
-            <StackPanel DockPanel.Dock="Top">
-                <TextBlock Text="{x:Static r:Resources.str_RetrievingLogins}" Margin="0,5,0,5"/>
-                <StackPanel>
-                    <DockPanel LastChildFill="True">
-                        <TextBlock Text="{x:Static r:Resources.str_Period}" Margin="0,5,5,5" DockPanel.Dock="Left"></TextBlock>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <xctk:DateTimePicker x:Name="dtpPeriodFrom" Grid.Column="0" Margin="0,0,2,0" MinHeight="24" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
-                            <xctk:DateTimePicker x:Name="dtpPeriodTo" Grid.Column="1" Margin="0,0,2,0" MinHeight="24" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
-                        </Grid>
-                    </DockPanel>
-                    <TextBlock Text="{x:Static r:Resources.str_EventsToDisplay}" Margin="0,5,0,5" VerticalAlignment="Center"/>
-                    <DockPanel>
-                        <Button x:Name="btnEventsSearch" Content="{x:Static r:Resources.str_Search}" Height="24" DockPanel.Dock="Right"/>
-                        <WrapPanel VerticalAlignment="Center">
-                            <RadioButton x:Name="rbEventAll" Content="{x:Static r:Resources.str_EventAll}" Margin="0,0,5,0" VerticalAlignment="Center" IsChecked="True"/>
-                            <RadioButton x:Name="rbEventSuccess" Content="{x:Static r:Resources.str_EventSuccess}" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                            <RadioButton x:Name="rbEventFailure" Content="{x:Static r:Resources.str_EventFailure}" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                        </WrapPanel>
-                    </DockPanel>
-                </StackPanel>
-            </StackPanel>
-            <StatusBar MinHeight="24" DockPanel.Dock="Bottom" >
-                <TextBlock>
+    <TabControl>
+        <TabItem Header="Журнал">
+            <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
+                <DockPanel LastChildFill="True" Margin="10,5,10,5">
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Text="{x:Static r:Resources.str_RetrievingLogins}" Margin="0,5,0,5"/>
+                        <StackPanel>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{x:Static r:Resources.str_Period}" Margin="0,5,5,5" DockPanel.Dock="Left"></TextBlock>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <xctk:DateTimePicker x:Name="dtpPeriodFrom" Grid.Column="0" Margin="0,0,2,0" MinHeight="24" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
+                                    <xctk:DateTimePicker x:Name="dtpPeriodTo" Grid.Column="1" Margin="0,0,2,0" MinHeight="24" FormatString="dd.MM.yyyy HH:mm:ss dddd" AutoCloseCalendar="True" Format="Custom" AllowTextInput="False" TextAlignment="Left"/>
+                                </Grid>
+                            </DockPanel>
+                            <TextBlock Text="{x:Static r:Resources.str_EventsToDisplay}" Margin="0,5,0,5" VerticalAlignment="Center"/>
+                            <DockPanel>
+                                <Button x:Name="btnEventsSearch" Content="{x:Static r:Resources.str_Search}" Height="24" Padding="5,0,5,0" DockPanel.Dock="Right"/>
+                                <WrapPanel VerticalAlignment="Center">
+                                    <RadioButton x:Name="rbEventAll" Content="{x:Static r:Resources.str_EventAll}" Margin="0,0,5,0" VerticalAlignment="Center" IsChecked="True"/>
+                                    <RadioButton x:Name="rbEventSuccess" Content="{x:Static r:Resources.str_EventSuccess}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    <RadioButton x:Name="rbEventFailure" Content="{x:Static r:Resources.str_EventFailure}" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                </WrapPanel>
+                            </DockPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <StatusBar MinHeight="24" DockPanel.Dock="Bottom" >
+                        <TextBlock>
                     <Run Text="{x:Static r:Resources.str_ObjectsTotal}"/>
                     <Run Text="{Binding ElementName=dgEvents, Path=Items.Count, Mode=OneWay}"/>
-                </TextBlock>
-                <TextBlock>
+                        </TextBlock>
+                        <TextBlock>
                     <Run Text="{x:Static r:Resources.str_ObjectsSelected}"/>
                     <Run Text="{Binding ElementName=dgEvents, Path=SelectedItems.Count, Mode=OneWay}"/>
-                </TextBlock>
-                <StatusBarItem HorizontalAlignment="Right">
-                    <StackPanel Orientation="Horizontal">
-                        <ProgressBar x:Name="pbSearch" Width="30" Height="24" IsIndeterminate="True" Visibility="Hidden"/>
+                        </TextBlock>
+                        <StatusBarItem HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar x:Name="pbSearch" Width="30" Height="24" IsIndeterminate="True" Visibility="Hidden"/>
+                            </StackPanel>
+                        </StatusBarItem>
+                    </StatusBar>
+                    <DataGrid 
+                        Name="dgEvents"
+                        Foreground="Black"
+                        AlternationCount="2"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        VirtualizingStackPanel.ScrollUnit="Pixel"
+                        GridLinesVisibility="None"
+                        AutoGenerateColumns="False"
+                        Margin="0,5,0,0"
+                        IsReadOnly="True"
+                        MinHeight="250"
+                    >
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventCategory}" Width="150" CanUserSort="True" SortMemberPath="Image">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal">
+                                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding CategoryString}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                        </VirtualizingStackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventCode}" Width="50" CanUserSort="True" SortMemberPath="EventCode">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding EventCode}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventAccountName}" Width="80" CanUserSort="True" SortMemberPath="MessageAccountName">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MessageAccountName}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventLogonType}" Width="100" CanUserSort="True" SortMemberPath="MessageLogonType">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MessageLogonType}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventSourceAddress}" Width="110" CanUserSort="True" SortMemberPath="MessageSourceAddress">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding MessageSourceAddress}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTimeGenerated}" Width="110" CanUserSort="True" SortMemberPath="TimeGenerated">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                    <TextBlock Text="{Binding TimeGenerated, StringFormat='{}{0:dd.MM.yyyy HH:mm:ss}'}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            <!--</ScrollViewer>-->
+        </TabItem>
+        <TabItem Header="Календарь">
+            <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
+                <DockPanel LastChildFill="True" Margin="10,5,10,5">
+                    <StackPanel DockPanel.Dock="Top">
+                        <TextBlock Text="{x:Static r:Resources.str_RetrievingLogins}" Margin="0,5,0,5"/>
+                        <StackPanel>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{x:Static r:Resources.str_Period}" Margin="0,5,5,5" DockPanel.Dock="Left"></TextBlock>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <DatePicker x:Name="dtpTotalPeriodFrom" Grid.Column="0" Margin="0,0,2,0" MinHeight="24"/>
+                                    <DatePicker x:Name="dtpTotalPeriodTo" Grid.Column="1" Margin="0,0,2,0" MinHeight="24"/>
+                                </Grid>
+                            </DockPanel>
+                            <DockPanel Margin="0,5,0,0">
+                                <TextBlock Text="{x:Static r:Resources.str_EventsToDisplayForUser}" Margin="0,5,0,5" VerticalAlignment="Center" DockPanel.Dock="Left" Padding="0,0,10,0"/>
+                                <Button x:Name="btnTotalEventsSearch" Content="{x:Static r:Resources.str_Search}" Height="24" DockPanel.Dock="Right" Padding="5,0,5,0"/>
+                                <TextBox x:Name="tbTotalUsername" Margin="5,0,5,0"/>
+                            </DockPanel>
+                        </StackPanel>
                     </StackPanel>
-                </StatusBarItem>
-            </StatusBar>
-            <DataGrid 
-                Name="dgEvents"
-                Foreground="Black"
-                AlternationCount="2"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling"
-                GridLinesVisibility="None"
-                AutoGenerateColumns="False"
-                Margin="0,5,0,0"
-                IsReadOnly="True"
-                MinHeight="250"
-            >
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventCategory}" Width="150" CanUserSort="True" SortMemberPath="Image">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <VirtualizingStackPanel Orientation="Horizontal">
-                                    <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding CategoryString}" TextWrapping="Wrap"/>
-                                </VirtualizingStackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <StatusBar MinHeight="24" DockPanel.Dock="Bottom" >
+                        <TextBlock>
+                            <Run Text="{x:Static r:Resources.str_ObjectsTotal}"/>
+                            <Run Text="{Binding ElementName=dgTotalEvents, Path=Items.Count, Mode=OneWay}"/>
+                        </TextBlock>
+                        <TextBlock>
+                            <Run Text="{x:Static r:Resources.str_ObjectsSelected}"/>
+                            <Run Text="{Binding ElementName=dgTotalEvents, Path=SelectedItems.Count, Mode=OneWay}"/>
+                        </TextBlock>
+                        <StatusBarItem HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar x:Name="pbTotalSearch" Width="30" Height="24" IsIndeterminate="True" Visibility="Hidden"/>
+                            </StackPanel>
+                        </StatusBarItem>
+                    </StatusBar>
+                    <DataGrid 
+                        Name="dgTotalEvents"
+                        Foreground="Black"
+                        AlternationCount="2"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        VirtualizingStackPanel.ScrollUnit="Pixel"
+                        GridLinesVisibility="None"
+                        AutoGenerateColumns="False"
+                        Margin="0,5,0,0"
+                        IsReadOnly="True"
+                        MinHeight="250"
+                        >
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTotalDate}" Width="200" CanUserSort="True" SortMemberPath="Day">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal">
+                                            <Image Height="16" Width="16" Source="{Binding Image}" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                        <TextBlock Text="{Binding Day, StringFormat='dd.MM.yyyy  ( ddd )'}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                        </VirtualizingStackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventCode}" Width="50" CanUserSort="True" SortMemberPath="EventCode">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding EventCode}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTotalFirst}" Width="100" CanUserSort="True" SortMemberPath="First">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding First, StringFormat='HH:mm:ss'}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventAccountName}" Width="80" CanUserSort="True" SortMemberPath="MessageAccountName">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding MessageAccountName}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTotalLast}" Width="100" CanUserSort="True" SortMemberPath="Last">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Last, StringFormat='HH:mm:ss'}" TextWrapping="Wrap" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventLogonType}" Width="100" CanUserSort="True" SortMemberPath="MessageLogonType">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding MessageLogonType}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTotalDiff}" Width="100" CanUserSort="True" SortMemberPath="Diff">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" >
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0:00}:{1:00}">
+                                                    <Binding Path="Diff.Hours" />
+                                                    <Binding Path="Diff.Minutes" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventSourceAddress}" Width="110" CanUserSort="True" SortMemberPath="MessageSourceAddress">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding MessageSourceAddress}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            <!--</ScrollViewer>-->
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTimeGenerated}" Width="110" CanUserSort="True" SortMemberPath="TimeGenerated">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding TimeGenerated}" TextWrapping="Wrap"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                </DataGrid.Columns>
-            </DataGrid>
-        </DockPanel>
-    </ScrollViewer>
+        </TabItem>
+    </TabControl>
 </Page>

@@ -34,6 +34,7 @@
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                 VirtualizingStackPanel.VirtualizationMode="Recycling"
+                VirtualizingStackPanel.ScrollUnit="Pixel"
                 KeyboardNavigation.DirectionalNavigation="None"
                 ViewStyleList="{StaticResource ListViewExtended_ViewStyleList_Small}"
                 CurrentView="List"
@@ -58,7 +59,6 @@
                 </TextBlock>
             </Grid>
             <local:ListViewExtended x:Name="lvDomainObjects"
-                AllowDrop="True"
                 Margin="3,0,0,0"
                 local:clsSorter.AutoSort="True"
                 IsSynchronizedWithCurrentItem="True"
@@ -69,6 +69,7 @@
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                 VirtualizingStackPanel.VirtualizationMode="Recycling"
+                VirtualizingStackPanel.ScrollUnit="Pixel"
                 KeyboardNavigation.DirectionalNavigation="None"
                 ViewStyleList="{StaticResource ListViewExtended_ViewStyleList_Small}"
                 CurrentView="List"

@@ -979,8 +979,8 @@ A universal group can not be a member of a global group.</value>
   <data name="str_LayoutAddColumn" xml:space="preserve">
     <value>Add column</value>
   </data>
-  <data name="str_LayoutRemoveLastColumn" xml:space="preserve">
-    <value>Remove last column</value>
+  <data name="str_LayoutRemoveColumn" xml:space="preserve">
+    <value>Remove column</value>
   </data>
   <data name="str_AttributesForSearchDefault" xml:space="preserve">
     <value>Default</value>
@@ -1444,5 +1444,20 @@ To obtain the API key:
   </data>
   <data name="str_PluginsTelegramBot_UseProxy" xml:space="preserve">
     <value>Use HTTP-proxy</value>
+  </data>
+  <data name="str_EventsToDisplayForUser" xml:space="preserve">
+    <value>Display for user:</value>
+  </data>
+  <data name="str_EventTotalDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="str_EventTotalFirst" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="str_EventTotalLast" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="str_EventTotalDiff" xml:space="preserve">
+    <value>Difference</value>
   </data>
 </root>

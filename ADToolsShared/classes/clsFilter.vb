@@ -20,7 +20,7 @@ Public Class clsFilter
     End Sub
 
     Sub New(pattern As String,
-            attributes As ObservableCollection(Of clsAttribute),
+            attributes As ObservableCollection(Of clsAttributeSchema),
             searchobjectclasses As clsSearchObjectClasses)
 
         Me.Pattern = pattern
@@ -38,7 +38,7 @@ Public Class clsFilter
 
         Dim attrfilter = ""
         attributes.ToList.ForEach(
-            Sub(a As clsAttribute)
+            Sub(a As clsAttributeSchema)
                 patterns.ToList.ForEach(
                     Sub(p)
                         p = Trim(p)
@@ -56,7 +56,7 @@ Public Class clsFilter
                             freesuffix = False
                         End If
 
-                        If Not String.IsNullOrEmpty(p) Then attrfilter &= String.Format("({0}={1}{2}{3})", a.Name, If(freeprefix, "*", ""), p, If(freesuffix, "*", ""))
+                        If Not String.IsNullOrEmpty(p) Then attrfilter &= String.Format("({0}={1}{2}{3})", a.lDAPDisplayName, If(freeprefix, "*", ""), p, If(freesuffix, "*", ""))
                     End Sub)
             End Sub)
 

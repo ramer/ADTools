@@ -6,7 +6,7 @@
       xmlns:r="clr-namespace:ADTools.My.Resources"
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="300"
-      Title="{Binding name, Mode=OneWay}"
+      Title="{Binding name}"
       WindowWidth="900" WindowHeight="620"
       MinWidth="220"
       DataContext="{Binding Path=CurrentObject, RelativeSource={RelativeSource Self}}"
@@ -15,7 +15,7 @@
         <DockPanel x:Name="dpWrapper" LastChildFill="True">
             <StackPanel x:Name="spNav" MinWidth="200" HorizontalAlignment="Stretch" DockPanel.Dock="Left" Margin="10,5,10,5">
                 <Border BorderThickness="1" HorizontalAlignment="Center" BorderBrush="{DynamicResource ColorButtonBackground}" Margin="10,5,10,5">
-                    <Grid>
+                    <Grid x:Name="grdObjectImage">
                         <Image x:Name="imgPhoto" Source="{Binding thumbnailPhoto}" Width="150" Height="150"/>
                         <Image Width="120" Height="120" Source="{Binding ClassImage}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibilityInverted}}"/>
                         <Button x:Name="btnClearPhoto" Style="{StaticResource LightButton}" Content="🗑" MinWidth="20" MinHeight="20" IsEnabled="{Binding CanWrite[thumbnailPhoto]}" Visibility="{Binding HasValue[thumbnailPhoto], Converter={StaticResource ConverterBooleanToVisibility}}" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>

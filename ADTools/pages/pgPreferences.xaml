@@ -19,116 +19,173 @@
                 <TabItem Header="{x:Static r:Resources.str_MainWindow}">
                     <DockPanel Margin="5">
                         <DockPanel DockPanel.Dock="Bottom">
-                            <DockPanel LastChildFill="True">
-                                <DockPanel DockPanel.Dock="Top">
-                                    <Button x:Name="btnLayoutAddColumn" DockPanel.Dock="Right" Width="20" Content="✚" ToolTip="{x:Static r:Resources.str_LayoutAddColumn}"/>
-                                    <Button x:Name="btnLayoutRemoveLastColumn" DockPanel.Dock="Right" Width="20" Content="✖" ToolTip="{x:Static r:Resources.str_LayoutRemoveLastColumn}"/>
-                                    <Button x:Name="btnLayoutDefault" DockPanel.Dock="Left" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.str_LayoutDefault}" Margin="0,0,5,0"/>
-                                    <TextBlock Text="{x:Static r:Resources.str_Layout}" DockPanel.Dock="Left"/>
-                                </DockPanel>
-                                <Border BorderThickness="1" BorderBrush="{DynamicResource ColorButtonBackground}">
-                                    <Grid x:Name="grdLayout" ShowGridLines="True" AllowDrop="True" Background="Transparent" Height="200" >
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                            <ColumnDefinition></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="20"></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                            <RowDefinition></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                    </Grid>
-                                </Border>
+                            <DockPanel DockPanel.Dock="Top">
+                                <Button x:Name="btnLayoutDefault" DockPanel.Dock="Right" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.str_LayoutDefault}"/>
+                                <TextBlock Text="{x:Static r:Resources.str_Layout}" DockPanel.Dock="Left"/>
                             </DockPanel>
+                            <DataGrid x:Name="dgLayout"
+                                      Height="180"
+                                      AllowDrop="True"
+                                      HorizontalGridLinesBrush="{DynamicResource ColorButtonBackground}"
+                                      VerticalGridLinesBrush="{DynamicResource ColorButtonBackground}"
+                                      CanUserReorderColumns="True"
+                                      CanUserSortColumns="False"
+                                      SelectionMode="Single"
+                                      SelectionUnit="Cell"
+                                      RowHeaderWidth="0"
+                                      ColumnHeaderHeight="50"
+                                      RowHeight="40"
+                                      ColumnWidth="*"
+                                      IsReadOnly="True"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      >
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="DataGridCell">
+                                                    <Grid Background="{TemplateBinding Background}">
+                                                        <ContentPresenter VerticalAlignment="Center" TextBlock.TextAlignment="Center"/>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                <DataGrid.Resources>
+                                    <ContextMenu x:Key="DataGridColumnHeaderContextMenu">
+                                        <MenuItem Header="{x:Static r:Resources.str_LayoutAddColumn}" Click="mnuDataGridColumnHeaderAddColumn"/>
+                                        <MenuItem Header="{x:Static r:Resources.str_LayoutRemoveColumn}" Click="mnuDataGridColumnHeaderRemoveColumn"/>
+                                    </ContextMenu>
+                                </DataGrid.Resources>
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="ContextMenu" Value="{StaticResource DataGridColumnHeaderContextMenu}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="DataGridColumnHeader">
+                                                    <Border BorderThickness="0,0,1,1" BorderBrush="{DynamicResource ColorButtonBackground}">
+                                                        <Grid Margin="{TemplateBinding Padding}">
+                                                            <Border BorderThickness="10,0,10,0" BorderBrush="Transparent" >
+                                                                <!--<TextBlock Text="{TemplateBinding Content}" Height="24"/>-->
+                                                                <Grid x:Name="Panel">
+                                                                    <TextBox Text="{TemplateBinding Content}" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" LostFocus="tbDataGridColumnHeader_LostFocus" TextWrapping="WrapWithOverflow" FontWeight="Medium"/>
+                                                                    <Border BorderThickness="0" Background="Transparent" MouseLeftButtonDown="brdDataGridColumnHeader_MouseLeftButtonDown">
+                                                                    </Border>
+                                                                </Grid>
+                                                            </Border>
+                                                            <Thumb x:Name="PART_RightHeaderGripper"
+                                                                HorizontalAlignment="Right"
+                                                                Width="5"
+                                                                BorderThickness="3"
+                                                                BorderBrush="Transparent"
+                                                                Cursor="SizeWE">
+                                                            </Thumb>
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+
+                                </DataGrid.ColumnHeaderStyle>
+
+                            </DataGrid>
                         </DockPanel>
                         <DockPanel LastChildFill="True">
                             <Grid Margin="0,0,0,5">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="250"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Static r:Resources.str_AttributesDefault}" Grid.Column="0" Grid.Row="0"/>
-                                <TextBlock Text="{x:Static r:Resources.str_AttributesExtended}" Grid.Column="1" Grid.Row="0"/>
-                                <TextBlock Text="{x:Static r:Resources.str_AttributesForSearch}" Grid.Column="2" Grid.Row="0"/>
-                                <ListView x:Name="lvAttributesDefault" Grid.Column="0" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                    <ListView.View>
-                                        <GridView AllowsColumnReorder="False">
-                                            <GridView.Columns>
-                                                <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Label}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Name}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView.Columns>
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                                <ListView x:Name="lvAttributesExtended" Grid.Column="1" Grid.Row="1" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                    <ListView.View>
-                                        <GridView AllowsColumnReorder="False">
-                                            <GridView.Columns>
-                                                <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Label}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                                <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
-                                                    <GridViewColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBlock Text="{Binding Name}"/>
-                                                        </DataTemplate>
-                                                    </GridViewColumn.CellTemplate>
-                                                </GridViewColumn>
-                                            </GridView.Columns>
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                                <Grid Grid.Column="2" Grid.Row="1">
-                                    <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
-                                    <Button x:Name="btnAttributesForSearchDefault" HorizontalAlignment="Right" VerticalAlignment="Top" Width="29" Height="29" Content="⌗" Panel.ZIndex="5" ToolTip="{x:Static r:Resources.str_AttributesForSearchDefault}" />
-                                    <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                        <ListView.View>
-                                            <GridView AllowsColumnReorder="False">
-                                                <GridView.Columns>
-                                                    <GridViewColumn Header="{x:Static r:Resources.str_Name}" Width="120" local:clsSorter.PropertyName="Label">
-                                                        <GridViewColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Label}"/>
-                                                            </DataTemplate>
-                                                        </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>
-                                                    <GridViewColumn Header="{x:Static r:Resources.str_LdapName}" Width="120" local:clsSorter.PropertyName="Name">
-                                                        <GridViewColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <TextBlock Text="{Binding Name}"/>
-                                                            </DataTemplate>
-                                                        </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>
-                                                </GridView.Columns>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </Grid>
+                                <DockPanel Grid.Column="0">
+                                    <TextBlock Text="{x:Static r:Resources.str_AttributesDefault}" DockPanel.Dock="Top" Height="20"/>
+                                    <Grid>
+                                        <ListView x:Name="lvAttributes" 
+                                                AllowDrop="True"
+                                                TextSearch.TextPath="lDAPDisplayName" 
+                                                IsTextSearchEnabled="True" 
+                                                IsSynchronizedWithCurrentItem="True" 
+                                                local:clsSorter.AutoSort="True" 
+                                                VirtualizingPanel.IsVirtualizing="True"
+                                                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                                VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                                VirtualizingStackPanel.ScrollUnit="Pixel"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                            <ListView.View>
+                                                <GridView AllowsColumnReorder="False">
+                                                    <GridView.Columns>
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="300" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="300" local:clsSorter.PropertyName="Value">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding Value}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Header="D" Width="32" local:clsSorter.PropertyName="IsDefault">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsDefault, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                    </GridView.Columns>
+                                                </GridView>
+                                            </ListView.View>
+                                            <ListView.Resources>
+                                                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsIndexed}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListView.Resources>
+                                        </ListView>
+                                        <local:ctlCap x:Name="cap" Visibility="Hidden"/>
+                                    </Grid>
+                                </DockPanel>
+                                <DockPanel Grid.Column="1">
+                                    <DockPanel DockPanel.Dock="Top" Height="20">
+                                        <Button x:Name="btnAttributesForSearchDefault" DockPanel.Dock="Right" Width="20" Content="⌗" ToolTip="{x:Static r:Resources.str_AttributesForSearchDefault}" />
+                                        <TextBlock Text="{x:Static r:Resources.str_AttributesForSearch}" DockPanel.Dock="Top"/>
+                                    </DockPanel>
+                                    <Grid>
+                                        <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
+                                        <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                                            <ListView.View>
+                                                <GridView AllowsColumnReorder="False">
+                                                    <GridView.Columns>
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="400" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                    </GridView.Columns>
+                                                </GridView>
+                                            </ListView.View>
+                                            <ListView.Resources>
+                                                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsIndexed}" Value="True">
+                                                            <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListView.Resources>
+                                        </ListView>
+                                    </Grid>
+                                </DockPanel>
                             </Grid>
                         </DockPanel>
                     </DockPanel>
@@ -262,6 +319,7 @@
                             ItemsSource="{Binding ExternalSoftware}"
                             VirtualizingStackPanel.IsVirtualizing="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VirtualizingStackPanel.ScrollUnit="Pixel"
                             AutoGenerateColumns="False"
                             GridLinesVisibility="None"
                             IsSynchronizedWithCurrentItem="True"

@@ -64,6 +64,8 @@ Public Class clsDirectoryObject
 
     End Sub
 
+
+
     Sub New(DistinguishedName As String, ByRef Domain As clsDomain, Optional AttributeNames As String() = Nothing)
         _distinguishedName = DistinguishedName
         _domain = Domain
@@ -104,6 +106,12 @@ Public Class clsDirectoryObject
             Next
         End If
     End Sub
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If obj Is Nothing OrElse TypeOf obj IsNot clsDirectoryObject Then Return False
+        Dim target = CType(obj, clsDirectoryObject)
+        Return objectGUID.Equals(target.objectGUID)
+    End Function
 
     <RegistrySerializerAfterDeserialize(True)>
     Public Sub AfterDeserialize()
@@ -228,8 +236,20 @@ Public Class clsDirectoryObject
             Exit Sub
         End Try
 
+        ' only one object expercted
         If response.Entries.Count = 1 Then
             For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                If a.Name.Contains(";range=") Then
+                    Dim rangeparams() = a.Name.Split({";range="}, StringSplitOptions.RemoveEmptyEntries)
+                    If rangeparams.Count = 2 Then
+                        Dim rangelimits() = rangeparams(1).Split({"-"}, StringSplitOptions.RemoveEmptyEntries)
+                        If rangelimits.Count = 2 Then
+                            RefreshRanged(rangeparams(0), 1 + Integer.Parse(rangelimits(1)))
+                        End If
+                    End If
+                    Continue For
+                End If
+
                 If _cache.ContainsKey(a.Name) Then
                     _cache(a.Name) = a
                 Else
@@ -237,6 +257,38 @@ Public Class clsDirectoryObject
                 End If
             Next
         End If
+    End Sub
+
+    Private Sub RefreshRanged(attributename As String, pagesize As Integer)
+        Dim page As Integer = 0
+        Do
+
+            Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, {attributename & ";range=" & page * pagesize & "-" & (page + 1) * pagesize - 1})
+            searchRequest.Controls.Add(New ShowDeletedControl())
+
+            Dim response As SearchResponse
+            Try
+                response = Connection.SendRequest(searchRequest)
+            Catch ex As Exception
+                Exit Sub
+            End Try
+
+            ' only one object expercted
+            If response.Entries.Count = 1 Then
+                For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
+                    If _cache.ContainsKey(a.Name) Then
+                        _cache(a.Name) = a
+                    Else
+                        _cache.Add(a.Name, a)
+                    End If
+
+                    If a.Count = 0 Or a.Count < pagesize Then Exit Do
+                Next
+            End If
+
+            page += 1
+        Loop
+
     End Sub
 
     Public Sub RefreshAllAllowedAttributes()
@@ -244,34 +296,23 @@ Public Class clsDirectoryObject
 
         Debug.Print("Bulk allowed attributes refresh requested")
 
-        Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, AllowedAttributes.ToArray)
-        searchRequest.Controls.Add(New ShowDeletedControl())
-
-        Dim response As SearchResponse
-        Try
-            response = Connection.SendRequest(searchRequest)
-        Catch ex As Exception
-            Exit Sub
-        End Try
-
-        If response.Entries.Count = 1 Then
-            For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
-                If _cache.ContainsKey(a.Name) Then
-                    _cache(a.Name) = a
-                Else
-                    _cache.Add(a.Name, a)
-                End If
-            Next
-        End If
+        Refresh(AllowedAttributes.ToArray)
     End Sub
 
     Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
-        If returnType Is Nothing Then returnType = GetType(String) 'set default return type to String
-
         If Not _cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
         If Not _cache.ContainsKey(attributename) Then _cache.Add(attributename, Nothing) : Return Nothing
 
         If _cache(attributename) Is Nothing Then Return Nothing
+        If returnType Is Nothing Then
+            If _cache(attributename).Count = 0 Then
+                Return Nothing
+            ElseIf _cache(attributename).Count = 1 Then
+                returnType = GetType(String) 'set default return type to String
+            Else
+                returnType = GetType(String()) 'set default return type to String
+            End If
+        End If
 
         Select Case returnType
             Case GetType(String)
@@ -1121,19 +1162,19 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeDomainLocal() As Boolean
         Get
-            Return groupType And ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
+            Return groupType And mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
         End Get
         Set(ByVal value As Boolean)
             If value Then
                 Dim gt As Long = groupType
-                If Not (gt And ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
-                    gt = gt + ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
+                If Not (gt And mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
+                    gt = gt + mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
                 End If
-                If (gt And ADS_GROUP_TYPE_GLOBAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_GLOBAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP
                 End If
-                If (gt And ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_UNIVERSAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP
                 End If
                 groupType = gt
             End If
@@ -1143,19 +1184,19 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeGlobal() As Boolean
         Get
-            Return groupType And ADS_GROUP_TYPE_GLOBAL_GROUP
+            Return groupType And mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP
         End Get
         Set(ByVal value As Boolean)
             If value Then
                 Dim gt As Long = groupType
-                If (gt And ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
                 End If
-                If Not (gt And ADS_GROUP_TYPE_GLOBAL_GROUP) Then
-                    gt = gt + ADS_GROUP_TYPE_GLOBAL_GROUP
+                If Not (gt And mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP) Then
+                    gt = gt + mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP
                 End If
-                If (gt And ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_UNIVERSAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP
                 End If
                 groupType = gt
             End If
@@ -1165,19 +1206,19 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupTypeScopeUniversal() As Boolean
         Get
-            Return groupType And ADS_GROUP_TYPE_UNIVERSAL_GROUP
+            Return groupType And mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP
         End Get
         Set(ByVal value As Boolean)
             If value Then
                 Dim gt As Long = groupType
-                If (gt And ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_DOMAIN_LOCAL_GROUP
                 End If
-                If (gt And ADS_GROUP_TYPE_GLOBAL_GROUP) Then
-                    gt = gt - ADS_GROUP_TYPE_GLOBAL_GROUP
+                If (gt And mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP) Then
+                    gt = gt - mdlVariables.ADS_GROUP_TYPE_GLOBAL_GROUP
                 End If
-                If Not (gt And ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
-                    gt = gt + ADS_GROUP_TYPE_UNIVERSAL_GROUP
+                If Not (gt And mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP) Then
+                    gt = gt + mdlVariables.ADS_GROUP_TYPE_UNIVERSAL_GROUP
                 End If
                 groupType = gt
             End If
@@ -1187,16 +1228,16 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupTypeSecurity() As Boolean
         Get
-            Return groupType And ADS_GROUP_TYPE_SECURITY_ENABLED
+            Return groupType And mdlVariables.ADS_GROUP_TYPE_SECURITY_ENABLED
         End Get
         Set(ByVal value As Boolean)
             If value Then
-                If Not (groupType And ADS_GROUP_TYPE_SECURITY_ENABLED) Then
-                    groupType = groupType + ADS_GROUP_TYPE_SECURITY_ENABLED
+                If Not (groupType And mdlVariables.ADS_GROUP_TYPE_SECURITY_ENABLED) Then
+                    groupType = groupType + mdlVariables.ADS_GROUP_TYPE_SECURITY_ENABLED
                 End If
             Else
-                If (groupType And ADS_GROUP_TYPE_SECURITY_ENABLED) Then
-                    groupType = groupType - ADS_GROUP_TYPE_SECURITY_ENABLED
+                If (groupType And mdlVariables.ADS_GROUP_TYPE_SECURITY_ENABLED) Then
+                    groupType = groupType - mdlVariables.ADS_GROUP_TYPE_SECURITY_ENABLED
                 End If
             End If
         End Set
@@ -1509,17 +1550,17 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property normalAccount() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_NORMAL_ACCOUNT)
+            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
             If value Then
-                If Not (userAccountControl And ADS_UF_NORMAL_ACCOUNT) Then
-                    userAccountControl = userAccountControl + ADS_UF_NORMAL_ACCOUNT
+                If Not (userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
+                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_NORMAL_ACCOUNT
                 End If
             Else
-                If (userAccountControl And ADS_UF_NORMAL_ACCOUNT) Then
-                    userAccountControl = userAccountControl - ADS_UF_NORMAL_ACCOUNT
+                If (userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
+                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_NORMAL_ACCOUNT
                 End If
             End If
         End Set
@@ -1528,17 +1569,17 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property disabled() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_ACCOUNTDISABLE)
+            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
             If value Then
-                If Not (userAccountControl And ADS_UF_ACCOUNTDISABLE) Then
-                    userAccountControl = userAccountControl + ADS_UF_ACCOUNTDISABLE
+                If Not (userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
+                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_ACCOUNTDISABLE
                 End If
             Else
-                If (userAccountControl And ADS_UF_ACCOUNTDISABLE) Then
-                    userAccountControl = userAccountControl - ADS_UF_ACCOUNTDISABLE
+                If (userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
+                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_ACCOUNTDISABLE
                 End If
             End If
             description = String.Format("{0} {1} ({2})", If(value, My.Resources.str_Disabled, My.Resources.str_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
@@ -1563,17 +1604,17 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property passwordNeverExpires() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And ADS_UF_DONT_EXPIRE_PASSWD)
+            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
             If value Then
-                If Not (userAccountControl And ADS_UF_DONT_EXPIRE_PASSWD) Then
-                    userAccountControl = userAccountControl + ADS_UF_DONT_EXPIRE_PASSWD
+                If Not (userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
+                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
                 End If
             Else
-                If (userAccountControl And ADS_UF_DONT_EXPIRE_PASSWD) Then
-                    userAccountControl = userAccountControl - ADS_UF_DONT_EXPIRE_PASSWD
+                If (userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
+                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
                 End If
             End If
         End Set
@@ -1716,8 +1757,35 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
+
+            'Dim searchRequest = New SearchRequest(Domain.DefaultNamingContext, "(memberof=" & distinguishedName & ")", Protocols.SearchScope.Subtree, {"distinguishedName"})
+            'searchRequest.Controls.Add(New ShowDeletedControl())
+            'searchRequest.Controls.Add(New SearchOptionsControl(SearchOption.DomainScope))
+
+            'Dim response As SearchResponse
+            'Try
+            '    response = Connection.SendRequest(searchRequest)
+
+            '    Debug.Print(String.Format("Total {0}", response.Entries.Count))
+
+            '    For Each entry In response.Entries
+            '        Debug.Print(DirectCast(entry, System.DirectoryServices.Protocols.SearchResultEntry).DistinguishedName)
+            '    Next
+
+            'Catch ex As Exception
+            '    Return Nothing
+            'End Try
+
             If _member Is Nothing Then
-                Dim o As String() = GetAttribute("member", GetType(String()))
+                Refresh({"member"})
+                Dim members As New List(Of String)
+                For Each k In Cache.Keys.Where(Function(name) name = "member" Or name.StartsWith("member;"))
+                    For Each m As String In GetAttribute(k, GetType(String()))
+                        members.Add(m)
+                        Debug.Print(m)
+                    Next
+                Next
+                Dim o As String() = members.ToArray
 
                 If o Is Nothing Then
                     _member = New ObservableCollection(Of clsDirectoryObject)
@@ -1726,6 +1794,7 @@ Public Class clsDirectoryObject
                 End If
             End If
             Return _member
+
         End Get
     End Property
 

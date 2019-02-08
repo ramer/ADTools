@@ -28,4 +28,8 @@
         CurrentObject = obj
     End Sub
 
+    Private Sub hlManagedBy_Click(sender As Object, e As RoutedEventArgs) Handles hlManagedBy.Click
+        If CurrentObject.managedBy Is Nothing Then Exit Sub
+        ShowDirectoryObjectProperties(CurrentObject.managedBy, Window.GetWindow(Me))
+    End Sub
 End Class

@@ -46,23 +46,24 @@ Public Class clsSorter
         "AutoSort",
         GetType(Boolean),
         GetType(clsSorter),
-        New UIPropertyMetadata(False,
-                               Sub(o, e)
-                                   Dim listView As ListView = TryCast(o, ListView)
-                                   If listView IsNot Nothing Then
-                                       If GetCommand(listView) Is Nothing Then
-                                           ' Don't change click handler if a command is set
-                                           Dim oldValue As Boolean = CBool(e.OldValue)
-                                           Dim newValue As Boolean = CBool(e.NewValue)
-                                           If oldValue AndAlso Not newValue Then
-                                               listView.[RemoveHandler](GridViewColumnHeader.ClickEvent, New RoutedEventHandler(AddressOf ColumnHeader_Click))
-                                           End If
-                                           If Not oldValue AndAlso newValue Then
-                                               listView.[AddHandler](GridViewColumnHeader.ClickEvent, New RoutedEventHandler(AddressOf ColumnHeader_Click))
-                                           End If
-                                       End If
-                                   End If
-                               End Sub))
+        New UIPropertyMetadata(
+            False,
+            Sub(o, e)
+                Dim listView As ListView = TryCast(o, ListView)
+                If listView IsNot Nothing Then
+                    If GetCommand(listView) Is Nothing Then
+                        ' Don't change click handler if a command is set
+                        Dim oldValue As Boolean = CBool(e.OldValue)
+                        Dim newValue As Boolean = CBool(e.NewValue)
+                        If oldValue AndAlso Not newValue Then
+                            listView.[RemoveHandler](GridViewColumnHeader.ClickEvent, New RoutedEventHandler(AddressOf ColumnHeader_Click))
+                        End If
+                        If Not oldValue AndAlso newValue Then
+                            listView.[AddHandler](GridViewColumnHeader.ClickEvent, New RoutedEventHandler(AddressOf ColumnHeader_Click))
+                        End If
+                    End If
+                End If
+            End Sub))
 
     Public Shared Function GetPropertyName(obj As DependencyObject) As String
         If obj Is Nothing Then Return Nothing
@@ -116,8 +117,7 @@ Public Class clsSorter
         End If
     End Function
 
-    Public Shared Sub ApplySort(view As ICollectionView, propertyName As String)
-        Dim direction As ListSortDirection = ListSortDirection.Ascending
+    Public Shared Sub ApplySort(view As ICollectionView, propertyName As String, Optional direction As ListSortDirection = ListSortDirection.Ascending)
         If view.SortDescriptions.Count > 0 Then
             Dim currentSort As SortDescription = view.SortDescriptions(0)
             If currentSort.PropertyName = propertyName Then

@@ -68,7 +68,6 @@
                     </DockPanel>
 
                     <Grid Margin="0,0,0,4">
-                        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
                         <local:ListViewExtended x:Name="lvObjects"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -77,12 +76,13 @@
                             VirtualizingPanel.IsVirtualizing="True"
                             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                             VirtualizingStackPanel.VirtualizationMode="Recycling"
+                            VirtualizingStackPanel.ScrollUnit="Pixel"
                             KeyboardNavigation.DirectionalNavigation="None"
                             ViewStyleTiles="{StaticResource ListViewExtended_ViewStyleTiles}"
                             ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
                             ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
                             GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
-
+                            local:clsSorter.AutoSort="True"
                             >
 
                             <ListView.ContextMenu>
@@ -139,6 +139,7 @@
                             </ListView.ContextMenu>
 
                         </local:ListViewExtended>
+                        <local:ctlCap x:Name="cap" Visibility="Hidden"/>
                     </Grid>
                 </DockPanel>
 

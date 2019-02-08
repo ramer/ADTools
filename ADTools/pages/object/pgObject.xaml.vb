@@ -117,7 +117,7 @@ Class pgObject
     End Sub
 
     Private Sub imgPhoto_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgPhoto.MouseDown
-        Navigate(New pgUserPhoto(CurrentObject))
+        If e.ClickCount = 2 Then Navigate(New pgUserPhoto(CurrentObject))
     End Sub
 
     Public Sub Navigate(pg As Page)
@@ -155,5 +155,16 @@ Class pgObject
     Private Sub btnClearPhoto_Click(sender As Object, e As RoutedEventArgs) Handles btnClearPhoto.Click
         If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_ClearPhoto, Window.GetWindow(Me)) = MsgBoxResult.Yes Then CurrentObject.thumbnailPhoto = Nothing
     End Sub
+
+#Region "Drag'n'Drop"
+
+    Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles grdObjectImage.MouseMove
+        If e.LeftButton = MouseButtonState.Pressed Then
+            Dim dragData As New DataObject({CurrentObject})
+            DragDrop.DoDragDrop(Me, dragData, DragDropEffects.Copy)
+        End If
+    End Sub
+
+#End Region
 
 End Class

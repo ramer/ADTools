@@ -29,7 +29,8 @@ Public Class clsPreferences
     Private _columns As New ObservableCollection(Of clsViewColumnInfo)
 
     ' search attributes
-    Private _attributesforsearch As New ObservableCollection(Of clsAttribute)
+    Private _attributesforsearchnames As New List(Of String)
+    Private _attributesforsearch As ObservableCollection(Of clsAttributeSchema)
     Private _searchmode As enmSearchMode
     Private _searchobjectclasses As clsSearchObjectClasses
 
@@ -171,7 +172,7 @@ Public Class clsPreferences
             Return _columns
         End Get
         Set(value As ObservableCollection(Of clsViewColumnInfo))
-            _columns = If(value, GetDefaultColumns())
+            _columns = If(value, columnsDefault)
             NotifyPropertyChanged("Columns")
         End Set
     End Property
@@ -196,11 +197,11 @@ Public Class clsPreferences
         End Set
     End Property
 
-    Public Property AttributesForSearch() As ObservableCollection(Of clsAttribute)
+    Public Property AttributesForSearch As ObservableCollection(Of clsAttributeSchema)
         Get
             Return _attributesforsearch
         End Get
-        Set(value As ObservableCollection(Of clsAttribute))
+        Set(value As ObservableCollection(Of clsAttributeSchema))
             _attributesforsearch = If(value, attributesForSearchDefault)
             NotifyPropertyChanged("AttributesForSearch")
         End Set

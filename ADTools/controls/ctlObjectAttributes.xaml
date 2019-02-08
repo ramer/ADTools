@@ -41,6 +41,7 @@
                     AlternationCount="2"
                     VirtualizingStackPanel.IsVirtualizing="True"
                     VirtualizingStackPanel.VirtualizationMode="Recycling"
+                    VirtualizingStackPanel.ScrollUnit="Pixel"
                     AutoGenerateColumns="False"
                     GridLinesVisibility="None"
                     IsSynchronizedWithCurrentItem="True"

@@ -359,7 +359,6 @@ Class pgObjects
             If cvcurrentobjects.Filter IsNot Nothing Then
                 Dim fdmnuclear As New MenuItem
                 fdmnuclear.Header = My.Resources.ctxmnu_PostfilterClear
-                fdmnuclear.Tag = New clsAttribute("", "", "")
                 AddHandler fdmnuclear.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
                 ctxmnuObjectsFilterData.Items.Add(fdmnuclear)
                 ctxmnuObjectsFilterData.Items.Add(New Separator)
@@ -368,18 +367,18 @@ Class pgObjects
             Dim statusvalue As clsDirectoryObject.enmStatus = GetType(clsDirectoryObject).GetProperty("Status").GetValue(objects(0))
             Dim fdmnustatus As New MenuItem
             fdmnustatus.Header = statusvalue.ToString
-            fdmnustatus.Tag = New clsAttribute("Status", "Status", statusvalue)
+            fdmnustatus.Tag = New KeyValuePair(Of String, String)("Status", statusvalue)
             AddHandler fdmnustatus.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
             ctxmnuObjectsFilterData.Items.Add(fdmnustatus)
 
             For Each columninfo In preferences.Columns
                 For Each attr In columninfo.Attributes
-                    If GetType(clsDirectoryObject).GetProperty(attr.Name).PropertyType Is GetType(String) Then
-                        Dim value As String = GetType(clsDirectoryObject).GetProperty(attr.Name).GetValue(objects(0))
+                    If GetType(clsDirectoryObject).GetProperty(attr).PropertyType Is GetType(String) Then
+                        Dim value As String = GetType(clsDirectoryObject).GetProperty(attr).GetValue(objects(0))
                         If Not String.IsNullOrEmpty(value) Then
                             Dim fdmnu As New MenuItem
                             fdmnu.Header = value
-                            fdmnu.Tag = New clsAttribute(attr.Name, attr.Label, value)
+                            fdmnu.Tag = New KeyValuePair(Of String, String)(attr, value)
                             AddHandler fdmnu.Click, AddressOf ctxmnuObjectsFilterDataItem_Click
                             ctxmnuObjectsFilterData.Items.Add(fdmnu)
                         End If
@@ -408,8 +407,8 @@ Class pgObjects
             For Each col As clsViewColumnInfo In preferences.Columns
                 For Each attr In col.Attributes
                     Dim cdmnu As New MenuItem
-                    cdmnu.Header = attr.Label
-                    cdmnu.Tag = attr.Name
+                    cdmnu.Header = attr
+                    cdmnu.Tag = attr
                     AddHandler cdmnu.Click, AddressOf ctxmnuObjectsCopyDataItem_Click
                     ctxmnuObjectsCopyData.Items.Add(cdmnu)
                 Next
@@ -491,13 +490,13 @@ Class pgObjects
         Dim objects() As clsDirectoryObject = CType(CType(CType(sender, MenuItem).Parent, MenuItem).Parent, ContextMenu).Tag
         Dim cdmnu As MenuItem = CType(sender, MenuItem)
         If cdmnu Is Nothing Then Exit Sub
-        If cdmnu.Tag Is Nothing Then Exit Sub
 
-        If TypeOf cdmnu.Tag IsNot clsAttribute Then Exit Sub
+        If cdmnu.Tag Is Nothing Then ApplyPostfilter(,)
+        If TypeOf cdmnu.Tag IsNot KeyValuePair(Of String, String) Then Exit Sub
 
-        Dim attr As clsAttribute = cdmnu.Tag
+        Dim attr As KeyValuePair(Of String, String) = cdmnu.Tag
         Try
-            ApplyPostfilter(attr.Name, attr.Value)
+            ApplyPostfilter(attr.Key, attr.Value)
         Catch ex As Exception
             IMsgBox(ex.Message, vbExclamation)
         End Try
@@ -609,41 +608,6 @@ Class pgObjects
 
         End If
     End Sub
-
-    Public Function CreateColumn(columninfo As clsViewColumnInfo) As DataGridTemplateColumn
-        Dim column As New DataGridTemplateColumn()
-        column.Header = columninfo.Header
-        column.SetValue(DataGridColumn.CanUserSortProperty, True)
-        If columninfo.DisplayIndex > 0 Then column.DisplayIndex = columninfo.DisplayIndex
-        column.Width = If(columninfo.Width > 0, columninfo.Width, 0)
-        column.MinWidth = 58
-        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-        panel.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center)
-        panel.SetValue(MarginProperty, New Thickness(5, 0, 5, 0))
-
-        Dim first As Boolean = True
-        For Each attr As clsAttribute In columninfo.Attributes
-            Dim bind As New Binding(attr.Name) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr.Name}
-
-
-            Dim container As New FrameworkElementFactory(GetType(ItemsControl))
-            If first Then
-                first = False
-                container.SetValue(ItemsControl.FontWeightProperty, FontWeights.Bold)
-                column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-            End If
-
-            container.SetBinding(ItemsControl.ItemsSourceProperty, bind)
-            container.SetValue(ToolTipProperty, attr.Label)
-            panel.AppendChild(container)
-        Next
-
-        Dim template As New DataTemplate()
-        template.VisualTree = panel
-        column.CellTemplate = template
-
-        Return column
-    End Function
 
     Public Sub ObjectsCopy(destination As clsDirectoryObject, sourceobjects() As clsDirectoryObject)
         If sourceobjects(0).Domain Is destination.Domain Then ' same domain
