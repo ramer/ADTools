@@ -132,15 +132,15 @@ Class pgObject
         Dim pg As Page = Nothing
         If FirstPage Is Nothing Then
             Select Case CurrentObject.SchemaClass
-                Case clsDirectoryObject.enmSchemaClass.User
+                Case enmDirectoryObjectSchemaClass.User
                     pg = New pgUserBasicInformation(CurrentObject)
-                Case clsDirectoryObject.enmSchemaClass.Computer
+                Case enmDirectoryObjectSchemaClass.Computer
                     pg = New pgComputerBasicInformation(CurrentObject)
-                Case clsDirectoryObject.enmSchemaClass.Group
+                Case enmDirectoryObjectSchemaClass.Group
                     pg = New pgGroupBasicInformation(CurrentObject)
-                Case clsDirectoryObject.enmSchemaClass.Contact
+                Case enmDirectoryObjectSchemaClass.Contact
                     pg = New pgContactBasicInformation(CurrentObject)
-                Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Case enmDirectoryObjectSchemaClass.OrganizationalUnit
                     pg = New pgOrganizationalUnitBasicInformation(CurrentObject)
                 Case Else
                     pg = New pgObjectAllAttributes(CurrentObject)

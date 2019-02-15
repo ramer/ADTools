@@ -206,11 +206,11 @@ Class pgMain
             End If
 
             For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
+                If Not (obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit) Then e.Effects = DragDropEffects.None : Exit For
             Next
         Else
             e.Effects = DragDropEffects.None
@@ -224,18 +224,18 @@ Class pgMain
         If TypeOf sp.Tag IsNot clsDirectoryObject Then Exit Sub
         Dim destination As clsDirectoryObject = sp.Tag
 
-        If Not (destination.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            destination.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then Exit Sub
+        If Not (destination.SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+            destination.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+            destination.SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer) Then Exit Sub
 
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
             For Each obj As clsDirectoryObject In dropped
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit) Then Exit Sub
+                If Not (obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit) Then Exit Sub
             Next
 
             If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
@@ -287,10 +287,10 @@ Class pgMain
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
 
         If objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.DomainDNS Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer) Then
 
             ShowPage(New pgCreateObject(objects(0), objects(0).Domain), False, Window.GetWindow(Me), False)
         Else
@@ -311,11 +311,11 @@ Class pgMain
 
         ClipboardBuffer = objects.Where(
             Function(obj)
-                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Return obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit
             End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Copy
@@ -333,11 +333,11 @@ Class pgMain
 
         ClipboardBuffer = objects.Where(
             Function(obj)
-                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Return obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit
             End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Cut
@@ -347,9 +347,9 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim destinations() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (destinations.Count = 1 AndAlso (
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer)) Then Exit Sub
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer)) Then Exit Sub
 
         If Not (ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0) Then Exit Sub
 
@@ -376,11 +376,11 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim organizationalunitaffected As Boolean = False
@@ -388,7 +388,7 @@ Class pgMain
             Dim obj As clsDirectoryObject = objects(0)
             Dim name As String = IInputBox(My.Resources.str_EnterObjectName, My.Resources.str_RenameObject, objects(0).name, vbQuestion, Window.GetWindow(Me))
             If Len(name) > 0 Then
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+                If obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then
                     obj.Rename("OU=" & name)
                     organizationalunitaffected = True
                 Else
@@ -408,11 +408,11 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim currentcontaineraffected As Boolean = False
@@ -421,7 +421,7 @@ Class pgMain
             Dim pg = CurrentObjectsPage()
             If pg Is Nothing Then Exit Sub
 
-            If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+            If objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then
                 If IMsgBox(My.Resources.str_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.str_AreYouSure, vbYesNo + vbExclamation, My.Resources.str_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
                 If pg.currentcontainer IsNot Nothing AndAlso objects(0).distinguishedName = pg.currentcontainer.distinguishedName Then currentcontaineraffected = True
             End If
@@ -465,7 +465,7 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_PasswordReset, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
@@ -483,8 +483,8 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.str_Enable, My.Resources.str_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
@@ -500,7 +500,7 @@ Class pgMain
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)

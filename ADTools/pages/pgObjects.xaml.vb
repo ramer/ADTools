@@ -66,10 +66,10 @@ Class pgObjects
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
 
         If objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer) Then
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.DomainDNS Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer) Then
 
             ShowPage(New pgCreateObject(objects(0), objects(0).Domain), False, Window.GetWindow(Me), False)
         Else
@@ -90,11 +90,11 @@ Class pgObjects
 
         ClipboardBuffer = objects.Where(
             Function(obj)
-                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Return obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit
             End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Copy
@@ -112,11 +112,11 @@ Class pgObjects
 
         ClipboardBuffer = objects.Where(
             Function(obj)
-                Return obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-                       obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Return obj.SchemaClass = enmDirectoryObjectSchemaClass.User Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+                       obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit
             End Function).ToArray
 
         ClipboardAction = enmClipboardAction.Cut
@@ -126,9 +126,9 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim destinations() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (destinations.Count = 1 AndAlso (
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-            destinations(0).SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer)) Then Exit Sub
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+            destinations(0).SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer)) Then Exit Sub
 
         If Not (ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0) Then Exit Sub
 
@@ -151,11 +151,11 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim organizationalunitaffected As Boolean = False
@@ -163,7 +163,7 @@ Class pgObjects
             Dim obj As clsDirectoryObject = objects(0)
             Dim name As String = IInputBox(My.Resources.str_EnterObjectName, My.Resources.str_RenameObject, objects(0).name, vbQuestion, Window.GetWindow(Me))
             If Len(name) > 0 Then
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+                If obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then
                     obj.Rename("OU=" & name)
                     organizationalunitaffected = True
                 Else
@@ -183,17 +183,17 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit)) Then Exit Sub
 
         Try
             Dim currentcontaineraffected As Boolean = False
 
             If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
-            If objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+            If objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then
                 If IMsgBox(My.Resources.str_ThisIsOrganizationaUnit & vbCrLf & vbCrLf & My.Resources.str_AreYouSure, vbYesNo + vbExclamation, My.Resources.str_RemoveObject, Window.GetWindow(Me)) <> MsgBoxResult.Yes Then Exit Sub
                 If currentcontainer IsNot Nothing AndAlso objects(0).distinguishedName = currentcontainer.distinguishedName Then currentcontaineraffected = True
             End If
@@ -238,7 +238,7 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_PasswordReset, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
@@ -256,8 +256,8 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer)) Then Exit Sub
 
         Try
             If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.str_Enable, My.Resources.str_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
@@ -273,7 +273,7 @@ Class pgObjects
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
         Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
         If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)) Then Exit Sub
+            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
 
         Try
             objects(0).accountExpiresDate = Today.AddDays(1)
@@ -316,7 +316,7 @@ Class pgObjects
         ctxmnuObjectsRestoreToContainer.Visibility = BooleanToVisibility(alldeleted)
         ctxmnuObjectsRestoreSeparator.Visibility = ctxmnuObjectsRestore.Visibility
 
-        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(preferences.ExternalSoftware.Count > 0 AndAlso objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
+        ctxmnuObjectsExternalSoftware.Visibility = BooleanToVisibility(preferences.ExternalSoftware.Count > 0 AndAlso objects.Count = 1 AndAlso (objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer))
 
         ctxmnuObjectsSelectAll.Visibility = BooleanToVisibility(lvObjects.Items.Count > 1)
         ctxmnuObjectsSelectAllSeparator.Visibility = ctxmnuObjectsSelectAll.Visibility
@@ -326,10 +326,10 @@ Class pgObjects
         ctxmnuObjectsCopy.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsCopySeparator.Visibility = ctxmnuObjectsCopy.Visibility
         ctxmnuObjectsCut.Visibility = BooleanToVisibility(objects.Count > 0)
-        ctxmnuObjectsPaste.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS))
+        ctxmnuObjectsPaste.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Container Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.DomainDNS))
         ctxmnuObjectsPaste.IsEnabled = ClipboardBuffer IsNot Nothing AndAlso ClipboardBuffer.Count > 0
-        ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
-        ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Group Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User))
+        ctxmnuObjectsRename.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User))
+        ctxmnuObjectsRemove.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Contact Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Group Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User))
         ctxmnuObjectsCopyData.Visibility = BooleanToVisibility(objects.Count > 0)
         ctxmnuObjectsCopyDataSeparator.Visibility = ctxmnuObjectsCopyData.Visibility
         ctxmnuObjectsFilterData.Visibility = BooleanToVisibility(objects.Count = 1)
@@ -337,9 +337,9 @@ Class pgObjects
         ctxmnuObjectsOpenObjectLocation.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
         ctxmnuObjectsOpenObjectTree.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso currentcontainer Is Nothing)
 
-        ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
-        ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User Or objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.Computer))
-        ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = clsDirectoryObject.enmSchemaClass.User)
+        ctxmnuObjectsResetPassword.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)
+        ctxmnuObjectsDisableEnable.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso (objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer))
+        ctxmnuObjectsExpirationDate.Visibility = BooleanToVisibility(objects.Count = 1 AndAlso objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)
 
         ctxmnuObjectsProperties.Visibility = BooleanToVisibility(objects.Count = 1)
         ctxmnuObjectsPropertiesSeparator.Visibility = ctxmnuObjectsProperties.Visibility
@@ -364,7 +364,7 @@ Class pgObjects
                 ctxmnuObjectsFilterData.Items.Add(New Separator)
             End If
 
-            Dim statusvalue As clsDirectoryObject.enmStatus = GetType(clsDirectoryObject).GetProperty("Status").GetValue(objects(0))
+            Dim statusvalue As enmDirectoryObjectStatus = GetType(clsDirectoryObject).GetProperty("Status").GetValue(objects(0))
             Dim fdmnustatus As New MenuItem
             fdmnustatus.Header = statusvalue.ToString
             fdmnustatus.Tag = New KeyValuePair(Of String, String)("Status", statusvalue)
@@ -524,10 +524,10 @@ Class pgObjects
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
-        If (current.SchemaClass = clsDirectoryObject.enmSchemaClass.Container Or
-           current.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Or
-           current.SchemaClass = clsDirectoryObject.enmSchemaClass.UnknownContainer Or
-           current.SchemaClass = clsDirectoryObject.enmSchemaClass.DomainDNS) AndAlso
+        If (current.SchemaClass = enmDirectoryObjectSchemaClass.Container Or
+           current.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
+           current.SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer Or
+           current.SchemaClass = enmDirectoryObjectSchemaClass.DomainDNS) AndAlso
            (current.IsRecycled Is Nothing OrElse current.IsRecycled = False) Then
             StartSearch(current, Nothing)
         Else
@@ -618,7 +618,7 @@ Class pgObjects
             Dim w As New pgCreateObject(destination, destination.Domain)
 
             Select Case sourceobjects(0).SchemaClass
-                Case clsDirectoryObject.enmSchemaClass.User
+                Case enmDirectoryObjectSchemaClass.User
                     w.copyingobject = sourceobjects(0)
                     w.tbUserDisplayname.Text = sourceobjects(0).displayName
                     w.tbUserObjectName.Text = sourceobjects(0).displayName & "_copy"
@@ -626,12 +626,12 @@ Class pgObjects
                     w.cmboUserUserPrincipalNameDomain.SelectedItem = sourceobjects(0).userPrincipalNameDomain
                     w.tabctlObject.SelectedIndex = 0
 
-                Case clsDirectoryObject.enmSchemaClass.Computer
+                Case enmDirectoryObjectSchemaClass.Computer
                     w.copyingobject = sourceobjects(0)
                     w.cmboComputerObjectName.Text = sourceobjects(0).name & "_copy"
                     w.tabctlObject.SelectedIndex = 1
 
-                Case clsDirectoryObject.enmSchemaClass.Group
+                Case enmDirectoryObjectSchemaClass.Group
                     w.copyingobject = sourceobjects(0)
                     w.rbGroupScopeDomainLocal.IsChecked = sourceobjects(0).groupTypeScopeDomainLocal
                     w.rbGroupScopeGlobal.IsChecked = sourceobjects(0).groupTypeScopeGlobal
@@ -641,13 +641,13 @@ Class pgObjects
                     w.tbGroupObjectName.Text = sourceobjects(0).name & "_copy"
                     w.tabctlObject.SelectedIndex = 2
 
-                Case clsDirectoryObject.enmSchemaClass.Contact
+                Case enmDirectoryObjectSchemaClass.Contact
                     w.copyingobject = sourceobjects(0)
                     w.tbContactDisplayname.Text = sourceobjects(0).displayName
                     w.tbContactObjectName.Text = sourceobjects(0).displayName & "_copy"
                     w.tabctlObject.SelectedIndex = 3
 
-                Case clsDirectoryObject.enmSchemaClass.OrganizationalUnit
+                Case enmDirectoryObjectSchemaClass.OrganizationalUnit
                     w.copyingobject = sourceobjects(0)
                     w.tbOrganizationalUnitObjectName.Text = sourceobjects(0).name & "_copy"
                     w.tabctlObject.SelectedIndex = 4
@@ -678,7 +678,7 @@ Class pgObjects
 
         Try
             For Each obj In sourceobjects
-                If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
+                If obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then organizationalunitaffected = True
 
                 obj.MoveTo(destination.distinguishedName)
             Next
@@ -690,6 +690,74 @@ Class pgObjects
         'TODO
         'If organizationalunitaffected Then RefreshDomainTree()
     End Sub
+
+    Public Function GetViewDetailsStyle() As Style
+
+        Dim newstyle As New Style
+        newstyle.BasedOn = Windows.Application.Current.TryFindResource(GetType(ListView))
+        newstyle.TargetType = GetType(ListView)
+
+        newstyle.Setters.Add(New Setter(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+        newstyle.Setters.Add(New Setter(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
+        newstyle.Setters.Add(New Setter(ScrollViewer.CanContentScrollProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
+        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
+        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel))
+        newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
+
+        Dim vsp = New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+        vsp.SetValue(VirtualizingStackPanel.HorizontalAlignmentProperty, HorizontalAlignment.Left)
+        Dim ipt = New ItemsPanelTemplate()
+        ipt.VisualTree = vsp
+        newstyle.Setters.Add(New Setter(ListView.ItemsPanelProperty, ipt))
+
+        Dim gridview As New GridView
+
+        gridview.Columns.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"StatusImage"}, 0, 60)))
+        For Each columninfo As clsViewColumnInfo In preferences.Columns
+            gridview.Columns.Add(CreateViewDetailsStyleColumn(columninfo))
+        Next
+
+        newstyle.Setters.Add(New Setter(ListView.ViewProperty, gridview))
+
+        Return newstyle
+    End Function
+
+    Public Function CreateViewDetailsStyleColumn(columninfo As clsViewColumnInfo) As GridViewColumn
+        Dim column As New GridViewColumn()
+        column.Header = columninfo.Header
+        If columninfo.Attributes.Count > 0 Then column.SetValue(clsSorter.PropertyNameProperty, columninfo.Attributes(0))
+        column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
+        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
+        panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
+        panel.SetValue(FrameworkElement.MarginProperty, New Thickness(0))
+
+        Dim firstline As Boolean = True
+        For Each attr As String In columninfo.Attributes
+            Dim bind As New Binding(attr) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr}
+
+            Dim container As New FrameworkElementFactory(GetType(ContentControl))
+            If firstline Then
+                firstline = False
+                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
+                'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
+            Else
+                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
+            End If
+
+            container.SetBinding(ContentControl.ContentProperty, bind)
+            container.SetValue(FrameworkElement.ToolTipProperty, attr)
+            container.SetValue(FrameworkElement.MaxHeightProperty, 48.0)
+            panel.AppendChild(container)
+        Next
+
+        Dim template As New DataTemplate()
+        template.VisualTree = panel
+        column.CellTemplate = template
+
+        Return column
+    End Function
 
 #End Region
 

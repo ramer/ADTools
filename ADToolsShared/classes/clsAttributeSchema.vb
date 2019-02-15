@@ -39,6 +39,11 @@ Public Class clsAttributeSchema
         Value = obj.GetAttribute(lDAPDisplayName)
     End Sub
 
+    Public Sub SetStringValueFromDirectoryObject(obj As clsDirectoryObject)
+        If obj Is Nothing Then Exit Sub
+        Value = Join(CType(obj.GetAttribute(lDAPDisplayName, GetType(String())), String()), "; ")
+    End Sub
+
     Public Property adminDisplayName() As String
     Public Property isSingleValued As Boolean
     Public Property searchFlags As Integer
@@ -46,7 +51,7 @@ Public Class clsAttributeSchema
     Public Property lDAPDisplayName As String
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property type As enmADSType
+    Public ReadOnly Property ADSType As enmADSType
         Get
             If AttributeSchemeType.ContainsKey(attributeSyntax) Then
                 Return AttributeSchemeType(attributeSyntax)

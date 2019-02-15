@@ -22,10 +22,7 @@ Public Class pgPreferences
         Set(ByVal value As clsDirectoryObject)
             SetValue(CurrentObjectProperty, value)
 
-            For Each attr In Attributes
-                attr.SetValueFromDirectoryObject(value)
-            Next
-
+            ShowObjectAttributes(value)
         End Set
     End Property
 
@@ -119,9 +116,17 @@ Public Class pgPreferences
         End If
     End Sub
 
-    Private Sub ShowObjectAttributes()
-
+    Private Async Sub ShowObjectAttributes(obj As clsDirectoryObject)
+        capAttributes.Visibility = Visibility.Visible
+        Await Task.Run(
+            Sub()
+                For Each attr In Attributes
+                    attr.SetStringValueFromDirectoryObject(obj)
+                Next
+            End Sub)
+        capAttributes.Visibility = Visibility.Hidden
     End Sub
+
 
     Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvAttributes.MouseMove, lvAttributesForSearch.MouseMove
         Dim listView As ListView = TryCast(sender, ListView)

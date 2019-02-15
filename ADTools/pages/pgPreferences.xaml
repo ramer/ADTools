@@ -116,14 +116,14 @@
                                             <ListView.View>
                                                 <GridView AllowsColumnReorder="False">
                                                     <GridView.Columns>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="300" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="280" local:clsSorter.PropertyName="lDAPDisplayName">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
                                                                 </DataTemplate>
                                                             </GridViewColumn.CellTemplate>
                                                         </GridViewColumn>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="300" local:clsSorter.PropertyName="Value">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="280" local:clsSorter.PropertyName="Value">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding Value}"/>
@@ -150,7 +150,7 @@
                                                 </Style>
                                             </ListView.Resources>
                                         </ListView>
-                                        <local:ctlCap x:Name="cap" Visibility="Hidden"/>
+                                        <local:ctlCap x:Name="capAttributes" Visibility="Hidden"/>
                                     </Grid>
                                 </DockPanel>
                                 <DockPanel Grid.Column="1">

@@ -250,15 +250,15 @@ Module mdlTools
     Public Function ShowDirectoryObjectProperties(obj As clsDirectoryObject, Optional owner As Window = Nothing) As NavigationWindow
         Dim p As Page
 
-        If obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
+        If obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then
             p = New pgObject(obj)
-        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Contact Then
+        ElseIf obj.SchemaClass = enmDirectoryObjectSchemaClass.Contact Then
             p = New pgObject(obj)
-        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer Then
+        ElseIf obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
             p = New pgObject(obj)
-        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
+        ElseIf obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Then
             p = New pgObject(obj)
-        ElseIf obj.SchemaClass = clsDirectoryObject.enmSchemaClass.OrganizationalUnit Then
+        ElseIf obj.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Then
             p = New pgObject(obj)
         Else
             p = New pgObject(obj)
@@ -289,68 +289,6 @@ Module mdlTools
         Catch
             Return ""
         End Try
-    End Function
-
-    Public Function GetViewDetailsStyle() As Style
-
-        Dim newstyle As New Style
-        newstyle.BasedOn = Windows.Application.Current.TryFindResource(GetType(ListView))
-        newstyle.TargetType = GetType(ListView)
-
-        newstyle.Setters.Add(New Setter(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
-        newstyle.Setters.Add(New Setter(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
-        newstyle.Setters.Add(New Setter(ScrollViewer.CanContentScrollProperty, True))
-        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
-        newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
-        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
-        newstyle.Setters.Add(New Setter(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel))
-        newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
-
-        Dim gridview As New GridView
-
-        gridview.Columns.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"StatusImage"}, 0, 60)))
-        For Each columninfo As clsViewColumnInfo In preferences.Columns
-            gridview.Columns.Add(CreateViewDetailsStyleColumn(columninfo))
-        Next
-
-        newstyle.Setters.Add(New Setter(ListView.ViewProperty, gridview))
-
-        Return newstyle
-    End Function
-
-    Public Function CreateViewDetailsStyleColumn(columninfo As clsViewColumnInfo) As GridViewColumn
-        Dim column As New GridViewColumn()
-        column.Header = columninfo.Header
-        If columninfo.Attributes.Count > 0 Then column.SetValue(clsSorter.PropertyNameProperty, columninfo.Attributes(0))
-        column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
-        Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-        panel.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center)
-        panel.SetValue(FrameworkElement.MarginProperty, New Thickness(0))
-
-        Dim firstline As Boolean = True
-        For Each attr As String In columninfo.Attributes
-            Dim bind As New Binding(attr) With {.Mode = BindingMode.OneWay, .Converter = New ConverterDataToUIElement, .ConverterParameter = attr}
-
-            Dim container As New FrameworkElementFactory(GetType(ContentControl))
-            If firstline Then
-                firstline = False
-                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Medium)
-                'column.SetValue(DataGridColumn.SortMemberPathProperty, attr.Name)
-            Else
-                container.SetValue(TextBlock.FontWeightProperty, FontWeights.Light)
-            End If
-
-            container.SetBinding(ContentControl.ContentProperty, bind)
-            container.SetValue(FrameworkElement.ToolTipProperty, attr)
-            container.SetValue(FrameworkElement.MaxHeightProperty, 48.0)
-            panel.AppendChild(container)
-        Next
-
-        Dim template As New DataTemplate()
-        template.VisualTree = panel
-        column.CellTemplate = template
-
-        Return column
     End Function
 
 
@@ -638,14 +576,16 @@ Module mdlTools
         Return str.Split({" "}, StringSplitOptions.RemoveEmptyEntries).Count
     End Function
 
-    Public Function FindVisualParent(Of T As DependencyObject)(ByVal child As Object) As T
+    Public Function FindVisualParent(Of T As DependencyObject)(ByVal child As Object, Optional until As DependencyObject = Nothing) As T
         Dim parent As DependencyObject = If(child.Parent IsNot Nothing, child.Parent, VisualTreeHelper.GetParent(child))
 
         If parent IsNot Nothing Then
             If TypeOf parent Is T Then
                 Return parent
+            ElseIf parent Is until Then
+                Return Nothing
             Else
-                Return FindVisualParent(Of T)(parent)
+                Return FindVisualParent(Of T)(parent, until)
             End If
         Else
             Return Nothing

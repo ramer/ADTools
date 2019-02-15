@@ -72,6 +72,24 @@ Public Module mdlVariables
         ADSTYPE_DN_WITH_STRING = 28
     End Enum
 
+    Public Enum enmDirectoryObjectSchemaClass
+        User
+        Contact
+        Computer
+        Group
+        OrganizationalUnit
+        Container
+        DomainDNS
+        UnknownContainer
+        Unknown
+    End Enum
+
+    Public Enum enmDirectoryObjectStatus
+        Normal
+        Expired
+        Blocked
+    End Enum
+
     Public AttributeSchemeType As New Dictionary(Of String, Integer) From {
         {"2.5.5.1", enmADSType.ADSTYPE_DN_STRING},
         {"2.5.5.2", enmADSType.ADSTYPE_CASE_IGNORE_STRING},

@@ -175,7 +175,7 @@ Module mdlDialogue
                         Next
                         Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
-                            If Not obj.SchemaClass = clsDirectoryObject.enmSchemaClass.User Then
+                            If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then
                                 SendRequestUnexpectedUser(responce)
                                 Exit Sub
                             End If
@@ -214,7 +214,7 @@ Module mdlDialogue
                         Next
                         Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
-                            If Not obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Group Then
+                            If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Then
                                 SendRequestUnexpectedGroup(responce)
                                 Exit Sub
                             End If

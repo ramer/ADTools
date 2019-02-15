@@ -9,62 +9,18 @@ Public Class clsDirectoryObject
     Inherits Dynamic.DynamicObject
     Implements INotifyPropertyChanged
 
-    Enum enmSchemaClass
-        User
-        Contact
-        Computer
-        Group
-        OrganizationalUnit
-        Container
-        DomainDNS
-        UnknownContainer
-        Unknown
-    End Enum
-
-    Enum enmStatus
-        Normal
-        Expired
-        Blocked
-    End Enum
-
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
-    Private _distinguishedName As String
-
-    Private _cache As New Dictionary(Of String, DirectoryAttribute)
-
-    Private searcher As New clsSearcher
-
-    Private WithEvents _domain As clsDomain
-    Private _domainname As String
-
-    Private _name As String
-
-    'Private _missedattributes As New HashSet(Of String) ' to store attributes, witch is not cosidered to this objectclass
-    Private _allowedattributes As List(Of String)
-    Private _allowedattributeseffective As List(Of String)
-
-    Private _children As New ObservableCollection(Of clsDirectoryObject)
-    Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
-
-    Private _manager As clsDirectoryObject
-    Private _directreports As ObservableCollection(Of clsDirectoryObject)
-
-    Private _managedby As clsDirectoryObject
-    Private _managedobjects As ObservableCollection(Of clsDirectoryObject)
-
-    Private _memberof As ObservableCollection(Of clsDirectoryObject)
-    Private _member As ObservableCollection(Of clsDirectoryObject)
 
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
     End Sub
 
+    Private cache As New Dictionary(Of String, DirectoryAttribute)
+    Private searcher As New clsSearcher
+
     Sub New()
 
     End Sub
-
-
 
     Sub New(DistinguishedName As String, ByRef Domain As clsDomain, Optional AttributeNames As String() = Nothing)
         _distinguishedName = DistinguishedName
@@ -81,11 +37,11 @@ Public Class clsDirectoryObject
             Exit Sub
         End Try
 
-        _cache.Clear()
+        cache.Clear()
 
         If response.Entries.Count = 1 Then
             For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
-                _cache.Add(a.Name, a)
+                cache.Add(a.Name, a)
             Next
         End If
     End Sub
@@ -94,15 +50,15 @@ Public Class clsDirectoryObject
         _distinguishedName = Entry.DistinguishedName
         _domain = Domain
 
-        _cache.Clear()
+        cache.Clear()
 
         For Each a As DirectoryAttribute In Entry.Attributes.Values
-            _cache.Add(a.Name, a)
+            cache.Add(a.Name, a)
         Next
 
         If InitialCache IsNot Nothing Then
             For Each a As String In InitialCache.Keys
-                If Not _cache.ContainsKey(a) Then _cache.Add(a, InitialCache(a))
+                If Not cache.ContainsKey(a) Then cache.Add(a, InitialCache(a))
             Next
         End If
     End Sub
@@ -129,11 +85,11 @@ Public Class clsDirectoryObject
                     Exit Sub
                 End Try
 
-                _cache.Clear()
+                cache.Clear()
 
                 If response.Entries.Count = 1 Then
                     For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
-                        _cache.Add(a.Name, a)
+                        cache.Add(a.Name, a)
                     Next
                 End If
 
@@ -141,8 +97,6 @@ Public Class clsDirectoryObject
             End If
         Next
     End Sub
-
-
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Connection() As LdapConnection
@@ -165,6 +119,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _distinguishedName As String
     <RegistrySerializerAlias("DistinguishedName")>
     Public Property distinguishedName() As String
         Get
@@ -172,7 +127,6 @@ Public Class clsDirectoryObject
         End Get
         Set(value As String)
             _distinguishedName = value
-
             NotifyPropertyChanged("distinguishedName")
         End Set
     End Property
@@ -188,16 +142,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public Property Cache() As Dictionary(Of String, DirectoryAttribute)
-        Get
-            Return _cache
-        End Get
-        Set(value As Dictionary(Of String, DirectoryAttribute))
-            _cache = value
-        End Set
-    End Property
-
+    Private WithEvents _domain As clsDomain
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property Domain() As clsDomain
         Get
@@ -205,13 +150,13 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _domainname As String
     Public Property DomainName() As String
         Get
             Return If(_domain IsNot Nothing, _domain.Name, _domainname)
         End Get
         Set(value As String)
             _domainname = value
-
             NotifyPropertyChanged("DomainName")
         End Set
     End Property
@@ -250,10 +195,10 @@ Public Class clsDirectoryObject
                     Continue For
                 End If
 
-                If _cache.ContainsKey(a.Name) Then
-                    _cache(a.Name) = a
+                If cache.ContainsKey(a.Name) Then
+                    cache(a.Name) = a
                 Else
-                    _cache.Add(a.Name, a)
+                    cache.Add(a.Name, a)
                 End If
             Next
         End If
@@ -276,10 +221,10 @@ Public Class clsDirectoryObject
             ' only one object expercted
             If response.Entries.Count = 1 Then
                 For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
-                    If _cache.ContainsKey(a.Name) Then
-                        _cache(a.Name) = a
+                    If cache.ContainsKey(a.Name) Then
+                        cache(a.Name) = a
                     Else
-                        _cache.Add(a.Name, a)
+                        cache.Add(a.Name, a)
                     End If
 
                     If a.Count = 0 Or a.Count < pagesize Then Exit Do
@@ -300,14 +245,15 @@ Public Class clsDirectoryObject
     End Sub
 
     Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
-        If Not _cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
-        If Not _cache.ContainsKey(attributename) Then _cache.Add(attributename, Nothing) : Return Nothing
+        If Not cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
+        If Not cache.ContainsKey(attributename) Then cache.Add(attributename, Nothing) 'if entry hasn't value store nothing 
+        If cache(attributename) Is Nothing Then Return Nothing 'prevent refresh if nothing stored
 
-        If _cache(attributename) Is Nothing Then Return Nothing
+        If cache(attributename) Is Nothing Then Return Nothing
         If returnType Is Nothing Then
-            If _cache(attributename).Count = 0 Then
+            If cache(attributename).Count = 0 Then
                 Return Nothing
-            ElseIf _cache(attributename).Count = 1 Then
+            ElseIf cache(attributename).Count = 1 Then
                 returnType = GetType(String) 'set default return type to String
             Else
                 returnType = GetType(String()) 'set default return type to String
@@ -316,23 +262,23 @@ Public Class clsDirectoryObject
 
         Select Case returnType
             Case GetType(String)
-                Return If(_cache(attributename).Count = 1, _cache(attributename)(0), Nothing)
+                Return If(cache(attributename).Count = 1, cache(attributename)(0), Nothing)
             Case GetType(String())
                 Dim values As New List(Of String)
-                For Each value As String In _cache(attributename).GetValues(GetType(String))
+                For Each value As String In cache(attributename).GetValues(GetType(String))
                     values.Add(value)
                 Next
                 Return values.ToArray
             Case GetType(Byte())
-                Return If(_cache(attributename).Count = 1, _cache(attributename).GetValues(GetType(Byte()))(0), Nothing)
+                Return If(cache(attributename).Count = 1, cache(attributename).GetValues(GetType(Byte()))(0), Nothing)
             Case GetType(Long)
-                Return If(_cache(attributename).Count = 1, Long.Parse(_cache(attributename)(0)), Nothing)
+                Return If(cache(attributename).Count = 1, Long.Parse(cache(attributename)(0)), Nothing)
             Case GetType(Integer)
-                Return If(_cache(attributename).Count = 1, Integer.Parse(_cache(attributename)(0)), Nothing)
+                Return If(cache(attributename).Count = 1, Integer.Parse(cache(attributename)(0)), Nothing)
             Case GetType(Date)
-                Return If(_cache(attributename).Count = 1, Date.ParseExact(_cache(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
+                Return If(cache(attributename).Count = 1, Date.ParseExact(cache(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
             Case GetType(Boolean)
-                Return If(_cache(attributename).Count = 1, Boolean.Parse(_cache(attributename)(0)), Nothing)
+                Return If(cache(attributename).Count = 1, Boolean.Parse(cache(attributename)(0)), Nothing)
             Case Else
                 Throw New TypeLoadException("Unknown attribute return type")
                 Return Nothing
@@ -347,7 +293,7 @@ Public Class clsDirectoryObject
                 Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Delete, attributename, Nothing)
                 Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
                 Refresh({attributename})
-                If _cache.ContainsKey(attributename) Then _cache.Remove(attributename)
+                If cache.ContainsKey(attributename) Then cache.Remove(attributename)
             Catch e As DirectoryOperationException
 
             End Try
@@ -451,6 +397,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -487,6 +434,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _allowedattributes As List(Of String)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributes() As List(Of String)
         Get
@@ -504,6 +452,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _allowedattributeseffective As List(Of String)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property AllowedAttributesEffective() As List(Of String)
         Get
@@ -544,26 +493,30 @@ Public Class clsDirectoryObject
     End Function
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property SchemaClass() As enmSchemaClass
+    Public ReadOnly Property SchemaClass() As enmDirectoryObjectSchemaClass
         Get
-            If objectCategory = "person" And objectClass.Contains("user") Then
-                Return enmSchemaClass.User
-            ElseIf objectCategory = "person" And objectClass.Contains("contact", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.Contact
-            ElseIf objectClass.Contains("computer", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.Computer
-            ElseIf objectClass.Contains("group", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.Group
-            ElseIf objectClass.Contains("organizationalunit", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.OrganizationalUnit
-            ElseIf objectClass.Contains("container", StringComparer.OrdinalIgnoreCase) Or objectClass.Contains("builtindomain", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.Container
-            ElseIf objectClass.Contains("domaindns", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.DomainDNS
-            ElseIf objectClass.Contains("lostandfound", StringComparer.OrdinalIgnoreCase) Then
-                Return enmSchemaClass.UnknownContainer
+            Dim cat = objectCategory
+            Dim cls = objectClass
+            If cat Is Nothing OrElse cls Is Nothing Then Return Nothing
+
+            If cat = "person" And cls.Contains("user") Then
+                Return enmDirectoryObjectSchemaClass.User
+            ElseIf cat = "person" And cls.Contains("contact", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.Contact
+            ElseIf cls.Contains("computer", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.Computer
+            ElseIf cls.Contains("group", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.Group
+            ElseIf cls.Contains("organizationalunit", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.OrganizationalUnit
+            ElseIf cls.Contains("container", StringComparer.OrdinalIgnoreCase) Or cls.Contains("builtindomain", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.Container
+            ElseIf cls.Contains("domaindns", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.DomainDNS
+            ElseIf cls.Contains("lostandfound", StringComparer.OrdinalIgnoreCase) Then
+                Return enmDirectoryObjectSchemaClass.UnknownContainer
             Else
-                Return enmSchemaClass.Unknown
+                Return enmDirectoryObjectSchemaClass.Unknown
             End If
         End Get
     End Property
@@ -571,25 +524,25 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsUser
         Get
-            Return SchemaClass = enmSchemaClass.User
+            Return SchemaClass = enmDirectoryObjectSchemaClass.User
         End Get
     End Property
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsContact
         Get
-            Return SchemaClass = enmSchemaClass.Contact
+            Return SchemaClass = enmDirectoryObjectSchemaClass.Contact
         End Get
     End Property
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsComputer
         Get
-            Return SchemaClass = enmSchemaClass.Computer
+            Return SchemaClass = enmDirectoryObjectSchemaClass.Computer
         End Get
     End Property
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsGroup
         Get
-            Return SchemaClass = enmSchemaClass.Group
+            Return SchemaClass = enmDirectoryObjectSchemaClass.Group
         End Get
     End Property
     <RegistrySerializerIgnorable(True)>
@@ -606,7 +559,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property StatusImage As Grid
+    Public ReadOnly Property Image As Grid
         Get
             Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(StatusFormatted), Nothing, StatusFormatted), .SnapsToDevicePixels = True}
             Dim imggrd As New Grid With {.Margin = New Thickness(2)}
@@ -614,17 +567,17 @@ Public Class clsDirectoryObject
 
             Dim img As New Image With {.Stretch = Stretch.Uniform, .StretchDirection = StretchDirection.Both, .HorizontalAlignment = HorizontalAlignment.Center, .VerticalAlignment = VerticalAlignment.Center}
 
-            If SchemaClass = enmSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
+            If SchemaClass = enmDirectoryObjectSchemaClass.User AndAlso thumbnailPhoto IsNot Nothing Then
                 Dim clipbrdp As New Border With {.Background = Brushes.White, .CornerRadius = New CornerRadius(999)}
                 img.Source = thumbnailPhoto
                 imggrd.Children.Add(clipbrdp)
                 imggrd.Children.Add(img)
                 imggrd.OpacityMask = New VisualBrush() With {.Visual = clipbrdp}
 
-                Dim strokebrdr As New Border With {.BorderThickness = New Thickness(3), .CornerRadius = New CornerRadius(999), .BorderBrush = If(Status = enmStatus.Normal, New SolidColorBrush(Color.FromRgb(74, 217, 65)), If(Status = enmStatus.Expired, New SolidColorBrush(Color.FromRgb(246, 204, 33)), New SolidColorBrush(Color.FromRgb(228, 71, 71))))}
+                Dim strokebrdr As New Border With {.BorderThickness = New Thickness(3), .CornerRadius = New CornerRadius(999), .BorderBrush = If(Status = enmDirectoryObjectStatus.Normal, New SolidColorBrush(Color.FromRgb(74, 217, 65)), If(Status = enmDirectoryObjectStatus.Expired, New SolidColorBrush(Color.FromRgb(246, 204, 33)), New SolidColorBrush(Color.FromRgb(228, 71, 71))))}
                 grd.Children.Add(strokebrdr)
             Else
-                img.Source = Image
+                img.Source = StatusImage
                 imggrd.Children.Add(img)
             End If
 
@@ -633,31 +586,31 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property Status() As enmStatus
+    Public ReadOnly Property Status() As enmDirectoryObjectStatus
         Get
-            Dim _status As enmStatus = enmStatus.Normal
+            Dim _status As enmDirectoryObjectStatus = enmDirectoryObjectStatus.Normal
 
-            If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
+            If SchemaClass = enmDirectoryObjectSchemaClass.User Or SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
-                    _status = enmStatus.Expired
+                    _status = enmDirectoryObjectStatus.Expired
                 ElseIf passwordNeverExpires = False Then
                     If passwordExpiresDate() = Nothing Then
-                        _status = enmStatus.Expired
+                        _status = enmDirectoryObjectStatus.Expired
                     ElseIf passwordExpiresDate() <= Now Then
-                        _status = enmStatus.Expired
+                        _status = enmDirectoryObjectStatus.Expired
                     End If
                 End If
 
                 If accountNeverExpires Is Nothing Then
-                    _status = enmStatus.Expired
+                    _status = enmDirectoryObjectStatus.Expired
                 ElseIf accountNeverExpires = False AndAlso accountExpiresDate <= Now Then
-                    _status = enmStatus.Expired
+                    _status = enmDirectoryObjectStatus.Expired
                 End If
 
                 If disabled Is Nothing Then
-                    _status = enmStatus.Expired
+                    _status = enmDirectoryObjectStatus.Expired
                 ElseIf disabled Then
-                    _status = enmStatus.Blocked
+                    _status = enmDirectoryObjectStatus.Blocked
                 End If
             End If
 
@@ -670,7 +623,7 @@ Public Class clsDirectoryObject
         Get
             Dim _status As String = ""
 
-            If SchemaClass = enmSchemaClass.User Or SchemaClass = enmSchemaClass.Computer Then
+            If SchemaClass = enmDirectoryObjectSchemaClass.User Or SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
                     _status &= My.Resources.str_PasswordExpirationUnknown & vbCr
                 ElseIf passwordNeverExpires = False Then
@@ -700,11 +653,11 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property Image() As BitmapImage
+    Public ReadOnly Property StatusImage() As BitmapImage
         Get
             Dim _image As String = ""
 
-            If SchemaClass = enmSchemaClass.User Then
+            If SchemaClass = enmDirectoryObjectSchemaClass.User Then
                 _image = "user.png"
                 If passwordNeverExpires Is Nothing Then
                     _image = "user_unknown.png"
@@ -727,7 +680,7 @@ Public Class clsDirectoryObject
                 ElseIf disabled Then
                     _image = "user_blocked.png"
                 End If
-            ElseIf SchemaClass = enmSchemaClass.Computer Then
+            ElseIf SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
                 _image = "computer.png"
                 If passwordNeverExpires Is Nothing Then
                     _image = "computer_unknown.png"
@@ -750,7 +703,7 @@ Public Class clsDirectoryObject
                 ElseIf disabled Then
                     _image = "computer_blocked.png"
                 End If
-            ElseIf SchemaClass = enmSchemaClass.Group Then
+            ElseIf SchemaClass = enmDirectoryObjectSchemaClass.Group Then
                 _image = "group.png"
                 If groupTypeSecurity Then
                     _image = "group.png"
@@ -775,23 +728,23 @@ Public Class clsDirectoryObject
             Dim _image As String = ""
 
             Select Case SchemaClass
-                Case enmSchemaClass.User
+                Case enmDirectoryObjectSchemaClass.User
                     _image = "user_unknown.png"
-                Case enmSchemaClass.Contact
+                Case enmDirectoryObjectSchemaClass.Contact
                     _image = "contact.png"
-                Case enmSchemaClass.Computer
+                Case enmDirectoryObjectSchemaClass.Computer
                     _image = "computer_unknown.png"
-                Case enmSchemaClass.Group
+                Case enmDirectoryObjectSchemaClass.Group
                     _image = "group.png"
-                Case enmSchemaClass.OrganizationalUnit
+                Case enmDirectoryObjectSchemaClass.OrganizationalUnit
                     _image = "folder.png"
-                Case enmSchemaClass.Container
+                Case enmDirectoryObjectSchemaClass.Container
                     _image = "folder_locked.png"
-                Case enmSchemaClass.DomainDNS
+                Case enmDirectoryObjectSchemaClass.DomainDNS
                     _image = "domain.png"
-                Case enmSchemaClass.UnknownContainer
+                Case enmDirectoryObjectSchemaClass.UnknownContainer
                     _image = "folder_unknown.png"
-                Case enmSchemaClass.Unknown
+                Case enmDirectoryObjectSchemaClass.Unknown
                     _image = "puzzle.png"
                 Case Else
                     _image = "puzzle.png"
@@ -1641,6 +1594,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _manager As clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property manager() As clsDirectoryObject
         Get
@@ -1671,6 +1625,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    Private _directreports As ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property directReports() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -1687,6 +1642,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _managedby As clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property managedBy() As clsDirectoryObject
         Get
@@ -1717,6 +1673,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    Private _managedobjects As ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public Property managedObjects As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -1738,6 +1695,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    Private _memberof As ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -1754,6 +1712,7 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
+    Private _member As ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property member() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -1779,7 +1738,7 @@ Public Class clsDirectoryObject
             If _member Is Nothing Then
                 Refresh({"member"})
                 Dim members As New List(Of String)
-                For Each k In Cache.Keys.Where(Function(name) name = "member" Or name.StartsWith("member;"))
+                For Each k In cache.Keys.Where(Function(name) name = "member" Or name.StartsWith("member;"))
                     For Each m As String In GetAttribute(k, GetType(String()))
                         members.Add(m)
                         Debug.Print(m)
@@ -1812,18 +1771,18 @@ Public Class clsDirectoryObject
 
         Try
             For Each n In newcache.Keys
-                If _cache.ContainsKey(n) Then
-                    If Not AttributeEquals(_cache(n), newcache(n)) Then
+                If cache.ContainsKey(n) Then
+                    If Not AttributeEquals(cache(n), newcache(n)) Then
                         Debug.WriteLine(distinguishedName & " - " & n & " attribute changed:")
                         Debug.Write("From:")
-                        For Each item In _cache(n).GetValues(GetType(String))
+                        For Each item In cache(n).GetValues(GetType(String))
                             Debug.WriteLine(vbTab & item)
                         Next
                         Debug.Write("To:")
                         For Each item In newcache(n).GetValues(GetType(String))
                             Debug.WriteLine(vbTab & item)
                         Next
-                        _cache(n) = newcache(n)
+                        cache(n) = newcache(n)
                         NotifyPropertyChanged(n)
                     End If
                 Else
@@ -1832,7 +1791,7 @@ Public Class clsDirectoryObject
                     For Each item In newcache(n).GetValues(GetType(String))
                         Debug.WriteLine(vbTab & item)
                     Next
-                    _cache.Add(n, newcache(n))
+                    cache.Add(n, newcache(n))
                     NotifyPropertyChanged(n)
                 End If
 
@@ -1867,37 +1826,33 @@ Public Class clsDirectoryObject
                 NotifyPropertyChanged("userPrincipalNameName")
                 NotifyPropertyChanged("userPrincipalNameDomain")
             Case "thumbnailphoto"
-                NotifyPropertyChanged("StatusImage")
+                NotifyPropertyChanged("Image")
             Case "grouptype"
                 NotifyPropertyChanged("groupTypeScopeDomainLocal")
                 NotifyPropertyChanged("groupTypeScopeDomainGlobal")
                 NotifyPropertyChanged("groupTypeScopeDomainUniversal")
                 NotifyPropertyChanged("groupTypeSecurity")
                 NotifyPropertyChanged("groupTypeDistribution")
-                NotifyPropertyChanged("Image")
+                NotifyPropertyChanged("StatusImage")
             Case "accountexpires"
                 NotifyPropertyChanged("accountExpiresDate")
                 NotifyPropertyChanged("accountExpiresFormated")
                 NotifyPropertyChanged("accountNeverExpires")
                 NotifyPropertyChanged("accountExpiresAt")
-
-                NotifyPropertyChanged("Image")
                 NotifyPropertyChanged("Status")
                 NotifyPropertyChanged("StatusFormatted")
-
                 NotifyPropertyChanged("StatusImage")
+                NotifyPropertyChanged("Image")
             Case "pwdlastset"
                 NotifyPropertyChanged("pwdLastSetDate")
                 NotifyPropertyChanged("pwdLastSetFormated")
                 NotifyPropertyChanged("passwordExpiresDate")
                 NotifyPropertyChanged("passwordExpiresFormated")
                 NotifyPropertyChanged("userMustChangePasswordNextLogon")
-
-                NotifyPropertyChanged("Image")
                 NotifyPropertyChanged("Status")
                 NotifyPropertyChanged("StatusFormatted")
-
                 NotifyPropertyChanged("StatusImage")
+                NotifyPropertyChanged("Image")
             Case "useraccountcontrol"
                 NotifyPropertyChanged("normalAccount")
                 NotifyPropertyChanged("disabled")
@@ -1906,12 +1861,10 @@ Public Class clsDirectoryObject
                 NotifyPropertyChanged("passwordExpiresDate")
                 NotifyPropertyChanged("passwordExpiresFormated")
                 NotifyPropertyChanged("userMustChangePasswordNextLogon")
-
-                NotifyPropertyChanged("Image")
                 NotifyPropertyChanged("Status")
                 NotifyPropertyChanged("StatusFormatted")
-
                 NotifyPropertyChanged("StatusImage")
+                NotifyPropertyChanged("Image")
         End Select
     End Sub
 

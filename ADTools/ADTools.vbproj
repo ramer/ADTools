@@ -203,6 +203,7 @@
     <Compile Include="converters\ConverterIntegerToVisibility.vb" />
     <Compile Include="converters\ConverterToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
+    <Compile Include="converters\ConverterTreeViewItemDepthToMargin.vb" />
     <Compile Include="mdlSingleInstance.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>

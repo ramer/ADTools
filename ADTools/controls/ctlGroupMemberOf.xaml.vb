@@ -157,7 +157,7 @@ Public Class ctlGroupMemberOf
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             e.Effects = DragDropEffects.Copy
             For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
-                If obj.SchemaClass <> clsDirectoryObject.enmSchemaClass.Group Then e.Effects = DragDropEffects.None : Exit For
+                If obj.SchemaClass <> enmDirectoryObjectSchemaClass.Group Then e.Effects = DragDropEffects.None : Exit For
             Next
         Else
             e.Effects = DragDropEffects.None
@@ -184,7 +184,7 @@ Public Class ctlGroupMemberOf
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
             For Each obj As clsDirectoryObject In dropped
-                If obj.SchemaClass <> clsDirectoryObject.enmSchemaClass.Group Then Exit Sub
+                If obj.SchemaClass <> enmDirectoryObjectSchemaClass.Group Then Exit Sub
             Next
 
             For Each obj In dropped

@@ -122,7 +122,7 @@ Public Class ctlUserWorkstations
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             e.Effects = DragDropEffects.Copy
             For Each obj As clsDirectoryObject In e.Data.GetData(GetType(clsDirectoryObject()))
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer) Then e.Effects = DragDropEffects.None : Exit For
+                If Not (obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer) Then e.Effects = DragDropEffects.None : Exit For
             Next
         Else
             e.Effects = DragDropEffects.None
@@ -149,7 +149,7 @@ Public Class ctlUserWorkstations
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             Dim dropped = e.Data.GetData(GetType(clsDirectoryObject()))
             For Each obj As clsDirectoryObject In dropped
-                If Not (obj.SchemaClass = clsDirectoryObject.enmSchemaClass.Computer) Then Exit Sub
+                If Not (obj.SchemaClass = enmDirectoryObjectSchemaClass.Computer) Then Exit Sub
             Next
 
             For Each obj In dropped
