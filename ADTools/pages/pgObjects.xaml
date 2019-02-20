@@ -81,6 +81,7 @@
                             ViewStyleTiles="{StaticResource ListViewExtended_ViewStyleTiles}"
                             ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
                             ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
+                            ViewStyleDetails="{StaticResource ListViewExtended_ViewStyleDetails}"
                             GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
                             local:clsSorter.AutoSort="True"
                             >
@@ -137,7 +138,6 @@
                                     </MenuItem>
                                 </ContextMenu>
                             </ListView.ContextMenu>
-
                         </local:ListViewExtended>
                         <local:ctlCap x:Name="cap" Visibility="Hidden"/>
                     </Grid>

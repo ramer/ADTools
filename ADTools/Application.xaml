@@ -1176,6 +1176,8 @@
             </Setter>
         </Style>
         
+        
+        <!--For default ListView-->
         <Style TargetType="{x:Type ListView}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -1197,7 +1199,30 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
+        <!--For Extended ListView-->
+        <Style TargetType="{x:Type local:ListViewExtended}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:ListViewExtended}">
+                        <Border x:Name="Bd" BorderBrush="{DynamicResource ColorButtonBackground}" BorderThickness="1" Background="{DynamicResource ColorElementBackground}" SnapsToDevicePixels="true">
+                            <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource ColorWindowBackground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -1218,33 +1243,15 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
-        <!--<Style TargetType="{x:Type ListViewItem}">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Background" Value="{DynamicResource ColorListviewRow}" />
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="MinHeight" Value="24"/>
-            <Style.Triggers>
-                <Trigger Property="ItemsControl.AlternationIndex"  Value="0">
-                    <Setter Property="Background" Value="{DynamicResource ColorListviewRow}" />
-                </Trigger>
-                <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
-                    <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
-                </Trigger>
-                <Trigger Property="ListViewItem.IsSelected" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ColorButtonBackground}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>-->
 
-        <!--Default-->
-        <Style TargetType="local:ListViewItemExtended">
+        <!--For default ListView-->
+        <Style TargetType="ListViewItem">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="Background" Value="{DynamicResource ColorElementBackground}"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="local:ListViewItemExtended">
+                    <ControlTemplate TargetType="ListViewItem">
                         <Grid Name="Panel" Background="{TemplateBinding Background}">
                             <Grid>
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
@@ -1271,9 +1278,9 @@
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorButtonBackground}" />
                             </Trigger>
-                            <!--<Trigger Property="IsSelected" Value="False">
+                            <Trigger Property="IsSelected" Value="False">
                                 <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorElementBackground}" />
-                            </Trigger>-->
+                            </Trigger>
                         </ControlTemplate.Triggers>
                         
                     </ControlTemplate>
@@ -1281,13 +1288,13 @@
             </Setter>
         </Style>
 
-        <!--For Non-GridView View-->
-        <Style TargetType="local:ListViewItemExtended" x:Key="ListViewExtended_ListViewItem">
+        <!--For Extended ListView Icons Style-->
+        <Style TargetType="local:ListViewItemExtended">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
+                    <ControlTemplate TargetType="local:ListViewItemExtended">
                         <Grid Name="Panel">
                             <Grid>
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
@@ -1324,7 +1331,53 @@
             </Setter>
         </Style>
 
-        <Style x:Key="ListViewExtended_ViewStyleTiles" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <!--For Extended ListView Details Style-->
+        <Style x:Key="ListViewItemExtendedDetails" TargetType="local:ListViewItemExtended">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="local:ListViewItemExtended">
+                        <Grid Name="Panel">
+                            <Grid>
+                                <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
+                                <!--This is difference-->
+                                <GridViewRowPresenter Columns="{DynamicResource gvcc}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.2" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Overlay" Storyboard.TargetProperty="(Grid.Opacity)" To="0.3"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorButtonBackground}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Panel" Property="Background" Value="{DynamicResource ColorElementBackground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <GridViewColumnCollection x:Key="gvcc"></GridViewColumnCollection>
+
+        <Style x:Key="ListViewExtended_ViewStyleTiles" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -1347,7 +1400,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewExtended_ListViewItem}">
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource {x:Type local:ListViewItemExtended}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5" />
@@ -1359,7 +1412,7 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ListViewExtended_ViewStyleMediumIcons" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleMediumIcons" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -1378,7 +1431,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewExtended_ListViewItem}">
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource {x:Type local:ListViewItemExtended}}">
                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5" />
@@ -1390,7 +1443,7 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ListViewExtended_ViewStyleList" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleList" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -1409,7 +1462,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewExtended_ListViewItem}">
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource {x:Type local:ListViewItemExtended}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Margin" Value="5,1,5,1" />
@@ -1421,7 +1474,7 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ListViewExtended_ViewStyleList_Small" TargetType="{x:Type ListView}" BasedOn="{StaticResource {x:Type ListView}}">
+        <Style x:Key="ListViewExtended_ViewStyleList_Small" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -1440,7 +1493,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewExtended_ListViewItem}">
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource {x:Type local:ListViewItemExtended}}">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -1448,6 +1501,27 @@
                 </Style>
                 <Style TargetType="GridViewColumnHeader">
                     <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="ListViewExtended_ViewStyleDetails" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel HorizontalAlignment="Left"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewItemExtendedDetails}">
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="5,1,5,1" />
+                </Style>
+                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+                    <Setter Property="Visibility" Value="Visible" />
                 </Style>
             </Style.Resources>
         </Style>
