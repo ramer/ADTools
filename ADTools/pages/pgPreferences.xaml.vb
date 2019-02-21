@@ -127,7 +127,6 @@ Public Class pgPreferences
         capAttributes.Visibility = Visibility.Hidden
     End Sub
 
-
     Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvAttributes.MouseMove, lvAttributesForSearch.MouseMove
         Dim listView As ListView = TryCast(sender, ListView)
 
@@ -141,7 +140,7 @@ Public Class pgPreferences
         End If
     End Sub
 
-    Private Sub lvAttributesForSearch_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
+    Private Sub lv_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
                                                                             trashAttributesForSearch.DragEnter,
                                                                             lvAttributesForSearch.DragOver,
                                                                             trashAttributesForSearch.DragOver
@@ -159,14 +158,15 @@ Public Class pgPreferences
         e.Handled = True
     End Sub
 
-    Private Sub lvAttributesForSearch_DragLeave(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragLeave,
-                                                                                            trashAttributesForSearch.DragLeave
+    Private Sub lv_DragLeave(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragLeave,
+                                                                           trashAttributesForSearch.DragLeave
+
         If sender Is lvAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Collapsed
         If sender Is trashAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
     End Sub
 
 
-    Private Sub lvAttributesForSearch_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.Drop,
+    Private Sub lv_dgLayout_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.Drop,
                                                                       trashAttributesForSearch.Drop,
                                                                       dgLayout.Drop
 
@@ -190,6 +190,15 @@ Public Class pgPreferences
                 CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = obj.lDAPDisplayName
                 SaveMainWindowLayoutTable()
             End If
+        End If
+    End Sub
+
+    Private Sub dgLayout_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgLayout.PreviewKeyDown
+        If e.Key = Key.Delete Then
+            Dim cell = CType(e.OriginalSource, DataGridCell)
+            If cell Is Nothing Then Exit Sub
+            CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = DBNull.Value
+            SaveMainWindowLayoutTable()
         End If
     End Sub
 
@@ -292,7 +301,7 @@ Public Class pgPreferences
 
         For column As Integer = 0 To MainWindowLayoutTable.Columns.Count - 1
             Dim columninfo As New clsViewColumnInfo
-            columninfo.DisplayIndex = column
+            'columninfo.DisplayIndex = column
             columninfo.Header = MainWindowLayoutTable.Columns(column).ColumnName
             For row As Integer = 0 To MainWindowLayoutTable.Rows.Count - 1
                 If MainWindowLayoutTable.Rows(row).Item(column) IsNot DBNull.Value Then

@@ -1331,8 +1331,7 @@
             </Setter>
         </Style>
 
-        <!--For Extended ListView Details Style-->
-        <Style x:Key="ListViewItemExtendedDetails" TargetType="local:ListViewItemExtended">
+        <Style x:Key="ListViewItemExtended_ViewStyleDetails" TargetType="local:ListViewItemExtended">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
             <Setter Property="Template">
@@ -1342,7 +1341,7 @@
                             <Grid>
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
                                 <!--This is difference-->
-                                <GridViewRowPresenter Columns="{DynamicResource gvcc}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                             </Grid>
 
                             <VisualStateManager.VisualStateGroups>
@@ -1374,8 +1373,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <GridViewColumnCollection x:Key="gvcc"></GridViewColumnCollection>
 
         <Style x:Key="ListViewExtended_ViewStyleTiles" TargetType="{x:Type local:ListViewExtended}" BasedOn="{StaticResource {x:Type local:ListViewExtended}}">
             <Setter Property="ItemTemplate">
@@ -1514,7 +1511,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Resources>
-                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewItemExtendedDetails}">
+                <Style TargetType="local:ListViewItemExtended" BasedOn="{StaticResource ListViewItemExtended_ViewStyleDetails}">
                     <Setter Property="HorizontalAlignment" Value="Left"/>
                     <Setter Property="HorizontalContentAlignment" Value="Left"/>
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -1523,6 +1520,7 @@
                 <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
                     <Setter Property="Visibility" Value="Visible" />
                 </Style>
+
             </Style.Resources>
         </Style>
 

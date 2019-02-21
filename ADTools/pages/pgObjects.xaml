@@ -11,7 +11,7 @@
       Background="{DynamicResource ColorWindowBackground}"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       >
-    
+
     <Grid>
         <DockPanel LastChildFill="True">
             <StatusBar Height="30" DockPanel.Dock="Bottom" Margin="5,0,5,0" Background="Transparent">
@@ -81,11 +81,9 @@
                             ViewStyleTiles="{StaticResource ListViewExtended_ViewStyleTiles}"
                             ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
                             ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
-                            ViewStyleDetails="{StaticResource ListViewExtended_ViewStyleDetails}"
                             GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
                             local:clsSorter.AutoSort="True"
                             >
-
                             <ListView.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">
                                     <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.ctxmnu_Restore}" Click="ctxmnuObjectsRestore_Click"/>

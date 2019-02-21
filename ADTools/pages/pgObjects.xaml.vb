@@ -45,12 +45,13 @@ Class pgObjects
         cvcurrentobjects.GroupDescriptions.Add(New PropertyGroupDescription("Domain.Name"))
 
         lvObjects.SetBinding(ItemsControl.ItemsSourceProperty, New Binding("cvcurrentobjects") With {.IsAsync = True})
-        'lvObjects.ViewStyleDetails = GetViewDetailsStyle()
-        GetViewDetailsStyle()
 
         ' mega-crutch - lvObjects binded to local cvcurrentobjects property and remote preferences properties
         AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "CurrentView" Then lvObjects.CurrentView = preferences.CurrentView
+        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "Columns" And preferences.CurrentView = ListViewExtended.Views.Details Then lvObjects.ViewStyleDetails = CreateViewDetailsStyle()
+
         lvObjects.CurrentView = preferences.CurrentView
+        lvObjects.ViewStyleDetails = CreateViewDetailsStyle()
     End Sub
 
 #Region "Context Menu Shared"
@@ -692,37 +693,17 @@ Class pgObjects
         'If organizationalunitaffected Then RefreshDomainTree()
     End Sub
 
-    Public Function GetViewDetailsStyle() As Style
-
+    Public Function CreateViewDetailsStyle() As Style
         Dim newstyle As New Style
         newstyle.BasedOn = Windows.Application.Current.TryFindResource("ListViewExtended_ViewStyleDetails")
         newstyle.TargetType = GetType(ListViewExtended)
 
-        'newstyle.Setters.Add(New Setter(ScrollViewer.VerticalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
-        'newstyle.Setters.Add(New Setter(ScrollViewer.HorizontalScrollBarVisibilityProperty, ScrollBarVisibility.Auto))
-        'newstyle.Setters.Add(New Setter(ScrollViewer.CanContentScrollProperty, True))
-        'newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingProperty, True))
-        'newstyle.Setters.Add(New Setter(VirtualizingPanel.IsVirtualizingWhenGroupingProperty, True))
-        'newstyle.Setters.Add(New Setter(VirtualizingStackPanel.VirtualizationModeProperty, VirtualizationMode.Recycling))
-        'newstyle.Setters.Add(New Setter(VirtualizingStackPanel.ScrollUnitProperty, ScrollUnit.Pixel))
-        'newstyle.Setters.Add(New Setter(KeyboardNavigation.DirectionalNavigationProperty, KeyboardNavigationMode.None))
-
-        'Dim vsp = New FrameworkElementFactory(GetType(VirtualizingStackPanel))
-        'vsp.SetValue(VirtualizingStackPanel.HorizontalAlignmentProperty, HorizontalAlignment.Left)
-        'Dim ipt = New ItemsPanelTemplate()
-        'ipt.VisualTree = vsp
-        'newstyle.Setters.Add(New Setter(ListView.ItemsPanelProperty, ipt))
-        Dim gv As GridViewColumnCollection = Application.Current.Resources("gvcc")
-
         Dim gridview As New GridView
-        gv.Clear()
+        gridview.AllowsColumnReorder = False
 
-        gridview.Columns.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"Image"}, 0, 60)))
-        gv.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"Image"}, 0, 60)))
-
+        gridview.Columns.Add(CreateViewDetailsStyleColumn(New clsViewColumnInfo("⬕", New List(Of String) From {"Image"}, 60), "Status"))
         For Each columninfo As clsViewColumnInfo In preferences.Columns
             gridview.Columns.Add(CreateViewDetailsStyleColumn(columninfo))
-            gv.Add(CreateViewDetailsStyleColumn(columninfo))
         Next
 
         newstyle.Setters.Add(New Setter(ListViewExtended.ViewProperty, gridview))
@@ -730,10 +711,18 @@ Class pgObjects
         Return newstyle
     End Function
 
-    Public Function CreateViewDetailsStyleColumn(columninfo As clsViewColumnInfo) As GridViewColumn
+    Public Function CreateViewDetailsStyleColumn(columninfo As clsViewColumnInfo, Optional sortattribute As String = Nothing) As GridViewColumn
         Dim column As New GridViewColumn()
+        AddHandler CType(column, INotifyPropertyChanged).PropertyChanged, Sub(sender, e) If e.PropertyName = "ActualWidth" Then lvObjects_ColumnResized(sender)
+
         column.Header = columninfo.Header
-        If columninfo.Attributes.Count > 0 Then column.SetValue(clsSorter.PropertyNameProperty, columninfo.Attributes(0))
+
+        If String.IsNullOrEmpty(sortattribute) Then
+            If columninfo.Attributes.Count > 0 Then column.SetValue(clsSorter.PropertyNameProperty, columninfo.Attributes(0))
+        Else
+            column.SetValue(clsSorter.PropertyNameProperty, sortattribute)
+        End If
+
         column.Width = If(columninfo.Width > 0, columninfo.Width, Double.NaN)
 
         Dim panel As New FrameworkElementFactory(GetType(VirtualizingStackPanel))
@@ -794,17 +783,11 @@ Class pgObjects
         OpenObject(obj.DataContext)
     End Sub
 
-    Private Sub lvObjects_ColumnReordered_LayoutUpdated() Handles lvObjects.LayoutUpdated
-        Dim view = lvObjects.View
-        If view Is Nothing OrElse Not TypeOf view Is GridView Then Exit Sub
-        Dim gridview As GridView = CType(view, GridView)
-        For Each dgcolumn As GridViewColumn In gridview.Columns
-            For Each pcolumn As clsViewColumnInfo In preferences.Columns
-                If dgcolumn.Header.ToString = pcolumn.Header Then
-                    'pcolumn.DisplayIndex = dgcolumn.DisplayIndex
-                    pcolumn.Width = dgcolumn.ActualWidth
-                End If
-            Next
+    Private Sub lvObjects_ColumnResized(column As GridViewColumn)
+        For Each pcolumn As clsViewColumnInfo In preferences.Columns
+            If column.Header.ToString = pcolumn.Header Then
+                pcolumn.Width = column.ActualWidth
+            End If
         Next
     End Sub
 

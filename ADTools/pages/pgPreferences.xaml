@@ -36,7 +36,7 @@
                                       ColumnHeaderHeight="50"
                                       RowHeight="40"
                                       ColumnWidth="*"
-                                      IsReadOnly="True"
+                                      IsReadOnly="False"
                                       HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden"
                                       >

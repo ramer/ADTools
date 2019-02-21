@@ -31,13 +31,13 @@ Module mdlTools
     Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 610
 
     Public columnsDefault As New ObservableCollection(Of clsViewColumnInfo) From {
-        New clsViewColumnInfo("Имя", New List(Of String) From {"name", "description"}, 1, 220),
-        New clsViewColumnInfo("Имя входа", New List(Of String) From {"userPrincipalName", "distinguishedNameFormated"}, 2, 450),
-        New clsViewColumnInfo("Телефон", New List(Of String) From {"telephoneNumber", "physicalDeliveryOfficeName"}, 3, 100),
-        New clsViewColumnInfo("Место работы", New List(Of String) From {"title", "department", "company"}, 4, 300),
-        New clsViewColumnInfo("Основной адрес", New List(Of String) From {"mail"}, 5, 170),
-        New clsViewColumnInfo("Объект", New List(Of String) From {"whenCreatedFormated", "lastLogonFormated", "accountExpiresFormated"}, 6, 150),
-        New clsViewColumnInfo("Пароль", New List(Of String) From {"pwdLastSetFormated", "passwordExpiresFormated"}, 7, 150)}
+        New clsViewColumnInfo("Имя", New List(Of String) From {"name", "description"}, 220),
+        New clsViewColumnInfo("Имя входа", New List(Of String) From {"userPrincipalName", "distinguishedNameFormated"}, 450),
+        New clsViewColumnInfo("Телефон", New List(Of String) From {"telephoneNumber", "physicalDeliveryOfficeName"}, 100),
+        New clsViewColumnInfo("Место работы", New List(Of String) From {"title", "department", "company"}, 300),
+        New clsViewColumnInfo("Основной адрес", New List(Of String) From {"mail"}, 170),
+        New clsViewColumnInfo("Объект", New List(Of String) From {"whenCreatedFormated", "lastLogonFormated", "accountExpiresFormated"}, 150),
+        New clsViewColumnInfo("Пароль", New List(Of String) From {"pwdLastSetFormated", "passwordExpiresFormated"}, 150)}
 
     Public attributesToLoadDefault As String() =
         {"accountExpires",

@@ -273,10 +273,12 @@ Public Class ListViewExtended
 
             _dragoperation = False
 
-            DoDragDrop(SelectedItems, e.GetPosition(Me))
+            If SelectedItems.Count > 0 Then
+                DoDragDrop(SelectedItems, e.GetPosition(Me))
+            End If
         End If
 
-        If _mousecaptured Then
+            If _mousecaptured Then
             ' Get the position relative to the content of the ScrollViewer.
             _end = e.GetPosition(_scrollContent)
             _autoScroller.Update(_end)
@@ -419,7 +421,13 @@ Public Class ListViewExtended
         AdornerLayer.GetAdornerLayer(dragscope).Add(_dragadorner)
 
         dragscope.AllowDrop = True
-        DragDrop.DoDragDrop(Me, New DataObject(Data), DragDropEffects.All)
+
+        Dim objectlist As Object = Activator.CreateInstance(GetType(List(Of)).MakeGenericType(SelectedItems(0).GetType))
+        For Each element In SelectedItems
+            objectlist.Add(element)
+        Next
+
+        DragDrop.DoDragDrop(Me, New DataObject(objectlist.ToArray), DragDropEffects.All)
         dragscope.AllowDrop = previousDrop
 
         AdornerLayer.GetAdornerLayer(dragscope).Remove(_dragadorner)
