@@ -873,6 +873,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Attributes.
+        '''</summary>
+        Public ReadOnly Property str_AttributesAttributes() As String
+            Get
+                Return ResourceManager.GetString("str_AttributesAttributes", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Changed.
         '''</summary>
         Public ReadOnly Property str_AttributesChanged() As String
@@ -882,20 +891,29 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Basic attributes.
+        '''  Ищет локализованную строку, похожую на Complex.
         '''</summary>
-        Public ReadOnly Property str_AttributesDefault() As String
+        Public ReadOnly Property str_AttributesComplex() As String
             Get
-                Return ResourceManager.GetString("str_AttributesDefault", resourceCulture)
+                Return ResourceManager.GetString("str_AttributesComplex", resourceCulture)
             End Get
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Extended attributes.
+        '''  Ищет локализованную строку, похожую на The search cannot be accomplished by complex attribute.
         '''</summary>
-        Public ReadOnly Property str_AttributesExtended() As String
+        Public ReadOnly Property str_AttributesComplexCannotBeSearched() As String
             Get
-                Return ResourceManager.GetString("str_AttributesExtended", resourceCulture)
+                Return ResourceManager.GetString("str_AttributesComplexCannotBeSearched", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Default.
+        '''</summary>
+        Public ReadOnly Property str_AttributesDefault() As String
+            Get
+                Return ResourceManager.GetString("str_AttributesDefault", resourceCulture)
             End Get
         End Property
         
@@ -914,6 +932,15 @@ Namespace My.Resources
         Public ReadOnly Property str_AttributesForSearchDefault() As String
             Get
                 Return ResourceManager.GetString("str_AttributesForSearchDefault", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Indexed.
+        '''</summary>
+        Public ReadOnly Property str_AttributesIndexed() As String
+            Get
+                Return ResourceManager.GetString("str_AttributesIndexed", resourceCulture)
             End Get
         End Property
         
@@ -1193,6 +1220,69 @@ Namespace My.Resources
         Public ReadOnly Property str_ColorWindowBackground() As String
             Get
                 Return ResourceManager.GetString("str_ColorWindowBackground", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Login.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultLogin() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultLogin", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Mail.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultMail() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultMail", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Name.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultName() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultName", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Object.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultObject() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultObject", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Password.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultPassword() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultPassword", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Phone.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultPhone() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultPhone", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Workplace.
+        '''</summary>
+        Public ReadOnly Property str_ColumnsDefaultWorkplace() As String
+            Get
+                Return ResourceManager.GetString("str_ColumnsDefaultWorkplace", resourceCulture)
             End Get
         End Property
         

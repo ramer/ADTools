@@ -9,20 +9,14 @@
     End Sub
 
     Sub New(Command As String,
-        Optional Obj As String = "",
-        Optional Err As Exception = Nothing)
+        Optional [Object] As String = "",
+        Optional [Error] As Exception = Nothing)
 
         _timestamp = Now
         _command = Command
-        _object = Obj
-        _error = Err
+        _object = [Object]
+        _error = [Error]
     End Sub
-
-    Public ReadOnly Property Image() As BitmapImage
-        Get
-            Return New BitmapImage(New Uri("pack://application:,,,/" & "images/warning.png"))
-        End Get
-    End Property
 
     Public ReadOnly Property TimeStamp() As Date
         Get
@@ -42,10 +36,20 @@
         End Get
     End Property
 
-    Public ReadOnly Property Err() As String
+    Public ReadOnly Property Message() As String
         Get
             If _error IsNot Nothing Then
-                Return _error.Message & vbCrLf & _error.StackTrace
+                Return _error.Message
+            Else
+                Return Nothing
+            End If
+        End Get
+    End Property
+
+    Public ReadOnly Property StackTrace As String
+        Get
+            If _error IsNot Nothing Then
+                Return _error.StackTrace
             Else
                 Return Nothing
             End If

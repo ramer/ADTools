@@ -2,6 +2,7 @@
 Imports System.ComponentModel
 Imports IRegisty
 
+<DebuggerDisplay("clsAttributeSchema={lDAPDisplayName}")>
 Public Class clsAttributeSchema
     Implements INotifyPropertyChanged
 
@@ -19,12 +20,13 @@ Public Class clsAttributeSchema
 
     End Sub
 
-    Sub New(adminDisplayName As String, isSingleValued As Boolean, searchFlags As Integer, attributeSyntax As String, lDAPDisplayName As String)
+    Sub New(adminDisplayName As String, isSingleValued As Boolean, searchFlags As Integer, attributeSyntax As String, lDAPDisplayName As String, Optional IsComplex As Boolean = False)
         Me.adminDisplayName = adminDisplayName
         Me.isSingleValued = isSingleValued
         Me.searchFlags = searchFlags
         Me.attributeSyntax = attributeSyntax
         Me.lDAPDisplayName = lDAPDisplayName
+        Me.IsComplex = IsComplex
     End Sub
 
     Public Overrides Function Equals(obj As Object) As Boolean
@@ -73,6 +75,17 @@ Public Class clsAttributeSchema
         Get
             Return searchFlags And 1
         End Get
+    End Property
+
+    Private _iscomplex As Boolean
+    <RegistrySerializerIgnorable(True)>
+    Public Property IsComplex() As Boolean
+        Get
+            Return _iscomplex
+        End Get
+        Set(ByVal value As Boolean)
+            _iscomplex = value
+        End Set
     End Property
 
     Private _value As Object

@@ -1,7 +1,6 @@
 ﻿Public Class clsViewColumnInfo
     Private _header As String
     Private _attributes As New List(Of String)
-    'Private _displayindex As Integer
     Private _width As Double
 
     Sub New()
@@ -11,7 +10,6 @@
     Sub New(Header As String, Attributes As List(Of String), Optional Width As Double = 150.0)
         _header = Header
         _attributes = Attributes
-        '_displayindex = displayindex
         _width = Width
     End Sub
 
@@ -32,15 +30,6 @@
             _attributes = value
         End Set
     End Property
-
-    'Public Property DisplayIndex() As Integer
-    '    Get
-    '        Return _displayindex
-    '    End Get
-    '    Set(ByVal value As Integer)
-    '        _displayindex = value
-    '    End Set
-    'End Property
 
     Public Property Width() As Double
         Get

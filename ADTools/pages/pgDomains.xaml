@@ -9,11 +9,11 @@
         d:DesignHeight="600" d:DesignWidth="762"
         WindowHeight="600"
         WindowWidth="762"
+        Background="{DynamicResource ColorWindowBackground}"
         Title="{x:Static r:Resources.str_DomainOptions}"
         >
     
     <Grid>
-        <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
@@ -23,7 +23,7 @@
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <DockPanel DockPanel.Dock="Left" LastChildFill="true" Margin="5,5,0,5" Grid.Column="0" Grid.Row="0" >
+            <DockPanel DockPanel.Dock="Left" Margin="5,5,0,5" Grid.Column="0">
                 <Grid DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -218,5 +218,6 @@
                 </TabItem>
             </TabControl>
         </Grid>
+        <local:ctlCap x:Name="cap" Visibility="Hidden"/>
     </Grid>
 </Page>

@@ -138,11 +138,11 @@ Class pgMain
         ShowPage(New pgPreferences, True, Window.GetWindow(Me), False)
     End Sub
 
-    Private Sub mnuServiceLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceLog.Click
-        Dim w As New wndLog
-        w.Owner = Window.GetWindow(Me)
-        w.Show()
-    End Sub
+    'Private Sub mnuServiceLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceLog.Click
+    '    Dim w As New wndLog
+    '    w.Owner = Window.GetWindow(Me)
+    '    w.Show()
+    'End Sub
 
     Private Sub mnuServiceErrorLog_Click(sender As Object, e As RoutedEventArgs) Handles mnuServiceErrorLog.Click
         Dim w As New wndErrorLog

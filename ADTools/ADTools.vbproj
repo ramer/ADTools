@@ -142,17 +142,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\clsContact.vb" />
+    <Compile Include="classes\clsOnScreenKeyboardSpacer.vb" />
     <Compile Include="classes\clsViewColumnInfo.vb" />
     <Compile Include="classes\clsEmailAddress.vb" />
     <Compile Include="classes\clsErrorLog.vb" />
     <Compile Include="classes\clsEvent.vb" />
     <Compile Include="classes\clsEventTotal.vb" />
     <Compile Include="classes\clsExternalSoftware.vb" />
-    <Compile Include="classes\clsLog.vb" />
     <Compile Include="classes\clsMailbox.vb" />
     <Compile Include="classes\clsPowerShell.vb" />
-    <Compile Include="classes\clsSearchHistory.vb" />
-    <Compile Include="classes\clsSearchParameters.vb" />
     <Compile Include="classes\clsSorter.vb" />
     <Compile Include="classes\clsTelephoneNumber.vb" />
     <Compile Include="classes\clsWmi.vb" />
@@ -281,9 +279,6 @@
     </Compile>
     <Compile Include="windows\wndErrorLog.xaml.vb">
       <DependentUpon>wndErrorLog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="windows\wndLog.xaml.vb">
-      <DependentUpon>wndLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="pages\pgPreferences.xaml.vb">
       <DependentUpon>pgPreferences.xaml</DependentUpon>
@@ -432,10 +427,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="windows\wndErrorLog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="windows\wndLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

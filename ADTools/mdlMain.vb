@@ -27,7 +27,7 @@ Public Class ADToolsApplication
     Public Shared WithEvents nicon As New Forms.NotifyIcon
     Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
 
-    Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
+    'Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
     Public Shared commandlineargs As String()
 

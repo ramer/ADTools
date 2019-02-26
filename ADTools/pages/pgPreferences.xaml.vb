@@ -50,6 +50,8 @@ Public Class pgPreferences
 
         'mainwindow attributes
         Attributes = New ObservableCollection(Of clsAttributeSchema)(domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).Distinct())
+        GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing Then Attributes.Add(New clsAttributeSchema(prop.Name, True, 0, "2.5.5.2", prop.Name, True)))
+
         lvAttributes.ItemsSource = Attributes
         clsSorter.ApplySort(lvAttributes.Items, "IsDefault", ListSortDirection.Descending)
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch 'domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema).Where(Function(attr) preferences.AttributesForSearch.Contains(attr.lDAPDisplayName))
@@ -98,9 +100,26 @@ Public Class pgPreferences
         attributesForSearchDefault.ToList.ForEach(Sub(attr) preferences.AttributesForSearch.Add(attr))
     End Sub
 
+    Private Sub btnLayoutDefault_Click(sender As Object, e As RoutedEventArgs) Handles btnLayoutDefault.Click
+        preferences.Columns = columnsDefault
+        GenerateMainWindowLayoutTable()
+    End Sub
+
+    Private Async Sub ShowObjectAttributes(obj As clsDirectoryObject)
+        capAttributes.Visibility = Visibility.Visible
+        Await Task.Run(
+            Sub()
+                For Each attr In Attributes
+                    attr.SetStringValueFromDirectoryObject(obj)
+                Next
+            End Sub)
+        capAttributes.Visibility = Visibility.Hidden
+    End Sub
+
+
     Private Sub lvAttributes_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributes.DragEnter, lvAttributes.DragOver
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
-            e.Effects = DragDropEffects.Copy
+            e.Effects = DragDropEffects.Move
         Else
             e.Effects = DragDropEffects.None
         End If
@@ -116,43 +135,26 @@ Public Class pgPreferences
         End If
     End Sub
 
-    Private Async Sub ShowObjectAttributes(obj As clsDirectoryObject)
-        capAttributes.Visibility = Visibility.Visible
-        Await Task.Run(
-            Sub()
-                For Each attr In Attributes
-                    attr.SetStringValueFromDirectoryObject(obj)
-                Next
-            End Sub)
-        capAttributes.Visibility = Visibility.Hidden
-    End Sub
-
-    Private Sub lv_MouseMove(sender As Object, e As MouseEventArgs) Handles lvAttributes.MouseMove, lvAttributesForSearch.MouseMove
-        Dim listView As ListView = TryCast(sender, ListView)
-
-        If e.LeftButton = MouseButtonState.Pressed And
-            e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And
-            listView.SelectedItems.Count > 0 Then
-
-            Dim dragData As New DataObject(listView.SelectedItem)
-
-            DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy)
-        End If
-    End Sub
-
     Private Sub lv_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
                                                                             trashAttributesForSearch.DragEnter,
                                                                             lvAttributesForSearch.DragOver,
                                                                             trashAttributesForSearch.DragOver
-        If e.Data.GetDataPresent(GetType(clsAttributeSchema)) Then
+        If Not e.Data.GetDataPresent(GetType(clsAttributeSchema())) Then Exit Sub
+
+        Dim dragsource = e.Data.GetData("DragSource")
+
+        If dragsource Is lvAttributes AndAlso sender Is lvAttributesForSearch Then
             e.Effects = DragDropEffects.Copy
+        ElseIf dragsource Is lvAttributesForSearch Then
+            If sender Is lvAttributesForSearch Then
+                e.Effects = DragDropEffects.None
+                trashAttributesForSearch.Visibility = Visibility.Visible
+            ElseIf sender Is trashAttributesForSearch Then
+                e.Effects = DragDropEffects.Move
+                trashAttributesForSearch.Visibility = Visibility.Visible : trashAttributesForSearch.Background = Application.Current.Resources("ColorButtonBackground")
+            End If
         Else
             e.Effects = DragDropEffects.None
-        End If
-
-        If e.Effects = DragDropEffects.Copy Then
-            If sender Is lvAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Visible
-            If sender Is trashAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Visible : trashAttributesForSearch.Background = Application.Current.Resources("ColorButtonBackground")
         End If
 
         e.Handled = True
@@ -165,32 +167,82 @@ Public Class pgPreferences
         If sender Is trashAttributesForSearch Then trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
     End Sub
 
+    Dim _dglayoutmousedownpoint As Point
+    Dim _dglayoutdragoperation As Boolean
+
+    Private Sub dgLayout_PreviewMouseDown(sender As Object, e As MouseButtonEventArgs) Handles dgLayout.PreviewMouseDown
+        _dglayoutmousedownpoint = e.GetPosition(Me)
+        _dglayoutdragoperation = False
+
+        Dim r As HitTestResult = VisualTreeHelper.HitTest(Me, e.GetPosition(Me))
+        If r IsNot Nothing Then
+
+            Dim cell = FindVisualParent(Of DataGridCell)(r.VisualHit, Me)
+            If cell Is Nothing Then Exit Sub
+            If CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) IsNot DBNull.Value Then
+                _dglayoutdragoperation = True
+            End If
+
+        End If
+    End Sub
+
+    Private Sub dgLayout_MouseMove(sender As Object, e As MouseEventArgs) Handles dgLayout.MouseMove
+        If _dglayoutdragoperation AndAlso Math.Abs(Point.Subtract(_dglayoutmousedownpoint, e.GetPosition(Me)).Length) > 5 Then
+            _dglayoutdragoperation = False
+
+            Dim r As HitTestResult = VisualTreeHelper.HitTest(Me, e.GetPosition(Me))
+            If r IsNot Nothing Then
+
+                Dim cell = FindVisualParent(Of DataGridCell)(r.VisualHit, Me)
+                If cell Is Nothing Then Exit Sub
+                If CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) IsNot DBNull.Value Then
+                    Dim attr As String = CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath)
+                    CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = DBNull.Value
+                    DragDrop.DoDragDrop(sender, New DataObject({New clsAttributeSchema(attr, False, 0, "", attr)}), DragDropEffects.All)
+                    SaveMainWindowLayoutTable()
+                    e.Handled = True
+                End If
+
+            End If
+        End If
+    End Sub
 
     Private Sub lv_dgLayout_Drop(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.Drop,
-                                                                      trashAttributesForSearch.Drop,
-                                                                      dgLayout.Drop
+                                                                              trashAttributesForSearch.Drop,
+                                                                              dgLayout.Drop
 
         trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
 
-        If e.Data.GetDataPresent(GetType(clsAttributeSchema)) Then
-            Dim obj As clsAttributeSchema = e.Data.GetData(GetType(clsAttributeSchema))
+        If Not e.Data.GetDataPresent(GetType(clsAttributeSchema())) Then Exit Sub
 
-            If sender Is lvAttributesForSearch Then ' adding attribute
-                If Not preferences.AttributesForSearch.Contains(obj) Then
-                    preferences.AttributesForSearch.Add(obj)
-                End If
-            ElseIf sender Is trashAttributesForSearch Then
-                If preferences.AttributesForSearch.Contains(obj) Then
-                    If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.str_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
-                    preferences.AttributesForSearch.Remove(obj)
-                End If
-            ElseIf sender Is dgLayout Then
-                Dim cell = FindVisualParent(Of DataGridCell)(e.OriginalSource)
-                If cell Is Nothing Then Exit Sub
-                CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = obj.lDAPDisplayName
-                SaveMainWindowLayoutTable()
+        Dim dragsource = e.Data.GetData("DragSource")
+
+        Dim dropped As clsAttributeSchema() = e.Data.GetData(GetType(clsAttributeSchema()))
+        If dropped.Count <> 1 Then Exit Sub
+
+        Dim obj = dropped(0)
+
+        If dragsource Is lvAttributes AndAlso sender Is lvAttributesForSearch Then ' adding attribute
+            If obj.IsComplex Then IMsgBox(My.Resources.str_AttributesComplexCannotBeSearched, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
+            If Not preferences.AttributesForSearch.Contains(obj) Then preferences.AttributesForSearch.Add(obj)
+        ElseIf dragsource Is lvAttributesForSearch AndAlso sender Is trashAttributesForSearch Then ' removing attribute
+            If preferences.AttributesForSearch.Contains(obj) Then
+                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.str_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
+                preferences.AttributesForSearch.Remove(obj)
             End If
+        ElseIf sender Is dgLayout Then ' setting layout
+            Dim cell = FindVisualParent(Of DataGridCell)(e.OriginalSource)
+            If cell Is Nothing Then Exit Sub
+            CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = obj.lDAPDisplayName
+            SaveMainWindowLayoutTable()
         End If
+
+    End Sub
+
+
+    Private Sub dgLayout_ColumnReordered(sender As Object, e As DataGridColumnEventArgs) Handles dgLayout.ColumnReordered
+        MainWindowLayoutTable.Columns(e.Column.Header).SetOrdinal(e.Column.DisplayIndex)
+        SaveMainWindowLayoutTable()
     End Sub
 
     Private Sub dgLayout_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles dgLayout.PreviewKeyDown
@@ -261,16 +313,6 @@ Public Class pgPreferences
             SaveMainWindowLayoutTable()
             GenerateMainWindowLayoutTable()
         End If
-    End Sub
-
-    Private Sub dgLayout_ColumnReordered(sender As Object, e As DataGridColumnEventArgs) Handles dgLayout.ColumnReordered
-        MainWindowLayoutTable.Columns(e.Column.Header).SetOrdinal(e.Column.DisplayIndex)
-        SaveMainWindowLayoutTable()
-    End Sub
-
-    Private Sub btnLayoutDefault_Click(sender As Object, e As RoutedEventArgs) Handles btnLayoutDefault.Click
-        preferences.Columns = columnsDefault
-        GenerateMainWindowLayoutTable()
     End Sub
 
     Private Sub GenerateMainWindowLayoutTable()

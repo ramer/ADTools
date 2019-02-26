@@ -156,8 +156,8 @@ Public Class clsSearcher
             searchscope = SearchScope.OneLevel
         Else
             roots = If(specificDomains Is Nothing,
-                domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList,
-                specificDomains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d)).ToList)
+                domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.SearchRoot, d)).ToList,
+                specificDomains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.SearchRoot, d)).ToList)
             searchscope = SearchScope.Subtree
         End If
 

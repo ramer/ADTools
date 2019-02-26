@@ -1,6 +1,5 @@
 ﻿Imports System.Management
 Imports System.Threading
-Imports System.Threading.Tasks
 
 Public Class clsWmi
     Private basicsearchtasks As New List(Of Task)

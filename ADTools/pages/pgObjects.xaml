@@ -69,21 +69,12 @@
 
                     <Grid Margin="0,0,0,4">
                         <local:ListViewExtended x:Name="lvObjects"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.PanningMode="VerticalFirst"
-                            VirtualizingPanel.IsVirtualizing="True"
-                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                            VirtualizingStackPanel.VirtualizationMode="Recycling"
-                            VirtualizingStackPanel.ScrollUnit="Pixel"
-                            KeyboardNavigation.DirectionalNavigation="None"
                             ViewStyleTiles="{StaticResource ListViewExtended_ViewStyleTiles}"
                             ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
                             ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
                             GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
-                            local:clsSorter.AutoSort="True"
-                            >
+                            local:clsSorter.AutoSort="True">
+
                             <ListView.ContextMenu>
                                 <ContextMenu x:Name="ctxmnuObjects">
                                     <MenuItem x:Name="ctxmnuObjectsRestore" Header="{x:Static r:Resources.ctxmnu_Restore}" Click="ctxmnuObjectsRestore_Click"/>

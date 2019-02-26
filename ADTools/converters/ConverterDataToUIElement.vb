@@ -88,7 +88,12 @@ Public Class ConverterDataToUIElement
                 End If
 
             Case Else
-                content = Nothing
+
+                Dim tblck As New TextBlock()
+                tblck.Text = value.ToString
+                tblck.TextWrapping = TextWrapping.Wrap
+                content = tblck
+
         End Select
 
         Return content

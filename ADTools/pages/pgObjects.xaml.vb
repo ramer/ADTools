@@ -31,7 +31,7 @@ Class pgObjects
 
     Private Sub InitializeObject()
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
-        tbSearchPattern.Focus()
+        'tbSearchPattern.Focus()
 
         gcdPreview.DataContext = preferences
 
@@ -48,7 +48,7 @@ Class pgObjects
 
         ' mega-crutch - lvObjects binded to local cvcurrentobjects property and remote preferences properties
         AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "CurrentView" Then lvObjects.CurrentView = preferences.CurrentView
-        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "Columns" And preferences.CurrentView = ListViewExtended.Views.Details Then lvObjects.ViewStyleDetails = CreateViewDetailsStyle()
+        AddHandler preferences.PropertyChanged, Sub(s, a) If a.PropertyName = "Columns" And preferences.CurrentView = ListViewExtended.Views.Details And currentobjects.Count <= 10 Then lvObjects.ViewStyleDetails = CreateViewDetailsStyle()
 
         lvObjects.CurrentView = preferences.CurrentView
         lvObjects.ViewStyleDetails = CreateViewDetailsStyle()
@@ -759,36 +759,29 @@ Class pgObjects
 #Region "Events"
 
     Private Sub lvObjects_PreviewKeyDown(sender As Object, e As KeyEventArgs) Handles lvObjects.PreviewKeyDown
-        Select Case e.Key
-            Case Key.Enter
-                If lvObjects.SelectedItem Is Nothing Then Exit Sub
-                Dim current As clsDirectoryObject = CType(lvObjects.SelectedItem, clsDirectoryObject)
-                OpenObject(current)
-                e.Handled = True
-            Case Key.Back
-                OpenObjectParent()
-                e.Handled = True
-            Case Key.Home
-                If lvObjects.Items.Count > 0 Then lvObjects.SelectedIndex = 0
-                e.Handled = True
-            Case Key.End
-                If lvObjects.Items.Count > 0 Then lvObjects.SelectedIndex = lvObjects.Items.Count - 1
-                e.Handled = True
-        End Select
+        If e.Key = Key.Enter Then
+            If lvObjects.SelectedItem Is Nothing OrElse lvObjects.SelectedItems.Count > 1 Then Exit Sub
+            OpenObject(CType(lvObjects.SelectedItem, clsDirectoryObject))
+            e.Handled = True
+        ElseIf e.Key = Key.Back Then
+            OpenObjectParent()
+            e.Handled = True
+        End If
     End Sub
 
-    Private Sub lvObjects_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles lvObjects.MouseDoubleClick
-        Dim obj = FindVisualParent(Of ListViewItem)(e.OriginalSource)
-        If obj Is Nothing OrElse TypeOf obj.DataContext IsNot clsDirectoryObject Then Exit Sub
-        OpenObject(obj.DataContext)
+    Private Sub lvObjects_ItemDoubleClick(sender As Object, item As ListViewItemExtended) Handles lvObjects.ItemDoubleClick
+        If item IsNot Nothing AndAlso TypeOf item.DataContext Is clsDirectoryObject Then OpenObject(item.DataContext)
     End Sub
 
     Private Sub lvObjects_ColumnResized(column As GridViewColumn)
+        Dim exists As Boolean
         For Each pcolumn As clsViewColumnInfo In preferences.Columns
             If column.Header.ToString = pcolumn.Header Then
                 pcolumn.Width = column.ActualWidth
+                exists = True
             End If
         Next
+        If Not exists Then column.Width = 60 ' this is first column
     End Sub
 
     Private Sub btnUp_Click(sender As Object, e As RoutedEventArgs) Handles btnUp.Click
@@ -843,7 +836,7 @@ Class pgObjects
         Else
             StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
         End If
-        tbSearchPattern.Focus()
+        'tbSearchPattern.Focus()
     End Sub
 
     Private Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick
@@ -874,7 +867,10 @@ Class pgObjects
 
         lvObjects.EnableGrouping = If(root Is Nothing, preferences.ViewResultGrouping, False)
 
-        tbSearchPattern.SelectAll()
+        If root Is Nothing AndAlso filter IsNot Nothing Then
+            tbSearchPattern.SelectAll()
+            tbSearchPattern.Focus()
+        End If
         ApplyPostfilter(Nothing, Nothing)
 
         cap.Visibility = Visibility.Visible

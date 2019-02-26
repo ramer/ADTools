@@ -21,4 +21,8 @@
         End If
     End Sub
 
+    Private Sub ScrollViewer_ManipulationBoundaryFeedback(sender As Object, e As ManipulationBoundaryFeedbackEventArgs)
+        e.Handled = True
+    End Sub
+
 End Class

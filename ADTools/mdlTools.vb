@@ -31,13 +31,13 @@ Module mdlTools
     Public Const OBJECT_DUALPANEL_MINWIDTH As Integer = 610
 
     Public columnsDefault As New ObservableCollection(Of clsViewColumnInfo) From {
-        New clsViewColumnInfo("Имя", New List(Of String) From {"name", "description"}, 220),
-        New clsViewColumnInfo("Имя входа", New List(Of String) From {"userPrincipalName", "distinguishedNameFormated"}, 450),
-        New clsViewColumnInfo("Телефон", New List(Of String) From {"telephoneNumber", "physicalDeliveryOfficeName"}, 100),
-        New clsViewColumnInfo("Место работы", New List(Of String) From {"title", "department", "company"}, 300),
-        New clsViewColumnInfo("Основной адрес", New List(Of String) From {"mail"}, 170),
-        New clsViewColumnInfo("Объект", New List(Of String) From {"whenCreatedFormated", "lastLogonFormated", "accountExpiresFormated"}, 150),
-        New clsViewColumnInfo("Пароль", New List(Of String) From {"pwdLastSetFormated", "passwordExpiresFormated"}, 150)}
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultName, New List(Of String) From {"name", "description"}, 220),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultLogin, New List(Of String) From {"userPrincipalName", "distinguishedNameFormated"}, 450),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultPhone, New List(Of String) From {"telephoneNumber", "physicalDeliveryOfficeName"}, 100),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultWorkplace, New List(Of String) From {"title", "department", "company"}, 300),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultMail, New List(Of String) From {"mail"}, 170),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultObject, New List(Of String) From {"whenCreatedFormated", "lastLogonFormated", "accountExpiresFormated"}, 150),
+        New clsViewColumnInfo(My.Resources.str_ColumnsDefaultPassword, New List(Of String) From {"pwdLastSetFormated", "passwordExpiresFormated"}, 150)}
 
     Public attributesToLoadDefault As String() =
         {"accountExpires",
@@ -316,9 +316,9 @@ Module mdlTools
         IMsgBox(My.Resources.str_WrongGroupMember, vbOKOnly + vbExclamation, My.Resources.str_WrongGroupMemberTitle)
     End Sub
 
-    Public Sub Log(message As String)
-        ADToolsApplication.tsocLog.Add(New clsLog(message))
-    End Sub
+    'Public Sub Log(message As String)
+    '    ADToolsApplication.tsocLog.Add(New clsLog(message))
+    'End Sub
 
     Public Function GetNextDomainUsers(domain As clsDomain, Optional displayname As String = "") As List(Of String)
         If domain Is Nothing Then Return Nothing

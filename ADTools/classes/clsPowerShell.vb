@@ -84,8 +84,6 @@ Public Class clsPowerShell
             Next
         End If
 
-        Log(res)
-
         Return psResult
     End Function
 

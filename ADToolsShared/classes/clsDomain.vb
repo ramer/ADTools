@@ -6,6 +6,7 @@ Imports CredentialManagement
 Imports HandlebarsDotNet
 Imports IRegisty
 
+<DebuggerDisplay("clsDomain={Name}")>
 Public Class clsDomain
     Implements INotifyPropertyChanged
 
@@ -451,16 +452,13 @@ Public Class clsDomain
     <RegistrySerializerAlias("SearchRoot")>
     Public Property SearchRoot() As String
         Get
-            Return _searchroot
+            Return If(String.IsNullOrEmpty(_searchroot), _defaultnamingcontext, _searchroot)
         End Get
         Set(value As String)
             _searchroot = value
             NotifyPropertyChanged("SearchRoot")
         End Set
     End Property
-
-
-
 
     <RegistrySerializerIgnorable(True)>
     Public Property Properties() As ObservableCollection(Of clsDomainProperty)

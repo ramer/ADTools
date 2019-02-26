@@ -377,6 +377,8 @@
 
                                     </DockPanel>
 
+                                    <Grid local:clsOnScreenKeyboardSpacer.IsEnabled="False" SnapsToDevicePixels="True" DockPanel.Dock="Bottom" Margin="0,0,0,0" Visibility="Collapsed"/>
+
                                     <!--Window Content-->
                                     <AdornerDecorator>
                                         <ContentPresenter x:Name="PART_NavWinCP" ClipToBounds="true" />
@@ -442,7 +444,7 @@
         </Style>
 
         <Style TargetType="{x:Type local:wndErrorLog}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <Style TargetType="{x:Type local:wndLog}" BasedOn="{StaticResource {x:Type Window}}"/>
+        <!--<Style TargetType="{x:Type local:wndLog}" BasedOn="{StaticResource {x:Type Window}}"/>-->
 
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />
@@ -924,6 +926,7 @@
         </Style>
 
         <Style TargetType="{x:Type ScrollViewer}">
+            <EventSetter Event="ManipulationBoundaryFeedback" Handler="ScrollViewer_ManipulationBoundaryFeedback"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
@@ -985,16 +988,17 @@
             <Setter Property="Fill" Value="{DynamicResource ColorText}"/>
         </Style>
         
-        <Style x:Key="{x:Type TreeView}"
-       TargetType="TreeView">
-            <Setter Property="OverridesDefaultStyle"
-          Value="True" />
-            <Setter Property="SnapsToDevicePixels"
-          Value="True" />
-            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
-          Value="Auto" />
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
-          Value="Auto" />
+        <Style x:Key="{x:Type TreeView}" TargetType="TreeView">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.ScrollUnit" Value="Pixel"/>
+            <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="None"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TreeView">
@@ -1100,7 +1104,7 @@
                                     </Grid.Style>
                                 </Grid>
 
-                                <Grid Margin="{Binding Converter={StaticResource ConverterTreeViewItemDepthToMargin}, ConverterParameter=10.0, RelativeSource={RelativeSource TemplatedParent}}">
+                                <Grid Margin="{Binding Converter={StaticResource ConverterTreeViewItemDepthToMargin}, ConverterParameter=10, RelativeSource={RelativeSource TemplatedParent}}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="19" />
                                         <ColumnDefinition />
@@ -1202,6 +1206,15 @@
 
         <!--For Extended ListView-->
         <Style TargetType="{x:Type local:ListViewExtended}">
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            <Setter Property="VirtualizingStackPanel.ScrollUnit" Value="Pixel"/>
+            <Setter Property="KeyboardNavigation.DirectionalNavigation" Value="None"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type local:ListViewExtended}">
@@ -1231,11 +1244,23 @@
                             <Grid Margin="{TemplateBinding Padding}">
                                 <TextBlock Text="{TemplateBinding Content}" Padding="5" />
                                 <Thumb x:Name="PART_HeaderGripper"
-                                    HorizontalAlignment="Right"
-                                    Width="5"
-                                    BorderThickness="3"
-                                    BorderBrush="Transparent"
-                                    Cursor="SizeWE">
+                                    HorizontalAlignment="Right">
+                                    <Thumb.Style>
+                                        <Style TargetType="Thumb">
+                                            <Setter Property="Width" Value="18"/>
+                                            <Setter Property="Margin" Value="0,0,-9,0"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderBrush" Value="Transparent"/>
+                                            <Setter Property="Cursor" Value="SizeWE"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                        <Border Padding="{TemplateBinding Padding}" Background="Transparent"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Thumb.Style>
                                 </Thumb>
                             </Grid>
                         </Border>

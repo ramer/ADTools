@@ -4,7 +4,9 @@
     Public Property Length As Double = 19
 
     Public Function Convert(ByVal value As Object, ByVal targetType As Type, ByVal parameter As Object, ByVal culture As System.Globalization.CultureInfo) As Object Implements IValueConverter.Convert
-        Double.TryParse(parameter, Length)
+        Dim NewLenght As Double
+        Double.TryParse(parameter, NewLenght)
+        If NewLenght > 0 Then Length = NewLenght
 
         Dim item As TreeViewItem = value
         If item Is Nothing Then Return New Thickness(0)

@@ -2,6 +2,8 @@
 Public Class ListViewExtended
     Inherits ListView
 
+    Public Event ItemDoubleClick(sender As Object, item As ListViewItemExtended)
+
     Private _scrollContent As ScrollContentPresenter
     Private _selectionAdorner As SelectionAdorner
     Private _autoScroller As AutoScroller
@@ -236,11 +238,15 @@ Public Class ListViewExtended
         Dim r As HitTestResult = VisualTreeHelper.HitTest(Me, e.GetPosition(Me))
         If r IsNot Nothing Then
             Dim cp = FindVisualParent(Of ContentPresenter)(r.VisualHit, Me)
-            Dim lvi = FindVisualParent(Of ListViewItem)(r.VisualHit, Me)
+            Dim lvi = FindVisualParent(Of ListViewItemExtended)(r.VisualHit, Me)
             If lvi IsNot Nothing Then
                 If lvi.IsSelected Then
-                    _dragoperation = True
-                    e.Handled = True
+                    If e.ClickCount = 2 Then
+                        RaiseEvent ItemDoubleClick(Me, lvi)
+                    Else
+                        _dragoperation = True
+                        e.Handled = True
+                    End If
                 Else
                     If cp IsNot Nothing Then
                         UnselectAll()
@@ -253,7 +259,7 @@ Public Class ListViewExtended
             End If
         End If
 
-        If Not _dragoperation Then
+        If Not _dragoperation And SelectionMode <> SelectionMode.Single Then
             Dim mousepoint As Point = e.GetPosition(_scrollContent)
             If (mousepoint.X >= 0) AndAlso (mousepoint.X < _scrollContent.ActualWidth) AndAlso (mousepoint.Y >= 0) AndAlso (mousepoint.Y < _scrollContent.ActualHeight) Then
                 _mousecaptured = TryCaptureMouse(e)
@@ -266,7 +272,7 @@ Public Class ListViewExtended
     End Sub
 
     Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
-        If _dragoperation AndAlso Math.Abs(Point.Subtract(_mousedownpoint, e.GetPosition(Me)).Length) > 3 Then
+        If _dragoperation AndAlso Math.Abs(Point.Subtract(_mousedownpoint, e.GetPosition(Me)).Length) > 5 Then
             _mousecaptured = False
             _scrollContent.ReleaseMouseCapture()
             StopSelection()
@@ -278,7 +284,7 @@ Public Class ListViewExtended
             End If
         End If
 
-            If _mousecaptured Then
+        If _mousecaptured Then
             ' Get the position relative to the content of the ScrollViewer.
             _end = e.GetPosition(_scrollContent)
             _autoScroller.Update(_end)
@@ -427,7 +433,10 @@ Public Class ListViewExtended
             objectlist.Add(element)
         Next
 
-        DragDrop.DoDragDrop(Me, New DataObject(objectlist.ToArray), DragDropEffects.All)
+        Dim dataObj = New DataObject(objectlist.ToArray)
+        dataObj.SetData("DragSource", Me)
+        DragDrop.DoDragDrop(Me, dataObj, DragDropEffects.All)
+
         dragscope.AllowDrop = previousDrop
 
         AdornerLayer.GetAdornerLayer(dragscope).Remove(_dragadorner)
@@ -458,14 +467,22 @@ Public Class ListViewExtended
 
         If objects.Count > 0 Then
             Dim imageprop As Reflection.PropertyInfo = Array.Find(objects(0).GetType.GetProperties, Function(prop) prop.Name = "Image")
-            If imageprop IsNot Nothing Then
-                Dim imgwrapper As New Border With {.Margin = New Thickness(10)}
-                Dim control = TryCast(objects(0).Image, UIElement)
-                If control IsNot Nothing Then imgwrapper.Child = objects(0).Image
-                Dim bitmap = TryCast(objects(0).Image, BitmapImage)
-                If bitmap IsNot Nothing Then imgwrapper.Child = New Image With {.Source = objects(0).Image}
-                grd.Children.Add(imgwrapper)
+            Dim imgwrapper As New Border With {.Margin = New Thickness(10)}
+            Dim control = If(imageprop IsNot Nothing, TryCast(objects(0).Image, UIElement), Nothing)
+            Dim bitmap = If(imageprop IsNot Nothing, TryCast(objects(0).Image, BitmapImage), Nothing)
+
+            If control IsNot Nothing Then
+                imgwrapper.Child = objects(0).Image
+            ElseIf bitmap IsNot Nothing Then
+                imgwrapper.Child = New Image With {.Source = objects(0).Image}
+            Else
+                Try
+                    imgwrapper.Child = New Image With {.Source = New BitmapImage(New Uri("pack://application:,,,/images/property.png"))}
+                Catch
+                End Try
             End If
+
+            grd.Children.Add(imgwrapper)
         End If
 
         If objects.Count > 1 Then

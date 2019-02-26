@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         d:DesignHeight="600" d:DesignWidth="1064"
         Title="{x:Static r:Resources.str_ApplicationOptions}"
+        Background="{DynamicResource ColorWindowBackground}"
         WindowHeight="600"
         WindowWidth="1064"
         >
@@ -36,7 +37,7 @@
                                       ColumnHeaderHeight="50"
                                       RowHeight="40"
                                       ColumnWidth="*"
-                                      IsReadOnly="False"
+                                      IsReadOnly="True"
                                       HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden"
                                       >
@@ -100,30 +101,29 @@
                                     <ColumnDefinition Width="250"/>
                                 </Grid.ColumnDefinitions>
                                 <DockPanel Grid.Column="0">
-                                    <TextBlock Text="{x:Static r:Resources.str_AttributesDefault}" DockPanel.Dock="Top" Height="20"/>
+                                    <TextBlock Text="{x:Static r:Resources.str_AttributesAttributes}" DockPanel.Dock="Top" Height="20"/>
                                     <Grid>
-                                        <ListView x:Name="lvAttributes" 
+                                        <local:ListViewExtended x:Name="lvAttributes" 
                                                 AllowDrop="True"
                                                 TextSearch.TextPath="lDAPDisplayName" 
                                                 IsTextSearchEnabled="True" 
-                                                IsSynchronizedWithCurrentItem="True" 
-                                                local:clsSorter.AutoSort="True" 
-                                                VirtualizingPanel.IsVirtualizing="True"
-                                                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                                VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                                VirtualizingStackPanel.ScrollUnit="Pixel"
-                                                ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                            <ListView.View>
+                                                SelectionMode="Single"
+                                                ViewStyleDetails="{StaticResource ListViewExtended_ViewStyleDetails}"
+                                                CurrentView="Details"
+                                                GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
+                                                local:clsSorter.AutoSort="True"
+                                                >
+                                            <local:ListViewExtended.View>
                                                 <GridView AllowsColumnReorder="False">
                                                     <GridView.Columns>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="280" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="260" local:clsSorter.PropertyName="lDAPDisplayName">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
                                                                 </DataTemplate>
                                                             </GridViewColumn.CellTemplate>
                                                         </GridViewColumn>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="280" local:clsSorter.PropertyName="Value">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="260" local:clsSorter.PropertyName="Value">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding Value}"/>
@@ -133,23 +133,28 @@
                                                         <GridViewColumn Header="D" Width="32" local:clsSorter.PropertyName="IsDefault">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
-                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsDefault, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}"/>
+                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsDefault, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}" ToolTip="{x:Static r:Resources.str_AttributesDefault}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Header="C" Width="32" local:clsSorter.PropertyName="IsComplex">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsComplex, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}" ToolTip="{x:Static r:Resources.str_AttributesComplex}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Header="I" Width="32" local:clsSorter.PropertyName="IsIndexed">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsIndexed, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}" ToolTip="{x:Static r:Resources.str_AttributesIndexed}"/>
                                                                 </DataTemplate>
                                                             </GridViewColumn.CellTemplate>
                                                         </GridViewColumn>
                                                     </GridView.Columns>
                                                 </GridView>
-                                            </ListView.View>
-                                            <ListView.Resources>
-                                                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsIndexed}" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ListView.Resources>
-                                        </ListView>
+                                            </local:ListViewExtended.View>
+                                        </local:ListViewExtended>
                                         <local:ctlCap x:Name="capAttributes" Visibility="Hidden"/>
                                     </Grid>
                                 </DockPanel>
@@ -160,11 +165,20 @@
                                     </DockPanel>
                                     <Grid>
                                         <local:ctlTrash x:Name="trashAttributesForSearch" VerticalAlignment="Bottom" Panel.ZIndex="10" Height="54" Margin="0,0,3,0" AllowDrop="True" Visibility="Collapsed" Background="Transparent"/>
-                                        <ListView x:Name="lvAttributesForSearch" IsSynchronizedWithCurrentItem="True" local:clsSorter.AutoSort="True" AllowDrop="True" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                                            <ListView.View>
+                                        <local:ListViewExtended x:Name="lvAttributesForSearch" 
+                                            AllowDrop="True"
+                                            TextSearch.TextPath="lDAPDisplayName" 
+                                            IsTextSearchEnabled="True" 
+                                            SelectionMode="Single"
+                                            ViewStyleDetails="{StaticResource ListViewExtended_ViewStyleDetails}"
+                                            CurrentView="Details"
+                                            GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
+                                            local:clsSorter.AutoSort="True"
+                                            >
+                                            <local:ListViewExtended.View>
                                                 <GridView AllowsColumnReorder="False">
                                                     <GridView.Columns>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="400" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="220" local:clsSorter.PropertyName="lDAPDisplayName">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
@@ -173,17 +187,8 @@
                                                         </GridViewColumn>
                                                     </GridView.Columns>
                                                 </GridView>
-                                            </ListView.View>
-                                            <ListView.Resources>
-                                                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsIndexed}" Value="True">
-                                                            <Setter Property="Background" Value="{DynamicResource ColorListviewAlternationRow}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ListView.Resources>
-                                        </ListView>
+                                            </local:ListViewExtended.View>
+                                        </local:ListViewExtended>
                                     </Grid>
                                 </DockPanel>
                             </Grid>

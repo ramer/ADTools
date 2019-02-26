@@ -965,10 +965,10 @@ A universal group can not be a member of a global group.</value>
     <value>Change log:</value>
   </data>
   <data name="str_AttributesDefault" xml:space="preserve">
-    <value>Basic attributes</value>
+    <value>Default</value>
   </data>
-  <data name="str_AttributesExtended" xml:space="preserve">
-    <value>Extended attributes</value>
+  <data name="str_AttributesComplex" xml:space="preserve">
+    <value>Complex</value>
   </data>
   <data name="str_Layout" xml:space="preserve">
     <value>Main window layout</value>
@@ -1459,5 +1459,35 @@ To obtain the API key:
   </data>
   <data name="str_EventTotalDiff" xml:space="preserve">
     <value>Difference</value>
+  </data>
+  <data name="str_AttributesAttributes" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="str_AttributesIndexed" xml:space="preserve">
+    <value>Indexed</value>
+  </data>
+  <data name="str_AttributesComplexCannotBeSearched" xml:space="preserve">
+    <value>The search cannot be accomplished by complex attribute</value>
+  </data>
+  <data name="str_ColumnsDefaultName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="str_ColumnsDefaultLogin" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="str_ColumnsDefaultPhone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="str_ColumnsDefaultWorkplace" xml:space="preserve">
+    <value>Workplace</value>
+  </data>
+  <data name="str_ColumnsDefaultMail" xml:space="preserve">
+    <value>Mail</value>
+  </data>
+  <data name="str_ColumnsDefaultObject" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="str_ColumnsDefaultPassword" xml:space="preserve">
+    <value>Password</value>
   </data>
 </root>

@@ -5,6 +5,7 @@ Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
 Imports IRegisty
 
+<DebuggerDisplay("clsDirectoryObject={name}")>
 Public Class clsDirectoryObject
     Inherits Dynamic.DynamicObject
     Implements INotifyPropertyChanged
@@ -131,6 +132,7 @@ Public Class clsDirectoryObject
         End Set
     End Property
 
+    <ExtendedProperty>
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property distinguishedNameFormated() As String
         Get
@@ -151,6 +153,7 @@ Public Class clsDirectoryObject
     End Property
 
     Private _domainname As String
+    <ExtendedProperty>
     Public Property DomainName() As String
         Get
             Return If(_domain IsNot Nothing, _domain.Name, _domainname)
@@ -397,17 +400,23 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    Private _childcontainers As New ObservableCollection(Of clsDirectoryObject)
+    Private _childcontainers As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property ChildContainers() As clsThreadSafeObservableCollection(Of clsDirectoryObject)
         Get
-            If IsDeleted Then Return New ObservableCollection(Of clsDirectoryObject)
+            If IsDeleted Then Return New clsThreadSafeObservableCollection(Of clsDirectoryObject)
 
             If _childcontainers.Count > 0 Then Return _childcontainers
 
-            _childcontainers = searcher.SearchChildContainersSync(
+            '_childcontainers = searcher.SearchChildContainersSync(
+            '    Me,
+            '    New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
+
+            searcher.SearchAsync(
+                _childcontainers,
                 Me,
                 New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
+
 
             Return _childcontainers
         End Get
@@ -559,6 +568,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property Image As Grid
         Get
             Dim grd As New Grid With {.ToolTip = If(String.IsNullOrEmpty(StatusFormatted), Nothing, StatusFormatted), .SnapsToDevicePixels = True}
@@ -619,6 +629,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property StatusFormatted() As String
         Get
             Dim _status As String = ""
@@ -653,6 +664,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property StatusImage() As BitmapImage
         Get
             Dim _image As String = ""
@@ -723,6 +735,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property ClassImage() As BitmapImage
         Get
             Dim _image As String = ""
@@ -966,6 +979,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property userPrincipalNameName() As String
         Get
             If userPrincipalName Is Nothing Then Return Nothing
@@ -985,6 +999,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property userPrincipalNameDomain() As String
         Get
             If userPrincipalName Is Nothing Then Return Nothing
@@ -1260,6 +1275,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property accountExpiresDate() As Date
         Get
             If accountExpires IsNot Nothing Then
@@ -1278,6 +1294,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property accountExpiresFormated() As String
         Get
             If accountExpires IsNot Nothing Then
@@ -1293,6 +1310,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property accountNeverExpires() As Boolean?
         Get
             If accountExpires IsNot Nothing Then
@@ -1306,17 +1324,6 @@ Public Class clsDirectoryObject
                 accountExpires = If(value, 0, Now.ToFileTime)
             End If
         End Set
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property accountExpiresAt() As Boolean?
-        Get
-            If accountNeverExpires IsNot Nothing Then
-                Return Not accountNeverExpires
-            Else
-                Return Nothing
-            End If
-        End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -1346,6 +1353,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property lastLogonDate() As Date
         Get
             If lastLogon IsNot Nothing Then
@@ -1357,6 +1365,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property lastLogonFormated() As String
         Get
             If lastLogon IsNot Nothing Then
@@ -1389,6 +1398,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property objectGUIDFormated() As String
         Get
             Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte())).ToString
@@ -1396,7 +1406,8 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property objectSID() As String
+    <ExtendedProperty>
+    Public ReadOnly Property objectSIDFormatted() As String
         Get
             Try
                 Dim sid As New SecurityIdentifier(TryCast(GetAttribute("objectSid", GetType(Byte())), Byte()), 0)
@@ -1421,46 +1432,58 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property pwdLastSetDate() As Date
         Get
-            Return If(pwdLastSet IsNot Nothing AndAlso pwdLastSet > 0, Date.FromFileTime(pwdLastSet), Nothing)
+            Dim pls = pwdLastSet
+            Return If(pls IsNot Nothing AndAlso pls > 0, Date.FromFileTime(pls), Nothing)
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property pwdLastSetFormated() As String
         Get
-            Return If(pwdLastSet Is Nothing, My.Resources.str_Unknown, If(pwdLastSet = 0, My.Resources.str_Expired, Date.FromFileTime(pwdLastSet).ToString))
+            Dim pls = pwdLastSet
+            Return If(pls Is Nothing, My.Resources.str_Unknown, If(pls = 0, My.Resources.str_Expired, Date.FromFileTime(pls).ToString))
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property passwordExpiresDate() As Date
         Get
-            If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
+            Dim pne = passwordNeverExpires
+            If pne IsNot Nothing AndAlso pne Then
                 Return Nothing
             Else
-                Return If(pwdLastSet IsNot Nothing AndAlso pwdLastSet > 0, Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge), Nothing)
+                Dim pls = pwdLastSet
+                Return If(pls IsNot Nothing AndAlso pls > 0, Date.FromFileTime(pls).AddDays(Domain.MaxPwdAge), Nothing)
             End If
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property passwordExpiresFormated() As String
         Get
-            If passwordNeverExpires IsNot Nothing AndAlso passwordNeverExpires Then
+            Dim pne = passwordNeverExpires
+            If pne IsNot Nothing AndAlso pne Then
                 Return My.Resources.str_Never
             Else
-                Return If(pwdLastSet Is Nothing, My.Resources.str_Unknown, If(pwdLastSet = 0, My.Resources.str_Expired, Date.FromFileTime(pwdLastSet).AddDays(Domain.MaxPwdAge).ToString))
+                Dim pls = pwdLastSet
+                Return If(pls Is Nothing, My.Resources.str_Unknown, If(pls = 0, My.Resources.str_Expired, Date.FromFileTime(pls).AddDays(Domain.MaxPwdAge).ToString))
             End If
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property userMustChangePasswordNextLogon() As Boolean?
         Get
-            If pwdLastSet IsNot Nothing Then
-                Return Not CBool(pwdLastSet)
+            Dim pls = pwdLastSet
+            If pls IsNot Nothing Then
+                Return Not CBool(pls)
             Else
                 Return Nothing
             End If
@@ -1501,38 +1524,46 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property normalAccount() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT)
+            Dim uac = userAccountControl
+            Return If(uac Is Nothing, Nothing, uac And mdlVariables.ADS_UF_NORMAL_ACCOUNT)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
+
+            Dim uac = userAccountControl
             If value Then
-                If Not (userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
-                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_NORMAL_ACCOUNT
+                If Not (uac And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
+                    userAccountControl = uac + mdlVariables.ADS_UF_NORMAL_ACCOUNT
                 End If
             Else
-                If (userAccountControl And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
-                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_NORMAL_ACCOUNT
+                If (uac And mdlVariables.ADS_UF_NORMAL_ACCOUNT) Then
+                    userAccountControl = uac - mdlVariables.ADS_UF_NORMAL_ACCOUNT
                 End If
             End If
         End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property disabled() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE)
+            Dim uac = userAccountControl
+            Return If(uac Is Nothing, Nothing, uac And mdlVariables.ADS_UF_ACCOUNTDISABLE)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
+
+            Dim uac = userAccountControl
             If value Then
-                If Not (userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
-                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_ACCOUNTDISABLE
+                If Not (uac And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
+                    userAccountControl = uac + mdlVariables.ADS_UF_ACCOUNTDISABLE
                 End If
             Else
-                If (userAccountControl And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
-                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_ACCOUNTDISABLE
+                If (uac And mdlVariables.ADS_UF_ACCOUNTDISABLE) Then
+                    userAccountControl = uac - mdlVariables.ADS_UF_ACCOUNTDISABLE
                 End If
             End If
             description = String.Format("{0} {1} ({2})", If(value, My.Resources.str_Disabled, My.Resources.str_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
@@ -1540,10 +1571,12 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property disabledFormated() As String
         Get
-            If disabled IsNot Nothing Then
-                If disabled Then
+            Dim d = disabled
+            If d IsNot Nothing Then
+                If d Then
                     Return "✓"
                 Else
                     Return ""
@@ -1555,19 +1588,23 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public Property passwordNeverExpires() As Boolean?
         Get
-            Return If(userAccountControl Is Nothing, Nothing, userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD)
+            Dim uac = userAccountControl
+            Return If(uac Is Nothing, Nothing, uac And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD)
         End Get
         Set(ByVal value As Boolean?)
             If value Is Nothing Then Exit Property
+
+            Dim uac = userAccountControl
             If value Then
-                If Not (userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
-                    userAccountControl = userAccountControl + mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
+                If Not (uac And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
+                    userAccountControl = uac + mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
                 End If
             Else
-                If (userAccountControl And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
-                    userAccountControl = userAccountControl - mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
+                If (uac And mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD) Then
+                    userAccountControl = uac - mdlVariables.ADS_UF_DONT_EXPIRE_PASSWD
                 End If
             End If
         End Set
@@ -1581,6 +1618,7 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
     Public ReadOnly Property whenCreatedFormated() As String
         Get
             Return If(whenCreated = Nothing, My.Resources.str_Unknown, whenCreated.ToString)
@@ -1869,5 +1907,10 @@ Public Class clsDirectoryObject
     End Sub
 
 #End Region
+
+End Class
+
+Public Class ExtendedPropertyAttribute
+    Inherits Attribute
 
 End Class

@@ -54,12 +54,12 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <Button x:Name="mnuServiceLog" Style="{StaticResource ToolbarButton}" Margin="3">
+                                <!--<Button x:Name="mnuServiceLog" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
                                         <TextBlock Text="{x:Static r:Resources.str_EventLog}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
                                         <Image Source="/images/log.png" Stretch="Uniform" MaxHeight="48" MinHeight="32"/>
                                     </DockPanel>
-                                </Button>
+                                </Button>-->
                                 <Button x:Name="mnuServiceErrorLog" Style="{StaticResource ToolbarButton}" Margin="3">
                                     <DockPanel>
                                         <TextBlock Text="{x:Static r:Resources.str_ErrorLog}" Margin="5,0,5,0" DockPanel.Dock="Bottom" TextAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=850}"/>
@@ -293,12 +293,8 @@
 
                 <TreeView Grid.Column="0" 
                         x:Name="tvObjects" 
-                        VirtualizingStackPanel.IsVirtualizing="True"
-                        VirtualizingStackPanel.VirtualizationMode="Recycling"
-                        VirtualizingStackPanel.ScrollUnit="Pixel"
                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                        SnapsToDevicePixels="True">
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                     <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
                         <TreeViewItem.Header>

@@ -185,12 +185,10 @@
   </data>
   <data name="str_ExchangeDefinition" xml:space="preserve">
     <value>Если в вашей организации используется Microsoft Exchange Server, укажите имя сервера Exchange и список почтовых доменов.
-
 Данные сведения используются для управления почтовыми ящиками пользователей средствами PowerShell.</value>
   </data>
   <data name="str_GroupsDefinition" xml:space="preserve">
     <value>Выберите стандартные группы безопасности домена.
-
 Создаваемые пользователи будут автоматически добавляться в данные группы.</value>
   </data>
   <data name="str_PatternsDefinition" xml:space="preserve">
@@ -942,7 +940,7 @@
     <value>Использовать буфер обмена</value>
   </data>
   <data name="str_ClipboardSourceToolTip" xml:space="preserve">
-    <value>При копировании в буфер обмена текстовых данных из других приложений ADViewer автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</value>
+    <value>При копировании в буфер обмена текстовых данных из других приложений ADTools автоматически произведет поиск объектов, используя эти данные в качестве шаблона поиска.</value>
   </data>
   <data name="str_ClipboardSourceLimit" xml:space="preserve">
     <value>Ограничить объем данных для поиска</value>
@@ -960,10 +958,10 @@
     <value>История изменений:</value>
   </data>
   <data name="str_AttributesDefault" xml:space="preserve">
-    <value>Основные атрибуты</value>
+    <value>Основной</value>
   </data>
-  <data name="str_AttributesExtended" xml:space="preserve">
-    <value>Дополнительные атрибуты</value>
+  <data name="str_AttributesComplex" xml:space="preserve">
+    <value>Комплексный</value>
   </data>
   <data name="str_Layout" xml:space="preserve">
     <value>Макет главного окна</value>
@@ -1298,5 +1296,35 @@
   </data>
   <data name="str_EventTotalDiff" xml:space="preserve">
     <value>Разница</value>
+  </data>
+  <data name="str_AttributesAttributes" xml:space="preserve">
+    <value>Атрибуты</value>
+  </data>
+  <data name="str_AttributesIndexed" xml:space="preserve">
+    <value>Индексированный</value>
+  </data>
+  <data name="str_AttributesComplexCannotBeSearched" xml:space="preserve">
+    <value>Поиск не может производиться по комплексным атрибутам</value>
+  </data>
+  <data name="str_ColumnsDefaultName" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="str_ColumnsDefaultLogin" xml:space="preserve">
+    <value>Имя входа</value>
+  </data>
+  <data name="str_ColumnsDefaultPhone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="str_ColumnsDefaultWorkplace" xml:space="preserve">
+    <value>Место работы</value>
+  </data>
+  <data name="str_ColumnsDefaultMail" xml:space="preserve">
+    <value>Основной адрес</value>
+  </data>
+  <data name="str_ColumnsDefaultObject" xml:space="preserve">
+    <value>Объект</value>
+  </data>
+  <data name="str_ColumnsDefaultPassword" xml:space="preserve">
+    <value>Пароль</value>
   </data>
 </root>
