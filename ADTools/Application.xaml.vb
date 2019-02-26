@@ -25,4 +25,20 @@
         e.Handled = True
     End Sub
 
+    Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
+        Dim wnd As Window = sender
+        AddHandler wnd.Closed,
+            Sub(s As Window, evt As EventArgs)
+                Dim p As Window = s.Parent
+                If p IsNot Nothing Then
+                    p.Show()
+                    p.Activate()
+                    p.Topmost = True : p.Topmost = False
+                End If
+            End Sub
+    End Sub
+
+    Private Sub Window_Closed(sender As Object, e As EventArgs)
+
+    End Sub
 End Class

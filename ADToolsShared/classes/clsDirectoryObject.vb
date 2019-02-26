@@ -17,7 +17,7 @@ Public Class clsDirectoryObject
     End Sub
 
     Private cache As New Dictionary(Of String, DirectoryAttribute)
-    Private searcher As New clsSearcher
+    Private WithEvents searcher As New clsSearcher
 
     Sub New()
 
@@ -400,27 +400,31 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    Private _childcontainers As New clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Private _childcontainers As ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property ChildContainers() As clsThreadSafeObservableCollection(Of clsDirectoryObject)
+    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
         Get
-            If IsDeleted Then Return New clsThreadSafeObservableCollection(Of clsDirectoryObject)
-
-            If _childcontainers.Count > 0 Then Return _childcontainers
-
-            '_childcontainers = searcher.SearchChildContainersSync(
-            '    Me,
-            '    New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
-
-            searcher.SearchAsync(
-                _childcontainers,
-                Me,
-                New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
-
+            If IsDeleted Then Return New ObservableCollection(Of clsDirectoryObject)
+            If _childcontainers IsNot Nothing Then
+                Return _childcontainers
+            Else
+                _childcontainers = New ObservableCollection(Of clsDirectoryObject)
+                GetChildContainersAsync()
+            End If
 
             Return _childcontainers
         End Get
     End Property
+
+    Private Async Sub GetChildContainersAsync()
+        _childcontainers = Await Task.Run(
+            Function()
+                Return searcher.SearchChildContainersSync(
+            Me,
+            New clsFilter("(|(objectClass=organizationalUnit)(objectClass=container)(objectClass=builtindomain)(objectClass=domaindns)(objectClass=lostandfound))"),, True)
+            End Function)
+        NotifyPropertyChanged("ChildContainers")
+    End Sub
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property CanWrite(name As String) As Boolean

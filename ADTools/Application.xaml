@@ -86,6 +86,7 @@
         </Style>
         
         <Style TargetType="NavigationWindow" x:Key="{x:Type NavigationWindow}">
+            <EventSetter Event="Loaded" Handler="Window_Loaded"/>
             <Setter Property="WindowChrome.WindowChrome">
                 <Setter.Value>
                     <WindowChrome CaptionHeight="32" ResizeBorderThickness="4" GlassFrameThickness="1"/>
@@ -440,6 +441,7 @@
         <Style TargetType="{x:Type local:pgUserExchange}" BasedOn="{StaticResource {x:Type Page}}"/>
 
         <Style TargetType="Window">
+            <EventSetter Event="Loaded" Handler="Window_Loaded"/>
             <Setter Property="Background" Value="{DynamicResource ColorWindowBackground}" />
         </Style>
 

@@ -521,6 +521,7 @@ Class pgMain
 
 #Region "Events"
 
+    <DebuggerStepThrough>
     Private Sub clipboardTimer_Tick(ByVal sender As Object, ByVal e As EventArgs) Handles clipboardTimer.Tick
         If preferences Is Nothing OrElse preferences.ClipboardSource = False Then Exit Sub
         If Not Clipboard.ContainsText(TextDataFormat.Text) Then Exit Sub
