@@ -989,8 +989,8 @@
             <Setter Property="Data" Value="M 2 1 L 5 4 L 2 7 L 3 8 L 7 4 L 3 0 Z"/>
             <Setter Property="Fill" Value="{DynamicResource ColorText}"/>
         </Style>
-        
-        <Style x:Key="{x:Type TreeView}" TargetType="TreeView">
+
+        <Style TargetType="{x:Type TreeView}">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
@@ -1003,7 +1003,7 @@
 
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TreeView">
+                    <ControlTemplate TargetType="{x:Type TreeView}">
                         <Border Name="Border" BorderThickness="1"
                             BorderBrush="{DynamicResource ColorButtonBackground}"
                             Background="{DynamicResource ColorElementBackground}" >
@@ -1075,6 +1075,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
         <Style TargetType="{x:Type TreeViewItem}">
             <Setter Property="MinHeight" Value="24"/>
             <Setter Property="Background" Value="Transparent" />
@@ -1089,7 +1090,10 @@
 
                         <StackPanel Name="Panel" Background="{TemplateBinding Background}">
 
-                            <Grid>
+                            <Grid PreviewDragEnter="DragDropHelper_PreviewDragEnter"
+                                  PreviewDragLeave="DragDropHelper_PreviewDragLeave" 
+                                  PreviewDrop="DragDropHelper_PreviewDragLeave">
+                                
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}">
                                     <Grid.Style>
                                         <Style TargetType="Grid">
@@ -1098,9 +1102,9 @@
                                                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid, AncestorLevel=1}, Path=IsMouseOver}" Value="True" >
                                                     <Setter Property="Opacity" Value="0.3"/>
                                                 </DataTrigger>
-                                                <!--<Trigger Property="local:classDragDropHelper.IsDragOver" Value="True">
-                                                    <Setter Property="Background" Value="{StaticResource brushBackgroundTreeViewNotSelected}"/>
-                                                </Trigger>-->
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid, AncestorLevel=1}, Path=(local:DragDropHelper.IsDragOver)}" Value="True">
+                                                    <Setter Property="Opacity" Value="0.3"/>
+                                                </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Grid.Style>

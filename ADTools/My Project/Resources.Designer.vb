@@ -83,6 +83,26 @@ Namespace My.Resources
         '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
+        Public ReadOnly Property attributes_indexed() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("attributes_indexed", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
+        Public ReadOnly Property attributes_selected() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("attributes_selected", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        '''</summary>
         Public ReadOnly Property clipboard() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("clipboard", resourceCulture)
@@ -3424,6 +3444,42 @@ Namespace My.Resources
         Public ReadOnly Property str_Search() As String
             Get
                 Return ResourceManager.GetString("str_Search", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Attributes.
+        '''</summary>
+        Public ReadOnly Property str_SearchAttributes() As String
+            Get
+                Return ResourceManager.GetString("str_SearchAttributes", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Indexed only.
+        '''</summary>
+        Public ReadOnly Property str_SearchAttributesIndexed() As String
+            Get
+                Return ResourceManager.GetString("str_SearchAttributesIndexed", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Search is performed only by indexed attributes. To search all the specified attributes, use the keyboard shortcut (Ctrl+Enter).
+        '''</summary>
+        Public ReadOnly Property str_SearchAttributesIndexedToolTip() As String
+            Get
+                Return ResourceManager.GetString("str_SearchAttributesIndexedToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на All selected.
+        '''</summary>
+        Public ReadOnly Property str_SearchAttributesSelected() As String
+            Get
+                Return ResourceManager.GetString("str_SearchAttributesSelected", resourceCulture)
             End Get
         End Property
         

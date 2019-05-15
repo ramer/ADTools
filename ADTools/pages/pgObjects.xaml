@@ -73,6 +73,8 @@
                             ViewStyleList="{StaticResource ListViewExtended_ViewStyleList}"
                             ViewStyleMediumIcons="{StaticResource ListViewExtended_ViewStyleMediumIcons}"
                             GroupItemStyle="{StaticResource ListViewExtended_GroupItemStyle}"
+                            IsTextSearchEnabled="True"
+                            TextSearch.TextPath="name"
                             local:clsSorter.AutoSort="True">
 
                             <ListView.ContextMenu>

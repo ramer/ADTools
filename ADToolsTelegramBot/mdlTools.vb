@@ -22,69 +22,6 @@ Module mdlTools
     Public TelegramProxyAddress As String
     Public TelegramProxyPort As Integer
 
-    'Public attributesDefault As New ObservableCollection(Of clsAttribute) From {
-    '    {New clsAttribute("accountExpires", "Объект истекает")},
-    '    {New clsAttribute("accountExpiresFormated", "Объект истекает (формат)")},
-    '    {New clsAttribute("badPwdCount", "Ошибок ввода пароля")},
-    '    {New clsAttribute("company", "Компания")},
-    '    {New clsAttribute("department", "Подразделение")},
-    '    {New clsAttribute("description", "Описание")},
-    '    {New clsAttribute("disabled", "Заблокирован")},
-    '    {New clsAttribute("disabledFormated", "Заблокирован (формат)")},
-    '    {New clsAttribute("displayName", "Отображаемое имя")},
-    '    {New clsAttribute("distinguishedName", "LDAP-путь")},
-    '    {New clsAttribute("distinguishedNameFormated", "LDAP-путь (формат)")},
-    '    {New clsAttribute("givenName", "Имя")},
-    '    {New clsAttribute("Image", "Картинка ⬕")},
-    '    {New clsAttribute("initials", "Инициалы")},
-    '    {New clsAttribute("lastLogonDate", "Последний вход")},
-    '    {New clsAttribute("lastLogonFormated", "Последний вход (формат)")},
-    '    {New clsAttribute("location", "Местонахождение")},
-    '    {New clsAttribute("logonCount", "Входов")},
-    '    {New clsAttribute("mail", "Основной адрес")},
-    '    {New clsAttribute("manager", "Руководитель")},
-    '    {New clsAttribute("managedBy", "Управляется")},
-    '    {New clsAttribute("name", "Имя объекта")},
-    '    {New clsAttribute("objectGUID", "Уникальный идентификатор (GUID)")},
-    '    {New clsAttribute("objectSID", "Уникальный идентификатор (SID)")},
-    '    {New clsAttribute("passwordExpiresDate", "Пароль истекает")},
-    '    {New clsAttribute("passwordExpiresFormated", "Пароль истекает (формат)")},
-    '    {New clsAttribute("physicalDeliveryOfficeName", "Офис")},
-    '    {New clsAttribute("pwdLastSetDate", "Пароль изменен")},
-    '    {New clsAttribute("pwdLastSetFormated", "Пароль изменен (формат)")},
-    '    {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")},
-    '    {New clsAttribute("SchemaClassName", "Класс")},
-    '    {New clsAttribute("sn", "Фамилия")},
-    '    {New clsAttribute("StatusImage", "Статус ⬕")},
-    '    {New clsAttribute("StatusFormatted", "Статус (формат)")},
-    '    {New clsAttribute("telephoneNumber", "Телефон")},
-    '    {New clsAttribute("thumbnailPhoto", "Фото ⬕")},
-    '    {New clsAttribute("title", "Должность")},
-    '    {New clsAttribute("userPrincipalName", "Имя входа")},
-    '    {New clsAttribute("whenCreated", "Создан")},
-    '    {New clsAttribute("whenCreatedFormated", "Создан (формат)")}
-    '}
-    'Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
-    '    {New clsAttribute("name", "Имя объекта")},
-    '    {New clsAttribute("displayName", "Отображаемое имя")},
-    '    {New clsAttribute("userPrincipalName", "Имя входа")},
-    '    {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    '}
-    'Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From { ' 
-    '    {New clsAttribute("name", "Имя объекта")},
-    '    {New clsAttribute("displayName", "Отображаемое имя")},
-    '    {New clsAttribute("userPrincipalName", "Имя входа")}
-    '}
-    'Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
-    '    {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    '}
-    'Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
-    '    {New clsAttribute("sAMAccountName", "Имя входа (пред-Windows 2000)")}
-    '}
-    'Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
-    '    {New clsAttribute("name", "Имя объекта")}
-    '}
-
     Public attributesToLoadDefault As String() =
         {"accountExpires",
         "company",
@@ -143,17 +80,11 @@ Module mdlTools
         Else
             Bot = New Telegram.Bot.TelegramBotClient(TelegramAPIKey)
         End If
+
     End Sub
 
     Public Sub StartTelegramUpdater()
-        Do
-            Try
-                GetTelegramMessages()
-                Threading.Thread.Sleep(1000)
-            Catch ex As Exception
-                ThrowException(ex, "TelegramUpdater")
-            End Try
-        Loop
+        Bot.StartReceiving()
     End Sub
 
     Public Sub initializeDomains()

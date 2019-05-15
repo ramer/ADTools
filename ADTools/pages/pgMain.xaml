@@ -179,7 +179,7 @@
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
-                                <DockPanel x:Name="dpSearchObjectClasses">
+                                <DockPanel x:Name="dpSearchObjectClasses" IsEnabled="{Binding ElementName=mnuSearchModeDefault, Path=IsChecked}">
                                     <TextBlock Text="{x:Static r:Resources.str_SearchObjectClasses}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
                                     <UniformGrid Rows="2">
                                         <ToggleButton IsChecked="{Binding SearchObjectClasses.User}" HorizontalContentAlignment="Left" Margin="3" MinHeight="24">
@@ -215,6 +215,26 @@
                                     </UniformGrid>
                                 </DockPanel>
 
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
+
+                                <DockPanel IsEnabled="{Binding ElementName=mnuSearchModeDefault, Path=IsChecked}">
+                                    <TextBlock Text="{x:Static r:Resources.str_SearchAttributes}" DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontWeight="Light" FontSize="{DynamicResource FontSizeSmall}"/>
+                                    <UniformGrid Rows="2">
+                                        <RadioButton x:Name="mnuSearchAttributesSelected" Margin="3" IsChecked="{Binding Path=QuickSearch, Converter={StaticResource ConverterBooleanInverted}}" Style="{StaticResource ToggleRadioButton}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" MinHeight="24">
+                                            <DockPanel>
+                                                <Image Source="/images/attributes_selected.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_SearchAttributesSelected}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                        <RadioButton x:Name="mnuSearchAttributesIndexed" Margin="3" IsChecked="{Binding Path=QuickSearch}" Style="{StaticResource ToggleRadioButton}" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" MinHeight="24" ToolTip="{x:Static r:Resources.str_SearchAttributesIndexedToolTip}">
+                                            <DockPanel VerticalAlignment="Center">
+                                                <Image Source="/images/attributes_indexed.png" Stretch="Uniform" DockPanel.Dock="Left" Width="16"/>
+                                                <TextBlock Text="{x:Static r:Resources.str_SearchAttributesIndexed}" Margin="5,0,5,0" TextAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ElementName=tabctlMain, Path=ActualWidth, Converter={StaticResource ConverterDesiredWidthToVisibility}, ConverterParameter=550}"/>
+                                            </DockPanel>
+                                        </RadioButton>
+                                    </UniformGrid>
+                                </DockPanel>
+                                
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Background="{DynamicResource ColorButtonBackground}"/>
 
                                 <DockPanel>
@@ -294,7 +314,8 @@
                 <TreeView Grid.Column="0" 
                         x:Name="tvObjects" 
                         ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          HorizontalContentAlignment="Stretch">
 
                     <TreeViewItem x:Name="tviFavorites" IsExpanded="True">
                         <TreeViewItem.Header>
@@ -367,6 +388,7 @@
                             </HierarchicalDataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
+                    
                     <TreeViewItem x:Name="tviDomains" IsExpanded="True">
                         <TreeViewItem.ContextMenu>
                             <ContextMenu>
@@ -429,6 +451,7 @@
                             </HierarchicalDataTemplate>
                         </TreeViewItem.ItemTemplate>
                     </TreeViewItem>
+                    
                     <TreeViewItem x:Name="tviFilters" IsExpanded="True">
                         <TreeViewItem.Header>
                             <StackPanel Background="Transparent" Orientation="Horizontal" Height="23" Tag="{Binding}">

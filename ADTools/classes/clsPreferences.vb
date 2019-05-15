@@ -33,6 +33,7 @@ Public Class clsPreferences
     Private _attributesforsearch As ObservableCollection(Of clsAttributeSchema)
     Private _searchmode As enmSearchMode
     Private _searchobjectclasses As clsSearchObjectClasses
+    Private _quicksearch As Boolean
 
     ' behavior
     Private _startwithwindows As Boolean?
@@ -234,6 +235,16 @@ Public Class clsPreferences
         Set(ByVal value As clsSearchObjectClasses)
             _searchobjectclasses = If(value, New clsSearchObjectClasses(True, True, True, True, False))
             NotifyPropertyChanged("SearchObjectClasses")
+        End Set
+    End Property
+
+    Public Property QuickSearch() As Boolean
+        Get
+            Return _quicksearch
+        End Get
+        Set(ByVal value As Boolean)
+            _quicksearch = value
+            NotifyPropertyChanged("QuickSearch")
         End Set
     End Property
 

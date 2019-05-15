@@ -63,16 +63,16 @@ Public Class ConverterDataToUIElement
                         rn.TextDecorations = TextDecorations.Underline
                         Dim hl As New Hyperlink(rn)
                         AddHandler hl.Click,
-                    Sub()
-                        Dim w As Window = Window.GetWindow(hl)
-                        If w IsNot Nothing AndAlso
-                        TypeOf w Is NavigationWindow AndAlso
-                        CType(w, NavigationWindow).Content IsNot Nothing AndAlso
-                        TypeOf CType(w, NavigationWindow).Content Is pgMain AndAlso
-                        TypeOf CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content Is pgObjects Then
-                            CType(CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content, pgObjects).StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, preferences.SearchObjectClasses))
-                        End If
-                    End Sub
+                            Sub()
+                                Dim w As Window = Window.GetWindow(hl)
+                                If w IsNot Nothing AndAlso
+                                TypeOf w Is NavigationWindow AndAlso
+                                CType(w, NavigationWindow).Content IsNot Nothing AndAlso
+                                TypeOf CType(w, NavigationWindow).Content Is pgMain AndAlso
+                                TypeOf CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content Is pgObjects Then
+                                    CType(CType(CType(w, NavigationWindow).Content, pgMain).frmObjects.Content, pgObjects).StartSearch(Nothing, New clsFilter("""" & match.Value & """", attributesForSearchDefault, preferences.SearchObjectClasses))
+                                End If
+                            End Sub
                         tblck.Inlines.Add(hl)
                     Next
                     tblck.Inlines.Add(New Run(value.ToString.Substring(lastindex)))

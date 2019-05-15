@@ -1,54 +1,38 @@
 ﻿
 Imports Telegram
+Imports Telegram.Bot.Args
 Imports Telegram.Bot.Types
 
 Module mdlTelegram
 
-    Public Bot As Bot.TelegramBotClient
-    Public lastupdateid As Integer
+    Public WithEvents Bot As Bot.TelegramBotClient
 
-    Public Sub SendTelegramMessage(ChatId As Integer, Message As String, Optional keyboard As IEnumerable(Of IEnumerable(Of ReplyMarkups.KeyboardButton)) = Nothing)
-        If Bot Is Nothing Then Exit Sub
+    Private Async Sub Bot_OnMessage(sender As Object, e As MessageEventArgs) Handles Bot.OnMessage
+        If e Is Nothing Then Exit Sub
+        Log("Message From " & e.Message.Chat.Id & " / " & e.Message.Chat.Username & " : " & e.Message.Text)
 
-        Dim response As Message = Nothing
-
-        If keyboard IsNot Nothing Then
-            response = Bot.SendTextMessageAsync(
-                ChatId, Message, Enums.ParseMode.Default, True, False, 0,
-                New ReplyMarkups.ReplyKeyboardMarkup With {.Keyboard = keyboard, .ResizeKeyboard = True},
-                Nothing).Result
+        If e.Message.Chat.Username = TelegramUsername Then
+            ' Если это свои тогда обработать запрос и ответить
+            Await Bot.SendChatActionAsync(e.Message.Chat.Id, Enums.ChatAction.Typing)
+            OnMessage(e.Message)
         Else
-            response = Bot.SendTextMessageAsync(
-                ChatId, Message, Enums.ParseMode.Default, True, False, 0,
-                New ReplyMarkups.ReplyKeyboardRemove,
-                Nothing).Result
+            ' Если это не понятно кто тогда приподпослать
+            Await Bot.SendTextMessageAsync(e.Message.Chat.Id, "Sorry, I don't know you...")
         End If
-
-        Log("[To   " & ChatId & " / " & response.From.Username & "] : " & Message)
     End Sub
 
-    Public Sub GetTelegramMessages()
-        If Bot Is Nothing Then Exit Sub
+    Private Sub Bot_OnCallbackQuery(sender As Object, e As CallbackQueryEventArgs) Handles Bot.OnCallbackQuery
+        If e Is Nothing Then Exit Sub
+        Log("CallbackQuery From " & e.CallbackQuery.Message.Chat.Id & " / " & e.CallbackQuery.Message.From.Username & " : " & e.CallbackQuery.Message.Text)
 
-        Dim updates As Update() = Bot.GetUpdatesAsync(lastupdateid + 1,,, {Enums.UpdateType.Message}).Result
-        Dim update As Update
-
-        For Each update In updates
-
-            If lastupdateid < update.Id Then lastupdateid = update.Id 'записываем номер последнего сообщения чтобы избежать повторного чтения
-
-            If update.Message Is Nothing Then Continue For
-            Log("[From " & update.Message.From.Id & " / " & update.Message.From.Username & "] : " & update.Message.Text)
-
-            If TelegramUsername = update.Message.From.Username Then
-                ' Если это свои тогда обработать запрос и ответить
-                If Bot IsNot Nothing Then Bot.SendChatActionAsync(update.Message.From.Id, Enums.ChatAction.Typing)
-                ProcessDialogue(update)
-            Else
-                ' Если это не понятно кто тогда приподпослать
-                SendTelegramMessage(update.Message.From.Id, "Sorry, I don't know you...")
-            End If
-        Next
+        'If e.CallbackQuery.Message.Chat.Username = TelegramUsername Then
+        '    dialogues(e.From.Username).OnCallbackQuery(e)
+        'Else
+        '    ' Если это не понятно кто тогда приподпослать
+        '    Await Bot.SendTextMessageAsync(e.From.Id, "Sorry, I don't know you...")
+        'End If
     End Sub
+
+
 
 End Module

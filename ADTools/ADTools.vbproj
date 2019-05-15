@@ -156,6 +156,7 @@
     <Compile Include="classes\clsWmi.vb" />
     <Compile Include="controlsinherited\ColumnDefinitionExtended.vb" />
     <Compile Include="controlsinherited\CustomTextBlock.vb" />
+    <Compile Include="controlsinherited\DragDropHelper.vb" />
     <Compile Include="controlsinherited\ListViewExtended.vb" />
     <Compile Include="controlsinherited\TabControlExtended.vb" />
     <Compile Include="controlsinherited\VirtualizingWrapPanel.vb" />
@@ -562,6 +563,8 @@
     <Resource Include="images\filter_advanced.png" />
     <Resource Include="images\filter_regular.png" />
     <Resource Include="images\error_log.png" />
+    <Resource Include="images\attributes_indexed.png" />
+    <Resource Include="images\attributes_selected.png" />
     <Content Include="libraries\Handlebars.dll" />
     <Content Include="libraries\System.Management.Automation.dll" />
     <Resource Include="images\view_pageinterface.png" />

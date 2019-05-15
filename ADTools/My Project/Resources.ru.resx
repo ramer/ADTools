@@ -1327,4 +1327,16 @@
   <data name="str_ColumnsDefaultPassword" xml:space="preserve">
     <value>Пароль</value>
   </data>
+  <data name="str_SearchAttributes" xml:space="preserve">
+    <value>Атрибуты</value>
+  </data>
+  <data name="str_SearchAttributesSelected" xml:space="preserve">
+    <value>Все указанные</value>
+  </data>
+  <data name="str_SearchAttributesIndexed" xml:space="preserve">
+    <value>Только индексированные</value>
+  </data>
+  <data name="str_SearchAttributesIndexedToolTip" xml:space="preserve">
+    <value>Поиск производится только по индексированным атрибутам. Для поиска по всем указанным атрибутам используйте сочетание клавиш (Ctrl+Enter)</value>
+  </data>
 </root>

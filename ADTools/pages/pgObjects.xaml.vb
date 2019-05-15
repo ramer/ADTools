@@ -31,7 +31,7 @@ Class pgObjects
 
     Private Sub InitializeObject()
         DataObject.AddPastingHandler(tbSearchPattern, AddressOf tbSearchPattern_OnPaste)
-        'tbSearchPattern.Focus()
+        tbSearchPattern.Focus()
 
         gcdPreview.DataContext = preferences
 
@@ -766,6 +766,15 @@ Class pgObjects
         ElseIf e.Key = Key.Back Then
             OpenObjectParent()
             e.Handled = True
+        ElseIf e.Key = Key.Tab Then
+            tbSearchPattern.SelectAll()
+            tbSearchPattern.Focus()
+            e.Handled = True
+        Else
+            If lvObjects.Items.Count = 0 Then
+                tbSearchPattern.SelectAll()
+                tbSearchPattern.Focus()
+            End If
         End If
     End Sub
 
@@ -819,10 +828,18 @@ Class pgObjects
     Private Sub tbSearchPattern_KeyDown(sender As Object, e As KeyEventArgs) Handles tbSearchPattern.KeyDown
         If e.Key = Key.Enter Then
             If preferences.SearchMode = enmSearchMode.Default Then
-                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                If preferences.QuickSearch And Not e.KeyboardDevice.Modifiers = ModifierKeys.Control Then
+                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttributeSchema)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+                Else
+                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                End If
             Else
                 StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
             End If
+        ElseIf e.Key = Key.F12 Then
+            tbSearchPattern.Text = SwitchLayout_EN_RU(tbSearchPattern.Text)
+            tbSearchPattern.SelectionStart = tbSearchPattern.Text.Length
+            tbSearchPattern.SelectionLength = 0
         End If
     End Sub
 
@@ -832,11 +849,14 @@ Class pgObjects
 
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If preferences.SearchMode = enmSearchMode.Default Then
-            StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+            If preferences.QuickSearch Then
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttributeSchema)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+            Else
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+            End If
         Else
             StartSearch(Nothing, New clsFilter(tbSearchPattern.Text))
         End If
-        'tbSearchPattern.Focus()
     End Sub
 
     Private Sub pbSearch_MouseDoubleClick(sender As Object, e As MouseButtonEventArgs) Handles pbSearch.MouseDoubleClick

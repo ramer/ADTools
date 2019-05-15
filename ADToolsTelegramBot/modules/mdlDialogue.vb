@@ -1,5 +1,6 @@
 ﻿Imports Telegram
 Imports Telegram.Bot.Types
+Imports Telegram.Bot.Types.ReplyMarkups
 
 Module mdlDialogue
 
@@ -56,105 +57,105 @@ Module mdlDialogue
         End Set
     End Property
 
-    Public Sub ProcessDialogue(responce As Telegram.Bot.Types.Update)
+    Public Sub OnMessage(message As Message)
 
-        If responce.Message.Text = "/start" Then
+        If message.Text = "/start" Then
 
             Stage = DialogueStage.SearchUser
-            SendRequestStageGreeting(responce)
+            SendRequestStageGreeting(message)
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_USERDETAILS Then
+        ElseIf message.Text = DIALOGUE_BUTTON_USERDETAILS Then
 
             Stage = DialogueStage.UserMenu
-            SendRequestStageUserDetails(responce)
+            SendRequestStageUserDetails(message)
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_BACK Then
+        ElseIf message.Text = DIALOGUE_BUTTON_BACK Then
 
             Select Case Stage
                 Case DialogueStage.UserMenu
                     Stage = DialogueStage.SearchUser
-                    SendRequestStageSearchUser(responce)
+                    SendRequestStageSearchUser(message)
                 Case DialogueStage.SearchGroup
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(responce)
+                    SendRequestStageUserMenu(message)
             End Select
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_USERRESETPASSWORD Then
+        ElseIf message.Text = DIALOGUE_BUTTON_USERRESETPASSWORD Then
 
             If currentuser Is Nothing Then
                 Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(responce)
+                SendRequestStageSearchUser(message)
             End If
 
             Stage = DialogueStage.UserConfirmResetPassword
-            SendRequestStageUserConfirmResetPassword(responce)
+            SendRequestStageUserConfirmResetPassword(message)
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_USERENABLEDISABLE Then
+        ElseIf message.Text = DIALOGUE_BUTTON_USERENABLEDISABLE Then
 
             If currentuser Is Nothing Then
                 Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(responce)
+                SendRequestStageSearchUser(message)
             End If
 
             Stage = DialogueStage.UserConfirmEnableDisable
-            SendRequestStageUserConfirmEnableDisable(responce)
+            SendRequestStageUserConfirmEnableDisable(message)
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_USERMEMBEROF Then
+        ElseIf message.Text = DIALOGUE_BUTTON_USERMEMBEROF Then
 
             If currentuser Is Nothing Then
                 Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(responce)
+                SendRequestStageSearchUser(message)
             End If
 
             Stage = DialogueStage.SearchGroup
-            SendRequestStageSearchGroup(responce)
+            SendRequestStageSearchGroup(message)
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_YES Then
+        ElseIf message.Text = DIALOGUE_BUTTON_YES Then
             Select Case Stage
                 Case DialogueStage.UserConfirmResetPassword
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserResetPasswordCompleted(responce)
+                    SendRequestStageUserResetPasswordCompleted(message)
 
                 Case DialogueStage.UserConfirmEnableDisable
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserEnableDisableCompleted(responce)
+                    SendRequestStageUserEnableDisableCompleted(message)
 
                 Case DialogueStage.GroupConfirmMemberOf
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageGroupMemberOfCompleted(responce)
+                    SendRequestStageGroupMemberOfCompleted(message)
 
                 Case Else
 
                     Stage = DialogueStage.SearchUser
-                    SendRequestStageSearchUser(responce)
+                    SendRequestStageSearchUser(message)
 
             End Select
 
-        ElseIf responce.Message.Text = DIALOGUE_BUTTON_NO Then
+        ElseIf message.Text = DIALOGUE_BUTTON_NO Then
 
             Select Case Stage
                 Case DialogueStage.UserConfirmResetPassword
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(responce)
+                    SendRequestStageUserMenu(message)
 
                 Case DialogueStage.UserConfirmEnableDisable
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(responce)
+                    SendRequestStageUserMenu(message)
 
                 Case DialogueStage.GroupConfirmMemberOf
 
                     Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(responce)
+                    SendRequestStageUserMenu(message)
 
                 Case Else
 
                     Stage = DialogueStage.SearchUser
-                    SendRequestStageSearchUser(responce)
+                    SendRequestStageSearchUser(message)
 
             End Select
 
@@ -165,7 +166,7 @@ Module mdlDialogue
 
                     Dim responceguid As Guid = Nothing
                     Try
-                        responceguid = New Guid(Decode58(responce.Message.Text.Replace("/", "")))
+                        responceguid = New Guid(Decode58(message.Text.Replace("/", "")))
                     Catch
                     End Try
                     If Not responceguid = Nothing Then
@@ -176,35 +177,35 @@ Module mdlDialogue
                         Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
                             If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then
-                                SendRequestUnexpectedUser(responce)
+                                SendRequestUnexpectedUser(message)
                                 Exit Sub
                             End If
 
                             currentuser = obj
 
                             Stage = DialogueStage.UserMenu
-                            SendRequestStageUserMenu(responce)
+                            SendRequestStageUserMenu(message)
                             Exit Sub
                         End If
                     End If
 
                     Dim results As New List(Of clsDirectoryObject)
                     For Each dmn In domains
-                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responce.Message.Text, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(message.Text, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
                     Next
 
-                    SendRequestStageSearchListObjects(responce, results)
+                    SendRequestStageSearchListObjects(message, results)
 
                 Case DialogueStage.SearchGroup
 
                     If currentuser Is Nothing Then
                         Stage = DialogueStage.SearchUser
-                        SendRequestStageSearchUser(responce)
+                        SendRequestStageSearchUser(message)
                     End If
 
                     Dim responceguid As Guid = Nothing
                     Try
-                        responceguid = New Guid(Decode58(responce.Message.Text.Replace("/", "")))
+                        responceguid = New Guid(Decode58(message.Text.Replace("/", "")))
                     Catch
                     End Try
                     If Not responceguid = Nothing Then
@@ -215,28 +216,28 @@ Module mdlDialogue
                         Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
                         If obj IsNot Nothing Then
                             If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Then
-                                SendRequestUnexpectedGroup(responce)
+                                SendRequestUnexpectedGroup(message)
                                 Exit Sub
                             End If
 
                             currentgroup = obj
 
                             Stage = DialogueStage.GroupConfirmMemberOf
-                            SendRequestStageGroupConfirmMemberOf(responce)
+                            SendRequestStageGroupConfirmMemberOf(message)
                             Exit Sub
                         End If
                     End If
 
                     Dim results As New List(Of clsDirectoryObject)
                     For Each dmn In domains
-                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter("*" & responce.Message.Text & "*", attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
+                        results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter("*" & message.Text & "*", attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
                     Next
 
-                    SendRequestStageSearchListObjects(responce, results)
+                    SendRequestStageSearchListObjects(message, results)
 
                 Case Else
 
-                    SendRequestUnexpected(responce)
+                    SendRequestUnexpected(message)
 
             End Select
 
@@ -244,41 +245,41 @@ Module mdlDialogue
 
     End Sub
 
-    Private Sub SendRequestUnexpected(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, "ВТФ??? нажми на кнопку!",)
+    Private Async Sub SendRequestUnexpected(message As Message)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, "ВТФ??? нажми на кнопку!",)
     End Sub
 
-    Private Sub SendRequestUnexpectedUser(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, "Чойта??? Надо юзера выбрать!",)
+    Private Async Sub SendRequestUnexpectedUser(message As Message)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, "Чойта??? Надо юзера выбрать!",)
     End Sub
 
-    Private Sub SendRequestUnexpectedGroup(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, "Нутычо??? Тут надо группу выбрать!",)
+    Private Async Sub SendRequestUnexpectedGroup(message As Message)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, "Нутычо??? Тут надо группу выбрать!",)
     End Sub
 
-    Private Sub SendRequestStageGreeting(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, String.Format(
+    Private Async Sub SendRequestStageGreeting(message As Message)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, String.Format(
         "Привет, {0}!" & nl &
         "Я бот ADTools." & nl &
-        "Кого ищем?", responce.Message.From.Username))
+        "Кого ищем?", message.Chat.Username))
     End Sub
 
-    Private Sub SendRequestStageSearchUser(responce As Telegram.Bot.Types.Update)
-        SendTelegramMessage(responce.Message.From.Id, "Кого ищем?")
+    Private Async Sub SendRequestStageSearchUser(message As Message)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, "Кого ищем?")
     End Sub
 
-    Private Sub SendRequestStageSearchListObjects(responce As Telegram.Bot.Types.Update, objects As List(Of clsDirectoryObject))
+    Private Async Sub SendRequestStageSearchListObjects(message As Message, objects As List(Of clsDirectoryObject))
 
         If objects.Count = 0 Then
             If Stage = DialogueStage.SearchUser Then
-                SendTelegramMessage(responce.Message.From.Id, "Никого не найдено")
+                Await Bot.SendTextMessageAsync(message.Chat.Id, "Никого не найдено")
             ElseIf Stage = DialogueStage.SearchGroup Then
-                SendTelegramMessage(responce.Message.From.Id, "Группа не найдена", searchgroupkeyboard)
+                Await Bot.SendTextMessageAsync(message.Chat.Id, "Группа не найдена",,,,, New ReplyKeyboardMarkup(searchgroupkeyboard))
             End If
 
         ElseIf objects.Count > 50 Then
 
-            SendTelegramMessage(responce.Message.From.Id, "Найдено больше 50 объектов")
+            Await Bot.SendTextMessageAsync(message.Chat.Id, "Найдено больше 50 объектов")
 
         Else
 
@@ -289,12 +290,12 @@ Module mdlDialogue
                 msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & nl)
                 msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & dnl
             Next
-            SendTelegramMessage(responce.Message.From.Id, msg)
+            Await Bot.SendTextMessageAsync(message.Chat.Id, msg)
 
         End If
     End Sub
 
-    Private Sub SendRequestStageUserDetails(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserDetails(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Выбранный юзер:" & dnl
@@ -306,11 +307,11 @@ Module mdlDialogue
         msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & ", " & currentuser.department & nl)
         msg &= If(String.IsNullOrEmpty(currentuser.passwordExpiresFormated), "", "🔑 " & currentuser.passwordExpiresFormated & nl)
 
-        SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
     End Sub
 
 
-    Private Sub SendRequestStageUserMenu(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserMenu(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = "Юзер выбран:" & dnl
@@ -318,18 +319,18 @@ Module mdlDialogue
         msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & nl)
         msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "📲 " & currentuser.userPrincipalName & nl)
 
-        SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
     End Sub
 
-    Private Sub SendRequestStageUserConfirmResetPassword(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserConfirmResetPassword(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = String.Format("Сброс пароля:" & dnl & "👤 {0}" & dnl & "Чо серьезно?", currentuser.name)
 
-        SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
     End Sub
 
-    Private Sub SendRequestStageUserConfirmEnableDisable(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserConfirmEnableDisable(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -340,10 +341,10 @@ Module mdlDialogue
             msg &= String.Format("Заблочить:" & dnl & "👤 {0}" & dnl & "А надо?", currentuser.name)
         End If
 
-        SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
     End Sub
 
-    Private Sub SendRequestStageUserResetPasswordCompleted(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserResetPasswordCompleted(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -356,10 +357,10 @@ Module mdlDialogue
             msg = String.Format("Не получилось сбросить пароль:" & dnl & "👤 {0}" & dnl & "{1}", currentuser.name, ex.Message)
         End Try
 
-        SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
     End Sub
 
-    Private Sub SendRequestStageUserEnableDisableCompleted(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageUserEnableDisableCompleted(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -377,10 +378,10 @@ Module mdlDialogue
             msg = String.Format("Не получилось заблочить/разблочить:" & dnl & "👤 {0}" & dnl & "{1}", currentuser.name, ex.Message)
         End Try
 
-        SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
     End Sub
 
-    Private Sub SendRequestStageSearchGroup(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageSearchGroup(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -395,10 +396,10 @@ Module mdlDialogue
 
         msg &= "Введи кусок названия группы"
 
-        SendTelegramMessage(responce.Message.From.Id, msg, searchgroupkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(searchgroupkeyboard))
     End Sub
 
-    Private Sub SendRequestStageGroupConfirmMemberOf(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageGroupConfirmMemberOf(message As Message)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -414,10 +415,10 @@ Module mdlDialogue
             msg &= String.Format("Удалить:" & dnl & "👤 {0}" & dnl & "из группы" & dnl & "👥 {1}" & dnl & "ммм?", currentuser.name, currentgroup.name)
         End If
 
-        SendTelegramMessage(responce.Message.From.Id, msg, confimkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
     End Sub
 
-    Private Sub SendRequestStageGroupMemberOfCompleted(responce As Telegram.Bot.Types.Update)
+    Private Async Sub SendRequestStageGroupMemberOfCompleted(message As Message)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -445,7 +446,7 @@ Module mdlDialogue
             msg = String.Format("Не получилось добавить/удалить:" & dnl & "👤 {0}" & dnl & "в/из группы" & dnl & "👥 {1}" & dnl & "{2}", currentuser.name, currentgroup.name, ex.Message)
         End Try
 
-        SendTelegramMessage(responce.Message.From.Id, msg, userkeyboard)
+        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
     End Sub
 
 End Module

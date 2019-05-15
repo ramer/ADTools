@@ -1490,4 +1490,22 @@ To obtain the API key:
   <data name="str_ColumnsDefaultPassword" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="str_SearchAttributes" xml:space="preserve">
+    <value>Attributes</value>
+  </data>
+  <data name="str_SearchAttributesSelected" xml:space="preserve">
+    <value>All selected</value>
+  </data>
+  <data name="str_SearchAttributesIndexed" xml:space="preserve">
+    <value>Indexed only</value>
+  </data>
+  <data name="str_SearchAttributesIndexedToolTip" xml:space="preserve">
+    <value>Search is performed only by indexed attributes. To search all the specified attributes, use the keyboard shortcut (Ctrl+Enter)</value>
+  </data>
+  <data name="attributes_indexed" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\attributes_indexed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="attributes_selected" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\attributes_selected.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

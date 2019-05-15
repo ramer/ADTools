@@ -41,4 +41,13 @@
     Private Sub Window_Closed(sender As Object, e As EventArgs)
 
     End Sub
+
+    Private Sub DragDropHelper_PreviewDragEnter(sender As Object, e As DragEventArgs)
+        DragDropHelper.SetIsDragOver(sender, True)
+    End Sub
+
+    Private Sub DragDropHelper_PreviewDragLeave(sender As Object, e As DragEventArgs)
+        DragDropHelper.SetIsDragOver(sender, False)
+    End Sub
+
 End Class

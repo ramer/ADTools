@@ -245,14 +245,14 @@ Public Class ListViewExtended
                         RaiseEvent ItemDoubleClick(Me, lvi)
                     Else
                         _dragoperation = True
-                        e.Handled = True
+                        'e.Handled = True
                     End If
                 Else
                     If cp IsNot Nothing Then
                         UnselectAll()
                         lvi.IsSelected = True
                         _dragoperation = True
-                        e.Handled = True
+                        'e.Handled = True
                     End If
                 End If
 

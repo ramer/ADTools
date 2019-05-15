@@ -178,10 +178,17 @@
                                             <local:ListViewExtended.View>
                                                 <GridView AllowsColumnReorder="False">
                                                     <GridView.Columns>
-                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="220" local:clsSorter.PropertyName="lDAPDisplayName">
+                                                        <GridViewColumn Header="{x:Static r:Resources.str_AttributesAttribute}" Width="200" local:clsSorter.PropertyName="lDAPDisplayName">
                                                             <GridViewColumn.CellTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding lDAPDisplayName}" ToolTip="{Binding adminDisplayName}"/>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                        <GridViewColumn Header="I" Width="32" local:clsSorter.PropertyName="IsIndexed">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <Image Source="/images/ok.png" Width="16" Height="16" Visibility="{Binding IsIndexed, Mode=OneWay, Converter={StaticResource ConverterBooleanToVisibility}}" ToolTip="{x:Static r:Resources.str_AttributesIndexed}"/>
                                                                 </DataTemplate>
                                                             </GridViewColumn.CellTemplate>
                                                         </GridViewColumn>
