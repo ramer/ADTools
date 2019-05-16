@@ -1,5 +1,4 @@
-﻿Imports Telegram
-Imports Telegram.Bot.Types
+﻿Imports Telegram.Bot.Types
 Imports Telegram.Bot.Types.ReplyMarkups
 
 Module mdlDialogue
@@ -10,52 +9,27 @@ Module mdlDialogue
 
     Public Enum DialogueStage
         SearchUser
-        UserMenu
         UserConfirmResetPassword
         UserConfirmEnableDisable
         SearchGroup
         GroupConfirmMemberOf
     End Enum
 
-    'Const DIALOGUE_BUTTON_CURRENTUSER = "👤 выбранный юзер"
-    Const DIALOGUE_BUTTON_USERRESETPASSWORD = "🔑 сбросить пароль"
-    Const DIALOGUE_BUTTON_USERENABLEDISABLE = "⛔️  заблочить / разблочить"
-    Const DIALOGUE_BUTTON_USERMEMBEROF = "👥 член групп"
-    Const DIALOGUE_BUTTON_USERDETAILS = "ℹ️ подробнее"
-    'Const DIALOGUE_BUTTON_SHOWCONFIG = "ℹ️ показать настройки"
-    'Const DIALOGUE_BUTTON_UPDATE = "⏺ начать перепись"
-    Const DIALOGUE_BUTTON_BACK = "↪️ назад"
+
     Const DIALOGUE_BUTTON_YES = "✅ канеш"
     Const DIALOGUE_BUTTON_NO = "❌ передумал"
-    'Const DIALOGUE_BUTTON_HOME = "🏠 главная"
-    'Const DIALOGUE_BUTTON_UPDATELASTDEVICES = "Переписать последние"
-    'Const DIALOGUE_BUTTON_CLEARHISTORY = "🚫 удалить историю"
-    'Const DIALOGUE_BUTTON_PRINT = "🖨 печать акта"
-    'Const DIALOGUE_BUTTON_COPY = "🆕 копировать"
-    'Const DIALOGUE_BUTTON_SHOWPRINTERLIST = "ℹ️ список принтеров"
 
     'Const DIALOGUE_WARNING = "❗️"
 
-    Private confimkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
-                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_YES), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_NO)}.ToList}}
+    Const DIALOGUE_INLINEBUTTON_DETAILS = "ℹ️"
+    Const DIALOGUE_INLINEBUTTON_RESETPASSWORD = "🔑"
+    Const DIALOGUE_INLINEBUTTON_ENABLE = "🍏"
+    Const DIALOGUE_INLINEBUTTON_DISABLE = "🍎"
+    Const DIALOGUE_INLINEBUTTON_GROUPS = "👥"
 
-    Private userkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
-                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERDETAILS), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_BACK)}.ToList},
-                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERRESETPASSWORD), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERENABLEDISABLE), New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_USERMEMBEROF)}.ToList}}
+    Private confimkeyboard As New List(Of KeyboardButton) From {New KeyboardButton(DIALOGUE_BUTTON_YES), New KeyboardButton(DIALOGUE_BUTTON_NO)}
 
-    Private searchgroupkeyboard As New List(Of List(Of ReplyMarkups.KeyboardButton)) From {
-                        {{New ReplyMarkups.KeyboardButton(DIALOGUE_BUTTON_BACK)}.ToList}}
-
-    Private _stage As DialogueStage = DialogueStage.SearchUser
-
-    Public Property Stage As DialogueStage
-        Get
-            Return _stage
-        End Get
-        Set(value As DialogueStage)
-            _stage = value
-        End Set
-    End Property
+    Public Property Stage As DialogueStage = DialogueStage.SearchUser
 
     Public Sub OnMessage(message As Message)
 
@@ -64,67 +38,21 @@ Module mdlDialogue
             Stage = DialogueStage.SearchUser
             SendRequestStageGreeting(message)
 
-        ElseIf message.Text = DIALOGUE_BUTTON_USERDETAILS Then
-
-            Stage = DialogueStage.UserMenu
-            SendRequestStageUserDetails(message)
-
-        ElseIf message.Text = DIALOGUE_BUTTON_BACK Then
-
-            Select Case Stage
-                Case DialogueStage.UserMenu
-                    Stage = DialogueStage.SearchUser
-                    SendRequestStageSearchUser(message)
-                Case DialogueStage.SearchGroup
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(message)
-            End Select
-
-        ElseIf message.Text = DIALOGUE_BUTTON_USERRESETPASSWORD Then
-
-            If currentuser Is Nothing Then
-                Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(message)
-            End If
-
-            Stage = DialogueStage.UserConfirmResetPassword
-            SendRequestStageUserConfirmResetPassword(message)
-
-        ElseIf message.Text = DIALOGUE_BUTTON_USERENABLEDISABLE Then
-
-            If currentuser Is Nothing Then
-                Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(message)
-            End If
-
-            Stage = DialogueStage.UserConfirmEnableDisable
-            SendRequestStageUserConfirmEnableDisable(message)
-
-        ElseIf message.Text = DIALOGUE_BUTTON_USERMEMBEROF Then
-
-            If currentuser Is Nothing Then
-                Stage = DialogueStage.SearchUser
-                SendRequestStageSearchUser(message)
-            End If
-
-            Stage = DialogueStage.SearchGroup
-            SendRequestStageSearchGroup(message)
-
         ElseIf message.Text = DIALOGUE_BUTTON_YES Then
             Select Case Stage
                 Case DialogueStage.UserConfirmResetPassword
 
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserResetPasswordCompleted(message)
+                    Stage = DialogueStage.SearchUser
+                    SendRequestResetPasswordCompleted(message)
 
                 Case DialogueStage.UserConfirmEnableDisable
 
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserEnableDisableCompleted(message)
+                    Stage = DialogueStage.SearchUser
+                    SendRequestEnableDisableCompleted(message)
 
                 Case DialogueStage.GroupConfirmMemberOf
 
-                    Stage = DialogueStage.UserMenu
+                    Stage = DialogueStage.SearchUser
                     SendRequestStageGroupMemberOfCompleted(message)
 
                 Case Else
@@ -136,96 +64,27 @@ Module mdlDialogue
 
         ElseIf message.Text = DIALOGUE_BUTTON_NO Then
 
-            Select Case Stage
-                Case DialogueStage.UserConfirmResetPassword
-
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(message)
-
-                Case DialogueStage.UserConfirmEnableDisable
-
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(message)
-
-                Case DialogueStage.GroupConfirmMemberOf
-
-                    Stage = DialogueStage.UserMenu
-                    SendRequestStageUserMenu(message)
-
-                Case Else
-
-                    Stage = DialogueStage.SearchUser
-                    SendRequestStageSearchUser(message)
-
-            End Select
+            Stage = DialogueStage.SearchUser
+            Bot.SendTextMessageAsync(message.Chat.Id, "Ну и ладно...", Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
 
         Else ' нажали не кнопку
 
             Select Case Stage
                 Case DialogueStage.SearchUser
 
-                    Dim responceguid As Guid = Nothing
-                    Try
-                        responceguid = New Guid(Decode58(message.Text.Replace("/", "")))
-                    Catch
-                    End Try
-                    If Not responceguid = Nothing Then
-                        Dim guidresults As New List(Of clsDirectoryObject)
-                        For Each dmn In domains
-                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
-                        Next
-                        Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
-                        If obj IsNot Nothing Then
-                            If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then
-                                SendRequestUnexpectedUser(message)
-                                Exit Sub
-                            End If
-
-                            currentuser = obj
-
-                            Stage = DialogueStage.UserMenu
-                            SendRequestStageUserMenu(message)
-                            Exit Sub
-                        End If
-                    End If
-
                     Dim results As New List(Of clsDirectoryObject)
                     For Each dmn In domains
                         results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(message.Text, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
                     Next
 
-                    SendRequestStageSearchListObjects(message, results)
+                    SendRequestUserList(message, results)
 
                 Case DialogueStage.SearchGroup
 
                     If currentuser Is Nothing Then
                         Stage = DialogueStage.SearchUser
                         SendRequestStageSearchUser(message)
-                    End If
-
-                    Dim responceguid As Guid = Nothing
-                    Try
-                        responceguid = New Guid(Decode58(message.Text.Replace("/", "")))
-                    Catch
-                    End Try
-                    If Not responceguid = Nothing Then
-                        Dim guidresults As New List(Of clsDirectoryObject)
-                        For Each dmn In domains
-                            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
-                        Next
-                        Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
-                        If obj IsNot Nothing Then
-                            If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Then
-                                SendRequestUnexpectedGroup(message)
-                                Exit Sub
-                            End If
-
-                            currentgroup = obj
-
-                            Stage = DialogueStage.GroupConfirmMemberOf
-                            SendRequestStageGroupConfirmMemberOf(message)
-                            Exit Sub
-                        End If
+                        Exit Sub
                     End If
 
                     Dim results As New List(Of clsDirectoryObject)
@@ -233,11 +92,11 @@ Module mdlDialogue
                         results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter("*" & message.Text & "*", attributesForSearchDefault, New clsSearchObjectClasses(False, False, False, True, False))))
                     Next
 
-                    SendRequestStageSearchListObjects(message, results)
+                    SendRequestGroupList(message, results)
 
                 Case Else
 
-                    SendRequestUnexpected(message)
+                    SendRequestUnexpectedRequest(message)
 
             End Select
 
@@ -245,161 +104,327 @@ Module mdlDialogue
 
     End Sub
 
-    Private Async Sub SendRequestUnexpected(message As Message)
-        Await Bot.SendTextMessageAsync(message.Chat.Id, "ВТФ??? нажми на кнопку!",)
-    End Sub
+    Public Sub OnCallbackQuery(query As CallbackQuery)
+        Dim data = query.Data.Split({";"}, StringSplitOptions.RemoveEmptyEntries)
+        If data.Length <> 2 Then Exit Sub
+        Dim action = data(0)
 
-    Private Async Sub SendRequestUnexpectedUser(message As Message)
-        Await Bot.SendTextMessageAsync(message.Chat.Id, "Чойта??? Надо юзера выбрать!",)
-    End Sub
+        Dim responceguid As Guid = Nothing
+        Try
+            responceguid = New Guid(Decode58(data(1)))
+        Catch
+            Exit Sub
+        End Try
+        If responceguid = Nothing Then Exit Sub
 
-    Private Async Sub SendRequestUnexpectedGroup(message As Message)
-        Await Bot.SendTextMessageAsync(message.Chat.Id, "Нутычо??? Тут надо группу выбрать!",)
-    End Sub
+        Dim guidresults As New List(Of clsDirectoryObject)
+        For Each dmn In domains
+            guidresults.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(responceguid.ToString, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
+        Next
+        Dim obj As clsDirectoryObject = If(guidresults.Count = 1, guidresults(0), Nothing)
+        If obj Is Nothing Then Exit Sub
 
-    Private Async Sub SendRequestStageGreeting(message As Message)
-        Await Bot.SendTextMessageAsync(message.Chat.Id, String.Format(
-        "Привет, {0}!" & nl &
-        "Я бот ADTools." & nl &
-        "Кого ищем?", message.Chat.Username))
-    End Sub
+        If obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then
 
-    Private Async Sub SendRequestStageSearchUser(message As Message)
-        Await Bot.SendTextMessageAsync(message.Chat.Id, "Кого ищем?")
-    End Sub
+            currentuser = obj
 
-    Private Async Sub SendRequestStageSearchListObjects(message As Message, objects As List(Of clsDirectoryObject))
+            If action = "Details" Then
 
-        If objects.Count = 0 Then
-            If Stage = DialogueStage.SearchUser Then
-                Await Bot.SendTextMessageAsync(message.Chat.Id, "Никого не найдено")
-            ElseIf Stage = DialogueStage.SearchGroup Then
-                Await Bot.SendTextMessageAsync(message.Chat.Id, "Группа не найдена",,,,, New ReplyKeyboardMarkup(searchgroupkeyboard))
+                SendRequestUserDetails(query.Message, obj)
+
+            ElseIf action = "Pass" Then
+
+                Stage = DialogueStage.UserConfirmResetPassword
+                SendRequestResetPasswordConfirm(query.Message)
+
+            ElseIf action = "Enable" Then
+
+                Stage = DialogueStage.UserConfirmEnableDisable
+                SendRequestEnableDisableConfirm(query.Message)
+
+            ElseIf action = "Disable" Then
+
+                Stage = DialogueStage.UserConfirmEnableDisable
+                SendRequestEnableDisableConfirm(query.Message)
+
+            ElseIf action = "Groups" Then
+
+                Stage = DialogueStage.SearchGroup
+                SendRequestUserGroups(query.Message)
+
+            Else
+
+                SendRequestUnexpectedInlineButton(query.Message)
+
             End If
 
-        ElseIf objects.Count > 50 Then
+        ElseIf obj.SchemaClass = enmDirectoryObjectSchemaClass.Group Then
 
-            Await Bot.SendTextMessageAsync(message.Chat.Id, "Найдено больше 50 объектов")
+            If currentuser Is Nothing Then
+                Stage = DialogueStage.SearchUser
+                SendRequestUnexpectedInlineButton(query.Message)
+                Exit Sub
+            End If
+
+            currentgroup = obj
+
+            If action = "MemberOf" Then
+
+                Stage = DialogueStage.GroupConfirmMemberOf
+                SendRequestConfirmMemberOf(query.Message)
+
+            Else
+
+                SendRequestUnexpectedInlineButton(query.Message)
+
+            End If
 
         Else
 
-            Dim msg As String = ""
-            For Each obj In objects
-                msg &= If(obj.disabled = True, "⛔️ ", If(Stage = DialogueStage.SearchUser, "👤 ", "👥 ")) & obj.name & nl
-                msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "📲 " & obj.userPrincipalNameName & nl)
-                msg &= If(String.IsNullOrEmpty(obj.title), "", "📃 " & obj.title & nl)
-                msg &= "/" & Encode58(obj.objectGUID.ToByteArray) & dnl
+            SendRequestUnexpectedInlineButton(query.Message)
+
+        End If
+
+    End Sub
+
+    Public Sub OnInlineQuery(inlinequery As InlineQuery)
+        Dim queryresults As New List(Of InlineQueryResults.InlineQueryResultBase)
+
+        If inlinequery.Query.Length >= 3 Then
+            Dim results As New List(Of clsDirectoryObject)
+            For Each dmn In domains
+                results.AddRange(searcher.SearchSync(New clsDirectoryObject(dmn.DefaultNamingContext, dmn), New clsFilter(inlinequery.Query, attributesForSearchDefault, New clsSearchObjectClasses(True, False, False, False, False))))
             Next
-            Await Bot.SendTextMessageAsync(message.Chat.Id, msg)
+
+            Dim count = 0
+            For Each obj In results
+                count += 1
+                If count = 10 Then Exit For
+
+                Dim msg As String = ""
+                InsertUser(msg, obj)
+                msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "🎫 " & obj.userPrincipalNameName & nl)
+                msg &= If(String.IsNullOrEmpty(obj.physicalDeliveryOfficeName), "", "🏠 " & obj.physicalDeliveryOfficeName & nl)
+                msg &= If(String.IsNullOrEmpty(obj.telephoneNumber), "", "📞 " & obj.telephoneNumber & nl)
+                msg &= If(String.IsNullOrEmpty(obj.mail), "", "✉️ " & obj.mail & nl)
+                msg &= If(String.IsNullOrEmpty(obj.title), "", "🗄 " & obj.title & nl)
+                msg &= If(String.IsNullOrEmpty(obj.passwordExpiresFormated), "", "🔑 " & obj.passwordExpiresFormated & nl)
+
+                Dim queryresultmessage = New InlineQueryResults.InputTextMessageContent(msg)
+                queryresultmessage.DisableWebPagePreview = True
+                queryresultmessage.ParseMode = Enums.ParseMode.Markdown
+
+                Dim queryresultinlinekeyboard = New List(Of InlineKeyboardButton)
+
+                Dim queryobj = New InlineQueryResults.InlineQueryResultArticle(Encode58(obj.objectGUID.ToByteArray), obj.name, queryresultmessage)
+                queryobj.ReplyMarkup = New InlineKeyboardMarkup(queryresultinlinekeyboard)
+                queryobj.Description = obj.userPrincipalName & nl & obj.title
+
+                If obj.Status = enmDirectoryObjectStatus.Normal Then
+                    queryobj.ThumbUrl = "http://icons.iconarchive.com/icons/custom-icon-design/flatastic-11/64/User-green-icon.png"
+                ElseIf obj.Status = enmDirectoryObjectStatus.Expired Then
+                    queryobj.ThumbUrl = "http://icons.iconarchive.com/icons/custom-icon-design/flatastic-11/64/User-yellow-icon.png"
+                ElseIf obj.Status = enmDirectoryObjectStatus.Blocked Then
+                    queryobj.ThumbUrl = "http://icons.iconarchive.com/icons/custom-icon-design/flatastic-11/64/User-red-icon.png"
+                End If
+
+                queryresults.Add(queryobj)
+            Next
+
+        End If
+
+        Bot.AnswerInlineQueryAsync(inlinequery.Id, queryresults)
+    End Sub
+
+    Private Sub SendRequestStageGreeting(message As Message)
+        Bot.SendTextMessageAsync(message.Chat.Id, String.Format(
+        "Привет, {0}!" & nl &
+        "Я бот ADTools." & nl &
+        "Кого ищем?", message.Chat.FirstName), Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
+    End Sub
+
+    Private Sub SendRequestUnexpectedInlineButton(message As Message)
+        Bot.SendTextMessageAsync(message.Chat.Id, "Это чо за кнопка еще?!", Enums.ParseMode.Markdown)
+    End Sub
+
+    Private Sub SendRequestUnexpectedRequest(message As Message)
+        Bot.SendTextMessageAsync(message.Chat.Id, "Чойта??? Нажми кнопку!", Enums.ParseMode.Markdown)
+    End Sub
+
+    Private Sub SendRequestStageSearchUser(message As Message)
+        Bot.SendTextMessageAsync(message.Chat.Id, "Кого ищем?", Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
+    End Sub
+
+    Private Sub SendRequestUserList(message As Message, objects As List(Of clsDirectoryObject))
+
+        If objects.Count = 0 Then
+
+            Bot.SendTextMessageAsync(message.Chat.Id, "Никого не найдено", Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
+
+        ElseIf objects.Count > 10 Then
+
+            Bot.SendTextMessageAsync(message.Chat.Id, "Найдено больше 10 объектов, пешы ищё", Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
+
+        Else
+
+            For Each obj In objects
+                SendRequestUser(message, obj)
+            Next
 
         End If
     End Sub
 
-    Private Async Sub SendRequestStageUserDetails(message As Message)
-        If currentuser Is Nothing Then Exit Sub
+    Private Sub SendRequestGroupList(message As Message, objects As List(Of clsDirectoryObject))
 
-        Dim msg As String = "Выбранный юзер:" & dnl
-        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & nl
-        msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalNameName), "", "📲 " & currentuser.userPrincipalNameName & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.physicalDeliveryOfficeName), "", "🏢 " & currentuser.physicalDeliveryOfficeName & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.telephoneNumber), "", "📞 " & currentuser.telephoneNumber & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.mail), "", "✉️ " & currentuser.mail & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & ", " & currentuser.department & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.passwordExpiresFormated), "", "🔑 " & currentuser.passwordExpiresFormated & nl)
+        If objects.Count = 0 Then
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
+            Bot.SendTextMessageAsync(message.Chat.Id, "Группа не найдена", Enums.ParseMode.Markdown)
+
+        ElseIf objects.Count > 10 Then
+
+            Bot.SendTextMessageAsync(message.Chat.Id, "Найдено больше 10 объектов, пешы ищё", Enums.ParseMode.Markdown)
+
+        Else
+
+            Dim groupinlinekeyboard As New List(Of List(Of InlineKeyboardButton))
+            For Each group In objects
+                groupinlinekeyboard.Add(New List(Of InlineKeyboardButton) From {New InlineKeyboardButton With {.Text = "👥 " & group.name, .CallbackData = "MemberOf;" & Encode58(group.objectGUID.ToByteArray)}})
+            Next
+
+            Dim msg As String = "В какую группу добавить?"
+
+            Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New InlineKeyboardMarkup(groupinlinekeyboard))
+
+        End If
     End Sub
 
+    Private Sub SendRequestUser(message As Message, obj As clsDirectoryObject)
+        If obj Is Nothing Then Exit Sub
 
-    Private Async Sub SendRequestStageUserMenu(message As Message)
-        If currentuser Is Nothing Then Exit Sub
+        Dim userinlinekeyboard As New List(Of InlineKeyboardButton) From {
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_DETAILS, .CallbackData = "Details;" & Encode58(obj.objectGUID.ToByteArray)},
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_RESETPASSWORD, .CallbackData = "Pass;" & Encode58(obj.objectGUID.ToByteArray)},
+            New InlineKeyboardButton With {.Text = If(obj.disabled, DIALOGUE_INLINEBUTTON_DISABLE, DIALOGUE_INLINEBUTTON_ENABLE), .CallbackData = If(obj.disabled, "Enable;" & Encode58(obj.objectGUID.ToByteArray), "Disable;" & Encode58(obj.objectGUID.ToByteArray))},
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_GROUPS, .CallbackData = "Groups;" & Encode58(obj.objectGUID.ToByteArray)}}
 
-        Dim msg As String = "Юзер выбран:" & dnl
-        msg &= If(currentuser.disabled = True, "⛔️ ", "👤 ") & currentuser.name & nl
-        msg &= If(String.IsNullOrEmpty(currentuser.title), "", "📃 " & currentuser.title & nl)
-        msg &= If(String.IsNullOrEmpty(currentuser.userPrincipalName), "", "📲 " & currentuser.userPrincipalName & nl)
+        Dim msg As String = "*" & obj.name & "*" & nl
+        msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "🎫 " & obj.userPrincipalNameName & nl)
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New InlineKeyboardMarkup(userinlinekeyboard))
     End Sub
 
-    Private Async Sub SendRequestStageUserConfirmResetPassword(message As Message)
-        If currentuser Is Nothing Then Exit Sub
+    Private Sub SendRequestUserDetails(message As Message, obj As clsDirectoryObject)
+        If obj Is Nothing Then Exit Sub
 
-        Dim msg As String = String.Format("Сброс пароля:" & dnl & "👤 {0}" & dnl & "Чо серьезно?", currentuser.name)
+        Dim userinlinekeyboard As New List(Of InlineKeyboardButton) From {
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_DETAILS, .CallbackData = "Details;" & Encode58(obj.objectGUID.ToByteArray)},
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_RESETPASSWORD, .CallbackData = "Pass;" & Encode58(obj.objectGUID.ToByteArray)},
+            New InlineKeyboardButton With {.Text = If(obj.disabled, DIALOGUE_INLINEBUTTON_DISABLE, DIALOGUE_INLINEBUTTON_ENABLE), .CallbackData = If(obj.disabled, "Enable;" & Encode58(obj.objectGUID.ToByteArray), "Disable;" & Encode58(obj.objectGUID.ToByteArray))},
+            New InlineKeyboardButton With {.Text = DIALOGUE_INLINEBUTTON_GROUPS, .CallbackData = "Groups;" & Encode58(obj.objectGUID.ToByteArray)}}
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
+        Dim msg As String = ""
+        InsertUser(msg, obj)
+        msg &= If(String.IsNullOrEmpty(obj.userPrincipalNameName), "", "🎫 " & obj.userPrincipalNameName & nl)
+        msg &= If(String.IsNullOrEmpty(obj.physicalDeliveryOfficeName), "", "🏠 " & obj.physicalDeliveryOfficeName & nl)
+        msg &= If(String.IsNullOrEmpty(obj.telephoneNumber), "", "📞 " & obj.telephoneNumber & nl)
+        msg &= If(String.IsNullOrEmpty(obj.mail), "", "✉️ " & obj.mail & nl)
+        msg &= If(String.IsNullOrEmpty(obj.title), "", "🗄 " & obj.title & nl)
+        msg &= If(String.IsNullOrEmpty(obj.passwordExpiresFormated), "", "🔑 " & obj.passwordExpiresFormated & nl)
+
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New InlineKeyboardMarkup(userinlinekeyboard))
     End Sub
 
-    Private Async Sub SendRequestStageUserConfirmEnableDisable(message As Message)
+    Private Sub SendRequestResetPasswordConfirm(message As Message)
+        If currentuser Is Nothing Then Exit Sub
+
+        Dim msg As String = "Прям сбросить пароль??" & nl
+        InsertUser(msg, currentuser)
+
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardMarkup(confimkeyboard, True, True))
+    End Sub
+
+    Private Sub SendRequestEnableDisableConfirm(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
 
         If currentuser.disabled = True Then
-            msg &= String.Format("Разблочить:" & dnl & "👤 {0}" & dnl & "А надо?", currentuser.name)
+            msg &= String.Format("Разблочить?" & nl)
         Else
-            msg &= String.Format("Заблочить:" & dnl & "👤 {0}" & dnl & "А надо?", currentuser.name)
+            msg &= String.Format("Заблочить?" & nl)
         End If
+        InsertUser(msg, currentuser)
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardMarkup(confimkeyboard, True, True))
     End Sub
 
-    Private Async Sub SendRequestStageUserResetPasswordCompleted(message As Message)
+    Private Sub SendRequestResetPasswordCompleted(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
-
         Try
+
             currentuser.ResetPassword()
             currentuser.passwordNeverExpires = False
-            msg &= String.Format("👤 {0}" & dnl & "Пароль сброшен", currentuser.name)
+            msg = "Пароль сброшен." & nl
+            InsertUser(msg, currentuser)
+
         Catch ex As Exception
-            msg = String.Format("Не получилось сбросить пароль:" & dnl & "👤 {0}" & dnl & "{1}", currentuser.name, ex.Message)
+
+            msg = "Не получилось сбросить пароль." & nl
+            InsertUser(msg, currentuser)
+            msg &= ex.Message
+
         End Try
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
     End Sub
 
-    Private Async Sub SendRequestStageUserEnableDisableCompleted(message As Message)
+    Private Sub SendRequestEnableDisableCompleted(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
         Dim msg As String = ""
-
         Try
+
             If currentuser.disabled Then
                 currentuser.disabled = False
-                msg &= String.Format("👤 {0}" & dnl & "разблокирован", currentuser.name)
+                msg &= "Разблокирован" & nl
             Else
                 currentuser.disabled = True
-                msg &= String.Format("👤 {0}" & dnl & "заблокирован", currentuser.name)
+                msg &= "Заблокирован" & nl
             End If
+            InsertUser(msg, currentuser)
 
         Catch ex As Exception
-            msg = String.Format("Не получилось заблочить/разблочить:" & dnl & "👤 {0}" & dnl & "{1}", currentuser.name, ex.Message)
+
+            msg = "Не получилось заблочить/разблочить." & nl
+            InsertUser(msg, currentuser)
+            msg &= ex.Message
+
         End Try
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
     End Sub
 
-    Private Async Sub SendRequestStageSearchGroup(message As Message)
+    Private Sub SendRequestUserGroups(message As Message)
         If currentuser Is Nothing Then Exit Sub
 
+        Dim groupinlinekeyboard As New List(Of List(Of InlineKeyboardButton))
+
         Dim msg As String = ""
+        msg &= "Введи кусок названия группы для добавления" & nl
 
         If currentuser.memberOf.Count > 0 Then
-            msg &= "Текущие группы:" & dnl
+            msg &= "или выбери какую удалить:"
             For Each group As clsDirectoryObject In currentuser.memberOf
-                msg &= "👥 " & group.name & nl
-                msg &= "/" & Encode58(group.objectGUID.ToByteArray) & dnl
+                groupinlinekeyboard.Add(New List(Of InlineKeyboardButton) From {New InlineKeyboardButton With {.Text = "👥 " & group.name, .CallbackData = "MemberOf;" & Encode58(group.objectGUID.ToByteArray)}})
             Next
         End If
 
-        msg &= "Введи кусок названия группы"
-
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(searchgroupkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New InlineKeyboardMarkup(groupinlinekeyboard))
     End Sub
 
-    Private Async Sub SendRequestStageGroupConfirmMemberOf(message As Message)
+    Private Sub SendRequestConfirmMemberOf(message As Message)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""
@@ -410,43 +435,83 @@ Module mdlDialogue
         Next
 
         If newgroup Then
-            msg &= String.Format("Добавить:" & dnl & "👤 {0}" & dnl & "в группу" & dnl & "👥 {1}" & dnl & "ммм?", currentuser.name, currentgroup.name)
+
+            msg &= "Добавить" & nl
+            InsertUser(msg, currentuser)
+            msg &= "в группу" & nl
+            msg &= "👥 *" & currentgroup.name & "*" & nl
+            msg &= "ммм?"
+
         Else
-            msg &= String.Format("Удалить:" & dnl & "👤 {0}" & dnl & "из группы" & dnl & "👥 {1}" & dnl & "ммм?", currentuser.name, currentgroup.name)
+
+            msg &= "Удалить" & nl
+            InsertUser(msg, currentuser)
+            msg &= "из группы" & nl
+            msg &= "👥 *" & currentgroup.name & "*" & nl
+            msg &= "ммм?"
+
         End If
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(confimkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardMarkup(confimkeyboard, True, True))
     End Sub
 
-    Private Async Sub SendRequestStageGroupMemberOfCompleted(message As Message)
+    Private Sub SendRequestStageGroupMemberOfCompleted(message As Message)
         If currentuser Is Nothing Or currentgroup Is Nothing Then Exit Sub
 
         Dim msg As String = ""
 
+        Dim newgroup As Boolean = True
+        For Each group As clsDirectoryObject In currentuser.memberOf
+            If group.name = currentgroup.name Then newgroup = False
+        Next
+
         Try
-            Dim newgroup As Boolean = True
-            For Each group As clsDirectoryObject In currentuser.memberOf
-                If group.name = currentgroup.name Then newgroup = False
-            Next
 
             If newgroup Then
+
                 currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Add, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Add(currentgroup)
-                msg &= String.Format("👤 {0}" & dnl & "добавлен в группу" & dnl & "👥 {1}", currentuser.name, currentgroup.name)
+
+                InsertUser(msg, currentuser)
+                msg &= "добавлен в группу" & nl
+                msg &= "👥 *" & currentgroup.name & "*" & nl
+
             Else
+
                 currentgroup.UpdateAttribute(DirectoryServices.Protocols.DirectoryAttributeOperation.Delete, "member", currentuser.distinguishedName)
                 currentuser.memberOf.Remove(currentgroup)
                 For Each group As clsDirectoryObject In currentuser.memberOf
                     If group.name = currentgroup.name Then currentuser.memberOf.Remove(group) : Exit For
                 Next
-                msg &= String.Format("👤 {0}" & dnl & "удален из группы" & dnl & "👥 {1}", currentuser.name, currentgroup.name)
+
+                InsertUser(msg, currentuser)
+                msg &= "удален из группы" & nl
+                msg &= "👥 *" & currentgroup.name & "*" & nl
+
             End If
 
         Catch ex As Exception
-            msg = String.Format("Не получилось добавить/удалить:" & dnl & "👤 {0}" & dnl & "в/из группы" & dnl & "👥 {1}" & dnl & "{2}", currentuser.name, currentgroup.name, ex.Message)
+
+            msg = "Не получилось добавить/удалить" & nl
+            InsertUser(msg, currentuser)
+            msg &= "в/из группы" & nl
+            msg &= "👥 *" & currentgroup.name & "*" & nl
+            msg &= ex.Message
+
         End Try
 
-        Await Bot.SendTextMessageAsync(message.Chat.Id, msg,,,,, New ReplyKeyboardMarkup(userkeyboard))
+        Bot.SendTextMessageAsync(message.Chat.Id, msg, Enums.ParseMode.Markdown,,,, New ReplyKeyboardRemove)
+    End Sub
+
+    Private Sub InsertUser(ByRef msg As String, obj As clsDirectoryObject)
+        If obj Is Nothing Then Return
+        If obj.Status = enmDirectoryObjectStatus.Normal Then
+            msg &= "🍏 *" & obj.name & "*" & nl
+        ElseIf obj.Status = enmDirectoryObjectStatus.Expired Then
+            msg &= "🍋 *" & obj.name & "*" & nl
+        ElseIf obj.Status = enmDirectoryObjectStatus.Blocked Then
+            msg &= "🍎 *" & obj.name & "*" & nl
+        End If
     End Sub
 
 End Module

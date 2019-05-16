@@ -305,17 +305,17 @@ Public Class clsDomain
         SaveCredentials()
     End Sub
 
-    <RegistrySerializerAfterDeserialize(True)>
-    Public Async Sub AfterDeserialize()
+    '<RegistrySerializerAfterDeserialize(True)>
+    Public Async Function Initialize() As Task
         Validated = False
 
-        If Not LoadCredentials() Then Exit Sub
-        If Not SetupConnection() Then Exit Sub
+        If Not LoadCredentials() Then Return
+        If Not SetupConnection() Then Return
 
         If String.IsNullOrEmpty(DefaultNamingContext) Or
         String.IsNullOrEmpty(ConfigurationNamingContext) Or
         String.IsNullOrEmpty(SchemaNamingContext) Then
-            If Not Await UpdateNamingContextsAsync() Then Exit Sub
+            If Not Await UpdateNamingContextsAsync() Then Return
         End If
 
         Await UpdatePropertiesAsync()
@@ -329,7 +329,8 @@ Public Class clsDomain
         If String.IsNullOrEmpty(SearchRoot) Then SearchRoot = DefaultNamingContext
 
         Validated = True
-    End Sub
+        Return
+    End Function
 
     Public Async Function ConnectAsync() As Task
         Validated = False

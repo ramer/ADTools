@@ -110,16 +110,24 @@ Module mdlTools
                 End Try
 
                 Return Nothing
-            End Function
-        )
+            End Function)
     End Sub
 
     Public Sub initializePreferences()
         preferences = IRegistrySerializer.Deserialize(GetType(clsPreferences), regPreferences)
     End Sub
 
-    Public Sub initializeDomains()
+    Public Sub initializeDomains(Optional waitInit As Boolean = True)
         domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
+
+        Task.Run(
+            Sub()
+                Dim initTasks As New List(Of Task)
+                For Each domain In domains
+                    initTasks.Add(domain.Initialize)
+                Next
+                If waitInit Then Task.WaitAll(initTasks.ToArray)
+            End Sub).Wait()
     End Sub
 
     Public Sub deinitializePreferences()
@@ -171,6 +179,21 @@ Module mdlTools
                 Catch ex As Exception
                 End Try
             End Sub)
+
+        Try
+            Dim regApplicationClassRoot As RegistryKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\" & My.Application.Info.AssemblyName.ToLower)
+
+            If regApplicationClassRoot Is Nothing Then
+                regApplicationClassRoot = Registry.CurrentUser.CreateSubKey("SOFTWARE\Classes\" & My.Application.Info.AssemblyName.ToLower)
+                regApplicationClassRoot.SetValue(String.Empty, "URL:" & My.Application.Info.AssemblyName.ToLower)
+                regApplicationClassRoot.SetValue("URL Protocol", String.Empty)
+                regApplicationClassRoot = regApplicationClassRoot.CreateSubKey("shell\open\command")
+                regApplicationClassRoot.SetValue(String.Empty, System.Reflection.Assembly.GetExecutingAssembly().Location & " " & "%1")
+            End If
+
+            regApplicationClassRoot.Close()
+        Catch ex As Exception
+        End Try
     End Sub
 
     Public Function ShowPage(p As Page, Optional singleinstance As Boolean = False, Optional owner As Window = Nothing, Optional modal As Boolean = False) As NavigationWindow

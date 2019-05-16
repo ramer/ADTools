@@ -13,9 +13,9 @@ Imports System.Windows
 
 <Assembly: AssemblyTitle("ADToolsSIP")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("Vitaliy Sorokovikov")>
 <Assembly: AssemblyProduct("ADToolsSIP")>
-<Assembly: AssemblyCopyright("Copyright ©  2018")>
+<Assembly: AssemblyCopyright("© 2019")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 

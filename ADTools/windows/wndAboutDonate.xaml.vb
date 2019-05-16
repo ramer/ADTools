@@ -6,7 +6,7 @@
     Private Sub wndAboutDonate_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         closeTimer.Interval = New TimeSpan(0, 0, 1)
         closeTimer.Start()
-        counter = 5
+        counter = 1
     End Sub
 
     Private Sub imgDonate_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles imgDonate.MouseDown

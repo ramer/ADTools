@@ -29,12 +29,30 @@ Public Class ADToolsApplication
 
     'Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
-    Public Shared commandlineargs As String()
+
+    Private Shared startminimized As Boolean = False
+    Private Shared startwithsearch As Boolean = False
+    Private Shared startsearchstring As String = Nothing
 
     Public Function SignalExternalCommandLineArgs(args As IList(Of String)) As Boolean Implements ISingleInstanceApp.SignalExternalCommandLineArgs
-        commandlineargs = args.ToArray
+        ParseCommandlineArgs(args.ToArray)
+        ShowMainWindow()
         Return True
     End Function
+
+    Private Sub ParseCommandlineArgs(args As String())
+        For i = 0 To args.Count - 1
+            If args(i) = "-minimized" Or args(i) = "/minimized" Then startminimized = True
+            If (args(i) = "-search" Or args(i) = "/search") AndAlso i + 1 <= args.Count - 1 Then
+                startwithsearch = True
+                startsearchstring = args(i + 1)
+            End If
+            If args(i).StartsWith(My.Application.Info.AssemblyName.ToLower & ":") AndAlso args(i).Length > My.Application.Info.AssemblyName.Length + 1 Then
+                startwithsearch = True
+                startsearchstring = args(i).Substring(My.Application.Info.AssemblyName.Length + 1)
+            End If
+        Next
+    End Sub
 
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)
@@ -43,17 +61,7 @@ Public Class ADToolsApplication
             AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
             AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
-            Dim startminimized As Boolean = False
-            Dim startwithsearch As Boolean = False
-            Dim startsearchstring As String = Nothing
-            commandlineargs = Environment.GetCommandLineArgs()
-            For i = 0 To commandlineargs.Count - 1
-                If commandlineargs(i) = "-minimized" Or commandlineargs(i) = "/minimized" Then startminimized = True
-                If (commandlineargs(i) = "-search" Or commandlineargs(i) = "/search") AndAlso i + 1 <= commandlineargs.Count - 1 Then
-                    startwithsearch = True
-                    startsearchstring = commandlineargs(i + 1)
-                End If
-            Next
+            ParseCommandlineArgs(Environment.GetCommandLineArgs())
 
             ' splash screen
             If Not startminimized And Not startwithsearch Then
@@ -74,39 +82,14 @@ Public Class ADToolsApplication
             initializeGlobalParameters()
 
             ' domains setup
-            initializeDomains()
+            initializeDomains(startwithsearch)
 
             ' preferences setup
             initializePreferences()
 
             ' main window
             If Not startminimized Then
-                Dim w As NavigationWindow
-                w = ActivateMainWindow()
-
-                If w IsNot Nothing Then
-                    If startwithsearch Then
-                        If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
-                            Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
-                            Dim pgo = pgm.CurrentObjectsPage
-                            If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
-                        End If
-                    End If
-                Else
-                    w = CreateMainWindow()
-                    If startwithsearch Then
-                        Dim neh As NavigatedEventHandler
-                        neh = Sub()
-                                  If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
-                                      Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
-                                      Dim pgo = pgm.CurrentObjectsPage
-                                      If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
-                                  End If
-                                  RemoveHandler w.Navigated, neh
-                              End Sub
-                        AddHandler w.Navigated, neh
-                    End If
-                End If
+                ShowMainWindow()
             End If
 
         Catch ex As Exception
@@ -143,6 +126,35 @@ Public Class ADToolsApplication
     Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
         If e.Button = Forms.MouseButtons.Left Then
             If ActivateMainWindow() Is Nothing Then CreateMainWindow()
+        End If
+    End Sub
+
+    Public Shared Sub ShowMainWindow()
+        Dim w As NavigationWindow
+        w = ActivateMainWindow()
+
+        If w IsNot Nothing Then
+            If startwithsearch Then
+                If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                    Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                    Dim pgo = pgm.CurrentObjectsPage
+                    If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                End If
+            End If
+        Else
+            w = CreateMainWindow()
+            If startwithsearch Then
+                Dim neh As NavigatedEventHandler
+                neh = Sub()
+                          If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
+                              Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                              Dim pgo = pgm.CurrentObjectsPage
+                              If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                          End If
+                          RemoveHandler w.Navigated, neh
+                      End Sub
+                AddHandler w.Navigated, neh
+            End If
         End If
     End Sub
 

@@ -155,10 +155,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="classes\" />
-    <Folder Include="images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="libraries\CredentialManagement.dll" />
     <Content Include="libraries\Handlebars.dll" />

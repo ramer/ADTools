@@ -65,10 +65,10 @@ Public Class ADToolsTelegramBotApplication
             FrameworkElement.LanguageProperty.OverrideMetadata(GetType(FrameworkElement), New FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)))
 
             ' get credentials from windows storage
-            initializeCredentials
+            initializeCredentials()
 
             ' domains setup
-            initializeDomains()
+            initializeDomains(True)
 
             ' telegram update timer
             StartTelegramUpdater()

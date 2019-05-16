@@ -4,6 +4,7 @@ Imports Microsoft.Win32
 Imports IRegisty
 Imports CredentialManagement
 Imports System.IO
+Imports Telegram.Bot.Types.Enums
 
 Module mdlTools
 
@@ -84,11 +85,20 @@ Module mdlTools
     End Sub
 
     Public Sub StartTelegramUpdater()
-        Bot.StartReceiving()
+        Bot.StartReceiving({UpdateType.Message, UpdateType.InlineQuery, UpdateType.CallbackQuery})
     End Sub
 
-    Public Sub initializeDomains()
+    Public Sub initializeDomains(Optional waitInit As Boolean = True)
         domains = IRegistrySerializer.Deserialize(GetType(ObservableCollection(Of clsDomain)), regDomains)
+
+        Task.Run(
+            Sub()
+                Dim initTasks As New List(Of Task)
+                For Each domain In domains
+                    initTasks.Add(domain.Initialize)
+                Next
+                If waitInit Then Task.WaitAll(initTasks.ToArray)
+            End Sub).Wait()
     End Sub
 
     Public Function GetLDAPProperty(ByRef Properties As DirectoryServices.ResultPropertyCollection, ByVal Prop As String)
