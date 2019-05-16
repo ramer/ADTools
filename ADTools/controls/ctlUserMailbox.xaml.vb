@@ -49,7 +49,7 @@ Public Class ctlUserMailbox
         If mailbox Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso Not String.IsNullOrEmpty(_currentobject.Domain.ExchangeServer) Then
             capexchange.Visibility = Visibility.Visible
 
-            tbMailbox.Text = GetNextUserMailbox(_currentobject)
+            tbMailbox.Text = GetUserMailbox(_currentobject)
 
             mailbox = Await Task.Run(Function() New clsMailbox(_currentobject))
 

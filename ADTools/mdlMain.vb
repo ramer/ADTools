@@ -1,5 +1,4 @@
-﻿Imports System.Collections.ObjectModel
-Imports System.Collections.Specialized
+﻿Imports System.Collections.Specialized
 Imports System.Drawing
 Imports System.Windows.Threading
 Imports Microsoft.VisualBasic.ApplicationServices
@@ -27,33 +26,38 @@ Public Class ADToolsApplication
     Public Shared WithEvents nicon As New Forms.NotifyIcon
     Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
 
-    'Public Shared WithEvents tsocLog As New clsThreadSafeObservableCollection(Of clsLog)
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
 
-    Private Shared startminimized As Boolean = False
-    Private Shared startwithsearch As Boolean = False
-    Private Shared startsearchstring As String = Nothing
+    Private Shared startMinimized As Boolean = False
+    Private Shared startWithSearch As Boolean = False
+    Private Shared startSearchString As String = Nothing
 
+    ' fires when the second app instance started and closed
     Public Function SignalExternalCommandLineArgs(args As IList(Of String)) As Boolean Implements ISingleInstanceApp.SignalExternalCommandLineArgs
         ParseCommandlineArgs(args.ToArray)
         ShowMainWindow()
         Return True
     End Function
 
+    ' parses first and second app instance command line arguments
     Private Sub ParseCommandlineArgs(args As String())
         For i = 0 To args.Count - 1
-            If args(i) = "-minimized" Or args(i) = "/minimized" Then startminimized = True
+            ' regulag arguments
+            If args(i) = "-minimized" Or args(i) = "/minimized" Then startMinimized = True
             If (args(i) = "-search" Or args(i) = "/search") AndAlso i + 1 <= args.Count - 1 Then
-                startwithsearch = True
-                startsearchstring = args(i + 1)
+                startWithSearch = True
+                startSearchString = args(i + 1)
             End If
+
+            ' URL protocol arguments
             If args(i).StartsWith(My.Application.Info.AssemblyName.ToLower & ":") AndAlso args(i).Length > My.Application.Info.AssemblyName.Length + 1 Then
-                startwithsearch = True
-                startsearchstring = args(i).Substring(My.Application.Info.AssemblyName.Length + 1)
+                startWithSearch = True
+                startSearchString = args(i).Substring(My.Application.Info.AssemblyName.Length + 1)
             End If
         Next
     End Sub
 
+    ' fires when the first app instance started
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)
         Try
@@ -61,16 +65,17 @@ Public Class ADToolsApplication
             AddHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
             AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
+            ' parses first app instance command line arguments
             ParseCommandlineArgs(Environment.GetCommandLineArgs())
 
             ' splash screen
-            If Not startminimized And Not startwithsearch Then
+            If Not startMinimized And Not startWithSearch Then
                 Dim splash As New SplashScreen("images/splash.png")
                 splash.Show(True, True)
             End If
 
             ' check for application updates
-            checkApplicationUpdates()
+            CheckApplicationUpdates()
 
             ' notify icon initialization
             nicon.Icon = New Icon(Application.GetResourceStream(New Uri("images/app.ico", UriKind.Relative)).Stream)
@@ -79,16 +84,16 @@ Public Class ADToolsApplication
             nicon.Visible = True
 
             ' global parameters
-            initializeGlobalParameters()
+            InitializeGlobalParameters()
 
             ' domains setup
-            initializeDomains(startwithsearch)
+            InitializeDomains(startWithSearch)
 
             ' preferences setup
-            initializePreferences()
+            InitializePreferences()
 
             ' main window
-            If Not startminimized Then
+            If Not startMinimized Or startWithSearch Then
                 ShowMainWindow()
             End If
 
@@ -104,7 +109,7 @@ Public Class ADToolsApplication
             nicon.Visible = False
 
             ' save preferences
-            deinitializePreferences()
+            DeinitializePreferences()
 
             ' removing unhandled exception handler
             RemoveHandler Dispatcher.UnhandledException, AddressOf Dispatcher_UnhandledException
@@ -134,22 +139,22 @@ Public Class ADToolsApplication
         w = ActivateMainWindow()
 
         If w IsNot Nothing Then
-            If startwithsearch Then
+            If startWithSearch Then
                 If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
-                    Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                    Dim pgm = CType(w.Content, pgMain)
                     Dim pgo = pgm.CurrentObjectsPage
-                    If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                    If pgo IsNot Nothing And Not String.IsNullOrEmpty(startSearchString) Then pgo.StartSearch(Nothing, New clsFilter(startSearchString, preferences.AttributesForSearch, preferences.SearchObjectClasses))
                 End If
             End If
         Else
             w = CreateMainWindow()
-            If startwithsearch Then
+            If startWithSearch Then
                 Dim neh As NavigatedEventHandler
                 neh = Sub()
                           If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
-                              Dim pgm = CType(CType(w, NavigationWindow).Content, pgMain)
+                              Dim pgm = CType(w.Content, pgMain)
                               Dim pgo = pgm.CurrentObjectsPage
-                              If pgo IsNot Nothing And Not String.IsNullOrEmpty(startsearchstring) Then pgo.StartSearch(Nothing, New clsFilter(startsearchstring, preferences.AttributesForSearch, preferences.SearchObjectClasses))
+                              If pgo IsNot Nothing And Not String.IsNullOrEmpty(startSearchString) Then pgo.StartSearch(Nothing, New clsFilter(startSearchString, preferences.AttributesForSearch, preferences.SearchObjectClasses))
                           End If
                           RemoveHandler w.Navigated, neh
                       End Sub

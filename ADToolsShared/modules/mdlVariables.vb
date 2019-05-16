@@ -90,6 +90,13 @@ Public Module mdlVariables
         Blocked
     End Enum
 
+    ''' <summary>
+    ''' Useless procedure to set brake points
+    ''' </summary>
+    Public Sub shit()
+
+    End Sub
+
     Public AttributeSchemeType As New Dictionary(Of String, Integer) From {
         {"2.5.5.1", enmADSType.ADSTYPE_DN_STRING},
         {"2.5.5.2", enmADSType.ADSTYPE_CASE_IGNORE_STRING},

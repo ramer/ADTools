@@ -43,7 +43,7 @@ Public Class ctlContactMailbox
         If contact Is Nothing AndAlso _currentobject.Domain.UseExchange AndAlso _currentobject.Domain.ExchangeServer IsNot Nothing Then
             capexchange.Visibility = Visibility.Visible
 
-            tbContact.Text = GetNextUserMailbox(_currentobject)
+            tbContact.Text = GetUserMailbox(_currentobject)
 
             contact = Await Task.Run(Function() New clsContact(_currentobject))
 

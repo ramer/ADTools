@@ -46,16 +46,16 @@ Public Class pgCreateObject
         End If
     End Sub
 
-    Private Sub cmboUserUserPrincipalName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboUserUserPrincipalName.DropDownOpened
-        cmboUserUserPrincipalName.ItemsSource = GetNextDomainUsers(CType(cmboDomain.SelectedValue, clsDomain), tbUserDisplayname.Text)
+    Private Async Sub cmboUserUserPrincipalName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboUserUserPrincipalName.DropDownOpened
+        cmboUserUserPrincipalName.ItemsSource = Await GetNextDomainUserAsync(CType(cmboDomain.SelectedValue, clsDomain))
     End Sub
 
     Private Sub chbUserSharedMailbox_CheckedUnchecked(sender As Object, e As RoutedEventArgs) Handles chbUserSharedMailbox.Checked, chbUserSharedMailbox.Unchecked
         tbUserObjectName.Text = If(chbUserSharedMailbox.IsChecked, "SharedMailbox_" & cmboUserUserPrincipalName.Text, tbUserDisplayname.Text)
     End Sub
 
-    Private Sub cmboComputerObjectName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboComputerObjectName.DropDownOpened
-        cmboComputerObjectName.ItemsSource = GetNextDomainComputers(CType(cmboDomain.SelectedValue, clsDomain))
+    Private Async Sub cmboComputerObjectName_DropDownOpened(sender As Object, e As EventArgs) Handles cmboComputerObjectName.DropDownOpened
+        cmboComputerObjectName.ItemsSource = Await GetNextDomainComputerAsync(CType(cmboDomain.SelectedValue, clsDomain))
     End Sub
 
     Private Async Sub btnCreate_Click(sender As Object, e As RoutedEventArgs) Handles btnCreate.Click

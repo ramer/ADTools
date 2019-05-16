@@ -29,7 +29,7 @@
     End Sub
 
     Private Sub cmboTelephoneNumber_DropDownOpened(sender As Object, e As EventArgs) Handles cmboTelephoneNumber.DropDownOpened
-        cmboTelephoneNumber.ItemsSource = GetNextDomainTelephoneNumbers(CurrentObject.Domain)
+        cmboTelephoneNumber.ItemsSource = GetNextDomainTelephoneNumberAsync(CurrentObject.Domain)
     End Sub
 
     Private Sub cmboTelephoneNumber_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmboTelephoneNumber.SelectionChanged
