@@ -13,49 +13,6 @@ Public Class clsDomain
     Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
     Public Event ObjectChanged(sender As Object, e As ObjectChangedEventArgs)
 
-    Private _name As String
-    Private _username As String
-    Private _password As String
-    Private _server As String
-
-    Private _connection As LdapConnection
-    Private WithEvents _watcher As clsWatcher
-
-    Private _defaultnamingcontext As String
-    Private _configurationnamingcontext As String
-    Private _schemanamingcontext As String
-    Private _searchroot As String
-
-    Private _properties As New ObservableCollection(Of clsDomainProperty)
-    Private _attributesschema As New Dictionary(Of String, clsAttributeSchema)
-    Private _maxpwdage As Integer
-    Private _suffixes As New ObservableCollection(Of String)
-
-    Private _usernamepattern As String = ""
-    Private _usernamepatterntemplates As Func(Of Object, String)() = Nothing
-
-    Private _computerpattern As String = ""
-    Private _computerpatterntemplates As Func(Of Object, String)() = Nothing
-
-    Private _telephonenumberpattern As New ObservableCollection(Of clsTelephoneNumberPattern)
-
-    Private _defaultpassword As String = ""
-
-    Private _defaultgroups As New ObservableCollection(Of clsDirectoryObject)
-    Private _defaultgroupsdn As ObservableCollection(Of String)
-
-    Private _exchangeservers As New ObservableCollection(Of String)
-    Private _useexchange As Boolean
-    Private _exchangeserver As String
-
-    Private _mailboxpattern As String = ""
-
-    Private _issearchable As Boolean = True
-
-    Private _enablewatcher As Boolean
-
-    Private _validated As Boolean
-
     Protected Overridable Sub OnPropertyChanged(e As PropertyChangedEventArgs)
         RaiseEvent PropertyChanged(Me, e)
     End Sub
@@ -163,7 +120,6 @@ Public Class clsDomain
                     DefaultNamingContext = response.Entries(0).Attributes("defaultNamingContext")(0)
                     ConfigurationNamingContext = response.Entries(0).Attributes("configurationNamingContext")(0)
                     SchemaNamingContext = response.Entries(0).Attributes("schemaNamingContext")(0)
-                    If String.IsNullOrEmpty(SearchRoot) AndAlso Not String.IsNullOrEmpty(DefaultNamingContext) Then SearchRoot = DefaultNamingContext
 
                     Return True
                 Catch
@@ -229,6 +185,12 @@ Public Class clsDomain
 
                         pageRequestControl.Cookie = pageResponseControl.Cookie
                     Loop
+
+                    'For Each sa In a.Select(Function(p) p.Value)
+                    '    If sa.isSingleValued And sa.ADSType = enmADSType.ADSTYPE_CASE_IGNORE_STRING And Not LCase(sa.lDAPDisplayName).StartsWith("ms") Then
+                    '        Debug.WriteLine(sa.lDAPDisplayName)
+                    '    End If
+                    'Next
 
                     AttributesSchema = a
                     Return True
@@ -326,8 +288,6 @@ Public Class clsDomain
 
         If EnableWatcher Then StartWatcher()
 
-        If String.IsNullOrEmpty(SearchRoot) Then SearchRoot = DefaultNamingContext
-
         Validated = True
         Return
     End Function
@@ -348,8 +308,26 @@ Public Class clsDomain
         Validated = True
     End Function
 
+    Private _underlyingobject As clsDirectoryObject
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property UnderlyingObject() As clsDirectoryObject
+        Get
+            If String.IsNullOrEmpty(DefaultNamingContext) Then Return Nothing
+            If _underlyingobject Is Nothing Then _underlyingobject = New clsDirectoryObject(DefaultNamingContext, Me)
+            Return _underlyingobject
+        End Get
+    End Property
 
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If UnderlyingObject Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
+            AddHandler _underlyingobject.PropertyChanged, Sub(sender As Object, e As PropertyChangedEventArgs) If e.PropertyName = "ChildContainers" Then NotifyPropertyChanged("ChildContainers")
+            Return _underlyingobject.ChildContainers
+        End Get
+    End Property
 
+    Private _name As String
     Public Property Name() As String
         Get
             Return _name
@@ -360,6 +338,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _username As String
     <RegistrySerializerIgnorable(True)>
     Public Property Username() As String
         Get
@@ -371,6 +350,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _password As String
     <RegistrySerializerIgnorable(True)>
     Public Property Password() As String
         Get
@@ -382,7 +362,7 @@ Public Class clsDomain
         End Set
     End Property
 
-    <RegistrySerializerAlias("Server")>
+    Private _server As String
     Public Property Server() As String
         Get
             Return _server
@@ -393,6 +373,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _connection As LdapConnection
     <RegistrySerializerIgnorable(True)>
     Public Property Connection() As LdapConnection
         Get
@@ -404,6 +385,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private WithEvents _watcher As clsWatcher
     <RegistrySerializerIgnorable(True)>
     Public Property Watcher() As clsWatcher
         Get
@@ -415,9 +397,7 @@ Public Class clsDomain
         End Set
     End Property
 
-
-
-    <RegistrySerializerAlias("DefaultNamingContext")>
+    Private _defaultnamingcontext As String
     Public Property DefaultNamingContext() As String
         Get
             Return _defaultnamingcontext
@@ -425,10 +405,13 @@ Public Class clsDomain
         Set(value As String)
             _defaultnamingcontext = value
             NotifyPropertyChanged("DefaultNamingContext")
+            NotifyPropertyChanged("SearchRoot")
+            NotifyPropertyChanged("UnderlyingObject")
+            NotifyPropertyChanged("ChildContainers")
         End Set
     End Property
 
-    <RegistrySerializerAlias("ConfigurationNamingContext")>
+    Private _configurationnamingcontext As String
     Public Property ConfigurationNamingContext() As String
         Get
             Return _configurationnamingcontext
@@ -439,7 +422,7 @@ Public Class clsDomain
         End Set
     End Property
 
-    <RegistrySerializerAlias("SchemaNamingContext")>
+    Private _schemanamingcontext As String
     Public Property SchemaNamingContext() As String
         Get
             Return _schemanamingcontext
@@ -450,7 +433,7 @@ Public Class clsDomain
         End Set
     End Property
 
-    <RegistrySerializerAlias("SearchRoot")>
+    Private _searchroot As String
     Public Property SearchRoot() As String
         Get
             Return If(String.IsNullOrEmpty(_searchroot), _defaultnamingcontext, _searchroot)
@@ -461,6 +444,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _properties As New ObservableCollection(Of clsDomainProperty)
     <RegistrySerializerIgnorable(True)>
     Public Property Properties() As ObservableCollection(Of clsDomainProperty)
         Get
@@ -472,6 +456,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _attributesschema As New Dictionary(Of String, clsAttributeSchema)
     <RegistrySerializerIgnorable(True)>
     Public Property AttributesSchema() As Dictionary(Of String, clsAttributeSchema)
         Get
@@ -483,6 +468,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _maxpwdage As Integer
     Public Property MaxPwdAge() As Integer
         Get
             Return _maxpwdage
@@ -493,6 +479,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _suffixes As New ObservableCollection(Of String)
     Public Property Suffixes As ObservableCollection(Of String)
         Get
             Return _suffixes
@@ -503,6 +490,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _usernamepattern As String = ""
     Public Property UsernamePattern() As String
         Get
             Return _usernamepattern
@@ -515,6 +503,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _usernamepatterntemplates As Func(Of Object, String)() = Nothing
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property UsernamePatternTemplates As Func(Of Object, String)()
         Get
@@ -526,6 +515,7 @@ Public Class clsDomain
         End Get
     End Property
 
+    Private _computerpattern As String = ""
     Public Property ComputerPattern() As String
         Get
             Return _computerpattern
@@ -538,6 +528,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _computerpatterntemplates As Func(Of Object, String)() = Nothing
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property ComputerPatternTemplates As Func(Of Object, String)()
         Get
@@ -549,16 +540,7 @@ Public Class clsDomain
         End Get
     End Property
 
-    Public Property MailboxPattern As String
-        Get
-            Return _mailboxpattern
-        End Get
-        Set(value As String)
-            _mailboxpattern = value
-            NotifyPropertyChanged("MailboxPattern")
-        End Set
-    End Property
-
+    Private _telephonenumberpattern As New ObservableCollection(Of clsTelephoneNumberPattern)
     Public Property TelephoneNumberPattern() As ObservableCollection(Of clsTelephoneNumberPattern)
         Get
             Return _telephonenumberpattern
@@ -569,6 +551,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _defaultpassword As String = ""
     Public Property DefaultPassword() As String
         Get
             Return _defaultpassword
@@ -579,6 +562,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _defaultgroups As New ObservableCollection(Of clsDirectoryObject)
     <RegistrySerializerIgnorable(True)>
     Public Property DefaultGroups() As ObservableCollection(Of clsDirectoryObject)
         Get
@@ -591,6 +575,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _defaultgroupsdn As ObservableCollection(Of String)
     Public Property DefaultGroupsDN() As ObservableCollection(Of String)
         Get
             Return _defaultgroupsdn
@@ -601,6 +586,29 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _logactions As Boolean
+    Public Property LogActions() As Boolean
+        Get
+            Return _logactions
+        End Get
+        Set(ByVal value As Boolean)
+            _logactions = value
+            NotifyPropertyChanged("LogActions")
+        End Set
+    End Property
+
+    Private _logactionsattribute As String
+    Public Property LogActionsAttribute() As String
+        Get
+            Return _logactionsattribute
+        End Get
+        Set(ByVal value As String)
+            _logactionsattribute = value
+            NotifyPropertyChanged("LogActionsAttribute")
+        End Set
+    End Property
+
+    Private _exchangeservers As New ObservableCollection(Of String)
     Public Property ExchangeServers() As ObservableCollection(Of String)
         Get
             Return _exchangeservers
@@ -611,6 +619,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _useexchange As Boolean
     Public Property UseExchange() As Boolean
         Get
             Return _useexchange
@@ -621,6 +630,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _exchangeserver As String
     Public Property ExchangeServer() As String
         Get
             Return _exchangeserver
@@ -631,6 +641,18 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _mailboxpattern As String = ""
+    Public Property MailboxPattern As String
+        Get
+            Return _mailboxpattern
+        End Get
+        Set(value As String)
+            _mailboxpattern = value
+            NotifyPropertyChanged("MailboxPattern")
+        End Set
+    End Property
+
+    Private _validated As Boolean
     <RegistrySerializerIgnorable(True)>
     Public Property Validated() As Boolean
         Get
@@ -642,6 +664,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _issearchable As Boolean = True
     <RegistrySerializerIgnorable(True)>
     Public Property IsSearchable() As Boolean
         Get
@@ -653,6 +676,7 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _enablewatcher As Boolean
     Public Property EnableWatcher As Boolean
         Get
             Return _enablewatcher

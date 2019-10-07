@@ -36,7 +36,7 @@
         dgTotalEvents.ItemsSource = eventsTotal
 
         dtpPeriodTo.Value = Now
-        dtpPeriodFrom.Value = Now.AddDays(-1)
+        dtpPeriodFrom.Value = Now.AddMonths(-1)
         dtpTotalPeriodTo.SelectedDate = Today
         dtpTotalPeriodFrom.SelectedDate = Today 'New Date(Today.Hour, Today.Month, 1)
     End Sub
@@ -76,6 +76,36 @@
         Await wmisearcher.TotalSearchWmiAsync(eventsTotal, CurrentObject, df, dt, tbTotalUsername.Text)
 
         pbTotalSearch.Visibility = Visibility.Hidden
+    End Sub
+
+    Private Sub ctxmnuCopyEvents(sender As Object, e As RoutedEventArgs)
+        If dgEvents.SelectedItems Is Nothing Then Exit Sub
+
+        Dim evts As New List(Of clsEvent)
+        For Each evt In dgEvents.SelectedItems
+            evts.Add(evt)
+        Next
+
+        Try
+            Clipboard.SetDataObject(Join(evts.Select(Function(evt As clsEvent) Join({evt.CategoryString, evt.EventCode, evt.MessageAccountName, evt.MessageLogonType, evt.MessageSourceAddress, evt.TimeGenerated}, vbTab)).ToArray, vbCrLf), True)
+        Catch ex As Exception
+            MsgBox(ex.Message, vbExclamation)
+        End Try
+    End Sub
+
+    Private Sub ctxmnuCopyEventsTotal(sender As Object, e As RoutedEventArgs)
+        If dgTotalEvents.SelectedItems Is Nothing Then Exit Sub
+
+        Dim evts As New List(Of clsEventTotal)
+        For Each evt In dgTotalEvents.SelectedItems
+            evts.Add(evt)
+        Next
+
+        Try
+            Clipboard.SetDataObject(Join(evts.Select(Function(evt As clsEventTotal) Join({evt.Day.ToShortDateString, evt.First.ToString, evt.Last.ToString, evt.Diff.ToString}, vbTab)).ToArray, vbCrLf), True)
+        Catch ex As Exception
+            MsgBox(ex.Message, vbExclamation)
+        End Try
     End Sub
 
 End Class

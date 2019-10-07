@@ -22,11 +22,14 @@ Class pgMain
         clipboardTimer.Interval = New TimeSpan(0, 0, 1)
         clipboardTimer.Start()
 
-        AddHandler domains.CollectionChanged, AddressOf DomainsChangedHandler
-        For Each domain As clsDomain In domains
-            AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
-        Next
-        DomainRefreshHandler()
+        'AddHandler domains.CollectionChanged, AddressOf DomainsChangedHandler
+        'For Each domain As clsDomain In domains
+        '    AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+        'Next
+        'DomainRefreshHandler()
+
+        tviDomains.ItemsSource = domains
+
     End Sub
 
 
@@ -165,39 +168,42 @@ Class pgMain
 
 #Region "Context Menu"
 
+    Private Sub TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
+        Dim currenttvi = FindVisualParent(Of TreeViewItem)(sender)
+        Dim parenttvi = FindVisualParent(Of TreeViewItem)(currenttvi)
+        Dim isfavorites As Boolean = parenttvi IsNot Nothing AndAlso parenttvi Is tviFavorites
 
-    Private Sub tviFilters_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        Dim pg = CurrentObjectsPage()
-        If pg Is Nothing Then Exit Sub
-
-        If TypeOf sp.Tag Is clsFilter Then
-            pg.StartSearch(Nothing, CType(sp.Tag, clsFilter))
-        End If
+        Dim ctxmnu = CType(sender, FrameworkElement).ContextMenu
+        For Each mnu In ctxmnu.Items
+            If TypeOf mnu Is MenuItem AndAlso CType(mnu, MenuItem).Name = "ctxmnuDirectoryObjectFavoritesAdd" Then CType(mnu, MenuItem).Visibility = If(Not isfavorites, Visibility.Visible, Visibility.Collapsed)
+            If TypeOf mnu Is MenuItem AndAlso CType(mnu, MenuItem).Name = "ctxmnuDirectoryObjectFavoritesRemove" Then CType(mnu, MenuItem).Visibility = If(isfavorites, Visibility.Visible, Visibility.Collapsed)
+        Next
     End Sub
 
-    Private Sub tviDomainstviFavorites_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
-        Dim obj As clsDirectoryObject = Nothing
-        If TypeOf CType(sender, StackPanel).DataContext Is clsDirectoryObject Then obj = CType(CType(sender, StackPanel).DataContext, clsDirectoryObject)
-        If obj Is Nothing Then Exit Sub
-
-        If obj.IsDeleted Then e.Handled = True : Exit Sub
-
-        CType(sender, StackPanel).ContextMenu.Tag = {obj}
-    End Sub
-
-    Private Sub tviDomainstviFavorites_TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-
-        If TypeOf sp.Tag Is clsDirectoryObject Then
+    Private Sub TreeViewItem_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
+        If TypeOf CType(sender, FrameworkElement).DataContext Is clsFilter Then
+            Dim fltr As clsFilter = CType(CType(sender, FrameworkElement).DataContext, clsFilter)
             Dim pg = CurrentObjectsPage()
             If pg Is Nothing Then Exit Sub
+            pg.StartSearch(Nothing, fltr)
+        End If
 
-            pg.OpenObject(CType(sp.Tag, clsDirectoryObject))
+        If TypeOf CType(sender, FrameworkElement).DataContext Is clsDomain Then
+            Dim obj As clsDirectoryObject = CType(CType(sender, FrameworkElement).DataContext, clsDomain).UnderlyingObject
+            Dim pg = CurrentObjectsPage()
+            If pg Is Nothing Then Exit Sub
+            pg.OpenObject(obj)
+        End If
+
+        If TypeOf CType(sender, FrameworkElement).DataContext Is clsDirectoryObject Then
+            Dim obj As clsDirectoryObject = CType(CType(sender, FrameworkElement).DataContext, clsDirectoryObject)
+            Dim pg = CurrentObjectsPage()
+            If pg Is Nothing Then Exit Sub
+            pg.OpenObject(obj)
         End If
     End Sub
 
-    Private Sub tviDomains_TreeViewItem_DragEnterDragOver(sender As Object, e As DragEventArgs)
+    Private Sub TreeViewItem_DragEnterDragOver(sender As Object, e As DragEventArgs)
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
             If e.KeyStates.HasFlag(DragDropKeyStates.ControlKey) Then
                 e.Effects = DragDropEffects.Copy
@@ -219,10 +225,17 @@ Class pgMain
         e.Handled = True
     End Sub
 
-    Private Sub tviDomains_TreeViewItem_Drop(sender As Object, e As DragEventArgs)
-        Dim sp As StackPanel = CType(sender, StackPanel)
-        If TypeOf sp.Tag IsNot clsDirectoryObject Then Exit Sub
-        Dim destination As clsDirectoryObject = sp.Tag
+    Private Sub TreeViewItem_Drop(sender As Object, e As DragEventArgs)
+        Dim destination As clsDirectoryObject = Nothing
+
+        If TypeOf CType(sender, FrameworkElement).DataContext Is clsDomain Then
+            destination = CType(CType(sender, FrameworkElement).DataContext, clsDomain).UnderlyingObject
+        End If
+        If TypeOf CType(sender, FrameworkElement).DataContext Is clsDirectoryObject Then
+            destination = CType(CType(sender, FrameworkElement).DataContext, clsDirectoryObject)
+        End If
+
+        If destination Is Nothing Then Exit Sub
 
         If Not (destination.SchemaClass = enmDirectoryObjectSchemaClass.Container Or
             destination.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
@@ -255,15 +268,10 @@ Class pgMain
         End If
     End Sub
 
-    Private Sub ctxmnutviDomainsDomainOptions_Click(sender As Object, e As RoutedEventArgs) Handles ctxmnutviDomainsDomainOptions.Click
+    Private Sub ctxmnuDomain_Click(sender As Object, e As RoutedEventArgs)
         ShowPage(New pgDomains, True, Window.GetWindow(Me), True)
     End Sub
 
-    Private Sub ctxmnutviFavoritesRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 AndAlso preferences.Favorites.Contains(objects(0)) Then preferences.Favorites.Remove(objects(0))
-    End Sub
 
     Private Sub ctxmnutviFiltersRemoveFromFilters_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsFilter Then Exit Sub
@@ -274,13 +282,6 @@ Class pgMain
 #End Region
 
 #Region "Context Menu Shared"
-
-    Private Sub tviFilters_TreeViewItem_ContextMenuOpening(sender As Object, e As ContextMenuEventArgs)
-        Dim flt As clsFilter = Nothing
-        If TypeOf CType(sender, StackPanel).DataContext Is clsFilter Then flt = CType(CType(sender, StackPanel).DataContext, clsFilter)
-        If flt Is Nothing Then Exit Sub
-        CType(sender, StackPanel).ContextMenu.Tag = flt
-    End Sub
 
     Private Sub ctxmnuSharedCreateObject_Click(sender As Object, e As RoutedEventArgs)
         If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
@@ -438,9 +439,15 @@ Class pgMain
     End Sub
 
     Private Sub ctxmnuSharedAddToFavorites_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then preferences.Favorites.Add(objects(0))
+        If TypeOf CType(sender, FrameworkElement).DataContext IsNot clsDirectoryObject Then Exit Sub
+        Dim obj As clsDirectoryObject = CType(CType(sender, FrameworkElement).DataContext, clsDirectoryObject)
+        preferences.Favorites.Add(obj)
+    End Sub
+
+    Private Sub ctxmnuSharedRemoveFromFavorites_Click(sender As Object, e As RoutedEventArgs)
+        If TypeOf CType(sender, FrameworkElement).DataContext IsNot clsDirectoryObject Then Exit Sub
+        Dim obj As clsDirectoryObject = CType(CType(sender, FrameworkElement).DataContext, clsDirectoryObject)
+        If preferences.Favorites.Contains(obj) Then preferences.Favorites.Remove(obj)
     End Sub
 
     Private Sub ctxmnuSharedOpenObjectLocation_Click(sender As Object, e As RoutedEventArgs)
@@ -452,69 +459,68 @@ Class pgMain
         If objects.Count = 1 Then pg.OpenObject(objects(0).Parent)
     End Sub
 
-    Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then
-            Dim w As NavigationWindow = CType(Window.GetWindow(Me), NavigationWindow)
-            If TypeOf w.Content Is pgMain Then CType(w.Content, pgMain).ShowInTree(objects(0).Parent)
-        End If
-    End Sub
+    'Private Sub ctxmnuSharedOpenObjectTree_Click(sender As Object, e As RoutedEventArgs)
+    '    If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+    '    Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+    '    If objects.Count = 1 Then
+    '        Dim w As NavigationWindow = CType(Window.GetWindow(Me), NavigationWindow)
+    '        If TypeOf w.Content Is pgMain Then CType(w.Content, pgMain).ShowInTree(objects(0).Parent)
+    '    End If
+    'End Sub
 
-    Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
+    'Private Sub ctxmnuSharedResetPassword_Click(sender As Object, e As RoutedEventArgs)
+    '    If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+    '    Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+    '    If Not (objects.Count = 1 AndAlso (
+    '        objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
 
-        Try
-            If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_PasswordReset, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
-                objects(0).ResetPassword()
-                objects(0).passwordNeverExpires = False
-                IMsgBox(My.Resources.str_PasswordChanged, vbOKOnly + vbInformation, My.Resources.str_PasswordReset)
-            End If
+    '    Try
+    '        If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, My.Resources.str_PasswordReset, Window.GetWindow(Me)) = MsgBoxResult.Yes Then
+    '            objects(0).ResetPassword()
+    '            objects(0).passwordNeverExpires = False
+    '            IMsgBox(My.Resources.str_PasswordChanged, vbOKOnly + vbInformation, My.Resources.str_PasswordReset)
+    '        End If
 
-        Catch ex As Exception
-            ThrowException(ex, "ctxmnuSharedResetPassword_Click")
-        End Try
-    End Sub
+    '    Catch ex As Exception
+    '        ThrowException(ex, "ctxmnuSharedResetPassword_Click")
+    '    End Try
+    'End Sub
 
-    Private Sub ctxmnuSharedDisableEnable_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
-            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer)) Then Exit Sub
+    'Private Sub ctxmnuSharedDisableEnable_Click(sender As Object, e As RoutedEventArgs)
+    '    If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
+    '    Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
+    '    If Not (objects.Count = 1 AndAlso (
+    '        objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User Or
+    '        objects(0).SchemaClass = enmDirectoryObjectSchemaClass.Computer)) Then Exit Sub
 
-        Try
-            If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.str_Enable, My.Resources.str_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
-                objects(0).disabled = Not objects(0).disabled
-            End If
+    '    Try
+    '        If IMsgBox(My.Resources.str_AreYouSure, vbYesNo + vbQuestion, If(objects(0).disabled, My.Resources.str_Enable, My.Resources.str_Disable), Window.GetWindow(Me)) = MsgBoxResult.Yes Then
+    '            objects(0).disabled = Not objects(0).disabled
+    '        End If
 
-        Catch ex As Exception
-            ThrowException(ex, "ctxmnuSharedDisableEnable_Click")
-        End Try
-    End Sub
+    '    Catch ex As Exception
+    '        ThrowException(ex, "ctxmnuSharedDisableEnable_Click")
+    '    End Try
+    'End Sub
 
-    Private Sub ctxmnuSharedExpirationDate_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If Not (objects.Count = 1 AndAlso (
-            objects(0).SchemaClass = enmDirectoryObjectSchemaClass.User)) Then Exit Sub
+    'Private Sub ctxmnuSharedExpirationDate_Click(sender As Object, e As RoutedEventArgs)
+    '    If TypeOf CType(sender, MenuItem).DataContext IsNot clsDirectoryObject Then Exit Sub
+    '    Dim obj As clsDirectoryObject = CType(CType(sender, MenuItem).DataContext, clsDirectoryObject)
+    '    If Not obj.SchemaClass = enmDirectoryObjectSchemaClass.User Then Exit Sub
 
-        Try
-            objects(0).accountExpiresDate = Today.AddDays(1)
-            Dim w = ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
-            If w IsNot Nothing AndAlso w.Content IsNot Nothing AndAlso TypeOf w.Content Is pgObject Then CType(w.Content, pgObject).FirstPage = New pgUserObject(objects(0))
-        Catch ex As Exception
-            ThrowException(ex, "ctxmnuSharedExpirationDate_Click")
-        End Try
-    End Sub
+    '    Try
+    '        obj.accountExpiresDate = Today.AddDays(1)
+    '        Dim w = ShowDirectoryObjectProperties(obj, Window.GetWindow(Me))
+    '        If w IsNot Nothing AndAlso w.Content IsNot Nothing AndAlso TypeOf w.Content Is pgObject Then CType(w.Content, pgObject).FirstPage = New pgUserObject(obj)
+    '    Catch ex As Exception
+    '        ThrowException(ex, "ctxmnuSharedExpirationDate_Click")
+    '    End Try
+    'End Sub
 
     Private Sub ctxmnuSharedProperties_Click(sender As Object, e As RoutedEventArgs)
-        If TypeOf CType(CType(sender, MenuItem).Parent, ContextMenu).Tag IsNot clsDirectoryObject() Then Exit Sub
-        Dim objects() As clsDirectoryObject = CType(CType(sender, MenuItem).Parent, ContextMenu).Tag
-        If objects.Count = 1 Then ShowDirectoryObjectProperties(objects(0), Window.GetWindow(Me))
+        If TypeOf CType(sender, FrameworkElement).DataContext IsNot clsDirectoryObject Then Exit Sub
+        Dim obj As clsDirectoryObject = CType(CType(sender, FrameworkElement).DataContext, clsDirectoryObject)
+        ShowDirectoryObjectProperties(obj, Window.GetWindow(Me))
     End Sub
 
 #End Region
@@ -556,27 +562,27 @@ Class pgMain
 
 #Region "Subs"
 
-    Public Sub DomainsChangedHandler(sender As Object, e As NotifyCollectionChangedEventArgs)
-        If e.OldItems IsNot Nothing Then
-            For Each domain As clsDomain In e.OldItems
-                RemoveHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
-            Next
-        End If
-        If e.NewItems IsNot Nothing Then
-            For Each domain As clsDomain In e.NewItems
-                AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
-            Next
-        End If
-        DomainRefreshHandler()
-    End Sub
+    'Public Sub DomainsChangedHandler(sender As Object, e As NotifyCollectionChangedEventArgs)
+    '    If e.OldItems IsNot Nothing Then
+    '        For Each domain As clsDomain In e.OldItems
+    '            RemoveHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+    '        Next
+    '    End If
+    '    If e.NewItems IsNot Nothing Then
+    '        For Each domain As clsDomain In e.NewItems
+    '            AddHandler domain.PropertyChanged, AddressOf DomainValidatedHandler
+    '        Next
+    '    End If
+    '    DomainRefreshHandler()
+    'End Sub
 
-    Public Sub DomainValidatedHandler(sender As Object, e As PropertyChangedEventArgs)
-        If e.PropertyName = "Validated" Then DomainRefreshHandler()
-    End Sub
+    'Public Sub DomainValidatedHandler(sender As Object, e As PropertyChangedEventArgs)
+    '    If e.PropertyName = "Validated" Then DomainRefreshHandler()
+    'End Sub
 
-    Public Sub DomainRefreshHandler()
-        tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
-    End Sub
+    'Public Sub DomainRefreshHandler()
+    '    tviDomains.ItemsSource = domains.Where(Function(d As clsDomain) d.Validated).Select(Function(d As clsDomain) New clsDirectoryObject(d.DefaultNamingContext, d))
+    'End Sub
 
     Public Async Sub ShowInTree(container As clsDirectoryObject)
         If container Is Nothing Then Exit Sub
@@ -626,6 +632,7 @@ Class pgMain
             Next
         Next
     End Sub
+
 
 #End Region
 

@@ -783,7 +783,10 @@ Public Class clsDirectoryObject
         End Using
 
         pwdLastSet = 0
-        description = String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+
+        If Domain.LogActions = True AndAlso Not String.IsNullOrEmpty(Domain.LogActionsAttribute) Then
+            SetAttribute(Domain.LogActionsAttribute, String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString))
+        End If
     End Sub
 
     Public Sub SetPassword(password As String)
@@ -847,6 +850,42 @@ Public Class clsDirectoryObject
             SetAttribute("displayName", value)
 
             NotifyPropertyChanged("displayName")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property employeeID() As String
+        Get
+            Return GetAttribute("employeeID")
+        End Get
+        Set(ByVal value As String)
+            SetAttribute("employeeID", value)
+
+            NotifyPropertyChanged("employeeID")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property employeeNumber() As String
+        Get
+            Return GetAttribute("employeeNumber")
+        End Get
+        Set(ByVal value As String)
+            SetAttribute("employeeNumber", value)
+
+            NotifyPropertyChanged("employeeNumber")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property employeeType() As String
+        Get
+            Return GetAttribute("employeeType")
+        End Get
+        Set(ByVal value As String)
+            SetAttribute("employeeType", value)
+
+            NotifyPropertyChanged("employeeType")
         End Set
     End Property
 
@@ -1410,6 +1449,21 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property parentGUID() As Guid
+        Get
+            Return New Guid(TryCast(GetAttribute("parentGUID", GetType(Byte())), Byte()))
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property parentGUIDFormated() As String
+        Get
+            Return New Guid(TryCast(GetAttribute("parentGUID", GetType(Byte())), Byte())).ToString
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
     <ExtendedProperty>
     Public ReadOnly Property objectSIDFormatted() As String
         Get
@@ -1570,7 +1624,10 @@ Public Class clsDirectoryObject
                     userAccountControl = uac - mdlVariables.ADS_UF_ACCOUNTDISABLE
                 End If
             End If
-            description = String.Format("{0} {1} ({2})", If(value, My.Resources.str_Disabled, My.Resources.str_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+
+            If Domain.LogActions = True AndAlso Not String.IsNullOrEmpty(Domain.LogActionsAttribute) Then
+                SetAttribute(Domain.LogActionsAttribute, String.Format("{0} {1} ({2})", If(value, My.Resources.str_Disabled, My.Resources.str_Enabled), Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString))
+            End If
         End Set
     End Property
 

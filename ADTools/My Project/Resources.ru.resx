@@ -1339,4 +1339,25 @@
   <data name="str_SearchAttributesIndexedToolTip" xml:space="preserve">
     <value>Поиск производится только по индексированным атрибутам. Для поиска по всем указанным атрибутам используйте сочетание клавиш (Ctrl+Enter)</value>
   </data>
+  <data name="str_EmployeeID" xml:space="preserve">
+    <value>ID сотрудника</value>
+  </data>
+  <data name="str_EmployeeNumber" xml:space="preserve">
+    <value>Номер сотрудника</value>
+  </data>
+  <data name="str_EmployeeType" xml:space="preserve">
+    <value>Тип сотрудника</value>
+  </data>
+  <data name="str_Actions" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="str_ActionsDefinition" xml:space="preserve">
+    <value>Информация об основных действиях с объектом может хранится в его атрибуте.</value>
+  </data>
+  <data name="n" xml:space="preserve">
+    <value>Сохранять действия</value>
+  </data>
+  <data name="str_LogActions" xml:space="preserve">
+    <value>Сохранять действия</value>
+  </data>
 </root>

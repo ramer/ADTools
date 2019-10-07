@@ -80,7 +80,12 @@
                         Margin="0,5,0,0"
                         IsReadOnly="True"
                         MinHeight="250"
-                    >
+                        >
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{x:Static r:Resources.ctxmnu_Copy}" Click="ctxmnuCopyEvents"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventCategory}" Width="150" CanUserSort="True" SortMemberPath="Image">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -190,6 +195,11 @@
                         IsReadOnly="True"
                         MinHeight="250"
                         >
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{x:Static r:Resources.ctxmnu_Copy}" Click="ctxmnuCopyEventsTotal"/>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="{x:Static r:Resources.str_EventTotalDate}" Width="200" CanUserSort="True" SortMemberPath="Day">
                                 <DataGridTemplateColumn.CellTemplate>

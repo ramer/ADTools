@@ -5,18 +5,18 @@ Public Class clsWatcher
 
     Public Event ObjectChanged As EventHandler(Of EventArgs)
 
-    Public Property Connection As LdapConnection
-    Public Property Watchers As New HashSet(Of IAsyncResult)()
+    Public Property connection As LdapConnection
+    Public Property asyncResult As IAsyncResult
 
     Public Sub New(connection As LdapConnection)
-        Me.Connection = connection
+        Me.connection = connection
     End Sub
 
     Public Function Register(dn As String, scope As SearchScope, Optional timeout As TimeSpan = Nothing) As Boolean
         Try
             Dim searchRequest As New SearchRequest(dn, "(objectClass=*)", scope, Nothing)
             searchRequest.Controls.Add(New DirectoryNotificationControl())
-            Watchers.Add(Connection.BeginSendRequest(searchRequest, If(timeout <> Nothing, timeout, TimeSpan.FromDays(365)), PartialResultProcessing.ReturnPartialResultsAndNotifyCallback, AddressOf Notify, searchRequest))
+            asyncResult = connection.BeginSendRequest(searchRequest, If(timeout <> Nothing, timeout, TimeSpan.FromDays(365)), PartialResultProcessing.ReturnPartialResultsAndNotifyCallback, AddressOf Notify, searchRequest)
             Return True
         Catch ex As Exception
             Return False
@@ -24,11 +24,13 @@ Public Class clsWatcher
     End Function
 
     Private Sub Notify(result As IAsyncResult)
-        Dim prc As PartialResultsCollection = Connection.GetPartialResults(result)
+        Dim prc As PartialResultsCollection = connection.GetPartialResults(result)
 
         For Each entry As SearchResultEntry In prc
             OnObjectChanged(New ObjectChangedEventArgs(entry.DistinguishedName, entry))
         Next
+
+        If result.IsCompleted Then MsgBox("")
     End Sub
 
     Private Sub OnObjectChanged(args As ObjectChangedEventArgs)
@@ -36,9 +38,7 @@ Public Class clsWatcher
     End Sub
 
     Public Sub Dispose() Implements IDisposable.Dispose
-        For Each watcher In Watchers
-            Connection.Abort(watcher)
-        Next
+        connection.Abort(asyncResult)
     End Sub
 
 End Class

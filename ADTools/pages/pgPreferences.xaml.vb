@@ -49,9 +49,10 @@ Public Class pgPreferences
         DataContext = preferences
 
         'mainwindow attributes
-        Attributes = New ObservableCollection(Of clsAttributeSchema)(domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).Distinct())
-        GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing Then Attributes.Add(New clsAttributeSchema(prop.Name, True, 0, "2.5.5.2", prop.Name, True)))
-
+        Dim attrsdict As New Dictionary(Of String, clsAttributeSchema)
+        domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).ToList.ForEach(Sub(a As clsAttributeSchema) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
+        GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing AndAlso Not attrsdict.ContainsKey(prop.Name) Then attrsdict.Add(prop.Name, New clsAttributeSchema(prop.Name, True, 0, "2.5.5.2", prop.Name, True)))
+        Attributes = New ObservableCollection(Of clsAttributeSchema)(attrsdict.Values)
         lvAttributes.ItemsSource = Attributes
         clsSorter.ApplySort(lvAttributes.Items, "IsDefault", ListSortDirection.Descending)
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch 'domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema).Where(Function(attr) preferences.AttributesForSearch.Contains(attr.lDAPDisplayName))

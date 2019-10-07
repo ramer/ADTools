@@ -526,6 +526,8 @@ Class pgObjects
     End Sub
 
     Public Sub OpenObject(current As clsDirectoryObject)
+        If current Is Nothing OrElse Not current.Exist Then Exit Sub
+
         If (current.SchemaClass = enmDirectoryObjectSchemaClass.Container Or
            current.SchemaClass = enmDirectoryObjectSchemaClass.OrganizationalUnit Or
            current.SchemaClass = enmDirectoryObjectSchemaClass.UnknownContainer Or

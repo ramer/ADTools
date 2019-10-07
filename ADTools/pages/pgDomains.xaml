@@ -50,6 +50,12 @@
                             </GridView.Columns>
                         </GridView>
                     </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                            <Setter Property="MinHeight" Value="24"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </DockPanel>
             <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False" Grid.Column="1" Grid.Row="0" Width="5" />
@@ -73,7 +79,7 @@
                                     <TextBlock x:Name="tblckPassword" IsHitTestVisible="False" Text="●●●●●●●●●●●●●●●●●●●" VerticalAlignment="Center" Margin="3,0,0,6" Visibility="Collapsed"/>
                                 </Grid>
                             </DockPanel>
-                            <Button x:Name="btnConnect" Content="{x:Static r:Resources.str_Connect}" MinHeight="24" MinWidth="100" HorizontalAlignment="Right"/>
+                            <Button x:Name="btnConnect" Content="{x:Static r:Resources.str_Connect}" MinHeight="24" MinWidth="100" HorizontalAlignment="Right" IsDefault="True"/>
                             <TextBlock Text="{x:Static r:Resources.str_EnableWatcher}" Margin="0,0,0,5"/>
                             <CheckBox x:Name="chbEnableWatcher" Height="23" Content="{x:Static r:Resources.str_EnableWatcherDefinition}" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.EnableWatcher, Mode=TwoWay}"/>
                         </StackPanel>
@@ -196,6 +202,22 @@
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.str_GroupsDefinition}"/>
                         </StackPanel>
                         <local:ctlGroupMemberOf x:Name="ctlMemberOf" CurrentDomain="{Binding ElementName=lvDomains, Path=SelectedItem}"/>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="{x:Static r:Resources.str_Actions}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
+                    <DockPanel LastChildFill="True"  Margin="5">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock Text="{x:Static r:Resources.str_Actions}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+                            <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.str_ActionsDefinition}"/>
+                            <DockPanel Margin="0,0,0,10">
+                                <CheckBox x:Name="chbLogActions" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.LogActions, Mode=TwoWay}" Content="{x:Static r:Resources.str_LogActions}" Margin="0,3,20,0"/>
+                                <ComboBox ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.AttributesSchema}"
+                                          SelectedValuePath="Value.lDAPDisplayName"
+                                          DisplayMemberPath="Value.adminDisplayName"
+                                          SelectedValue="{Binding ElementName=lvDomains, Path=SelectedItem.LogActionsAttribute}"
+                                          IsEnabled="{Binding ElementName=chbLogActions, Path=IsChecked}"/>
+                            </DockPanel>
+                        </StackPanel>
                     </DockPanel>
                 </TabItem>
                 <TabItem Header="{x:Static r:Resources.str_Exchange}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">

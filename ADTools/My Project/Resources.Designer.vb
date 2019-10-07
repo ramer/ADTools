@@ -22,7 +22,7 @@ Namespace My.Resources
     '''<summary>
     '''  Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
     '''</summary>
-    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0"),  _
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0"),  _
      Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
      Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
      Global.Microsoft.VisualBasic.HideModuleNameAttribute()>  _
@@ -643,6 +643,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Log actions.
+        '''</summary>
+        Public ReadOnly Property n() As String
+            Get
+                Return ResourceManager.GetString("n", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Поиск локализованного ресурса типа System.Drawing.Bitmap.
         '''</summary>
         Public ReadOnly Property ok() As System.Drawing.Bitmap
@@ -754,6 +763,24 @@ Namespace My.Resources
         Public ReadOnly Property str_AccountNeverExpires() As String
             Get
                 Return ResourceManager.GetString("str_AccountNeverExpires", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Actions.
+        '''</summary>
+        Public ReadOnly Property str_Actions() As String
+            Get
+                Return ResourceManager.GetString("str_Actions", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Information about the main actions with the object can be stored in its attribute..
+        '''</summary>
+        Public ReadOnly Property str_ActionsDefinition() As String
+            Get
+                Return ResourceManager.GetString("str_ActionsDefinition", resourceCulture)
             End Get
         End Property
         
@@ -1604,6 +1631,33 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Employee ID.
+        '''</summary>
+        Public ReadOnly Property str_EmployeeID() As String
+            Get
+                Return ResourceManager.GetString("str_EmployeeID", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Employee number.
+        '''</summary>
+        Public ReadOnly Property str_EmployeeNumber() As String
+            Get
+                Return ResourceManager.GetString("str_EmployeeNumber", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Employee type.
+        '''</summary>
+        Public ReadOnly Property str_EmployeeType() As String
+            Get
+                Return ResourceManager.GetString("str_EmployeeType", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Enable object.
         '''</summary>
         Public ReadOnly Property str_Enable() As String
@@ -2232,6 +2286,15 @@ Namespace My.Resources
         Public ReadOnly Property str_LockoutThresholdFormat() As String
             Get
                 Return ResourceManager.GetString("str_LockoutThresholdFormat", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Ищет локализованную строку, похожую на Log actions.
+        '''</summary>
+        Public ReadOnly Property str_LogActions() As String
+            Get
+                Return ResourceManager.GetString("str_LogActions", resourceCulture)
             End Get
         End Property
         
