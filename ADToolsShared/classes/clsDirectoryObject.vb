@@ -799,7 +799,10 @@ Public Class clsDirectoryObject
         End Using
 
         pwdLastSet = -1
-        description = String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString)
+
+        If Domain.LogActions = True AndAlso Not String.IsNullOrEmpty(Domain.LogActionsAttribute) Then
+            SetAttribute(Domain.LogActionsAttribute, String.Format("{0} {1} ({2})", My.Resources.str_PasswordChanged, Domain.Username, Now.ToShortTimeString & " " & Now.ToShortDateString))
+        End If
     End Sub
 
 
