@@ -203,9 +203,12 @@
     <Compile Include="converters\ConverterDesiredWidthToVisibility.vb" />
     <Compile Include="converters\ConverterEnumToVisibility.vb" />
     <Compile Include="converters\ConverterIntegerToVisibility.vb" />
-    <Compile Include="converters\ConverterToSingleLine.vb" />
+    <Compile Include="converters\ConverterOctetStringToSingleLine.vb" />
+    <Compile Include="converters\ConverterSIDToSingleLine.vb" />
+    <Compile Include="converters\ConverterStringToSingleLine.vb" />
     <Compile Include="converters\ConverterToInlinesWithHyperlink.vb" />
     <Compile Include="converters\ConverterTreeViewItemDepthToMargin.vb" />
+    <Compile Include="converters\ConverterUTCTimeToSingleLine.vb" />
     <Compile Include="mdlSingleInstance.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>

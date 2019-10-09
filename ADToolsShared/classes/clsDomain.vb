@@ -6,7 +6,7 @@ Imports CredentialManagement
 Imports HandlebarsDotNet
 Imports IRegisty
 
-<DebuggerDisplay("clsDomain={Name}")>
+<DebuggerDisplay("Domain={Name}")>
 Public Class clsDomain
     Implements INotifyPropertyChanged
 
@@ -27,6 +27,10 @@ Public Class clsDomain
 
     Private Sub NotifyObjectChanged(ocea As ObjectChangedEventArgs)
         OnObjectChanged(ocea)
+    End Sub
+
+    Private Sub Watcher_ObjectChanged(sender As Object, e As ObjectChangedEventArgs) Handles _watcher.ObjectChanged
+        NotifyObjectChanged(e)
     End Sub
 
     Sub New()
@@ -106,11 +110,6 @@ Public Class clsDomain
     End Function
 
     Private Async Function UpdateNamingContextsAsync() As Task(Of Boolean)
-        'defaultNamingContext
-        'configurationNamingContext
-        'schemaNamingContext
-        'search root
-
         Return Await Task.Run(
             Function()
                 Try
@@ -126,15 +125,13 @@ Public Class clsDomain
                     DefaultNamingContext = Nothing
                     ConfigurationNamingContext = Nothing
                     SchemaNamingContext = Nothing
-                    SearchRoot = Nothing
+
                     Return False
                 End Try
             End Function)
     End Function
 
     Private Async Function UpdatePropertiesAsync() As Task(Of Boolean)
-        'properties
-
         Return Await Task.Run(
             Function()
                 Try
@@ -162,35 +159,29 @@ Public Class clsDomain
     End Function
 
     Private Async Function UpdateAttributesSchemaAsync() As Task(Of Boolean)
-        'attributes
-
         Return Await Task.Run(
             Function()
                 Try
-                    Dim a As New Dictionary(Of String, clsAttributeSchema)
+                    Dim a As New Dictionary(Of String, clsAttribute)
                     Dim pageRequestControl As New PageResultRequestControl(1000)
                     Dim pageResponseControl As PageResultResponseControl
-                    Dim searchRequest = New SearchRequest(SchemaNamingContext, "(objectClass=attributeSchema)", SearchScope.Subtree, {"adminDisplayName", "isSingleValued", "searchFlags", "attributeSyntax", "lDAPDisplayName"})
+                    Dim searchRequest = New SearchRequest(SchemaNamingContext, "(objectClass=attributeSchema)", SearchScope.Subtree, {"adminDisplayName", "isSingleValued", "searchFlags", "attributeSyntax", "lDAPDisplayName", "rangeLower", "rangeUpper"})
                     searchRequest.Controls.Add(pageRequestControl)
 
                     Do
                         Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
-                        For Each attr As SearchResultEntry In response.Entries
-                            a.Add(attr.Attributes("lDAPDisplayName")(0), New clsAttributeSchema(attr.Attributes("adminDisplayName")(0), attr.Attributes("isSingleValued")(0), attr.Attributes("searchFlags")(0), attr.Attributes("attributeSyntax")(0), attr.Attributes("lDAPDisplayName")(0)))
-                        Next attr
+                        For Each sre As SearchResultEntry In response.Entries
+                            If sre IsNot Nothing AndAlso sre.Attributes.Contains("lDAPDisplayName") AndAlso sre.Attributes("lDAPDisplayName").Count > 0 AndAlso sre.Attributes("lDAPDisplayName")(0) IsNot Nothing Then
+                                a.Add(sre.Attributes("lDAPDisplayName")(0), New clsAttribute(sre))
+                            End If
+                        Next
 
                         pageResponseControl = response.Controls(0)
                         If pageResponseControl.Cookie.Length = 0 Then Exit Do
 
                         pageRequestControl.Cookie = pageResponseControl.Cookie
                     Loop
-
-                    'For Each sa In a.Select(Function(p) p.Value)
-                    '    If sa.isSingleValued And sa.ADSType = enmADSType.ADSTYPE_CASE_IGNORE_STRING And Not LCase(sa.lDAPDisplayName).StartsWith("ms") Then
-                    '        Debug.WriteLine(sa.lDAPDisplayName)
-                    '    End If
-                    'Next
 
                     AttributesSchema = a
                     Return True
@@ -262,7 +253,6 @@ Public Class clsDomain
             End Function)
     End Function
 
-    <RegistrySerializerAfterSerialize(True)>
     Public Sub AfterSerialize()
         SaveCredentials()
     End Sub
@@ -289,7 +279,6 @@ Public Class clsDomain
         If EnableWatcher Then StartWatcher()
 
         Validated = True
-        Return
     End Function
 
     Public Async Function ConnectAsync() As Task
@@ -298,12 +287,12 @@ Public Class clsDomain
         If Not SetupConnection() Then Return
         If Not Await UpdateNamingContextsAsync() Then Return
 
-        If EnableWatcher Then StartWatcher()
-
         Await UpdatePropertiesAsync()
         Await UpdateAttributesSchemaAsync()
         Await UpdateSuffixesAsync()
         Await UpdateExchangeServersAsync()
+
+        If EnableWatcher Then StartWatcher()
 
         Validated = True
     End Function
@@ -326,6 +315,8 @@ Public Class clsDomain
             Return _underlyingobject.ChildContainers
         End Get
     End Property
+
+#Region "Properties"
 
     Private _name As String
     Public Property Name() As String
@@ -456,13 +447,13 @@ Public Class clsDomain
         End Set
     End Property
 
-    Private _attributesschema As New Dictionary(Of String, clsAttributeSchema)
+    Private _attributesschema As New Dictionary(Of String, clsAttribute)
     <RegistrySerializerIgnorable(True)>
-    Public Property AttributesSchema() As Dictionary(Of String, clsAttributeSchema)
+    Public Property AttributesSchema() As Dictionary(Of String, clsAttribute)
         Get
             Return _attributesschema
         End Get
-        Set(value As Dictionary(Of String, clsAttributeSchema))
+        Set(value As Dictionary(Of String, clsAttribute))
             _attributesschema = value
             NotifyPropertyChanged("AttributesSchema")
         End Set
@@ -694,8 +685,6 @@ Public Class clsDomain
         End Set
     End Property
 
-    Private Sub Watcher_ObjectChanged(sender As Object, e As ObjectChangedEventArgs) Handles _watcher.ObjectChanged
-        NotifyObjectChanged(e)
-    End Sub
+#End Region
 
 End Class

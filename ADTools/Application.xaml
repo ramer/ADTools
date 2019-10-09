@@ -18,9 +18,12 @@
         <local:ConverterDesiredWidthToVisibility x:Key="ConverterDesiredWidthToVisibility" />
         <local:ConverterEnumToVisibility x:Key="ConverterEnumToVisibility" />
         <local:ConverterIntegerToVisibility x:Key="ConverterIntegerToVisibility"/>
-        <local:ConverterToSingleLine x:Key="ConverterToSingleLine"/>
         <local:ConverterTreeViewItemDepthToMargin x:Key="ConverterTreeViewItemDepthToMargin"/>
-        
+        <local:ConverterStringToSingleLine x:Key="ConverterStringToSingleLine" />
+        <local:ConverterUTCTimeToSingleLine x:Key="ConverterUTCTimeToSingleLine"/>
+        <local:ConverterOctetStringToSingleLine x:Key="ConverterOctetStringToSingleLine"/>
+        <local:ConverterSIDToSingleLine x:Key="ConverterSIDToSingleLine"/>
+
         <sys:Double x:Key="FontSizePage">12</sys:Double>
         <sys:Double x:Key="FontSizeSmall">12</sys:Double>
 

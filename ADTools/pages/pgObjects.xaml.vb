@@ -446,7 +446,7 @@ Class pgObjects
         Dim patterns As MatchCollection = Regex.Matches(args, "{{(.*?)}}")
 
         For Each pattern As Match In patterns
-            Dim val As String = If(objects(0).GetAttribute(pattern.Value.Replace("{{", "").Replace("}}", "")), pattern.Value).ToString
+            Dim val As String = If(objects(0).GetValue(pattern.Value.Replace("{{", "").Replace("}}", "")), pattern.Value).ToString
             args = Replace(args, pattern.Value, val)
         Next
 
@@ -831,7 +831,7 @@ Class pgObjects
         If e.Key = Key.Enter Then
             If preferences.SearchMode = enmSearchMode.Default Then
                 If preferences.QuickSearch And Not e.KeyboardDevice.Modifiers = ModifierKeys.Control Then
-                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttributeSchema)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttribute)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
                 Else
                     StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
                 End If
@@ -852,7 +852,7 @@ Class pgObjects
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If preferences.SearchMode = enmSearchMode.Default Then
             If preferences.QuickSearch Then
-                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttributeSchema)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttribute)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
             Else
                 StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
             End If

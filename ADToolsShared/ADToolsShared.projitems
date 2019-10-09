@@ -9,8 +9,8 @@
     <Import_RootNamespace>ADToolsShared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttributeOld.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttribute.vb" />
-    <Compile Include="$(MSBuildThisFileDirectory)classes\clsAttributeSchema.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDirectoryObject.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomain.vb" />
     <Compile Include="$(MSBuildThisFileDirectory)classes\clsDomainProperty.vb" />

@@ -87,7 +87,7 @@ Public Class ADToolsApplication
             InitializeGlobalParameters()
 
             ' domains setup
-            InitializeDomains(startWithSearch)
+            InitializeDomains(True)
 
             ' preferences setup
             InitializePreferences()

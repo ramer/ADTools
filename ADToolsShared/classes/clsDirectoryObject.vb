@@ -247,48 +247,66 @@ Public Class clsDirectoryObject
         Refresh(AllowedAttributes.ToArray)
     End Sub
 
-    Public Function GetAttribute(attributename As String, Optional returnType As Type = Nothing) As Object
+    Public Function GetValue(attributename As String) As Object
+        Dim attr As clsAttribute = GetAttribute(attributename)
+        If attr Is Nothing Then
+            Return Nothing
+        Else
+            Return attr.Value
+        End If
+    End Function
+
+
+    Public Function GetAttribute(attributename As String) As clsAttribute
         If Not cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
         If Not cache.ContainsKey(attributename) Then cache.Add(attributename, Nothing) 'if entry hasn't value store nothing 
-        If cache(attributename) Is Nothing Then Return Nothing 'prevent refresh if nothing stored
 
-        If cache(attributename) Is Nothing Then Return Nothing
-        If returnType Is Nothing Then
-            If cache(attributename).Count = 0 Then
-                Return Nothing
-            ElseIf cache(attributename).Count = 1 Then
-                returnType = GetType(String) 'set default return type to String
-            Else
-                returnType = GetType(String()) 'set default return type to String
-            End If
-        End If
+        Dim baseattr As clsAttribute = If(Domain.AttributesSchema.ContainsKey(attributename), Domain.AttributesSchema(attributename), Nothing)
+        If baseattr Is Nothing Then Return Nothing
 
-        Select Case returnType
-            Case GetType(String)
-                Return If(cache(attributename).Count = 1, cache(attributename)(0), Nothing)
-            Case GetType(String())
-                Dim values As New List(Of String)
-                For Each value As String In cache(attributename).GetValues(GetType(String))
-                    values.Add(value)
-                Next
-                Return values.ToArray
-            Case GetType(Byte())
-                Return If(cache(attributename).Count = 1, cache(attributename).GetValues(GetType(Byte()))(0), Nothing)
-            Case GetType(Long)
-                Return If(cache(attributename).Count = 1, Long.Parse(cache(attributename)(0)), Nothing)
-            Case GetType(Integer)
-                Return If(cache(attributename).Count = 1, Integer.Parse(cache(attributename)(0)), Nothing)
-            Case GetType(Date)
-                Return If(cache(attributename).Count = 1, Date.ParseExact(cache(attributename)(0), "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture), Nothing)
-            Case GetType(Boolean)
-                Return If(cache(attributename).Count = 1, Boolean.Parse(cache(attributename)(0)), Nothing)
+        Dim attr As clsAttribute
+        Select Case baseattr.attributeSyntax
+            Case "2.5.5.8" 'Boolean. For queries that include attributes of Boolean syntax in a filter, specify TRUE or FALSE (for example, myboolattr=TRUE).
+                attr = New clsAttributeBoolean(baseattr, cache(attributename))
+            Case "2.5.5.1" 'String that contains a DN. For attributes with this syntax, Active Directory handles attribute values as references to the object identified by the DN and automatically updates the value if the object is moved or renamed. For queries that include attributes of DN syntax in a filter, specify full distinguished names—wildcards (for example, cn=John*) are not supported.
+                attr = New clsAttributeDistinguishedName(baseattr, cache(attributename))
+            Case "2.5.5.2" 'An OID string, which is a string that contains digits (0-9) and decimal points (.).
+                attr = New clsAttributeObjectIdentifier(baseattr, cache(attributename))
+            Case "2.5.5.4" 'A case-insensitive string that contains characters from the teletex character set.
+                attr = New clsAttributeCaseInsensitiveString(baseattr, cache(attributename))
+            Case "2.5.5.5" 'A case-sensitive string that contains characters from the printable character set.
+                attr = New clsAttributeIA5String(baseattr, cache(attributename))
+            Case "2.5.5.6" 'String that contains digits.
+                attr = New clsAttributeNumericString(baseattr, cache(attributename))
+            Case "2.5.5.11" 'A case-sensitive character string, with UTC-Time.
+                attr = New clsAttributeUTCTime(baseattr, cache(attributename))
+            Case "2.5.5.12" 'A case-insensitive Unicode string.
+                attr = New clsAttributeUnicodeString(baseattr, cache(attributename))
+            Case "2.5.5.13" 'A string that contains OSI presentation addresses.
+                attr = New clsAttributeOSIString(baseattr, cache(attributename))
+            Case "2.5.5.14" 'From X400.
+                attr = New clsAttributeDistinguishedNameWithString(baseattr, cache(attributename))
+            Case "2.5.5.15" 'Octet string that contains a Windows NT/Windows 2000 security descriptor.
+                attr = New clsAttributeNTSecurityDescriptor(baseattr, cache(attributename))
+            Case "2.5.5.17" 'Octet string that contains a security identifier (SID). Use this syntax to store SID values only.
+                attr = New clsAttributeSID(baseattr, cache(attributename))
+            Case "2.5.5.7" 'An OctetString that contains a binary value and a DN. A value with this syntax has the following format: B : CharCount : binaryvalue : ObjectDN
+                attr = New clsAttributeDNBinary(baseattr, cache(attributename))
+            Case "2.5.5.10" 'Array of bytes. Use OctetString to store binary data.
+                attr = New clsAttributeOctetString(baseattr, cache(attributename))
+            Case "2.5.5.9" '32-bit integer.
+                attr = New clsAttributeInteger(baseattr, cache(attributename))
+            Case "2.5.5.16" 'Large integer. Use for 64-bit values.
+                attr = New clsAttributeLong(baseattr, cache(attributename))
             Case Else
-                Throw New TypeLoadException("Unknown attribute return type")
-                Return Nothing
+                Throw New ArgumentException
         End Select
+
+        Return attr
     End Function
 
     Public Sub SetAttribute(attributename As String, value As Object)
+        Exit Sub
         If value Is Nothing OrElse String.IsNullOrEmpty(value.ToString) Then
 
             Try
@@ -443,7 +461,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property HasValue(name As String) As Boolean
         Get
-            Return GetAttribute(name) IsNot Nothing
+            Return GetValue(name) IsNot Nothing
         End Get
     End Property
 
@@ -453,7 +471,7 @@ Public Class clsDirectoryObject
         Get
             If _allowedattributes IsNot Nothing Then Return _allowedattributes
 
-            Dim a As Object = GetAttribute("allowedAttributes", GetType(String()))
+            Dim a As Object = GetValue("allowedAttributes")
 
             If a Is Nothing Then
                 _allowedattributes = New List(Of String)
@@ -471,7 +489,7 @@ Public Class clsDirectoryObject
         Get
             If _allowedattributeseffective IsNot Nothing Then Return _allowedattributeseffective
 
-            Dim a As Object = GetAttribute("allowedAttributesEffective", GetType(String()))
+            Dim a As Object = GetValue("allowedAttributesEffective")
 
             If a Is Nothing Then
                 _allowedattributeseffective = New List(Of String)
@@ -483,19 +501,19 @@ Public Class clsDirectoryObject
         End Get
     End Property
 
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property AllAttributes As ObservableCollection(Of clsAttribute)
-        Get
-            Dim aa As New ObservableCollection(Of clsAttribute)
-            For Each attr As String In AllowedAttributes
-                aa.Add(New clsAttribute(attr, "", GetAttribute(attr)))
-            Next
-            Return aa
-        End Get
-    End Property
+    '<RegistrySerializerIgnorable(True)>
+    'Public ReadOnly Property AllAttributes As ObservableCollection(Of clsAttributeSchema)
+    '    Get
+    '        Dim aa As New ObservableCollection(Of clsAttributeSchema)
+    '        For Each attr As String In AllowedAttributes
+    '            If Domain.AttributesSchema.ContainsKey(attr) Then aa.Add(New clsAttributeSchema(Domain.AttributesSchema(attr)))
+    '        Next
+    '        Return aa
+    '    End Get
+    'End Property
 
     Public Overrides Function TryGetMember(ByVal binder As Dynamic.GetMemberBinder, ByRef result As Object) As Boolean
-        result = GetAttribute(binder.Name)
+        result = GetValue(binder.Name)
         Return True
     End Function
 
@@ -561,13 +579,13 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsDeleted As Boolean?
         Get
-            Return GetAttribute("isDeleted", GetType(Boolean))
+            Return GetValue("isDeleted")
         End Get
     End Property
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property IsRecycled As Boolean?
         Get
-            Return GetAttribute("isRecycled", GetType(Boolean))
+            Return GetValue("isRecycled")
         End Get
     End Property
 
@@ -638,7 +656,7 @@ Public Class clsDirectoryObject
         Get
             Dim _status As String = ""
 
-            If SchemaClass = enmDirectoryObjectSchemaClass.User Or SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
+            If SchemaClass = enmDirectoryObjectSchemaClass.User OrElse SchemaClass = enmDirectoryObjectSchemaClass.Computer Then
                 If passwordNeverExpires Is Nothing Then
                     _status &= My.Resources.str_PasswordExpirationUnknown & vbCr
                 ElseIf passwordNeverExpires = False Then
@@ -811,7 +829,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property sn() As String
         Get
-            Return GetAttribute("sn")
+            Return GetValue("sn")
         End Get
         Set(ByVal value As String)
             SetAttribute("sn", value)
@@ -823,7 +841,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property initials() As String
         Get
-            Return GetAttribute("initials")
+            Return GetValue("initials")
         End Get
         Set(ByVal value As String)
             SetAttribute("initials", value)
@@ -835,7 +853,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property givenName() As String
         Get
-            Return GetAttribute("givenName")
+            Return GetValue("givenName")
         End Get
         Set(ByVal value As String)
             SetAttribute("givenName", value)
@@ -847,7 +865,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property displayName() As String
         Get
-            Return GetAttribute("displayName")
+            Return GetValue("displayName")
         End Get
         Set(ByVal value As String)
             SetAttribute("displayName", value)
@@ -859,7 +877,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property employeeID() As String
         Get
-            Return GetAttribute("employeeID")
+            Return GetValue("employeeID")
         End Get
         Set(ByVal value As String)
             SetAttribute("employeeID", value)
@@ -871,7 +889,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property employeeNumber() As String
         Get
-            Return GetAttribute("employeeNumber")
+            Return GetValue("employeeNumber")
         End Get
         Set(ByVal value As String)
             SetAttribute("employeeNumber", value)
@@ -883,7 +901,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property employeeType() As String
         Get
-            Return GetAttribute("employeeType")
+            Return GetValue("employeeType")
         End Get
         Set(ByVal value As String)
             SetAttribute("employeeType", value)
@@ -895,7 +913,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property physicalDeliveryOfficeName() As String
         Get
-            Return GetAttribute("physicalDeliveryOfficeName")
+            Return GetValue("physicalDeliveryOfficeName")
         End Get
         Set(ByVal value As String)
             SetAttribute("physicalDeliveryOfficeName", value)
@@ -907,7 +925,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property company() As String
         Get
-            Return GetAttribute("company")
+            Return GetValue("company")
         End Get
         Set(ByVal value As String)
             SetAttribute("company", value)
@@ -919,7 +937,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property telephoneNumber() As String
         Get
-            Return GetAttribute("telephoneNumber")
+            Return GetValue("telephoneNumber")
         End Get
         Set(ByVal value As String)
             SetAttribute("telephoneNumber", value)
@@ -931,7 +949,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property homePhone() As String
         Get
-            Return GetAttribute("homePhone")
+            Return GetValue("homePhone")
         End Get
         Set(ByVal value As String)
             SetAttribute("homePhone", value)
@@ -943,7 +961,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property ipPhone() As String
         Get
-            Return GetAttribute("ipPhone")
+            Return GetValue("ipPhone")
         End Get
         Set(ByVal value As String)
             SetAttribute("ipPhone", value)
@@ -955,7 +973,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property mobile() As String
         Get
-            Return GetAttribute("mobile")
+            Return GetValue("mobile")
         End Get
         Set(ByVal value As String)
             SetAttribute("mobile", value)
@@ -967,7 +985,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property streetAddress() As String
         Get
-            Return GetAttribute("streetAddress")
+            Return GetValue("streetAddress")
         End Get
         Set(ByVal value As String)
             SetAttribute("streetAddress", value)
@@ -979,7 +997,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property mail() As String
         Get
-            Return GetAttribute("mail")
+            Return GetValue("mail")
         End Get
         Set(ByVal value As String)
             SetAttribute("mail", value)
@@ -991,7 +1009,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property title() As String
         Get
-            Return GetAttribute("title")
+            Return GetValue("title")
         End Get
         Set(ByVal value As String)
             SetAttribute("title", value)
@@ -1003,7 +1021,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property department() As String
         Get
-            Return GetAttribute("department")
+            Return GetValue("department")
         End Get
         Set(ByVal value As String)
             SetAttribute("department", value)
@@ -1015,7 +1033,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userPrincipalName() As String
         Get
-            Return GetAttribute("userPrincipalName")
+            Return GetValue("userPrincipalName")
         End Get
         Set(ByVal value As String)
             SetAttribute("userPrincipalName", value)
@@ -1065,7 +1083,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property thumbnailPhoto() As BitmapImage
         Get
-            Dim photo = GetAttribute("thumbnailPhoto", GetType(Byte()))
+            Dim photo = GetValue("thumbnailPhoto")
 
             If photo IsNot Nothing Then
                 Using ms = New System.IO.MemoryStream(CType(photo, Byte()))
@@ -1106,7 +1124,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userWorkstations() As String()
         Get
-            Dim w As String = GetAttribute("userWorkstations")
+            Dim w As String = GetValue("userWorkstations")
             Return If(Not String.IsNullOrEmpty(w), w.Split({","}, StringSplitOptions.RemoveEmptyEntries), New String() {})
         End Get
         Set(value As String())
@@ -1123,14 +1141,14 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property dNSHostName As String
         Get
-            Return GetAttribute("dNSHostName")
+            Return GetValue("dNSHostName")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public Property location() As String
         Get
-            Return GetAttribute("location")
+            Return GetValue("location")
         End Get
         Set(ByVal value As String)
             SetAttribute("location", value)
@@ -1142,14 +1160,14 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystem() As String
         Get
-            Return GetAttribute("operatingSystem")
+            Return GetValue("operatingSystem")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property operatingSystemVersion() As String
         Get
-            Return GetAttribute("operatingSystemVersion")
+            Return GetValue("operatingSystemVersion")
         End Get
     End Property
 
@@ -1160,7 +1178,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property groupType() As Long
         Get
-            Return GetAttribute("groupType", GetType(Long))
+            Return GetValue("groupType")
         End Get
         Set(ByVal value As Long)
             Try
@@ -1267,7 +1285,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property info() As String
         Get
-            Return GetAttribute("info")
+            Return GetValue("info")
         End Get
         Set(ByVal value As String)
             SetAttribute("info", value)
@@ -1284,7 +1302,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectClass() As String()
         Get
             Try
-                Return GetAttribute("objectClass", GetType(String()))
+                Return GetValue("objectClass")
             Catch ex As Exception
                 Return Nothing
             End Try
@@ -1295,7 +1313,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectCategory() As String
         Get
             Try
-                Dim oc = GetAttribute("objectCategory")
+                Dim oc = GetValue("objectCategory")
                 If oc IsNot Nothing Then
                     Dim ocarr = LCase(oc.ToString).Split(New String() {"=", ","}, StringSplitOptions.RemoveEmptyEntries)
                     Return If(ocarr.Length >= 2, ocarr(1), Nothing)
@@ -1311,7 +1329,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property accountExpires() As Long?
         Get
-            Return GetAttribute("accountExpires", GetType(Long))
+            Return GetValue("accountExpires")
         End Get
         Set(ByVal value As Long?)
             If value IsNot Nothing Then SetAttribute("accountExpires", value)
@@ -1375,14 +1393,15 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property badPwdCount() As Integer?
         Get
-            Return GetAttribute("badPwdCount", GetType(Integer))
+            Return GetValue("badPwdCount")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public Property description() As String
         Get
-            Return GetAttribute("description")
+            Dim val = GetValue("description")
+            Return If(TypeOf val Is String(), val(0), val)
         End Get
         Set(ByVal value As String)
             SetAttribute("description", value)
@@ -1394,7 +1413,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property lastLogon() As Long?
         Get
-            Return GetAttribute("lastLogon", GetType(Long))
+            Return GetValue("lastLogon")
         End Get
     End Property
 
@@ -1425,21 +1444,23 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property logonCount() As Integer
         Get
-            Return GetAttribute("logonCount", GetType(Integer))
+            Return GetValue("logonCount")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property name() As String
         Get
-            Return If(GetAttribute("name"), "Null object")
+            Return If(GetValue("name"), "Null object")
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property objectGUID() As Guid
         Get
-            Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte()))
+            Dim a = GetValue("objectGUID")
+            If a Is Nothing Then Return Nothing
+            Return New Guid(TryCast(a, Byte()))
         End Get
     End Property
 
@@ -1447,14 +1468,14 @@ Public Class clsDirectoryObject
     <ExtendedProperty>
     Public ReadOnly Property objectGUIDFormated() As String
         Get
-            Return New Guid(TryCast(GetAttribute("objectGUID", GetType(Byte())), Byte())).ToString
+            Return New Guid(TryCast(GetValue("objectGUID"), Byte())).ToString
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property parentGUID() As Guid
         Get
-            Return New Guid(TryCast(GetAttribute("parentGUID", GetType(Byte())), Byte()))
+            Return New Guid(TryCast(GetValue("parentGUID"), Byte()))
         End Get
     End Property
 
@@ -1462,7 +1483,7 @@ Public Class clsDirectoryObject
     <ExtendedProperty>
     Public ReadOnly Property parentGUIDFormated() As String
         Get
-            Return New Guid(TryCast(GetAttribute("parentGUID", GetType(Byte())), Byte())).ToString
+            Return New Guid(TryCast(GetValue("parentGUID"), Byte())).ToString
         End Get
     End Property
 
@@ -1471,7 +1492,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property objectSIDFormatted() As String
         Get
             Try
-                Dim sid As New SecurityIdentifier(TryCast(GetAttribute("objectSid", GetType(Byte())), Byte()), 0)
+                Dim sid As New SecurityIdentifier(TryCast(GetValue("objectSid"), Byte()), 0)
                 If sid.IsAccountSid Then Return sid.ToString
                 Return Nothing
             Catch
@@ -1483,7 +1504,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property pwdLastSet() As Long?
         Get
-            Return GetAttribute("pwdLastSet", GetType(Long))
+            Return GetValue("pwdLastSet")
         End Get
         Set(ByVal value As Long?)
             If value IsNot Nothing Then SetAttribute("pwdLastSet", value)
@@ -1563,7 +1584,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property sAMAccountName() As String
         Get
-            Return GetAttribute("sAMAccountName")
+            Return GetValue("sAMAccountName")
         End Get
         Set(ByVal value As String)
             SetAttribute("sAMAccountName", value)
@@ -1575,7 +1596,7 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public Property userAccountControl() As Integer?
         Get
-            Return GetAttribute("userAccountControl", GetType(Integer))
+            Return GetValue("userAccountControl")
         End Get
         Set(ByVal value As Integer?)
             If value IsNot Nothing Then SetAttribute("userAccountControl", value)
@@ -1677,7 +1698,8 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenCreated() As Date
         Get
-            Return GetAttribute("whenCreated", GetType(Date))
+            Dim val = GetValue("whenCreated")
+            Return Date.ParseExact(val, "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture)
         End Get
     End Property
 
@@ -1692,7 +1714,8 @@ Public Class clsDirectoryObject
     <RegistrySerializerIgnorable(True)>
     Public ReadOnly Property whenChanged() As Date
         Get
-            Return GetAttribute("whenChanged", GetType(Date))
+            Dim val = GetValue("whenChanged")
+            Return Date.ParseExact(val, "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture)
         End Get
     End Property
 
@@ -1701,7 +1724,7 @@ Public Class clsDirectoryObject
     Public Property manager() As clsDirectoryObject
         Get
             If _manager Is Nothing Then
-                Dim managerDN As String = GetAttribute("manager")
+                Dim managerDN As String = GetValue("manager")
 
                 If managerDN Is Nothing Then
                     _manager = Nothing
@@ -1732,7 +1755,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property directReports() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _directreports Is Nothing Then
-                Dim o As String() = GetAttribute("directReports", GetType(String()))
+                Dim o As String() = GetValue("directReports")
 
                 If o Is Nothing Then
                     _directreports = New ObservableCollection(Of clsDirectoryObject)
@@ -1749,7 +1772,7 @@ Public Class clsDirectoryObject
     Public Property managedBy() As clsDirectoryObject
         Get
             If _managedby Is Nothing Then
-                Dim managerDN As String = GetAttribute("managedBy")
+                Dim managerDN As String = GetValue("managedBy")
 
                 If managerDN Is Nothing Then
                     _managedby = Nothing
@@ -1780,7 +1803,7 @@ Public Class clsDirectoryObject
     Public Property managedObjects As ObservableCollection(Of clsDirectoryObject)
         Get
             If _managedobjects Is Nothing Then
-                Dim o As String() = GetAttribute("managedObjects", GetType(String()))
+                Dim o As String() = GetValue("managedObjects")
 
                 If o Is Nothing Then
                     _managedobjects = New ObservableCollection(Of clsDirectoryObject)
@@ -1802,7 +1825,7 @@ Public Class clsDirectoryObject
     Public ReadOnly Property memberOf() As ObservableCollection(Of clsDirectoryObject)
         Get
             If _memberof Is Nothing Then
-                Dim o As String() = GetAttribute("memberOf", GetType(String()))
+                Dim o As String() = GetValue("memberOf")
 
                 If o Is Nothing Then
                     _memberof = New ObservableCollection(Of clsDirectoryObject)
@@ -1841,7 +1864,7 @@ Public Class clsDirectoryObject
                 Refresh({"member"})
                 Dim members As New List(Of String)
                 For Each k In cache.Keys.Where(Function(name) name = "member" Or name.StartsWith("member;"))
-                    For Each m As String In GetAttribute(k, GetType(String()))
+                    For Each m As String In GetValue(k)
                         members.Add(m)
                         Debug.Print(m)
                     Next

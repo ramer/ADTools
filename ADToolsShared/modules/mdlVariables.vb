@@ -97,24 +97,6 @@ Public Module mdlVariables
 
     End Sub
 
-    Public AttributeSchemeType As New Dictionary(Of String, Integer) From {
-        {"2.5.5.1", enmADSType.ADSTYPE_DN_STRING},
-        {"2.5.5.2", enmADSType.ADSTYPE_CASE_IGNORE_STRING},
-        {"2.5.5.4", enmADSType.ADSTYPE_CASE_IGNORE_STRING},
-        {"2.5.5.5", enmADSType.ADSTYPE_PRINTABLE_STRING},
-        {"2.5.5.6", enmADSType.ADSTYPE_NUMERIC_STRING},
-        {"2.5.5.7", enmADSType.ADSTYPE_DN_WITH_BINARY},
-        {"2.5.5.8", enmADSType.ADSTYPE_BOOLEAN},
-        {"2.5.5.9", enmADSType.ADSTYPE_INTEGER},
-        {"2.5.5.10", enmADSType.ADSTYPE_OCTET_STRING},
-        {"2.5.5.11", enmADSType.ADSTYPE_UTC_TIME},
-        {"2.5.5.12", enmADSType.ADSTYPE_CASE_IGNORE_STRING},
-        {"2.5.5.13", enmADSType.ADSTYPE_CASE_IGNORE_STRING},
-        {"2.5.5.14", enmADSType.ADSTYPE_DN_WITH_STRING},
-        {"2.5.5.15", enmADSType.ADSTYPE_NT_SECURITY_DESCRIPTOR},
-        {"2.5.5.16", enmADSType.ADSTYPE_LARGE_INTEGER},
-        {"2.5.5.17", enmADSType.ADSTYPE_OCTET_STRING}
-    }
 
     Public attributesDefaultNames As String() = {
     "accountExpires",
@@ -196,24 +178,24 @@ Public Module mdlVariables
     "whenCreated"
     }
 
-    Public attributesForSearchDefault As New ObservableCollection(Of clsAttributeSchema) From {
-        New clsAttributeSchema("RDN", True, 13, "2.5.5.12", "name"),
-        New clsAttributeSchema("Display-Name", True, 5, "2.5.5.12", "displayName"),
-        New clsAttributeSchema("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName"),
-        New clsAttributeSchema("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName")}
+    Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
+        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255),
+        New clsAttribute("Display-Name", True, 5, "2.5.5.12", "displayName", 0, 256),
+        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256),
+        New clsAttribute("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName", Nothing, Nothing)}
 
-    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttributeSchema) From {
-        New clsAttributeSchema("RDN", True, 13, "2.5.5.12", "name"),
-        New clsAttributeSchema("Display-Name", True, 5, "2.5.5.12", "displayName"),
-        New clsAttributeSchema("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName")}
+    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From {
+        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255),
+        New clsAttribute("Display-Name", True, 5, "2.5.5.12", "displayName", 0, 256),
+        New clsAttribute("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName", Nothing, Nothing)}
 
-    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttributeSchema) From {
-        New clsAttributeSchema("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName")}
+    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
+        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256)}
 
-    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttributeSchema) From {
-        New clsAttributeSchema("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName")}
+    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
+        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256)}
 
-    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttributeSchema) From {
-        New clsAttributeSchema("RDN", True, 13, "2.5.5.12", "name")}
+    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
+        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255)}
 
 End Module

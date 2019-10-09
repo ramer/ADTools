@@ -26,7 +26,7 @@ Public Class ctlObjectAttributes
     Sub New()
         cvsAttributes = New CollectionViewSource() With {.Source = attributes}
         cvAttributes = cvsAttributes.View
-        cvAttributes.SortDescriptions.Add(New SortDescription("Name", ListSortDirection.Ascending))
+        cvAttributes.SortDescriptions.Add(New SortDescription("lDAPDisplayName", ListSortDirection.Ascending))
 
         InitializeComponent()
 
@@ -52,15 +52,19 @@ Public Class ctlObjectAttributes
         If attributes.Count = 0 Then
             cap.Visibility = Visibility.Visible
 
-            Dim ldapattributes As New ObservableCollection(Of clsAttribute)
-            ldapattributes = Await Task.Run(Function()
-                                                _currentobject.RefreshAllAllowedAttributes()
-                                                Return _currentobject.AllAttributes
-                                            End Function)
+            Await Task.Run(Sub() _currentobject.RefreshAllAllowedAttributes())
+
+            Dim allattributes As New List(Of clsAttribute)
+            Await Task.Run(
+                Sub()
+                    For Each a In _currentobject.AllowedAttributes
+                        allattributes.Add(_currentobject.GetAttribute(a))
+                    Next
+                End Sub)
 
             attributes.Clear()
-            For Each a In ldapattributes
-                attributes.Add(New clsAttribute(a.Name, "", a.Value))
+            For Each a In allattributes
+                attributes.Add(a)
             Next
 
             cap.Visibility = Visibility.Hidden
@@ -68,43 +72,43 @@ Public Class ctlObjectAttributes
     End Sub
 
     Private Sub btnAttributesRefresh_Click(sender As Object, e As RoutedEventArgs) Handles btnAttributesRefresh.Click
-        RefreshAsync()
+        'RefreshAsync()
     End Sub
 
-    Public Async Sub RefreshAsync()
-        If _currentobject Is Nothing Then Exit Sub
+    'Public Async Sub RefreshAsync()
+    '    If _currentobject Is Nothing Then Exit Sub
 
-        cap.Visibility = Visibility.Visible
-        Dim ldapattributes As New ObservableCollection(Of clsAttribute)
+    '    cap.Visibility = Visibility.Visible
+    '    Dim ldapattributes As New ObservableCollection(Of clsAttribute)
 
-        Await Task.Run(
-            Sub()
-                _currentobject.Refresh()
-                ldapattributes = _currentobject.AllAttributes
-            End Sub)
+    '    Await Task.Run(
+    '        Sub()
+    '            _currentobject.Refresh()
+    '            ldapattributes = _currentobject.AllAttributes
+    '        End Sub)
 
-        For I = 0 To ldapattributes.Count - 1
-            For J = 0 To attributes.Count - 1
-                If ldapattributes(I).Name = attributes(J).Name Then
-                    'magic
-                    If ldapattributes(I).Value Is Nothing And attributes(J).Value Is Nothing Then Continue For
+    '    For I = 0 To ldapattributes.Count - 1
+    '        For J = 0 To attributes.Count - 1
+    '            If ldapattributes(I).Name = attributes(J).Name Then
+    '                'magic
+    '                If ldapattributes(I).Value Is Nothing And attributes(J).Value Is Nothing Then Continue For
 
-                    If (ldapattributes(I).Value IsNot Nothing And attributes(J).Value Is Nothing) OrElse
-                       (ldapattributes(I).Value Is Nothing And attributes(J).Value IsNot Nothing) OrElse
-                       (Not ldapattributes(I).Value.ToString = attributes(J).Value.ToString) Then
-                        attributes(J).NewValue = ldapattributes(I).Value
-                    End If
+    '                If (ldapattributes(I).Value IsNot Nothing And attributes(J).Value Is Nothing) OrElse
+    '                   (ldapattributes(I).Value Is Nothing And attributes(J).Value IsNot Nothing) OrElse
+    '                   (Not ldapattributes(I).Value.ToString = attributes(J).Value.ToString) Then
+    '                    attributes(J).NewValue = ldapattributes(I).Value
+    '                End If
 
-                End If
-            Next
-        Next
+    '            End If
+    '        Next
+    '    Next
 
-        ApplyFilter()
+    '    ApplyFilter()
 
-        cap.Visibility = Visibility.Hidden
-    End Sub
+    '    cap.Visibility = Visibility.Hidden
+    'End Sub
 
-    Private Sub rbAttributesWithValue_Checked(sender As Object, e As RoutedEventArgs) Handles rbAttributesWithValue.Checked, rbAttributesAll.Checked, rbAttributesChanged.Checked
+    Private Sub rbAttributesWithValue_Checked(sender As Object, e As RoutedEventArgs) Handles rbAttributesWithValue.Checked, rbAttributesAll.Checked
         ApplyFilter()
     End Sub
 
@@ -121,8 +125,10 @@ Public Class ctlObjectAttributes
 
         Dim str As String = ""
 
-        For Each a As clsAttribute In dgAttributes.SelectedItems
-            str &= a.Name & vbTab & a.Value & vbCrLf
+        For Each a As String In dgAttributes.SelectedItems
+            Dim val = _currentobject.GetValue(a)
+            If TypeOf val Is String Then str &= a & vbTab & val & vbCrLf
+            If TypeOf val Is String() Then str &= a & vbTab & Join(CType(val, String()), ", ") & vbCrLf
         Next
 
         Clipboard.SetText(str)
@@ -134,7 +140,9 @@ Public Class ctlObjectAttributes
         Dim str As String = ""
 
         For Each a As clsAttribute In dgAttributes.SelectedItems
-            str &= a.Value & vbCrLf
+            Dim val = a.Value
+            If TypeOf val Is String Then str &= val & vbCrLf
+            If TypeOf val Is String() Then str &= Join(CType(val, String()), ", ") & vbCrLf
         Next
 
         Clipboard.SetText(str)
@@ -147,37 +155,16 @@ Public Class ctlObjectAttributes
 
                 If rbAttributesWithValue.IsChecked Then ' with values
                     If filter.Length = 0 Then
-                        Return (a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString))
+                        Return a.Value IsNot Nothing
                     Else
-                        Return (a.Value IsNot Nothing AndAlso Not String.IsNullOrEmpty(a.Value.ToString)) _
-                               AndAlso
-                               ((a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0))
-                    End If
-                ElseIf rbAttributesChanged.IsChecked Then 'changed
-                    If filter.Length = 0 Then
-                        Return (a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
-                               (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
-                               (Not a.Value.Equals(a.NewValue))
-                    Else
-                        Return ((a.Value Is Nothing And a.NewValue IsNot Nothing) OrElse
-                               (a.Value IsNot Nothing And a.NewValue IsNot Nothing) AndAlso
-                               (Not a.Value.Equals(a.NewValue))) _
-                               AndAlso
-                               ((a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0))
+                        Return a.Value IsNot Nothing AndAlso a.lDAPDisplayName.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0
                     End If
                 Else ' all
                     If filter.Length = 0 Then
                         Return True
                     Else
-                        Return (a.Name.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.Value IsNot Nothing AndAlso a.Value.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0) Or
-                               (a.NewValue IsNot Nothing AndAlso a.NewValue.ToString.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0)
+                        Return a.lDAPDisplayName.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0
                     End If
-
                 End If
 
             End Function)

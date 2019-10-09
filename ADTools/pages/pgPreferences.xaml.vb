@@ -33,7 +33,7 @@ Public Class pgPreferences
         End With
     End Sub
 
-    Public Property Attributes As ObservableCollection(Of clsAttributeSchema)
+    Public Property Attributes As ObservableCollection(Of clsAttribute)
     Private Property PluginProcessTelegramBot As Process
     Private Property PluginProcessSIP As Process
 
@@ -49,10 +49,10 @@ Public Class pgPreferences
         DataContext = preferences
 
         'mainwindow attributes
-        Dim attrsdict As New Dictionary(Of String, clsAttributeSchema)
-        domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).ToList.ForEach(Sub(a As clsAttributeSchema) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
-        GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing AndAlso Not attrsdict.ContainsKey(prop.Name) Then attrsdict.Add(prop.Name, New clsAttributeSchema(prop.Name, True, 0, "2.5.5.2", prop.Name, True)))
-        Attributes = New ObservableCollection(Of clsAttributeSchema)(attrsdict.Values)
+        Dim attrsdict As New Dictionary(Of String, clsAttribute)
+        domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).ToList.ForEach(Sub(a As clsAttribute) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
+        GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing AndAlso Not attrsdict.ContainsKey(prop.Name) Then attrsdict.Add(prop.Name, New clsAttribute(prop.Name, True, 0, "2.5.5.12", prop.Name, 0, 1024, True)))
+        Attributes = New ObservableCollection(Of clsAttribute)(attrsdict.Values)
         lvAttributes.ItemsSource = Attributes
         clsSorter.ApplySort(lvAttributes.Items, "IsDefault", ListSortDirection.Descending)
         lvAttributesForSearch.ItemsSource = preferences.AttributesForSearch 'domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema).Where(Function(attr) preferences.AttributesForSearch.Contains(attr.lDAPDisplayName))
@@ -111,12 +111,11 @@ Public Class pgPreferences
         Await Task.Run(
             Sub()
                 For Each attr In Attributes
-                    attr.SetStringValueFromDirectoryObject(obj)
+                    attr = obj.GetValue(attr.lDAPDisplayName)
                 Next
             End Sub)
         capAttributes.Visibility = Visibility.Hidden
     End Sub
-
 
     Private Sub lvAttributes_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributes.DragEnter, lvAttributes.DragOver
         If e.Data.GetDataPresent(GetType(clsDirectoryObject())) Then
@@ -140,7 +139,7 @@ Public Class pgPreferences
                                                                             trashAttributesForSearch.DragEnter,
                                                                             lvAttributesForSearch.DragOver,
                                                                             trashAttributesForSearch.DragOver
-        If Not e.Data.GetDataPresent(GetType(clsAttributeSchema())) Then Exit Sub
+        If Not e.Data.GetDataPresent(GetType(clsAttribute())) Then Exit Sub
 
         Dim dragsource = e.Data.GetData("DragSource")
 
@@ -197,9 +196,9 @@ Public Class pgPreferences
                 Dim cell = FindVisualParent(Of DataGridCell)(r.VisualHit, Me)
                 If cell Is Nothing Then Exit Sub
                 If CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) IsNot DBNull.Value Then
-                    Dim attr As String = CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath)
+                    Dim attributename As String = CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath)
                     CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = DBNull.Value
-                    DragDrop.DoDragDrop(sender, New DataObject({New clsAttributeSchema(attr, False, 0, "", attr)}), DragDropEffects.All)
+                    DragDrop.DoDragDrop(sender, New DataObject({New clsAttribute("", False, 0, "", attributename, 0, 1024)}), DragDropEffects.All)
                     SaveMainWindowLayoutTable()
                     e.Handled = True
                 End If
@@ -214,11 +213,11 @@ Public Class pgPreferences
 
         trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
 
-        If Not e.Data.GetDataPresent(GetType(clsAttributeSchema())) Then Exit Sub
+        If Not e.Data.GetDataPresent(GetType(clsAttribute())) Then Exit Sub
 
         Dim dragsource = e.Data.GetData("DragSource")
 
-        Dim dropped As clsAttributeSchema() = e.Data.GetData(GetType(clsAttributeSchema()))
+        Dim dropped As clsAttribute() = e.Data.GetData(GetType(clsAttribute()))
         If dropped.Count <> 1 Then Exit Sub
 
         Dim obj = dropped(0)

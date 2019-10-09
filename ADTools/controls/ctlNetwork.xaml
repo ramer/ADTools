@@ -9,7 +9,7 @@
              d:DesignHeight="413" d:DesignWidth="518"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <UserControl.Resources>
-        <local:ConverterToSingleLine x:Key="ConverterToSingleLine" />
+        <local:ConverterStringToSingleLine x:Key="ConverterStringToSingleLine" />
     </UserControl.Resources>
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>

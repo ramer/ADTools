@@ -20,7 +20,7 @@ Public Class clsFilter
     End Sub
 
     Sub New(pattern As String,
-            attributes As ObservableCollection(Of clsAttributeSchema),
+            attributes As ObservableCollection(Of clsAttribute),
             searchobjectclasses As clsSearchObjectClasses)
 
         Me.Pattern = pattern
@@ -38,7 +38,7 @@ Public Class clsFilter
 
         Dim attrfilter = ""
         attributes.ToList.ForEach(
-            Sub(a As clsAttributeSchema)
+            Sub(a As clsAttribute)
                 patterns.ToList.ForEach(
                     Sub(p)
                         p = Trim(p)

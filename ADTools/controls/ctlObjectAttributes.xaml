@@ -8,18 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="413" d:DesignWidth="518"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <UserControl.Resources>
-        <local:ConverterToSingleLine x:Key="ConverterToSingleLine" />
-    </UserControl.Resources>
     <Grid>
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden"/>
         <DockPanel>
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" MinHeight="24">
-                <RadioButton x:Name="rbAttributesWithValue" Content="{x:Static r:Resources.str_AttributesWithValue}" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
-                <RadioButton x:Name="rbAttributesAll" Content="{x:Static r:Resources.str_AttributesAll}" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                <RadioButton x:Name="rbAttributesChanged" Content="{x:Static r:Resources.str_AttributesChanged}" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                <Button x:Name="btnAttributesRefresh" Content="↺" MinHeight="24" MinWidth="24" IsEnabled="{Binding ElementName=rbAttributesChanged, Path=IsChecked}"/>
-            </StackPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <Button x:Name="btnAttributesRefresh" Content="↺" MinHeight="24" MinWidth="24" DockPanel.Dock="Right"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" MinHeight="24">
+                    <RadioButton x:Name="rbAttributesWithValue" Content="{x:Static r:Resources.str_AttributesWithValue}" Margin="0,0,15,0" IsChecked="True" VerticalAlignment="Center"/>
+                    <RadioButton x:Name="rbAttributesAll" Content="{x:Static r:Resources.str_AttributesAll}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
             <Grid Margin="0,5,0,0" MinHeight="24" DockPanel.Dock="Bottom">
                 <TextBox x:Name="tbAttributesFilter"/>
                 <TextBlock IsHitTestVisible="False" Text="{x:Static r:Resources.str_SearchPlaceholder}" VerticalAlignment="Center" Margin="5,0,0,0" Opacity="0.5">
@@ -56,7 +54,7 @@
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
 
-                    <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static r:Resources.str_AttributesAttribute}" Width="250" SortMemberPath="Name" CanUserSort="True" IsReadOnly="True">
+                    <DataGridTextColumn Binding="{Binding lDAPDisplayName}" Header="{x:Static r:Resources.str_AttributesAttribute}" Width="220" SortMemberPath="lDAPDisplayName" CanUserSort="True" IsReadOnly="True">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -67,16 +65,60 @@
                     <DataGridTemplateColumn Header="{x:Static r:Resources.str_AttributesValue}" Width="*" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Value, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
+                                <ContentPresenter Content="{Binding}" VerticalAlignment="Center">
+                                    <ContentPresenter.Resources>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeBoolean}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="Boolean"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeCaseInsensitiveString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="CaseInsensitiveString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeDistinguishedName}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="DistinguishedName"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeDistinguishedNameWithString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="DistinguishedNameWithString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeOSIString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="OSIString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeNTSecurityDescriptor}">
+                                            <TextBlock Text="&lt;binary descriptor&gt;" ToolTip="NTSecurityDescriptor"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeIA5String}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="IA5String"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeNumericString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="NumericString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeObjectIdentifier}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="ObjectIdentifier"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeUnicodeString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="UnicodeString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeOctetString}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterOctetStringToSingleLine}}" ToolTip="OctetString"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeDNBinary}">
+                                            <TextBlock Text="&lt;binary DN&gt;" ToolTip="DNBinary"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeInteger}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterStringToSingleLine}}" ToolTip="Integer"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeLong}">
+                                            <TextBlock Text="{Binding Value}" ToolTip="Long"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeUTCTime}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterUTCTimeToSingleLine}}" ToolTip="UTCTime"/>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsAttributeSID}">
+                                            <TextBlock Text="{Binding Value, Converter={StaticResource ConverterSIDToSingleLine}}" ToolTip="SID"/>
+                                        </DataTemplate>
+                                    </ContentPresenter.Resources>
+                                </ContentPresenter>
                             </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn Header="{x:Static r:Resources.str_AttributesNewValue}" Width="*" CanUserSort="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding NewValue, Converter={StaticResource ConverterToSingleLine}}" VerticalAlignment="Center" />
-                            </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
