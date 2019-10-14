@@ -24,7 +24,7 @@ Public Class ADToolsApplication
     Implements ISingleInstanceApp
 
     Public Shared WithEvents nicon As New Forms.NotifyIcon
-    Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.ctxmnu_Exit, AddressOf ni_ctxmenuExit)})
+    Public Shared ctxmenu As New Forms.ContextMenu({New Forms.MenuItem(My.Resources.ctxmnu_Exit, Sub() Current.Shutdown())})
 
     Public Shared WithEvents tsocErrorLog As New clsThreadSafeObservableCollection(Of clsErrorLog)
 
@@ -32,14 +32,24 @@ Public Class ADToolsApplication
     Private Shared startWithSearch As Boolean = False
     Private Shared startSearchString As String = Nothing
 
-    ' fires when the second app instance started and closed
+    Sub New()
+        InitializeComponent()
+    End Sub
+
+    ''' <summary>
+    ''' Fires when the second application instance have started (and closed immediately)
+    ''' </summary>
+    ''' <param name="args">Command line arguments</param>
     Public Function SignalExternalCommandLineArgs(args As IList(Of String)) As Boolean Implements ISingleInstanceApp.SignalExternalCommandLineArgs
         ParseCommandlineArgs(args.ToArray)
         ShowMainWindow()
         Return True
     End Function
 
-    ' parses first and second app instance command line arguments
+    ''' <summary>
+    ''' Parses first and second command line arguments, and stores global variables
+    ''' </summary>
+    ''' <param name="args">Command line arguments</param>
     Private Sub ParseCommandlineArgs(args As String())
         For i = 0 To args.Count - 1
             ' regulag arguments
@@ -57,7 +67,9 @@ Public Class ADToolsApplication
         Next
     End Sub
 
-    ' fires when the first app instance started
+    ''' <summary>
+    ''' Fires when the second application instance have started (and closed immediately)
+    ''' </summary>
     Protected Overrides Sub OnStartup(e As Windows.StartupEventArgs)
         MyBase.OnStartup(e)
         Try
@@ -66,7 +78,7 @@ Public Class ADToolsApplication
             AddHandler AppDomain.CurrentDomain.UnhandledException, AddressOf AppDomain_CurrentDomain_UnhandledException
 
             ' parses first app instance command line arguments
-            ParseCommandlineArgs(Environment.GetCommandLineArgs())
+            ParseCommandlineArgs(e.Args)
 
             ' splash screen
             If Not startMinimized And Not startWithSearch Then
@@ -87,7 +99,7 @@ Public Class ADToolsApplication
             InitializeGlobalParameters()
 
             ' domains setup
-            InitializeDomains(True)
+            InitializeDomains(False)
 
             ' preferences setup
             InitializePreferences()
@@ -102,6 +114,9 @@ Public Class ADToolsApplication
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Fires on application closing
+    ''' </summary>
     Protected Overrides Sub OnExit(e As ExitEventArgs)
         MyBase.OnExit(e)
         Try
@@ -120,20 +135,9 @@ Public Class ADToolsApplication
         End Try
     End Sub
 
-    Sub New()
-        InitializeComponent()
-    End Sub
-
-    Private Shared Sub ni_ctxmenuExit(sender As Object, e As EventArgs)
-        ApplicationDeactivate()
-    End Sub
-
-    Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
-        If e.Button = Forms.MouseButtons.Left Then
-            If ActivateMainWindow() Is Nothing Then CreateMainWindow()
-        End If
-    End Sub
-
+    ''' <summary>
+    ''' Shows MainWindow is exists, creates MainWindow otherwise
+    ''' </summary>
     Public Shared Sub ShowMainWindow()
         Dim w As NavigationWindow
         w = ActivateMainWindow()
@@ -163,6 +167,9 @@ Public Class ADToolsApplication
         End If
     End Sub
 
+    ''' <summary>
+    ''' Activates MainWindow is exits
+    ''' </summary>
     Public Shared Function ActivateMainWindow() As NavigationWindow
         For Each w As Window In Current.Windows
             If TypeOf w Is NavigationWindow AndAlso TypeOf CType(w, NavigationWindow).Content Is pgMain Then
@@ -177,6 +184,9 @@ Public Class ADToolsApplication
         Return Nothing
     End Function
 
+    ''' <summary>
+    ''' Creates MainWindow
+    ''' </summary>
     Public Shared Function CreateMainWindow() As NavigationWindow
         Dim w As NavigationWindow = ShowPage(New pgMain)
         If w IsNot Nothing Then
@@ -192,17 +202,23 @@ Public Class ADToolsApplication
                         If TypeOf wnd Is NavigationWindow AndAlso TypeOf CType(wnd, NavigationWindow).Content Is pgMain Then count += 1
                     Next
 
-                    If preferences.CloseOnXButton AndAlso count <= 1 Then ApplicationDeactivate()
+                    If preferences.CloseOnXButton AndAlso count <= 1 Then Current.Shutdown()
                 End Sub
         End If
         Return w
     End Function
 
+    ''' <summary>
+    ''' Fires when unhandled exception occured
+    ''' </summary>
     Public Shared Sub Dispatcher_UnhandledException(ByVal sender As Object, ByVal e As DispatcherUnhandledExceptionEventArgs)
         ThrowException(e.Exception, My.Resources.str_UnhandledException)
         e.Handled = True
     End Sub
 
+    ''' <summary>
+    ''' Fires when unhandled exception occured
+    ''' </summary>
     Public Shared Sub AppDomain_CurrentDomain_UnhandledException(sender As Object, e As Object)
         Dim ex = TryCast(e, UnhandledExceptionEventArgs)
         If ex IsNot Nothing Then
@@ -212,6 +228,9 @@ Public Class ADToolsApplication
         End If
     End Sub
 
+    ''' <summary>
+    ''' Shows ErrorLog window, on exception
+    ''' </summary>
     Private Shared Sub tsocErrorLog_CollectionChanged(sender As Object, e As NotifyCollectionChangedEventArgs) Handles tsocErrorLog.CollectionChanged
         Dim w As wndErrorLog
 
@@ -227,6 +246,12 @@ Public Class ADToolsApplication
 
         w = New wndErrorLog
         w.Show()
+    End Sub
+
+    Private Shared Sub ni_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles nicon.MouseClick
+        If e.Button = Forms.MouseButtons.Left Then
+            If ActivateMainWindow() Is Nothing Then CreateMainWindow()
+        End If
     End Sub
 
 End Class

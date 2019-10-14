@@ -12,37 +12,52 @@
         Background="{DynamicResource ColorWindowBackground}"
         Title="{x:Static r:Resources.str_DomainOptions}"
         >
+    <Page.DataContext>
+        <local:pgDomainsVM/>
+    </Page.DataContext>
+    <Page.Resources>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Height" Value="23"/>
+        </Style>
+    </Page.Resources>
     
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="5"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <DockPanel DockPanel.Dock="Left" Margin="5,5,0,5" Grid.Column="0">
-                <Grid DockPanel.Dock="Bottom">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="btnDomainsAdd" MinHeight="24" Content="{x:Static r:Resources.str_Add}" Margin="0,5,3,5" Grid.Column="0"/>
-                    <Button x:Name="btnDomainsRemove" MinHeight="24" Content="{x:Static r:Resources.str_Remove}" Margin="3,5,0,5" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItems.Count}" Grid.Column="1"/>
-                </Grid>
-                <ListView x:Name="lvDomains" AlternationCount="2" SelectedItem="{Binding CurrentDomain, Mode=TwoWay}" Foreground="Black">
+            <DockPanel DockPanel.Dock="Left" Grid.Column="0">
+                <UniformGrid Columns="2" DockPanel.Dock="Bottom" Margin="0,5,0,0">
+                    <Button x:Name="btnDomainsAdd" MinHeight="24" Content="{x:Static r:Resources.str_Add}" Margin="0,0,3,0"/>
+                    <Button x:Name="btnDomainsRemove" MinHeight="24" Content="{x:Static r:Resources.str_Remove}" Margin="3,0,0,0" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItems.Count}"/>
+                </UniformGrid>
+                <ListView x:Name="lvDomains" AlternationCount="2" SelectedItem="{Binding SelectedDomain}" ItemsSource="{Binding Domains}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
                                 <GridViewColumn Header="{x:Static r:Resources.str_Domains}" Width="165">
                                     <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:clsDomain}">
                                             <DockPanel>
-                                                <Image Height="16" Width="16" Source="/images/domain.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                <Image Height="16" Width="16" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0">
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}" BasedOn="{StaticResource {x:Type Image}}">
+                                                            <Setter Property="Source" Value="/images/warning.png"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Validated}" Value="True">
+                                                                    <Setter Property="Source" Value="/images/domain.png"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
                                                 <TextBlock Text="{Binding Name}"/>
-                                                <Image Height="16" Width="16" Source="/images/warning.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Validated, Converter={StaticResource ConverterBooleanToVisibilityInverted}}"/>
                                             </DockPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -58,32 +73,48 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
             </DockPanel>
+            
             <GridSplitter VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False" Grid.Column="1" Grid.Row="0" Width="5" />
-            <TabControl x:Name="tabctlDomain" Margin="0,5,5,5" Grid.Column="2" Grid.Row="0" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItems.Count}" >
+            
+            <TabControl x:Name="tabctlDomain" Grid.Column="2" Grid.Row="0" DataContext="{Binding SelectedDomain}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItems.Count}" >
                 <TabItem Header="{x:Static r:Resources.str_Domain}">
-                    <DockPanel LastChildFill="True" Margin="5">
+                    <DockPanel Margin="5">
                         <StackPanel DockPanel.Dock="Top" Margin="0,0,0,10">
                             <TextBlock Text="{x:Static r:Resources.str_Domain}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-                            <TextBlock Text="{x:Static r:Resources.str_DomainName}" Margin="0,0,0,5"/>
-                            <TextBox x:Name="tbDomainName" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Name, Mode=TwoWay}" CharacterCasing="Upper" Margin="0,0,0,5"/>
-                            <TextBlock Text="{x:Static r:Resources.str_ServerOptional}" Margin="0,0,0,5"/>
-                            <TextBox x:Name="tbServer" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Server, Mode=TwoWay}" Margin="0,0,0,5"/>
-                            <DockPanel LastChildFill="True" Margin="0,0,0,5">
+                            <TextBlock Text="{x:Static r:Resources.str_DomainName}"/>
+                            <TextBox x:Name="tbDomainName" Text="{Binding Name}"/>
+                            <TextBlock Text="{x:Static r:Resources.str_ServerOptional}"/>
+                            <TextBox x:Name="tbServer" Text="{Binding Server}"/>
+                            <DockPanel>
                                 <TextBlock Text="{x:Static r:Resources.str_Username}" Width="100" VerticalAlignment="Center"/>
-                                <TextBox x:Name="tbLogin" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.Username, Mode=TwoWay}"/>
+                                <TextBox x:Name="tbLogin" Text="{Binding Username}"/>
                             </DockPanel>
-                            <DockPanel LastChildFill="True" Margin="0,0,0,5">
+                            <DockPanel>
                                 <TextBlock Text="{x:Static r:Resources.str_Password}" Width="100" VerticalAlignment="Center"/>
                                 <Grid>
-                                    <PasswordBox x:Name="pbPassword" Height="23"/>
-                                    <TextBlock x:Name="tblckPassword" IsHitTestVisible="False" Text="●●●●●●●●●●●●●●●●●●●" VerticalAlignment="Center" Margin="3,0,0,6" Visibility="Collapsed"/>
+                                    <PasswordBox x:Name="pbPassword" Height="23" PasswordChar="●" SnapsToDevicePixels="True"/>
+                                    <TextBlock x:Name="tblckPassword" IsHitTestVisible="False" Margin="3,4" SnapsToDevicePixels="True">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Text" Value="●●●●●●●●●●●●●●●●●●" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Password.Length}" Value="0">
+                                                        <Setter Property="Text" Value="Введите пароль"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ElementName=pbPassword, Path=IsFocused}" Value="True">
+                                                        <Setter Property="Text" Value=""/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </Grid>
                             </DockPanel>
                             <Button x:Name="btnConnect" Content="{x:Static r:Resources.str_Connect}" MinHeight="24" MinWidth="100" HorizontalAlignment="Right" IsDefault="True"/>
-                            <TextBlock Text="{x:Static r:Resources.str_EnableWatcher}" Margin="0,0,0,5"/>
-                            <CheckBox x:Name="chbEnableWatcher" Height="23" Content="{x:Static r:Resources.str_EnableWatcherDefinition}" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.EnableWatcher, Mode=TwoWay}"/>
+                            <TextBlock Text="{x:Static r:Resources.str_EnableWatcher}"/>
+                            <CheckBox x:Name="chbEnableWatcher" Height="23" Content="{x:Static r:Resources.str_EnableWatcherDefinition}" IsChecked="{Binding EnableWatcher}"/>
                         </StackPanel>
-                        <ListView x:Name="lvDomainProperties" AlternationCount="2" DockPanel.Dock="Bottom" ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.Properties}" Foreground="Black">
+                        <ListView x:Name="lvDomainProperties" AlternationCount="2" DockPanel.Dock="Bottom" ItemsSource="{Binding Properties}" Foreground="Black">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="False">
                                     <GridView.Columns>
@@ -91,7 +122,7 @@
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <DockPanel>
-                                                        <Image Height="16" Width="16" Source="/images/property.png" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                                        <Image Height="16" Width="16" Source="/images/property.png" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,5,0"/>
                                                         <TextBlock TextWrapping="Wrap" Text="{Binding Prop}"/>
                                                     </DockPanel>
                                                 </DataTemplate>
@@ -107,10 +138,16 @@
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                                    <Setter Property="MinHeight" Value="24"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                         </ListView>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.str_SearchRoot}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
+                <TabItem Header="{x:Static r:Resources.str_SearchRoot}" IsEnabled="{Binding Validated}">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel DockPanel.Dock="Top" Margin="5">
                             <TextBlock Text="{x:Static r:Resources.str_SearchRoot}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
@@ -118,12 +155,12 @@
                             <TextBlock Text="{x:Static r:Resources.str_SearchRoot}"/>
                             <DockPanel LastChildFill="True">
                                 <Button x:Name="btnSearchRootBrowse" Content="🔎" Height="23" Width="23" DockPanel.Dock="Right" />
-                                <TextBox x:Name="tbSearchRoot" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.SearchRoot, Mode=OneWay}" Margin="0,0,5,0" IsReadOnly="True"/>
+                                <TextBox x:Name="tbSearchRoot" Height="23" Text="{Binding SearchRoot, Mode=OneWay}" Margin="0,0,5,0" IsReadOnly="True"/>
                             </DockPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.str_Patterns}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
+                <TabItem Header="{x:Static r:Resources.str_Patterns}" IsEnabled="{Binding Validated}">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel DockPanel.Dock="Top" Margin="5">
                             <TextBlock Text="{x:Static r:Resources.str_Patterns}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
@@ -133,26 +170,24 @@
                                 <Run Text="{x:Static r:Resources.str_PatternsExampleDefinition1}"/>
                             </TextBlock>
 
-                            <DockPanel LastChildFill="True" Margin="0,5,0,0" Grid.Column="0">
+                            <DockPanel Margin="0,5,0,0">
                                 <TextBlock TextWrapping="Wrap" Width="100" Text="{x:Static r:Resources.str_PatternsUsername}"/>
-                                <TextBox x:Name="tbPatternUsername" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.UsernamePattern, Mode=TwoWay}" VerticalContentAlignment="Top"/>
+                                <TextBox x:Name="tbPatternUsername" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding UsernamePattern}" VerticalContentAlignment="Top"/>
                             </DockPanel>
-                            <DockPanel LastChildFill="True" Margin="0,5,0,0" Grid.Column="1">
+                            <DockPanel Margin="0,5,0,0">
                                 <TextBlock TextWrapping="Wrap" Width="100" Text="{x:Static r:Resources.str_PatternsComputer}"/>
-                                <TextBox x:Name="tbPatternComputer" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ElementName=lvDomains, Path=SelectedItem.ComputerPattern, Mode=TwoWay}" VerticalContentAlignment="Top"/>
+                                <TextBox x:Name="tbPatternComputer" Height="75" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding ComputerPattern}" VerticalContentAlignment="Top"/>
                             </DockPanel>
 
-                            <DockPanel LastChildFill="True" Margin="0,5,0,0">
+                            <DockPanel Margin="0,5,0,0">
                                 <TextBlock Text="{x:Static r:Resources.str_PatternsDefaultPassword}" Width="100"/>
-                                <TextBox x:Name="tbDefaultPassword" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.DefaultPassword, Mode=TwoWay}"/>
+                                <TextBox x:Name="tbDefaultPassword" Height="23" Text="{Binding DefaultPassword}"/>
                             </DockPanel>
-                            <DockPanel LastChildFill="True" Margin="0,5,0,0">
+                            <DockPanel Margin="0,5,0,0">
                                 <TextBlock Text="{x:Static r:Resources.str_PatternsPhoneNumbers}" Margin="0,0,0,5" DockPanel.Dock="Top" HorizontalAlignment="Left"/>
                                 <DataGrid 
                                     Name="dgPatternTelephoneNumbers"
-                                    Foreground="Black"
-                                    AlternationCount="2"
-                                    ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.TelephoneNumberPattern, Mode=TwoWay}"
+                                    ItemsSource="{Binding TelephoneNumberPattern}"
                                     VirtualizingStackPanel.IsVirtualizing="True"
                                     VirtualizingStackPanel.VirtualizationMode="Recycling"
                                     VirtualizingStackPanel.ScrollUnit="Pixel"
@@ -195,8 +230,8 @@
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.str_Groups}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
-                    <DockPanel LastChildFill="True"  Margin="5">
+                <TabItem Header="{x:Static r:Resources.str_Groups}" IsEnabled="{Binding Validated}">
+                    <DockPanel  Margin="5">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="{x:Static r:Resources.str_Groups}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.str_GroupsDefinition}"/>
@@ -204,36 +239,36 @@
                         <local:ctlGroupMemberOf x:Name="ctlMemberOf" CurrentDomain="{Binding ElementName=lvDomains, Path=SelectedItem}"/>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.str_Actions}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
-                    <DockPanel LastChildFill="True"  Margin="5">
+                <TabItem Header="{x:Static r:Resources.str_Actions}" IsEnabled="{Binding Validated}">
+                    <DockPanel  Margin="5">
                         <StackPanel DockPanel.Dock="Top">
                             <TextBlock Text="{x:Static r:Resources.str_Actions}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.str_ActionsDefinition}"/>
                             <DockPanel Margin="0,0,0,10">
-                                <CheckBox x:Name="chbLogActions" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.LogActions, Mode=TwoWay}" Content="{x:Static r:Resources.str_LogActions}" Margin="0,3,20,0"/>
-                                <ComboBox ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.AttributesSchema}"
+                                <CheckBox x:Name="chbLogActions" IsChecked="{Binding LogActions}" Content="{x:Static r:Resources.str_LogActions}" Margin="0,3,20,0"/>
+                                <ComboBox ItemsSource="{Binding Attributes}"
                                           SelectedValuePath="Value.lDAPDisplayName"
                                           DisplayMemberPath="Value.adminDisplayName"
-                                          SelectedValue="{Binding ElementName=lvDomains, Path=SelectedItem.LogActionsAttribute}"
+                                          SelectedValue="{Binding LogActionsAttribute}"
                                           IsEnabled="{Binding ElementName=chbLogActions, Path=IsChecked}"/>
                             </DockPanel>
                         </StackPanel>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="{x:Static r:Resources.str_Exchange}" IsEnabled="{Binding ElementName=lvDomains, Path=SelectedItem.Validated}">
+                <TabItem Header="{x:Static r:Resources.str_Exchange}" IsEnabled="{Binding Validated}">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <DockPanel LastChildFill="True" Margin="5">
+                        <DockPanel Margin="5">
                             <StackPanel DockPanel.Dock="Top">
                                 <TextBlock Text="{x:Static r:Resources.str_Exchange}" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
                                 <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="{x:Static r:Resources.str_ExchangeDefinition}"/>
                                 <DockPanel Margin="0,0,0,10">
-                                    <CheckBox x:Name="chbUseExchange" IsChecked="{Binding ElementName=lvDomains, Path=SelectedItem.UseExchange, Mode=TwoWay}" Content="{x:Static r:Resources.str_UseExchange}" Margin="0,3,20,0"/>
-                                    <ComboBox ItemsSource="{Binding ElementName=lvDomains, Path=SelectedItem.ExchangeServers}"
-                                              SelectedValue="{Binding ElementName=lvDomains, Path=SelectedItem.ExchangeServer}"
+                                    <CheckBox x:Name="chbUseExchange" IsChecked="{Binding UseExchange}" Content="{x:Static r:Resources.str_UseExchange}" Margin="0,3,20,0"/>
+                                    <ComboBox ItemsSource="{Binding ExchangeServers}"
+                                              SelectedValue="{Binding ExchangeServer}"
                                               IsEnabled="{Binding ElementName=chbUseExchange, Path=IsChecked}"/>
                                 </DockPanel>
                                 <TextBlock Text="{x:Static r:Resources.str_PatternsExchange}"/>
-                                <TextBox x:Name="tbPatternMailbox" Height="23" Text="{Binding ElementName=lvDomains, Path=SelectedItem.MailboxPattern, Mode=TwoWay}" IsEnabled="{Binding ElementName=chbUseExchange, Path=IsChecked}" Margin="0,0,0,10"/>
+                                <TextBox x:Name="tbPatternMailbox" Height="23" Text="{Binding MailboxPattern}" IsEnabled="{Binding ElementName=chbUseExchange, Path=IsChecked}" Margin="0,0,0,10"/>
                             </StackPanel>
                         </DockPanel>
                     </ScrollViewer>

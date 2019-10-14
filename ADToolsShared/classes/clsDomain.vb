@@ -33,10 +33,20 @@ Public Class clsDomain
         NotifyObjectChanged(e)
     End Sub
 
+    Public Sub AfterSerialize()
+        SaveCredentials()
+    End Sub
+
     Sub New()
 
     End Sub
 
+#Region "Functions"
+
+    ''' <summary>
+    ''' Uses Credential Management to load credentials from Windows store
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Function LoadCredentials() As Boolean
         If String.IsNullOrEmpty(Name) Then Return False
 
@@ -52,6 +62,10 @@ Public Class clsDomain
         End Try
     End Function
 
+    ''' <summary>
+    ''' Uses Credential Management to save credentials to Windows store
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Function SaveCredentials() As Boolean
         If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
@@ -68,6 +82,10 @@ Public Class clsDomain
         End Try
     End Function
 
+    ''' <summary>
+    ''' Initializing LDAP-connection, using Username as Password
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Function SetupConnection() As Boolean
         If String.IsNullOrEmpty(Name) Or String.IsNullOrEmpty(Username) Or String.IsNullOrEmpty(Password) Then Return False
 
@@ -83,7 +101,7 @@ Public Class clsDomain
         Dim ldapconnection As New LdapConnection(ldapdi, ldapnc)
         ldapconnection.SessionOptions.TcpKeepAlive = True
         ldapconnection.SessionOptions.AutoReconnect = True
-        'ldapconnection.Timeout = TimeSpan.FromSeconds(5)
+        ldapconnection.Timeout = TimeSpan.FromSeconds(10)
         ldapconnection.AutoBind = True
         Try
             ldapconnection.Bind()
@@ -95,6 +113,10 @@ Public Class clsDomain
         End Try
     End Function
 
+    ''' <summary>
+    ''' Initializes LDAP-watcher
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Function StartWatcher() As Boolean
         If Connection Is Nothing Or String.IsNullOrEmpty(DefaultNamingContext) Then Return False
         If Watcher IsNot Nothing Then Return False
@@ -102,6 +124,10 @@ Public Class clsDomain
         Return Watcher.Register(DefaultNamingContext, SearchScope.Subtree)
     End Function
 
+    ''' <summary>
+    ''' Stops LDAP-watcher
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Function StopWatcher() As Boolean
         If Watcher Is Nothing Then Return False
         Watcher.Dispose()
@@ -109,6 +135,10 @@ Public Class clsDomain
         Return True
     End Function
 
+    ''' <summary>
+    ''' Requesting defaultNamingContext, configurationNamingContext, schemaNamingContext
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Async Function UpdateNamingContextsAsync() As Task(Of Boolean)
         Return Await Task.Run(
             Function()
@@ -131,6 +161,10 @@ Public Class clsDomain
             End Function)
     End Function
 
+    ''' <summary>
+    ''' Requesting primary domain properties
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Async Function UpdatePropertiesAsync() As Task(Of Boolean)
         Return Await Task.Run(
             Function()
@@ -158,7 +192,11 @@ Public Class clsDomain
             End Function)
     End Function
 
-    Private Async Function UpdateAttributesSchemaAsync() As Task(Of Boolean)
+    ''' <summary>
+    ''' Requesting all object attributes from domain schema
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
+    Private Async Function UpdateAttributesAsync() As Task(Of Boolean)
         Return Await Task.Run(
             Function()
                 Try
@@ -183,7 +221,7 @@ Public Class clsDomain
                         pageRequestControl.Cookie = pageResponseControl.Cookie
                     Loop
 
-                    AttributesSchema = a
+                    Attributes = a
                     Return True
                 Catch ex As Exception
                     Return False
@@ -191,9 +229,11 @@ Public Class clsDomain
             End Function)
     End Function
 
+    ''' <summary>
+    ''' Requesting Exchange server name from domain configuration, if exists
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Async Function UpdateExchangeServersAsync() As Task(Of Boolean)
-        'exchange servers
-
         Return Await Task.Run(
             Function()
                 Try
@@ -219,9 +259,11 @@ Public Class clsDomain
             End Function)
     End Function
 
+    ''' <summary>
+    ''' Requesting DNS-suffixes from domain configuration
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Async Function UpdateSuffixesAsync() As Task(Of Boolean)
-        'domain suffixes
-
         Return Await Task.Run(
             Function()
                 Try
@@ -241,6 +283,10 @@ Public Class clsDomain
             End Function)
     End Function
 
+    ''' <summary>
+    ''' Initializing default group objects based on group DN
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Private Async Function UpdateDefaultGroupsAsync() As Task(Of Boolean)
         Return Await Task.Run(
             Function()
@@ -253,11 +299,10 @@ Public Class clsDomain
             End Function)
     End Function
 
-    Public Sub AfterSerialize()
-        SaveCredentials()
-    End Sub
-
-    '<RegistrySerializerAfterDeserialize(True)>
+    ''' <summary>
+    ''' Initializes primary domain properties and set Validation flag on Application startup
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Public Async Function Initialize() As Task
         Validated = False
 
@@ -271,7 +316,7 @@ Public Class clsDomain
         End If
 
         Await UpdatePropertiesAsync()
-        Await UpdateAttributesSchemaAsync()
+        Await UpdateAttributesAsync()
         Await UpdateSuffixesAsync()
         Await UpdateExchangeServersAsync()
         Await UpdateDefaultGroupsAsync()
@@ -281,6 +326,10 @@ Public Class clsDomain
         Validated = True
     End Function
 
+    ''' <summary>
+    ''' Initializes primary domain properties and set Validation flag on domain adding
+    ''' </summary>
+    ''' <returns>True on success, False otherwise</returns>
     Public Async Function ConnectAsync() As Task
         Validated = False
 
@@ -288,7 +337,7 @@ Public Class clsDomain
         If Not Await UpdateNamingContextsAsync() Then Return
 
         Await UpdatePropertiesAsync()
-        Await UpdateAttributesSchemaAsync()
+        Await UpdateAttributesAsync()
         Await UpdateSuffixesAsync()
         Await UpdateExchangeServersAsync()
 
@@ -297,24 +346,7 @@ Public Class clsDomain
         Validated = True
     End Function
 
-    Private _underlyingobject As clsDirectoryObject
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property UnderlyingObject() As clsDirectoryObject
-        Get
-            If String.IsNullOrEmpty(DefaultNamingContext) Then Return Nothing
-            If _underlyingobject Is Nothing Then _underlyingobject = New clsDirectoryObject(DefaultNamingContext, Me)
-            Return _underlyingobject
-        End Get
-    End Property
-
-    <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
-        Get
-            If UnderlyingObject Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
-            AddHandler _underlyingobject.PropertyChanged, Sub(sender As Object, e As PropertyChangedEventArgs) If e.PropertyName = "ChildContainers" Then NotifyPropertyChanged("ChildContainers")
-            Return _underlyingobject.ChildContainers
-        End Get
-    End Property
+#End Region
 
 #Region "Properties"
 
@@ -361,30 +393,6 @@ Public Class clsDomain
         Set(value As String)
             _server = value
             NotifyPropertyChanged("Server")
-        End Set
-    End Property
-
-    Private _connection As LdapConnection
-    <RegistrySerializerIgnorable(True)>
-    Public Property Connection() As LdapConnection
-        Get
-            Return _connection
-        End Get
-        Set(value As LdapConnection)
-            _connection = value
-            NotifyPropertyChanged("Connection")
-        End Set
-    End Property
-
-    Private WithEvents _watcher As clsWatcher
-    <RegistrySerializerIgnorable(True)>
-    Public Property Watcher() As clsWatcher
-        Get
-            Return _watcher
-        End Get
-        Set(value As clsWatcher)
-            _watcher = value
-            NotifyPropertyChanged("Watcher")
         End Set
     End Property
 
@@ -444,18 +452,6 @@ Public Class clsDomain
         Set(value As ObservableCollection(Of clsDomainProperty))
             _properties = value
             NotifyPropertyChanged("Properties")
-        End Set
-    End Property
-
-    Private _attributesschema As New Dictionary(Of String, clsAttribute)
-    <RegistrySerializerIgnorable(True)>
-    Public Property AttributesSchema() As Dictionary(Of String, clsAttribute)
-        Get
-            Return _attributesschema
-        End Get
-        Set(value As Dictionary(Of String, clsAttribute))
-            _attributesschema = value
-            NotifyPropertyChanged("AttributesSchema")
         End Set
     End Property
 
@@ -643,6 +639,48 @@ Public Class clsDomain
         End Set
     End Property
 
+    Private _enablewatcher As Boolean
+    Public Property EnableWatcher As Boolean
+        Get
+            Return _enablewatcher
+        End Get
+        Set(value As Boolean)
+            _enablewatcher = value
+
+            If value Then
+                StartWatcher()
+            Else
+                StopWatcher()
+            End If
+
+            NotifyPropertyChanged("EnableWatcher")
+        End Set
+    End Property
+
+    Private _connection As LdapConnection
+    <RegistrySerializerIgnorable(True)>
+    Public Property Connection() As LdapConnection
+        Get
+            Return _connection
+        End Get
+        Set(value As LdapConnection)
+            _connection = value
+            NotifyPropertyChanged("Connection")
+        End Set
+    End Property
+
+    Private _attributes As New Dictionary(Of String, clsAttribute)
+    <RegistrySerializerIgnorable(True)>
+    Public Property Attributes() As Dictionary(Of String, clsAttribute)
+        Get
+            Return _attributes
+        End Get
+        Set(value As Dictionary(Of String, clsAttribute))
+            _attributes = value
+            NotifyPropertyChanged("AttributesSchema")
+        End Set
+    End Property
+
     Private _validated As Boolean
     <RegistrySerializerIgnorable(True)>
     Public Property Validated() As Boolean
@@ -667,21 +705,34 @@ Public Class clsDomain
         End Set
     End Property
 
-    Private _enablewatcher As Boolean
-    Public Property EnableWatcher As Boolean
+    Private _underlyingobject As clsDirectoryObject
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property UnderlyingObject() As clsDirectoryObject
         Get
-            Return _enablewatcher
+            If String.IsNullOrEmpty(DefaultNamingContext) Then Return Nothing
+            If _underlyingobject Is Nothing Then _underlyingobject = New clsDirectoryObject(DefaultNamingContext, Me)
+            Return _underlyingobject
         End Get
-        Set(value As Boolean)
-            _enablewatcher = value
+    End Property
 
-            If value Then
-                StartWatcher()
-            Else
-                StopWatcher()
-            End If
+    <RegistrySerializerIgnorable(True)>
+    Public ReadOnly Property ChildContainers() As ObservableCollection(Of clsDirectoryObject)
+        Get
+            If UnderlyingObject Is Nothing Then Return New ObservableCollection(Of clsDirectoryObject)
+            AddHandler _underlyingobject.PropertyChanged, Sub(sender As Object, e As PropertyChangedEventArgs) If e.PropertyName = "ChildContainers" Then NotifyPropertyChanged("ChildContainers")
+            Return _underlyingobject.ChildContainers
+        End Get
+    End Property
 
-            NotifyPropertyChanged("EnableWatcher")
+    Private WithEvents _watcher As clsWatcher
+    <RegistrySerializerIgnorable(True)>
+    Public Property Watcher() As clsWatcher
+        Get
+            Return _watcher
+        End Get
+        Set(value As clsWatcher)
+            _watcher = value
+            NotifyPropertyChanged("Watcher")
         End Set
     End Property
 

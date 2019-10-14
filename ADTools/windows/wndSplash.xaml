@@ -1,0 +1,19 @@
+﻿<Window x:Class="wndSplash"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ADTools"
+        mc:Ignorable="d"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Height="300" Width="720">
+    <DockPanel>
+        <ProgressBar IsIndeterminate="True" Height="24" Background="White" Foreground="#FF00AAF2" DockPanel.Dock="Bottom"/>
+        <Image Source="/images/splash.png" Stretch="UniformToFill"/>
+    </DockPanel>
+</Window>

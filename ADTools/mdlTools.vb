@@ -132,11 +132,11 @@ Module mdlTools
 
         Task.Run(
             Sub()
-                Dim initTasks As New List(Of Task)
+                Dim tasks As New List(Of Task)
                 For Each domain In domains
-                    initTasks.Add(domain.Initialize)
+                    tasks.Add(domain.Initialize)
                 Next
-                If waitInit Then Task.WaitAll(initTasks.ToArray)
+                If waitInit Then Task.WaitAll(tasks.ToArray)
             End Sub).Wait()
     End Sub
 
@@ -668,7 +668,6 @@ Module mdlTools
         Return resultlist
     End Function
 
-
     ''' <summary>
     ''' Counts words in specified string
     ''' </summary>
@@ -678,7 +677,6 @@ Module mdlTools
         If String.IsNullOrEmpty(str) Then Return 0
         Return str.Split({" "}, StringSplitOptions.RemoveEmptyEntries).Count
     End Function
-
 
     ''' <summary>
     ''' Searches a parent of the specified object in the visual tree. 
@@ -724,16 +722,6 @@ Module mdlTools
         End While
         Return Nothing
     End Function
-
-    ''' <summary>
-    ''' Shut down the application after a few seconds ;)
-    ''' </summary>
-    Public Sub ApplicationDeactivate()
-        Dim w As New wndAboutDonate
-        w.Show()
-        applicationdeactivating = True
-        'Application.Current.Shutdown()
-    End Sub
 
     ''' <summary>
     ''' Opens URL in default browser

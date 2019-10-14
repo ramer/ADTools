@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <local:ctlCap x:Name="cap" Panel.ZIndex="1" Visibility="Hidden" Grid.ColumnSpan="2"/>
-        <DockPanel LastChildFill="True" Grid.Column="0">
+        <DockPanel Grid.Column="0">
             <Grid DockPanel.Dock="Top" MinHeight="24">
                 <TextBlock Margin="0,0,3,0" Text="{x:Static r:Resources.str_SelectedGroups}"/>
                 <Button x:Name="btnDefaultGroups" Style="{StaticResource LightButton}" HorizontalAlignment="Right" VerticalAlignment="Center" Width="24" Height="24" Content="#" Panel.ZIndex="5" ToolTip="По умолчанию" Margin="0,0,3,0"/>
@@ -45,7 +45,7 @@
                     />
             </Grid>
         </DockPanel>
-        <DockPanel LastChildFill="True" Grid.Column="1">
+        <DockPanel Grid.Column="1">
             <TextBlock  MinHeight="24" Margin="3,0,0,0" Text="{x:Static r:Resources.str_GroupsList}" DockPanel.Dock="Top"/>
             <Grid Margin="3,5,0,0" MinHeight="24" DockPanel.Dock="Bottom">
                 <TextBox x:Name="tbDomainGroupsFilter"/>

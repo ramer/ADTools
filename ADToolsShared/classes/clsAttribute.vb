@@ -3,7 +3,7 @@ Imports System.ComponentModel
 Imports System.DirectoryServices.Protocols
 Imports IRegisty
 
-<DebuggerDisplay("clsAttributeSchema={lDAPDisplayName}")>
+<DebuggerDisplay("Attribute={lDAPDisplayName}")>
 Public Class clsAttribute
     Implements INotifyPropertyChanged
 

@@ -1433,15 +1433,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Use current credentials on start.
-        '''</summary>
-        Public ReadOnly Property str_CurrentCredentialsToolTip() As String
-            Get
-                Return ResourceManager.GetString("str_CurrentCredentialsToolTip", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Ищет локализованную строку, похожую на Debug.
         '''</summary>
         Public ReadOnly Property str_Debug() As String
@@ -1956,7 +1947,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Ищет локализованную строку, похожую на Cur. cred..
+        '''  Ищет локализованную строку, похожую на Launching an external application with the current credentials (otherwise with the credentials of the current domain).
         '''</summary>
         Public ReadOnly Property str_ExternalSoftwareCurrentCredentials() As String
             Get

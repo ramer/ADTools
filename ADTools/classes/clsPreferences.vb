@@ -30,7 +30,7 @@ Public Class clsPreferences
 
     ' search attributes
     Private _attributesforsearchnames As New List(Of String)
-    Private _attributesforsearch As ObservableCollection(Of clsAttribute)
+    Private _attributesforsearch As ObservableCollection(Of String)
     Private _searchmode As enmSearchMode
     Private _searchobjectclasses As clsSearchObjectClasses
     Private _quicksearch As Boolean
@@ -198,11 +198,11 @@ Public Class clsPreferences
         End Set
     End Property
 
-    Public Property AttributesForSearch As ObservableCollection(Of clsAttribute)
+    Public Property AttributesForSearch As ObservableCollection(Of String)
         Get
             Return _attributesforsearch
         End Get
-        Set(value As ObservableCollection(Of clsAttribute))
+        Set(value As ObservableCollection(Of String))
             _attributesforsearch = If(value, attributesForSearchDefault)
             NotifyPropertyChanged("AttributesForSearch")
         End Set

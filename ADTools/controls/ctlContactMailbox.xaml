@@ -128,7 +128,7 @@
                         </CheckBox>
                     </StackPanel>
                 </DockPanel>
-                <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
+                <DockPanel IsEnabled="{Binding Connected}">
                     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
                         <ComboBox x:Name="cmboContactDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" MinHeight="24" Width="150" DockPanel.Dock="Right"/>
                         <TextBox x:Name="tbContact" MinHeight="24" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />

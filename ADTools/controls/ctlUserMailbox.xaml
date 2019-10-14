@@ -205,7 +205,7 @@
                                 </CheckBox>
                             </StackPanel>
                         </DockPanel>
-                        <DockPanel LastChildFill="True" IsEnabled="{Binding Connected}">
+                        <DockPanel IsEnabled="{Binding Connected}">
                             <DockPanel DockPanel.Dock="Top" Margin="0,0,0,5">
                                 <ComboBox x:Name="cmboMailboxDomain" ItemsSource="{Binding AcceptedDomain, Mode=OneWay}" Height="23" Width="150" DockPanel.Dock="Right"/>
                                 <TextBox x:Name="tbMailbox" Height="23" MaxLength="128" BorderThickness="1,1,0,1" TabIndex="0" />
@@ -274,7 +274,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
+                    <DockPanel Grid.Column="0" Grid.Row="0">
                         <TextBlock Text="{x:Static r:Resources.str_FullAccess}" DockPanel.Dock="Top"/>
                         <ListView x:Name="lvFullAccess" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionFullAccess, Mode=OneWay}">
                             <ListView.View>
@@ -304,7 +304,7 @@
                             </ListView.View>
                         </ListView>
                     </DockPanel>
-                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="1">
+                    <DockPanel Grid.Column="0" Grid.Row="1">
                         <TextBlock Text="{x:Static r:Resources.str_SendAs}" DockPanel.Dock="Top"/>
                         <CheckBox x:Name="chbSentItemsConfigurationSendAs" DockPanel.Dock="Bottom" Margin="5,5,5,5" IsChecked="{Binding SentItemsConfigurationSendAs}" Content="{x:Static r:Resources.str_SendAsCopyToSent}"/>
                         <ListView x:Name="lvSendAs" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendAs, Mode=OneWay}">
@@ -335,7 +335,7 @@
                             </ListView.View>
                         </ListView>
                     </DockPanel>
-                    <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="2">
+                    <DockPanel Grid.Column="0" Grid.Row="2">
                         <TextBlock Text="{x:Static r:Resources.str_SendOnBehalf}" DockPanel.Dock="Top"/>
                         <CheckBox x:Name="chbSentItemsConfigurationSendOnBehalf" DockPanel.Dock="Bottom" Margin="5,8,5,5" IsChecked="{Binding SentItemsConfigurationSendOnBehalf}" Content="{x:Static r:Resources.str_SendOnBehalfCopyToSent}"/>
                         <ListView x:Name="lvSendOnBehalf" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding PermissionSendOnBehalf, Mode=OneWay}">
@@ -366,7 +366,7 @@
                             </ListView.View>
                         </ListView>
                     </DockPanel>
-                    <DockPanel LastChildFill="True" Grid.Column="1" Grid.RowSpan="3" Margin="5,0,0,0">
+                    <DockPanel Grid.Column="1" Grid.RowSpan="3" Margin="5,0,0,0">
                         <TextBlock Text="{x:Static r:Resources.str_ObjectsList}" DockPanel.Dock="Top"/>
                         <TextBox x:Name="tbSearchPattern" Margin="0,5,0,0" Height="23" DockPanel.Dock="Bottom"/>
                         <ListView x:Name="lvUsers" AlternationCount="2" DockPanel.Dock="Bottom" Foreground="Black" AllowDrop="True" ItemsSource="{Binding users}">

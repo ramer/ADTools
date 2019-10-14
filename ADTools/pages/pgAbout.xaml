@@ -13,7 +13,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Grid>
-        <DockPanel LastChildFill="True" Margin="5">
+        <DockPanel Margin="5">
             <DockPanel>
                 <Grid Width="150">
                     <Image Source="/images/splash.png" VerticalAlignment="Center" HorizontalAlignment="Center">

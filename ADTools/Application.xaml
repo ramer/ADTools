@@ -119,7 +119,7 @@
                                 <DockPanel>
                                     
                                     <!--Header DockPanel-->
-                                    <DockPanel LastChildFill="True" DockPanel.Dock="Top" Height="32">
+                                    <DockPanel DockPanel.Dock="Top" Height="32">
 
                                         <!--App icon-->
                                         <Image Source="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type NavigationWindow}}, Path=Icon}" Margin="3" RenderOptions.BitmapScalingMode="HighQuality">
@@ -449,7 +449,6 @@
         </Style>
 
         <Style TargetType="{x:Type local:wndErrorLog}" BasedOn="{StaticResource {x:Type Window}}"/>
-        <!--<Style TargetType="{x:Type local:wndLog}" BasedOn="{StaticResource {x:Type Window}}"/>-->
 
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="{DynamicResource ColorText}" />

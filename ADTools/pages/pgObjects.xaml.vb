@@ -831,7 +831,9 @@ Class pgObjects
         If e.Key = Key.Enter Then
             If preferences.SearchMode = enmSearchMode.Default Then
                 If preferences.QuickSearch And Not e.KeyboardDevice.Modifiers = ModifierKeys.Control Then
-                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttribute)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+                    Dim attrsdict As New Dictionary(Of String, clsAttribute)
+                    domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.Attributes.Values).ToList.ForEach(Sub(a As clsAttribute) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
+                    StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of String)(preferences.AttributesForSearch.Where(Function(a) attrsdict.ContainsKey(a) AndAlso attrsdict(a).IsIndexed = True).ToList), preferences.SearchObjectClasses))
                 Else
                     StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
                 End If
@@ -852,7 +854,9 @@ Class pgObjects
     Private Sub btnSearch_Click(sender As Object, e As RoutedEventArgs) Handles btnSearch.Click
         If preferences.SearchMode = enmSearchMode.Default Then
             If preferences.QuickSearch Then
-                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of clsAttribute)(preferences.AttributesForSearch.Where(Function(a) a.IsIndexed = True).ToList), preferences.SearchObjectClasses))
+                Dim attrsdict As New Dictionary(Of String, clsAttribute)
+                domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.Attributes.Values).ToList.ForEach(Sub(a As clsAttribute) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
+                StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, New ObservableCollection(Of String)(preferences.AttributesForSearch.Where(Function(a) attrsdict.ContainsKey(a) AndAlso attrsdict(a).IsIndexed = True).ToList), preferences.SearchObjectClasses))
             Else
                 StartSearch(Nothing, New clsFilter(tbSearchPattern.Text, preferences.AttributesForSearch, preferences.SearchObjectClasses))
             End If

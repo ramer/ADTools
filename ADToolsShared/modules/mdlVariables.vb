@@ -178,24 +178,19 @@ Public Module mdlVariables
     "whenCreated"
     }
 
-    Public attributesForSearchDefault As New ObservableCollection(Of clsAttribute) From {
-        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255),
-        New clsAttribute("Display-Name", True, 5, "2.5.5.12", "displayName", 0, 256),
-        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256),
-        New clsAttribute("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName", Nothing, Nothing)}
+    Public attributesForSearchDefault As New ObservableCollection(Of String) From {
+        "name", "displayName", "sAMAccountName", "userPrincipalName"}
 
-    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of clsAttribute) From {
-        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255),
-        New clsAttribute("Display-Name", True, 5, "2.5.5.12", "displayName", 0, 256),
-        New clsAttribute("User-Principal-Name", True, 1, "2.5.5.12", "userPrincipalName", Nothing, Nothing)}
+    Public attributesForSearchExchangePermissionTarget As New ObservableCollection(Of String) From {
+        "name", "displayName", "userPrincipalName"}
 
-    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of clsAttribute) From {
-        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256)}
+    Public attributesForSearchExchangePermissionFullAccess As New ObservableCollection(Of String) From {
+        "sAMAccountName"}
 
-    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of clsAttribute) From {
-        New clsAttribute("SAM-Account-Name", True, 13, "2.5.5.12", "sAMAccountName", 0, 256)}
+    Public attributesForSearchExchangePermissionSendAs As New ObservableCollection(Of String) From {
+        "sAMAccountName"}
 
-    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of clsAttribute) From {
-        New clsAttribute("RDN", True, 13, "2.5.5.12", "name", 1, 255)}
+    Public attributesForSearchExchangePermissionSendOnBehalf As New ObservableCollection(Of String) From {
+        "name"}
 
 End Module

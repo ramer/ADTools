@@ -1065,11 +1065,8 @@
   <data name="str_ExternalSoftwareArgumentPatterns" xml:space="preserve">
     <value>Шаблоны аргументов</value>
   </data>
-  <data name="str_CurrentCredentialsToolTip" xml:space="preserve">
-    <value>Использовать текущие реквизиты при запуске</value>
-  </data>
   <data name="str_ExternalSoftwareCurrentCredentials" xml:space="preserve">
-    <value>Тек. рек.</value>
+    <value>Запуск внешнего приложения с текущими реквизитами (иначе с реквизитами текущего домена)</value>
   </data>
   <data name="str_ExternalSoftwareArguments" xml:space="preserve">
     <value>Агрументы</value>

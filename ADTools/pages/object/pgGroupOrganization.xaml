@@ -23,7 +23,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <DockPanel>
-                <DockPanel LastChildFill="True" DockPanel.Dock="Top">
+                <DockPanel DockPanel.Dock="Top">
                     <TextBlock Text="{x:Static r:Resources.str_ManagedBy}" Width="140"/>
                     <Border BorderThickness="1" Height="23" BorderBrush="{DynamicResource ColorButtonBackground}">
                         <TextBlock Height="23" Margin="2,0,2,0">

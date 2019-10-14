@@ -5,7 +5,7 @@ Imports System.DirectoryServices.Protocols
 Imports System.Security.Principal
 Imports IRegisty
 
-<DebuggerDisplay("clsDirectoryObject={name}")>
+<DebuggerDisplay("DirectoryObject={name}")>
 Public Class clsDirectoryObject
     Inherits Dynamic.DynamicObject
     Implements INotifyPropertyChanged
@@ -256,12 +256,11 @@ Public Class clsDirectoryObject
         End If
     End Function
 
-
     Public Function GetAttribute(attributename As String) As clsAttribute
         If Not cache.ContainsKey(attributename) Then Refresh({attributename}) ' refresh entry if requested attribute not found
         If Not cache.ContainsKey(attributename) Then cache.Add(attributename, Nothing) 'if entry hasn't value store nothing 
 
-        Dim baseattr As clsAttribute = If(Domain.AttributesSchema.ContainsKey(attributename), Domain.AttributesSchema(attributename), Nothing)
+        Dim baseattr As clsAttribute = If(Domain.Attributes.ContainsKey(attributename), Domain.Attributes(attributename), Nothing)
         If baseattr Is Nothing Then Return Nothing
 
         Dim attr As clsAttribute
@@ -310,7 +309,6 @@ Public Class clsDirectoryObject
         If value Is Nothing OrElse String.IsNullOrEmpty(value.ToString) Then
 
             Try
-
                 Dim modifyRequest As New ModifyRequest(distinguishedName, DirectoryAttributeOperation.Delete, attributename, Nothing)
                 Dim response As ModifyResponse = Connection.SendRequest(modifyRequest)
                 Refresh({attributename})
@@ -1696,9 +1694,10 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property whenCreated() As Date
+    Public ReadOnly Property whenCreated() As Date?
         Get
             Dim val = GetValue("whenCreated")
+            If val Is Nothing Then Return Nothing
             Return Date.ParseExact(val, "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture)
         End Get
     End Property
@@ -1707,14 +1706,15 @@ Public Class clsDirectoryObject
     <ExtendedProperty>
     Public ReadOnly Property whenCreatedFormated() As String
         Get
-            Return If(whenCreated = Nothing, My.Resources.str_Unknown, whenCreated.ToString)
+            Return If(whenCreated Is Nothing, My.Resources.str_Unknown, whenCreated.ToString)
         End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property whenChanged() As Date
+    Public ReadOnly Property whenChanged() As Date?
         Get
             Dim val = GetValue("whenChanged")
+            If val Is Nothing Then Return Nothing
             Return Date.ParseExact(val, "yyyyMMddHHmmss.f'Z'", Globalization.CultureInfo.InvariantCulture)
         End Get
     End Property

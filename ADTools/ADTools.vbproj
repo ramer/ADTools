@@ -275,9 +275,6 @@
     <Compile Include="pages\pgAbout.xaml.vb">
       <DependentUpon>pgAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="windows\wndAboutDonate.xaml.vb">
-      <DependentUpon>wndAboutDonate.xaml</DependentUpon>
-    </Compile>
     <Compile Include="pages\pgCreateObject.xaml.vb">
       <DependentUpon>pgCreateObject.xaml</DependentUpon>
     </Compile>
@@ -292,6 +289,9 @@
     </Compile>
     <Compile Include="pages\object\pgUserPhoto.xaml.vb">
       <DependentUpon>pgUserPhoto.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="windows\wndSplash.xaml.vb">
+      <DependentUpon>wndSplash.xaml</DependentUpon>
     </Compile>
     <Page Include="Application.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -421,10 +421,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="windows\wndAboutDonate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="pages\pgCreateObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -453,6 +449,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="pages\object\pgUserPhoto.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="windows\wndSplash.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

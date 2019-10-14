@@ -50,7 +50,7 @@ Public Class pgPreferences
 
         'mainwindow attributes
         Dim attrsdict As New Dictionary(Of String, clsAttribute)
-        domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.AttributesSchema.Values).ToList.ForEach(Sub(a As clsAttribute) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
+        domains.Where(Function(domain) domain.Validated).SelectMany(Function(domain) domain.Attributes.Values).ToList.ForEach(Sub(a As clsAttribute) If Not attrsdict.ContainsKey(a.lDAPDisplayName) Then attrsdict.Add(a.lDAPDisplayName, a))
         GetType(clsDirectoryObject).GetProperties.ToList.ForEach(Sub(prop As PropertyInfo) If prop.GetCustomAttribute(Of ExtendedPropertyAttribute) IsNot Nothing AndAlso Not attrsdict.ContainsKey(prop.Name) Then attrsdict.Add(prop.Name, New clsAttribute(prop.Name, True, 0, "2.5.5.12", prop.Name, 0, 1024, True)))
         Attributes = New ObservableCollection(Of clsAttribute)(attrsdict.Values)
         lvAttributes.ItemsSource = Attributes
@@ -111,7 +111,7 @@ Public Class pgPreferences
         Await Task.Run(
             Sub()
                 For Each attr In Attributes
-                    attr = obj.GetValue(attr.lDAPDisplayName)
+                    attr.Value = obj.GetValue(attr.lDAPDisplayName)
                 Next
             End Sub)
         capAttributes.Visibility = Visibility.Hidden
@@ -135,17 +135,15 @@ Public Class pgPreferences
         End If
     End Sub
 
-    Private Sub lv_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
-                                                                            trashAttributesForSearch.DragEnter,
-                                                                            lvAttributesForSearch.DragOver,
-                                                                            trashAttributesForSearch.DragOver
-        If Not e.Data.GetDataPresent(GetType(clsAttribute())) Then Exit Sub
-
+    Private Sub trashAttributesForSearch_DragEnterDragOver(sender As Object, e As DragEventArgs) Handles lvAttributesForSearch.DragEnter,
+                                                                                                         trashAttributesForSearch.DragEnter,
+                                                                                                         lvAttributesForSearch.DragOver,
+                                                                                                         trashAttributesForSearch.DragOver
         Dim dragsource = e.Data.GetData("DragSource")
 
-        If dragsource Is lvAttributes AndAlso sender Is lvAttributesForSearch Then
+        If dragsource Is lvAttributes AndAlso sender Is lvAttributesForSearch AndAlso e.Data.GetDataPresent(GetType(clsAttribute())) Then
             e.Effects = DragDropEffects.Copy
-        ElseIf dragsource Is lvAttributesForSearch Then
+        ElseIf dragsource Is lvAttributesForSearch AndAlso e.Data.GetDataPresent(GetType(String())) Then
             If sender Is lvAttributesForSearch Then
                 e.Effects = DragDropEffects.None
                 trashAttributesForSearch.Visibility = Visibility.Visible
@@ -198,7 +196,7 @@ Public Class pgPreferences
                 If CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) IsNot DBNull.Value Then
                     Dim attributename As String = CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath)
                     CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = DBNull.Value
-                    DragDrop.DoDragDrop(sender, New DataObject({New clsAttribute("", False, 0, "", attributename, 0, 1024)}), DragDropEffects.All)
+                    DragDrop.DoDragDrop(sender, New DataObject({attributename}), DragDropEffects.All)
                     SaveMainWindowLayoutTable()
                     e.Handled = True
                 End If
@@ -213,27 +211,39 @@ Public Class pgPreferences
 
         trashAttributesForSearch.Visibility = Visibility.Collapsed : trashAttributesForSearch.Background = Brushes.Transparent
 
-        If Not e.Data.GetDataPresent(GetType(clsAttribute())) Then Exit Sub
-
         Dim dragsource = e.Data.GetData("DragSource")
 
-        Dim dropped As clsAttribute() = e.Data.GetData(GetType(clsAttribute()))
-        If dropped.Count <> 1 Then Exit Sub
-
-        Dim obj = dropped(0)
-
         If dragsource Is lvAttributes AndAlso sender Is lvAttributesForSearch Then ' adding attribute
-            If obj.IsComplex Then IMsgBox(My.Resources.str_AttributesComplexCannotBeSearched, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
-            If Not preferences.AttributesForSearch.Contains(obj) Then preferences.AttributesForSearch.Add(obj)
+            If Not e.Data.GetDataPresent(GetType(clsAttribute())) Then Exit Sub
+            Dim dropped As clsAttribute() = e.Data.GetData(GetType(clsAttribute()))
+            For Each attr In dropped
+                If attr.IsComplex Then IMsgBox(My.Resources.str_AttributesComplexCannotBeSearched, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Continue For
+                If Not preferences.AttributesForSearch.Contains(attr.lDAPDisplayName) Then preferences.AttributesForSearch.Add(attr.lDAPDisplayName)
+            Next
         ElseIf dragsource Is lvAttributesForSearch AndAlso sender Is trashAttributesForSearch Then ' removing attribute
-            If preferences.AttributesForSearch.Contains(obj) Then
-                If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.str_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
-                preferences.AttributesForSearch.Remove(obj)
-            End If
+            If Not e.Data.GetDataPresent(GetType(String())) Then Exit Sub
+            Dim dropped As String() = e.Data.GetData(GetType(String()))
+            For Each attr In dropped
+                If preferences.AttributesForSearch.Contains(attr) Then
+                    If preferences.AttributesForSearch.Count <= 1 Then IMsgBox(My.Resources.str_AttributesAtLeastOne, vbOKOnly + vbExclamation, My.Resources.str_AttributesForSearch) : Exit Sub
+                    preferences.AttributesForSearch.Remove(attr)
+                End If
+            Next
         ElseIf sender Is dgLayout Then ' setting layout
+            Dim droppedstring As String = Nothing
+            If e.Data.GetDataPresent(GetType(clsAttribute())) Then
+                Dim dropped As clsAttribute() = e.Data.GetData(GetType(clsAttribute()))
+                If dropped.Count <> 1 Then Exit Sub
+                droppedstring = dropped(0).lDAPDisplayName
+            ElseIf e.Data.GetDataPresent(GetType(String())) Then
+                Dim dropped As String() = e.Data.GetData(GetType(String()))
+                If dropped.Count <> 1 Then Exit Sub
+                droppedstring = dropped(0)
+            End If
+            If String.IsNullOrEmpty(droppedstring) Then Exit Sub
             Dim cell = FindVisualParent(Of DataGridCell)(e.OriginalSource)
             If cell Is Nothing Then Exit Sub
-            CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = obj.lDAPDisplayName
+            CType(cell.DataContext, DataRowView).Row(cell.Column.SortMemberPath) = droppedstring
             SaveMainWindowLayoutTable()
         End If
 
@@ -357,179 +367,6 @@ Public Class pgPreferences
 
 #End Region
 
-
-    'Private Sub RebuildLayout()
-    '    grdLayout.ColumnDefinitions.Clear()
-    '    grdLayout.Children.Clear()
-
-    '    For Each columnindo As clsViewColumnInfo In preferences.Columns
-    '        grdLayout.ColumnDefinitions.Add(New ColumnDefinition())
-    '    Next
-
-    '    For x As Integer = 0 To preferences.Columns.Count - 1
-    '        Dim tbHeader As New TextBox()
-    '        tbHeader.SetValue(TextBox.TextProperty, preferences.Columns(x).Header)
-    '        AddHandler tbHeader.TextChanged, AddressOf tbHeader_TextChanged
-
-    '        Grid.SetRow(tbHeader, 0)
-    '        Grid.SetColumn(tbHeader, x)
-    '        grdLayout.Children.Add(tbHeader)
-
-    '        For y As Integer = 0 To preferences.Columns(x).Attributes.Count - 1
-    '            Dim attr As clsAttribute = preferences.Columns(x).Attributes(y)
-    '            Dim tblck As New TextBlock(New Run(attr.Label))
-    '            tblck.Tag = attr
-    '            tblck.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap)
-    '            tblck.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center)
-    '            tblck.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center)
-    '            tblck.SetBinding(TextBlock.BackgroundProperty, New System.Windows.Data.Binding("{DynamicResource ColorButtonBackground}"))
-    '            AddHandler tblck.MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
-
-    '            Grid.SetRow(tblck, y + 1)
-    '            Grid.SetColumn(tblck, x)
-    '            grdLayout.Children.Add(tblck)
-    '        Next
-    '    Next
-
-    'End Sub
-
-    'Private Sub SaveLayout()
-    '    Dim layout As New ObservableCollection(Of clsViewColumnInfo)
-
-    '    For x As Integer = 0 To grdLayout.ColumnDefinitions.Count - 1
-    '        Dim dgci As New clsViewColumnInfo
-    '        dgci.DisplayIndex = x
-    '        For y As Integer = 0 To grdLayout.RowDefinitions.Count - 1
-    '            For Each element As UIElement In grdLayout.Children
-    '                If Grid.GetColumn(element) = x And Grid.GetRow(element) = y Then
-    '                    If y = 0 Then
-    '                        dgci.Header = (CType(element, TextBox).GetValue(TextBox.TextProperty))
-    '                    Else
-    '                        Dim dummy As List(Of clsAttribute) = dgci.Attributes
-    '                        dummy.Add(CType(element, TextBlock).Tag)
-    '                        dgci.Attributes = dummy
-    '                    End If
-    '                End If
-    '            Next
-    '        Next
-    '        layout.Add(dgci)
-    '    Next
-    '    preferences.Columns = layout
-    'End Sub
-
-    'Private Sub lv_PreviewMouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs) Handles lvAttributes.PreviewMouseLeftButtonDown, lvAttributesExtended.PreviewMouseLeftButtonDown, lvAttributesForSearch.PreviewMouseLeftButtonDown
-    '    Dim listView As ListView = TryCast(sender, ListView)
-    '    allowdrag = e.GetPosition(sender).X < listView.ActualWidth - SystemParameters.VerticalScrollBarWidth And e.GetPosition(sender).Y < listView.ActualHeight - SystemParameters.HorizontalScrollBarHeight
-    'End Sub
-
-
-    'Private Sub grdLayout_Drop(sender As Object, e As DragEventArgs) Handles grdLayout.Drop
-    '    If Not e.Data.GetDataPresent(GetType(clsAttribute)) Then Exit Sub
-
-    '    Dim point As Point = e.GetPosition(grdLayout)
-
-    '    Dim row As Integer = 0
-    '    Dim col As Integer = 0
-    '    Dim accumulatedHeight As Double = 0.0
-    '    Dim accumulatedWidth As Double = 0.0
-
-    '    ' calc row mouse was over
-    '    For Each rowDefinition As RowDefinition In grdLayout.RowDefinitions
-    '        accumulatedHeight += rowDefinition.ActualHeight
-    '        If accumulatedHeight >= point.Y Then
-    '            Exit For
-    '        End If
-    '        row += 1
-    '    Next
-
-    '    ' calc col mouse was over
-    '    For Each columnDefinition As ColumnDefinition In grdLayout.ColumnDefinitions
-    '        accumulatedWidth += columnDefinition.ActualWidth
-    '        If accumulatedWidth >= point.X Then
-    '            Exit For
-    '        End If
-    '        col += 1
-    '    Next
-
-    '    If row = 0 Then Exit Sub
-
-    '    ' create new
-    '    Dim attr As clsAttribute = e.Data.GetData(GetType(clsAttribute))
-    '    Dim tblck As New TextBlock(New Run(attr.Label))
-    '    tblck.Tag = attr
-    '    tblck.SetValue(TextBlock.TextWrappingProperty, TextWrapping.Wrap)
-    '    tblck.SetValue(TextBlock.TextAlignmentProperty, TextAlignment.Center)
-    '    tblck.SetValue(TextBlock.VerticalAlignmentProperty, VerticalAlignment.Center)
-    '    tblck.SetBinding(TextBlock.BackgroundProperty, New System.Windows.Data.Binding("{DynamicResource ColorButtonBackground}"))
-    '    AddHandler tblck.MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
-
-    '    ' delete old
-    '    For Each element As UIElement In grdLayout.Children
-    '        If Grid.GetRow(element) = row And Grid.GetColumn(element) = col Then
-    '            grdLayout.Children.Remove(element)
-    '            RemoveHandler element.MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
-    '            Exit For
-    '        End If
-    '    Next
-
-    '    ' add new
-    '    Grid.SetRow(tblck, row)
-    '    Grid.SetColumn(tblck, col)
-
-    '    grdLayout.Children.Add(tblck)
-
-    '    SaveLayout()
-    'End Sub
-
-    'Private Sub tblckAttribute_MouseLeftButtonDown(sender As Object, e As MouseButtonEventArgs)
-    '    Dim obj As TextBlock = CType(sender, TextBlock)
-    '    grdLayout.Children.Remove(obj)
-    '    RemoveHandler obj.MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
-
-    '    Dim attr As clsAttribute = obj.Tag
-    '    Dim dragData As New DataObject(attr)
-
-    '    SaveLayout()
-
-    '    DragDrop.DoDragDrop(grdLayout, dragData, DragDropEffects.Copy)
-    'End Sub
-
-    'Private Sub tbHeader_TextChanged(sender As Object, e As TextChangedEventArgs)
-    '    SaveLayout()
-    'End Sub
-
-    'Private Sub btnLayoutAddColumn_Click(sender As Object, e As RoutedEventArgs) Handles btnLayoutAddColumn.Click
-    '    grdLayout.ColumnDefinitions.Add(New ColumnDefinition)
-
-    '    Dim tbheader As New TextBox()
-    '    AddHandler tbheader.TextChanged, AddressOf tbHeader_TextChanged
-    '    Grid.SetRow(tbheader, 0)
-    '    Grid.SetColumn(tbheader, grdLayout.ColumnDefinitions.Count - 1)
-    '    grdLayout.Children.Add(tbheader)
-
-    '    SaveLayout()
-    'End Sub
-
-    'Private Sub btnLayoutRemoveLastColumn_Click(sender As Object, e As RoutedEventArgs) Handles btnLayoutRemoveLastColumn.Click
-    '    Dim elementstoremove As New List(Of UIElement)
-    '    For Each element As UIElement In grdLayout.Children
-    '        If Grid.GetColumn(element) = grdLayout.ColumnDefinitions.Count - 1 Then
-    '            elementstoremove.Add(element)
-    '        End If
-    '    Next
-    '    For Each element As UIElement In elementstoremove
-    '        grdLayout.Children.Remove(element)
-    '        If element.GetType() Is GetType(TextBlock) Then RemoveHandler CType(element, TextBlock).MouseLeftButtonDown, AddressOf tblckAttribute_MouseLeftButtonDown
-    '        If element.GetType() Is GetType(TextBox) Then RemoveHandler CType(element, TextBox).TextChanged, AddressOf tbHeader_TextChanged
-    '    Next
-
-    '    grdLayout.ColumnDefinitions.RemoveAt(grdLayout.ColumnDefinitions.Count - 1)
-
-    '    SaveLayout()
-    'End Sub
-
-
-
     Private Sub cmboTheme_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmboTheme.SelectionChanged
         Select Case cmboTheme.SelectedIndex
             Case 0 ' light gray
@@ -624,16 +461,24 @@ Public Class pgPreferences
         End If
     End Sub
 
+    Private Sub btnExternalSoftwareAdd_Click(sender As Object, e As RoutedEventArgs) Handles btnExternalSoftwareAdd.Click
+        Dim newexternalsoftware = New clsExternalSoftware()
+        preferences.ExternalSoftware.Add(newexternalsoftware)
+        lvExternalSoftware.SelectedItem = newexternalsoftware
+        tbExternalSoftwareLabel.Focus()
+    End Sub
+
+    Private Sub btnExternalSoftwareRemove_Click(sender As Object, e As RoutedEventArgs) Handles btnExternalSoftwareRemove.Click
+        If lvExternalSoftware.SelectedItem Is Nothing Then Exit Sub
+        If preferences.ExternalSoftware.Contains(lvExternalSoftware.SelectedItem) Then preferences.ExternalSoftware.Remove(lvExternalSoftware.SelectedItem)
+    End Sub
+
     Private Sub btnExternalSoftwareBrowse_Click(sender As Object, e As RoutedEventArgs)
-        Try
-            Dim es As clsExternalSoftware = CType(sender, FrameworkElement).DataContext
-            Dim dlg As New Forms.OpenFileDialog
-            dlg.Filter = My.Resources.str_ExternalSoftwareDialogFilter & "|*.exe"
-            If dlg.ShowDialog = Forms.DialogResult.OK Then
-                es.Path = dlg.FileName
-            End If
-        Catch
-        End Try
+        If sender Is Nothing OrElse TypeOf sender.DataContext IsNot clsExternalSoftware Then Exit Sub
+        Dim es As clsExternalSoftware = CType(sender, FrameworkElement).DataContext
+        Dim dlg As New Forms.OpenFileDialog
+        dlg.Filter = My.Resources.str_ExternalSoftwareDialogFilter & "|*.exe"
+        If dlg.ShowDialog = Forms.DialogResult.OK Then es.Path = dlg.FileName
     End Sub
 
 

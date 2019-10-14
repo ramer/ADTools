@@ -6,12 +6,6 @@ Public Class clsExternalSoftware
 
     Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-    Private _label As String
-    Private _path As String
-    Private _arguments As String
-    Private _currentcredentials As Boolean
-    Private _image As ImageSource
-
     Private Sub NotifyPropertyChanged(propertyName As String)
         Me.OnPropertyChanged(New PropertyChangedEventArgs(propertyName))
     End Sub
@@ -20,18 +14,11 @@ Public Class clsExternalSoftware
         RaiseEvent PropertyChanged(Me, e)
     End Sub
 
-    Sub New(Label As String, Path As String, Arguments As String, CurrentCredentials As Boolean)
-        _label = Label
-        _path = Path
-        _arguments = Arguments
-        _currentcredentials = CurrentCredentials
-        _image = Image
-    End Sub
-
     Sub New()
 
     End Sub
 
+    Private _label As String
     Public Property Label() As String
         Get
             Return _label
@@ -43,6 +30,7 @@ Public Class clsExternalSoftware
         End Set
     End Property
 
+    Private _path As String
     Public Property Path() As String
         Get
             Return _path
@@ -55,6 +43,7 @@ Public Class clsExternalSoftware
         End Set
     End Property
 
+    Private _arguments As String
     Public Property Arguments() As String
         Get
             Return _arguments
@@ -66,6 +55,7 @@ Public Class clsExternalSoftware
         End Set
     End Property
 
+    Private _currentcredentials As Boolean
     Public Property CurrentCredentials() As Boolean
         Get
             Return _currentcredentials

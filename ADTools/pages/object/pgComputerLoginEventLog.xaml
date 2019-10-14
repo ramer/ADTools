@@ -27,7 +27,7 @@
     <TabControl>
         <TabItem Header="Журнал">
             <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
-                <DockPanel LastChildFill="True" Margin="10,5,10,5">
+                <DockPanel Margin="10,5,10,5">
                     <StackPanel DockPanel.Dock="Top">
                         <TextBlock Text="{x:Static r:Resources.str_RetrievingLogins}" Margin="0,5,0,5"/>
                         <StackPanel>
@@ -145,7 +145,7 @@
         </TabItem>
         <TabItem Header="Календарь">
             <!--<ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">-->
-                <DockPanel LastChildFill="True" Margin="10,5,10,5">
+                <DockPanel Margin="10,5,10,5">
                     <StackPanel DockPanel.Dock="Top">
                         <TextBlock Text="{x:Static r:Resources.str_RetrievingLogins}" Margin="0,5,0,5"/>
                         <StackPanel>

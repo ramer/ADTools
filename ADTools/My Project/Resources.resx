@@ -1082,10 +1082,7 @@ A universal group can not be a member of a global group.</value>
     <value>Arguments</value>
   </data>
   <data name="str_ExternalSoftwareCurrentCredentials" xml:space="preserve">
-    <value>Cur. cred.</value>
-  </data>
-  <data name="str_CurrentCredentialsToolTip" xml:space="preserve">
-    <value>Use current credentials on start</value>
+    <value>Launching an external application with the current credentials (otherwise with the credentials of the current domain)</value>
   </data>
   <data name="str_PluginsTelegramBot_Instructions" xml:space="preserve">
     <value>You can create a Telegram-bot and manage user accounts via the Telegram messenger.

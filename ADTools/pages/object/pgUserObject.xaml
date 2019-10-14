@@ -40,7 +40,7 @@
     </Page.Resources>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <DockPanel LastChildFill="True" Margin="0">
+        <DockPanel Margin="0">
             <StackPanel DockPanel.Dock="Top">
                 <Grid>
                     <Grid.ColumnDefinitions>
