@@ -174,7 +174,8 @@ Public Class clsDirectoryObject
             Debug.Print("Bulk attributes refresh requested")
         End If
 
-        Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)", Protocols.SearchScope.Base, attributenames)
+        Dim searchRequest = New SearchRequest(distinguishedName, "(objectClass=*)",
+                                              Protocols.SearchScope.Base, attributenames)
         searchRequest.Controls.Add(New ShowDeletedControl())
 
         Dim response As SearchResponse
@@ -184,7 +185,7 @@ Public Class clsDirectoryObject
             Exit Sub
         End Try
 
-        ' only one object expercted
+        ' only one object expected
         If response.Entries.Count = 1 Then
             For Each a As DirectoryAttribute In response.Entries(0).Attributes.Values
                 If a.Name.Contains(";range=") Then
@@ -305,7 +306,7 @@ Public Class clsDirectoryObject
     End Function
 
     Public Sub SetAttribute(attributename As String, value As Object)
-        Exit Sub
+        'Exit Sub
         If value Is Nothing OrElse String.IsNullOrEmpty(value.ToString) Then
 
             Try
@@ -821,8 +822,14 @@ Public Class clsDirectoryObject
         End If
     End Sub
 
+    Public Sub Unlock()
+        badPwdCount = 0
+        lockoutTime = 0
+    End Sub
+
 
 #Region "User attributes"
+
 
     <RegistrySerializerIgnorable(True)>
     Public Property sn() As String
@@ -1389,10 +1396,86 @@ Public Class clsDirectoryObject
     End Property
 
     <RegistrySerializerIgnorable(True)>
-    Public ReadOnly Property badPwdCount() As Integer?
+    Public ReadOnly Property accountExpiresAt() As Boolean?
+        Get
+            If accountNeverExpires IsNot Nothing Then
+                Return Not accountNeverExpires
+            Else
+                Return Nothing
+            End If
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property badPasswordTime() As Long?
+        Get
+            Return GetValue("badPasswordTime")
+        End Get
+        Set(ByVal value As Long?)
+            If value IsNot Nothing Then SetAttribute("badPasswordTime", value)
+
+            NotifyPropertyChanged("badPasswordTime")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property badPasswordTimeDate() As Date
+        Get
+            Dim t = badPasswordTime
+            Return If(t IsNot Nothing AndAlso t > 0, Date.FromFileTime(t), Nothing)
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property badPasswordTimeFormated() As String
+        Get
+            Dim t = badPasswordTime
+            Return If(t Is Nothing, My.Resources.str_Unknown, If(t = 0, My.Resources.str_Never, Date.FromFileTime(t).ToString))
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property lockoutTime() As Long?
+        Get
+            Return GetValue("lockoutTime")
+        End Get
+        Set(ByVal value As Long?)
+            If value IsNot Nothing Then SetAttribute("lockoutTime", value)
+
+            NotifyPropertyChanged("lockoutTime")
+        End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property lockoutTimeDate() As Date
+        Get
+            Dim t = lockoutTime
+            Return If(t IsNot Nothing AndAlso t > 0, Date.FromFileTime(t), Nothing)
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property lockoutTimeFormated() As String
+        Get
+            Dim t = lockoutTime
+            Return If(t Is Nothing, My.Resources.str_Unknown, If(t = 0, My.Resources.str_Never, Date.FromFileTime(t).ToString))
+        End Get
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    Public Property badPwdCount() As Integer?
         Get
             Return GetValue("badPwdCount")
         End Get
+        Set(ByVal value As Integer?)
+            If value IsNot Nothing Then SetAttribute("badPwdCount", value)
+
+            NotifyPropertyChanged("badPwdCount")
+        End Set
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -1624,6 +1707,15 @@ Public Class clsDirectoryObject
                 End If
             End If
         End Set
+    End Property
+
+    <RegistrySerializerIgnorable(True)>
+    <ExtendedProperty>
+    Public ReadOnly Property locked() As Boolean?
+        Get
+            Dim lt = lockoutTime
+            Return If(lt Is Nothing, False, If(lt = 0, False, Now < Date.FromFileTime(lt).AddMinutes(Domain.LockoutDuration)))
+        End Get
     End Property
 
     <RegistrySerializerIgnorable(True)>
@@ -1898,24 +1990,20 @@ Public Class clsDirectoryObject
             For Each n In newcache.Keys
                 If cache.ContainsKey(n) Then
                     If Not AttributeEquals(cache(n), newcache(n)) Then
-                        Debug.WriteLine(distinguishedName & " - " & n & " attribute changed:")
-                        Debug.Write("From:")
-                        For Each item In cache(n).GetValues(GetType(String))
-                            Debug.WriteLine(vbTab & item)
-                        Next
-                        Debug.Write("To:")
-                        For Each item In newcache(n).GetValues(GetType(String))
-                            Debug.WriteLine(vbTab & item)
-                        Next
+                        Debug.Write(distinguishedName & " - " & n & " changed: ")
+                        Array.ForEach(cache(n).GetValues(GetType(String)).ToArray, Sub(s) Debug.Write(s))
+                        Debug.Write(" - to:")
+                        Debug.Write(distinguishedName & " - " & n & " added: ")
+                        Array.ForEach(newcache(n).GetValues(GetType(String)).ToArray, Sub(s) Debug.Write(s))
+                        Debug.WriteLine("")
+
                         cache(n) = newcache(n)
                         NotifyPropertyChanged(n)
                     End If
                 Else
-                    Debug.WriteLine(distinguishedName & " - " & n & " attribute added:")
-                    Debug.Write("Value:")
-                    For Each item In newcache(n).GetValues(GetType(String))
-                        Debug.WriteLine(vbTab & item)
-                    Next
+                    Debug.Write(distinguishedName & " - " & n & " added: ")
+                    Array.ForEach(newcache(n).GetValues(GetType(String)).ToArray, Sub(s) Debug.Write(s))
+                    Debug.WriteLine("")
                     cache.Add(n, newcache(n))
                     NotifyPropertyChanged(n)
                 End If
@@ -1978,6 +2066,10 @@ Public Class clsDirectoryObject
                 NotifyPropertyChanged("StatusFormatted")
                 NotifyPropertyChanged("StatusImage")
                 NotifyPropertyChanged("Image")
+            Case "lockouttime"
+                NotifyPropertyChanged("lockoutTimeDate")
+                NotifyPropertyChanged("lockoutTimeFormated")
+                NotifyPropertyChanged("locked")
             Case "useraccountcontrol"
                 NotifyPropertyChanged("normalAccount")
                 NotifyPropertyChanged("disabled")

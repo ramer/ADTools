@@ -842,13 +842,10 @@
     <value>{0} ошибок входа</value>
   </data>
   <data name="str_LockoutDuration" xml:space="preserve">
-    <value>Время до сброса счетчика блокировки</value>
+    <value>Продолжительность блокировки учетной записи</value>
   </data>
   <data name="str_LockoutDurationFormat" xml:space="preserve">
     <value>{0} минут</value>
-  </data>
-  <data name="str_LockoutObservationWindow" xml:space="preserve">
-    <value>Продолжительность блокировки учетной записи</value>
   </data>
   <data name="str_LockoutObservationWindowFormat" xml:space="preserve">
     <value>{0} минут</value>
@@ -1356,5 +1353,11 @@
   </data>
   <data name="str_LogActions" xml:space="preserve">
     <value>Сохранять действия</value>
+  </data>
+  <data name="str_Unlock" xml:space="preserve">
+    <value>Сброс блокировки</value>
+  </data>
+  <data name="str_LockoutObservationWindow" xml:space="preserve">
+    <value>Время до сброса счетчика блокировки</value>
   </data>
 </root>

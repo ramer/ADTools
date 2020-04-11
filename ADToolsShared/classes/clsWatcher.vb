@@ -3,15 +3,24 @@
 Public Class clsWatcher
     Implements IDisposable
 
-    Public Event ObjectChanged As EventHandler(Of EventArgs)
-
-    Public Property connection As LdapConnection
-    Public Property asyncResult As IAsyncResult
+    ''' <summary>
+    ''' Fires when LDAP-object has changes
+    ''' </summary>
+    Public Event ObjectChanged As EventHandler(Of ObjectChangedEventArgs)
+    Private Property connection As LdapConnection
+    Private Property asyncResult As IAsyncResult
 
     Public Sub New(connection As LdapConnection)
         Me.connection = connection
     End Sub
 
+    ''' <summary>
+    ''' Registers watcher on current distinguished name by scope with optional timeout
+    ''' </summary>
+    ''' <param name="dn">LDAP-object distinguished name</param>
+    ''' <param name="scope">Watcher scope</param>
+    ''' <param name="timeout">Timeout (default is 1 year)</param>
+    ''' <returns>True on success, False otherwise</returns>
     Public Function Register(dn As String, scope As SearchScope, Optional timeout As TimeSpan = Nothing) As Boolean
         Try
             Dim searchRequest As New SearchRequest(dn, "(objectClass=*)", scope, Nothing)

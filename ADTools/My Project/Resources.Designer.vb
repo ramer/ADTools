@@ -3947,6 +3947,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Ищет локализованную строку, похожую на Unlock.
+        '''</summary>
+        Public ReadOnly Property str_Unlock() As String
+            Get
+                Return ResourceManager.GetString("str_Unlock", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Ищет локализованную строку, похожую на Use Exchange Server.
         '''</summary>
         Public ReadOnly Property str_UseExchange() As String

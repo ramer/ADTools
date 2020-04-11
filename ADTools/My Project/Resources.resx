@@ -1526,4 +1526,7 @@ To obtain the API key:
   <data name="str_LogActions" xml:space="preserve">
     <value>Log actions</value>
   </data>
+  <data name="str_Unlock" xml:space="preserve">
+    <value>Unlock</value>
+  </data>
 </root>

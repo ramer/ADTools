@@ -56,4 +56,13 @@ Class pgUserObject
         End Try
     End Sub
 
+    Private Sub btnUnlock_Click(sender As Object, e As RoutedEventArgs) Handles btnUnlock.Click
+        Try
+            If CurrentObject Is Nothing Then Exit Sub
+            CurrentObject.Unlock()
+        Catch ex As Exception
+            ThrowException(ex, "btnUnlock_Click")
+        End Try
+    End Sub
+
 End Class

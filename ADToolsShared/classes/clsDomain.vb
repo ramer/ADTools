@@ -173,6 +173,7 @@ Public Class clsDomain
                     Dim response As SearchResponse = Connection.SendRequest(searchRequest)
 
                     MaxPwdAge = -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("maxPwdAge")(0))).Days
+                    LockoutDuration = -TimeSpan.FromTicks(Long.Parse(response.Entries(0).Attributes("lockoutDuration")(0))).Minutes
 
                     Dim p As New ObservableCollection(Of clsDomainProperty)
                     p.Add(New clsDomainProperty(My.Resources.str_LockoutThreshold, String.Format(My.Resources.str_LockoutThresholdFormat, response.Entries(0).Attributes("lockoutThreshold")(0))))
@@ -463,6 +464,17 @@ Public Class clsDomain
         Set(value As Integer)
             _maxpwdage = value
             NotifyPropertyChanged("MaxPwdAge")
+        End Set
+    End Property
+
+    Private _lockoutduration As Integer
+    Public Property LockoutDuration() As Integer
+        Get
+            Return _lockoutduration
+        End Get
+        Set(ByVal value As Integer)
+            _lockoutduration = value
+            NotifyPropertyChanged("LockoutDuration")
         End Set
     End Property
 

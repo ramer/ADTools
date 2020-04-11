@@ -1289,7 +1289,7 @@
                             <Grid>
                                 <Grid x:Name="Overlay" Background="{DynamicResource ColorButtonBackground}" Opacity="0"/>
                                 <GridViewRowPresenter  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            </Grid>
+                            </Grid> 
 
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">

@@ -77,6 +77,7 @@
                     <StackPanel Grid.Column="1">
                         <Button x:Name="btnResetPassword" Style="{StaticResource LightButton}" Content="🔑" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.str_PasswordReset}" Margin="10,5,10,5"/>
                         <Button x:Name="btnSetPassword" Style="{StaticResource LightButton}" Content="🖊" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.str_PasswordSet}" Margin="10,5,10,5"/>
+                        <Button x:Name="btnUnlock" Style="{StaticResource LightButton}" Content="🕑" MinHeight="24" MinWidth="24" ToolTip="{x:Static r:Resources.str_Unlock}" Margin="10,5,10,5" IsEnabled="{Binding CanWrite[lockoutTime]}" Visibility="{Binding locked, Converter={StaticResource ConverterBooleanToVisibility}}"/>
                     </StackPanel>
 
                 </Grid>
